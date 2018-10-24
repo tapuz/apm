@@ -2,7 +2,7 @@
 class Image {
     public $image_id;
 	
-	public function insertImage($patientID,$filename,$tag) {
+	public static function insertImage($patientID,$filename,$tag) {
 		global $wpdb;
 		$wpdb->insert( 
 				'table_images', 
@@ -13,7 +13,7 @@ class Image {
 					) 
 	 			);
 	 			
-	 			//get the letter_id just created to pass to the select_category view
+	 	error_log($wpdb->insert_id);		
 	 	//$this->image_id = $wpdb->insert_id;
 		
 	

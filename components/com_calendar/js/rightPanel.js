@@ -6,6 +6,18 @@ $(document).ready(function() {
   //hide the patient_details div
   $('#rightPanel .patient_details').toggle();
   $('#rightPanel .search_results').toggle();
+
+  //load the datepicker
+  datepicker = $('#datePicker').datepicker({
+    calendarWeeks: true,
+    todayHighlight: true,
+    
+  }).on('changeDate', function(e) {
+    calendar.fullCalendar( 'gotoDate', e.date); 
+  });
+
+
+
   //load the templates & parse
   tmpl_patient_search_results  = $('#tmpl_patient_search_results').html();
   tmpl_patient_demographics = $('#tmpl_patient_demographics').html();
@@ -54,6 +66,13 @@ $(document).ready(function() {
       });
 
     });
+    $('.clear_right_panel_search').click(function(){
+      $('#rightPanel .patient-search').val('');
+      $('#rightPanel .search_results').html('')
+      $('#rightPanel .search_results').hide();
+      $('#rightPanel .patient_details').hide();
+      $('#rightPanel .default').show();
+    });
 
     $(document).on('click','#rightPanel .patient',function() {
       //get the patient details,push them into template
@@ -97,7 +116,7 @@ $(document).ready(function() {
         }).show();
     });
   
-     $(document).on('click','#rightPanel .appointment',function() {
+     $(document).on('click','#rightPanel .right_panel_appointment',function() {
        
        var start = $(this).attr('start');
        eventIDtoHighlight = $(this).attr('appointmentID');

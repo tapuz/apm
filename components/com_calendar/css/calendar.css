@@ -60,14 +60,14 @@
   min-width: 100px;
 }
 
-#rightPanel .content .appointment {
+#rightPanel .content .right_panel_appointment {
   border-style: solid;
   border-width: 0 0 0 10px;
   padding-left: 10px;
   cursor: pointer;
 }
 
-#rightPanel .content .appointment label {
+#rightPanel .content .right_panel_appointment label {
   cursor: pointer;
 }
 
@@ -246,4 +246,6 @@ td.fc-day.fc-widget-content.fc-wed.fc-today.fc-state-highlight {
 .fc-bgevent{opacity:.1}
 .fc-nonbusiness{background-color:#3b3b3b}
 
-
+.nav-pills>li>a {
+    border-radius: 1px;
+}

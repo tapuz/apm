@@ -84,6 +84,22 @@ class Appointment {
      });
   }
 
+  static addCustom(oAppointment,callback){
+    $.ajax({
+      url: "ajax.php",
+      dataType: "json",
+      type: 'post',
+      data: {
+        com: 'calendar',
+        task: 'addCustomAppointment',
+        appointment: JSON.stringify(oAppointment)
+      },
+      success: function(data) {
+        if(callback){callback(data);}
+      }
+     });
+  }
+
   static setStatus(appointment_id, status, callback) {
     $.ajax({
       url: "ajax.php",
@@ -147,6 +163,26 @@ class Appointment {
     });
   }
   
+  static delete(appointmentID,callback,fail){
+    $.ajax({
+      url: "ajax.php",
+      type: 'post',
+      data: {
+        com: 'calendar',
+        task: 'deleteAppointment',
+        appointmentID : appointmentID,
+      },
+      success: function(data) {
+        if (callback) {
+          callback(data);
+        }
+      },
+      fail: function(){
+        log('tis failing');
+        fail();}
+    });
+  }
+
   static update(oAppointment,callback,sendEmail,fail){
     log(JSON.stringify(oAppointment));
     $.ajax({

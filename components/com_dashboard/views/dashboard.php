@@ -4,7 +4,7 @@
 	<!-- /breadcrumb-->
 				
 
-<div class="row">
+<!--<div class="row">
 	<div class="col-lg-3 col-sm-6 col-xs-6 col-xxs-12">
 		<div class="smallstat box">
 			<div class="boxchart-overlay blue">
@@ -27,7 +27,7 @@
 			</a>
 		</div>
 	</div>
-	<!--/col-->
+	
 	<div class="col-lg-3 col-sm-6 col-xs-6 col-xxs-12">
 		<div class="smallstat box">
 			<div class="boxchart-overlay green">
@@ -50,7 +50,7 @@
 			</a>
 		</div>
 	</div>
-	<!--/col-->
+
 	<div class="col-lg-3 col-sm-6 col-xs-6 col-xxs-12">
 		<div class="smallstat box">
 			<div class="boxchart-overlay red">
@@ -73,7 +73,7 @@
 			</a>
 		</div>
 	</div>
-	<!--/col-->
+
 	<div class="col-lg-3 col-sm-6 col-xs-6 col-xxs-12">
 		<div class="smallstat box">
 			<div class="boxchart-overlay yellow">
@@ -97,24 +97,14 @@
 		</div>
 	</div>
 	<!--/col-->
-</div>
+</div>-->
 <!--/row-->
-<script>
-	function api() {
-        //code
-    
-	$.ajax({
-  			type: "post",
-		    url: "ajax.php",
-  			data: { com: 'api', 
-  					task: 'message', 
-  					message: 'hello world'}
-			}).success(function( response ) {
-                    //add the image to the portfolio
-                	console.log('api called');			
-			});
-	}
-</script>
+<div class=row>
+	<a href="https://github.com/tapuz/apm/projects/1?fullscreen=true" target="_blank"><h2> Wonderering what we are working on? Follow the project here! </h2></a> 
+	<img src="assets/img/apm_project.png" height="600px">
+</div>
+
+
 
 <div class="row">
 	<div class="box">

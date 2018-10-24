@@ -1,6 +1,7 @@
 //var mode = 'newPatient';
 var fNewPatient = true;
 var appModalMode; //newAppointment or editAppointment
+var customAppModalMode;//newCustomAppointment or editCustomAppointment
 $(document).ready(function() {
   //init some stuff
 var patientLinkedClinic = null;
@@ -8,6 +9,26 @@ var patientLinkedClinic = null;
   $('.selected').hide();
 
   //$('#btnSaveNewAppointment').prop('disabled', true);
+
+  $('#editBusyTime').on('submit', function(e){
+    e.preventDefault();
+    var duration = $('#editBusyTime .duration option:selected').val();
+    var start = moment(eventStart).format();
+    var end = eventStart.clone().add(duration, 'minutes').format();
+    var note= $('#busyTimeDesc').val();
+    if (note==''){note='Busy'};
+   
+  
+    
+    Appointment.addCustom({start:start,end:end,userID:userID,note:note},function (appointment){
+            eventIDtoHighlight = appointment.id;
+            highlightEvent = true;
+            calendar.fullCalendar('renderEvent', appointment);
+            calendar.fullCalendar('unselect');
+            closeEditAppModal();        
+           
+            });
+  });
 
   $('#editAppointment').on('submit', function(e) {
     e.preventDefault();
@@ -256,6 +277,17 @@ var patientLinkedClinic = null;
     $('.warningSelectClinic').hide();
     
   });
+
+  $('.deleteAppointment').click(function(){
+    log('deleting!!');
+    Appointment.delete(objEvent.id,function(){
+      calendar.fullCalendar('removeEvents' , objEvent.id );
+      $('#customEventDetails').modal('hide');
+    },function(){
+      log('fail!!');
+    });
+  });
+
 
   //get all the services related to group or groups
   //$.ajax({

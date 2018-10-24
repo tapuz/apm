@@ -190,6 +190,7 @@ $(document).ready(function() {
 
 
 function loadEventDetails() {
+      $('#tab_busyTime').hide();
       var title ='<a class="btn btn-sm editPatient">' + objEvent.patientName + '&nbsp;&nbsp;&nbsp;<i class="fa fa-pencil-square-o">&nbsp;</i></a>';
 			var body='';
 			title +='<div>';

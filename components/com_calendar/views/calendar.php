@@ -21,12 +21,17 @@
 			<div class="col-md-3" id="rightPanel"><!-- Start Right content -->
 				<div class="row header">
 					<div class="input-group" style="padding: 5px;">
-						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+						<span class="input-group-addon clear_right_panel_search"><i class="far fa-times-circle"></i></span>
 						<input type="text" class="form-control patient-search" pattern="^[a-zA-Z '.-]+$" placeholder="Find patient" required>
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
 					</div>
 				</div>
 				<div class="content">
-					<div class="default"></div>
+					<div class="default">
+						<div class="row">
+							<div id="datePicker"></div>
+						</div>
+					</div>
 					<div class="search_results"></div>
 					<div class="patient_details">
 						<div class="patient_demographics"></div>
@@ -50,7 +55,6 @@
 
 <div class="modal modal-wide fade" id="editEvent" role="dialog" tabindex="-1">
   <div class="modal-dialog" role="document">
-	<form id="editAppointment" role="form" data-toggle="validator">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -60,21 +64,19 @@
       </div>
       <div class="modal-body">
 		<!-- Nav tabs -->
-		<button type="button" class="btn btn-primary pull-right" ><i class="fas fa-ban"></i>&nbsp;Custom appointment</button>
-        <!-- <ul class="nav nav-pills">
-			<li class="active">
-                <a  href="#details" data-toggle="tab"><i class="fa fa-calendar fa-fw"></i>Details</a>
-			</li>
-            <li>
-                <a  href="#notes" data-toggle="tab"><i class="fa fa-pencil fa-fw"></i>Notes</a>
-			</li>
+	
+    	<ul class="nav nav-pills">
+			<li class="active"><a  href="#patientAppointment" data-toggle="tab"><i class="fa fa-user"></i>&nbsp;&nbsp;Patient Appointment</a></li>
+			<li id='tab_busyTime'><a  href="#busyTime" data-toggle="tab"><i class="fas fa-ban"></i>&nbsp;&nbsp;Busy Time</a></li>
 			
-		</ul> -->
+		</ul> 
 	
 		
 		<div class="tab-content">
-            <div class="tab-pane active" id="details">
+			
+            <div class="tab-pane active" id="patientAppointment">
                 <div class="patient-section">
+					<form id="editAppointment" role="form" data-toggle="validator">
 					
 					<div class="row">
 						<div class="col-sm-2">
@@ -166,10 +168,72 @@
 							</div>
 						</div>	
 					</div>
+					<div class="row">
+						<div class="col-sm-3">
+						 <button type="submit" class="btn btn-primary editAppSubmit">Save</button>
+        				 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						 </div>
+					</div>
+				</form>
                 </div>
+				
             </div>
-			<div class="tab-pane" id="notes">
-                <h3>Notes</h3>
+
+			<div class="tab-pane" id="busyTime">
+				<form id="editBusyTime" role="form" data-toggle="validator">
+					
+				<div class="row">
+						<div class="col-sm-3">
+							<label>Time</label>
+						</div>
+						<div class="col-sm-5">
+							<span class="datetime"></span>
+						</div>	
+				</div>
+
+				<div class="row">
+
+					<div class="col-sm-3">
+						<label for="duration">Duration</label>
+
+					</div>
+					<div class="col-sm-5">
+					
+  						<select class="form-control duration">
+    						<option value=10>10min</option>
+    						<option value=15>15min</option>
+    						<option value=30>30min</option>
+    						<option value=45>45min</option>
+							<option value=60>1h</option>
+							<option value=90>1h30min</option>
+							<option value=120>2h</option>
+ 					 	 </select>
+
+					</div>
+				</div>
+				<div class="row">
+
+					<div class="col-sm-3">
+						<label>Description</label>
+
+					</div>
+					<div class="col-sm-5">
+						<textarea class="form-control" cols="15" id="busyTimeDesc" rows="2"></textarea>
+
+					</div>
+				</div>
+
+				<div class="row">
+						<div class="col-sm-3">
+						 <button type="submit" class="btn btn-primary editBusyTimeSubmit">Save</button>
+        				 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						 </div>
+				</div>
+
+
+
+			</form>
+
 			</div>
             
 		</div>
@@ -177,33 +241,14 @@
        
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary editAppSubmit">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       
       </div>
     </div>
-	</form>
+	
   </div>
 </div>
 <!--stop: modal -->
 
-<!--start: busy-time-modal -->
-<div class="modal fade" id="busyTime">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h3 class="modal-title">Thierry Duhameeuw</h3>      
-      </div>
-      <div class="modal-body">
-		
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--stop: busy-time-modal -->
 
 <!--start: eventDetails-modal -->
 <div class="modal fade" id="eventDetails">
@@ -223,6 +268,62 @@
   </div>
 </div>
 <!--stop: eventDetails-modal -->
+
+<!--start: customEvent-modal -->
+<div class="modal fade" id="customEventDetails">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h3 class="modal-title">Edit Busy Time</h3>      
+      </div>
+      <div class="modal-body">
+	  <div class="row">
+				<div class="col-sm-3">
+					<label>Date</label>
+				</div>
+				<div class="col-sm-5">
+					<span class="datetime"></span>
+				</div>
+				
+		</div>
+	  
+
+				<div class="row">
+
+					<div class="col-sm-3">
+						<label>Duration</label>
+
+					</div>
+					<div class="col-sm-5">
+						<span class="duration"></span><span> minutes</span>
+					</div>
+				</div>
+				<div class="row">
+
+					<div class="col-sm-3">
+						<label>Description</label>
+
+					</div>
+					<div class="col-sm-5">
+						<textarea class="form-control description" cols="15" rows="2" disabled></textarea>
+					</div>
+				</div>
+				<div class="row">
+				<div class="col-sm-5">
+					<button type="button" class="btn btn-danger deleteAppointment"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>'
+				</div>
+				</div>
+
+		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--stop: customEvent-modal -->
 
 <!--start: editPatient-modal -->
 <div class="modal modal-wide fade" id="editPatient">
@@ -394,6 +495,9 @@
   </div>
 </div>
 <!--stop: payment-modal -->
+
+
+
 
 
 <!--load the Templates-->

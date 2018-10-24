@@ -6,8 +6,13 @@ class Calendar {
 		global $wpdb;
 		$query = $wpdb->prepare("SELECT * from view_appointments WHERE (resourceId = '%d' AND start > DATE_ADD('%s', INTERVAL -3 DAY) AND end < DATE_ADD('%s', INTERVAL +3 DAY))",$userID,$start,$end);
 		$appointments = $wpdb->get_results($query);
-	    return  $appointments;
 		
+		
+		$query = $wpdb->prepare("SELECT appointment_id as id, start,end, user as resourceId, customAppointment, note as title, note, '#9fa1a3' AS 'color' from table_appointments WHERE (customAppointment = 1 AND user = '%d' AND start > DATE_ADD('%s', INTERVAL -3 DAY) AND end < DATE_ADD('%s', INTERVAL +3 DAY))",$userID,$start,$end);
+		$custom_appointments = $wpdb->get_results($query);
+		//error_log(print_r(array_merge($appointments,$custom_appointments),1));
+		return array_merge($appointments,$custom_appointments);
+
 	}
 	
 
@@ -25,6 +30,14 @@ class Calendar {
 		return  $appointments;
 	}
     
+
+	public static function getAppointment_($id){
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT * from view_appointments WHERE id = %d",$userID);
+		$appointments = $wpdb->get_row($query);
+	    return  $appointment;
+	}
+
 	public function getAppointment($id){
         global $wpdb;
         $query=sprintf("
@@ -36,6 +49,8 @@ class Calendar {
             table_appointments.patient_id as patientID,
 			table_appointments.status as status,
 			table_appointments.clinic,
+			table_appointments.note,
+			table_appointments.customAppointment,
             
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as title,
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as patientName,
@@ -65,7 +80,13 @@ class Calendar {
         $appointment = $wpdb->get_row($query);
         return  $appointment;
     }
-  
+
+	public static function getCustomAppointment($id){
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT appointment_id as id, start,end, customAppointment, note as title, note, '#9fa1a3' AS 'color' from table_appointments WHERE appointment_id=%d",$id);
+		$customAppointment = $wpdb->get_row($query);
+		return $customAppointment;
+  	}
 	
 	public function addAppointment($appointment) {
         global $wpdb;
@@ -79,13 +100,34 @@ class Calendar {
 					'end' => $app->end,
 					'status' => $app->status,
 					'service' => $app->service,
-					'clinic' => $app->clinic
+					'clinic' => $app->clinic,
+					'customAppointment' => 0
 					) 
 	 			);
 	 			
         //return newly created appointment
 		$id=$wpdb->insert_id;
 		return self::getAppointment($id);
+	 	
+    }
+
+	public function addCustomAppointment($appointment) {
+        global $wpdb;
+		$app = $appointment;
+		$wpdb->insert( 
+				'table_appointments', 
+				array( 
+					'user' => $app->userID, 
+					'start' => $app->start,
+					'end' => $app->end,
+					'note' => $app->note,
+					'customAppointment' => 1
+					) 
+	 			);
+	 			
+        //return newly created CustomAppointmentappointment
+		$id=$wpdb->insert_id;
+		return self::getCustomAppointment($id);
 	 	
     }
 	
@@ -113,6 +155,11 @@ class Calendar {
 		return $result;
 	}
 	
+	public static function deleteAppointment($id){
+		global $wpdb;
+		$wpdb->delete( 'table_appointments', array( 'appointment_id' => $id ) );
+	}
+
 	public function updateAppointment($appointment){
 		$appointment = json_decode($appointment);
 		//error_log($appointment->service . ' :service');

@@ -93,7 +93,11 @@ switch (getVar('task')){
 		echo $workingPlan = get_user_meta( getVar('userID'), 'working_plan_2',1);
 
 	break;
-	
+
+	case 'addCustomAppointment':
+		$customAppointment =  Calendar::addCustomAppointment(json_decode(stripslashes(getVar('appointment'))));
+		echo json_encode($customAppointment);
+	break;
 	
 	case 'addAppointment':
 		
@@ -104,41 +108,43 @@ switch (getVar('task')){
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		
 		echo json_encode($appointment);
-		//send confirmation email
+		//send confirmation email only of not a custom appoitment
 		
+		error_log(json_encode($appointment));
+		if ($terry){
+			$clinic = Clinic::getClinic($appointment->clinic);
+			
+			//add clinic name to $appointment object
+			$appointment->{"clinic_name"} = $clinic->clinic_name;
+			$appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
+			$appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
+			
+			$email = new Email();
+			
+			$email->smtp_server = $clinic->smtp_server;
+			$email->smtp_username = $clinic->smtp_username;
+			$email->smtp_password = $clinic->smtp_password;
+			
+			$email->to = $appointment->email;
+			$email->from_email = $clinic->clinic_email;
+			$email->from_name = $clinic->email_name;
+			$email->subject = $clinic->email_appointment_confirmation_subject;
+			
+			
+			$message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
+			$message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
+			$message = str_replace('%text%', $clinic->email_appointment_confirmation_text, $message);
+			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
+			$message = str_replace('%time%', $appointment->time, $message);
+			$message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
+			$message = str_replace('%practitioner%', $appointment->resourceName, $message);
+			
+			$email->message = $message;
+			$email->ics = ICS::render($appointment);
+			
+			$email->send();
+		}	
 		
-		
-		$clinic = Clinic::getClinic($appointment->clinic);
-		
-		//add clinic name to $appointment object
-		$appointment->{"clinic_name"} = $clinic->clinic_name;
-		$appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
-		$appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
-		
-		$email = new Email();
-		
-		$email->smtp_server = $clinic->smtp_server;
-		$email->smtp_username = $clinic->smtp_username;
-		$email->smtp_password = $clinic->smtp_password;
-		
-		$email->to = $appointment->email;
-		$email->from_email = $clinic->clinic_email;
-		$email->from_name = $clinic->email_name;
-		$email->subject = $clinic->email_appointment_confirmation_subject;
-		
-		
-		$message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
-		$message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
-		$message = str_replace('%text%', $clinic->email_appointment_confirmation_text, $message);
-		$message = str_replace('%patient%', $appointment->patient_firstname, $message);
-		$message = str_replace('%time%', $appointment->time, $message);
-		$message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
-		$message = str_replace('%practitioner%', $appointment->resourceName, $message);
-		
-		$email->message = $message;
-		$email->ics = ICS::render($appointment);
-		
-		$email->send();
 		
 		
 		
@@ -190,6 +196,10 @@ switch (getVar('task')){
 		}
 		 //add a log that an email was sent
 		
+	break;
+
+	case 'deleteAppointment':
+		Calendar::deleteAppointment(getVar('appointmentID'));
 	break;
 	
 	case 'getAppointment':
@@ -274,7 +284,7 @@ switch (getView())
 		
 		
 		global $wpdb;
-		$query = "SELECT * from table_treatments WHERE practitioner = 1";
+		$query = "SELECT * from table_treatments WHERE practitioner = 1 and scheduled_date >= DATE_SUB(NOW(),INTERVAL 1 YEAR);";
 		$treatments = $wpdb->get_results($query);
 		
 		foreach($treatments as $treatment){
@@ -292,7 +302,7 @@ switch (getView())
 			$clinic = 1;
 			
 			$sql = $wpdb->prepare($sql,$user,$start,$end,$patient_id,$service,$clinic);
-			var_dump($sql); // debug
+			//var_dump($sql); // debug
 			$wpdb->query($sql);
 		}
 		

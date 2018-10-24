@@ -32,7 +32,7 @@ loadLib('image');
 
 //get the patient details
 
-
+//switch ($_POST('task')){
 switch (getVar('task')){
 	
     case 'getClinicsFromGroup':
@@ -69,7 +69,36 @@ switch (getVar('task')){
 		$appointment = Calendar::addAppointment($appointment);
 		echo json_encode($appointment);
 	break;
-    case "post_image":
+
+	case "upload_image":
+		//$patientID = getVar('patientID');
+		$patientID = $_POST['patientID'];
+		error_log('UPLOADING!!!');
+		error_log(dirname(__FILE__));
+		$filename = basename($_FILES["photo"]["name"]);
+		error_log($filename);
+		$target_dir = ROOT . "/userdata/camera_pictures/";
+		$target_file = $target_dir . basename($_FILES["photo"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+		$check = getimagesize($_FILES["photo"]["tmp_name"]);
+		if($check !== false) {
+			echo "File is an image - " . $check["mime"] . ".";
+			$uploadOk = 1;
+			if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file)) {
+				echo "The file ". basename( $_FILES["photo"]["name"]). " has been uploaded.";
+				//link image with patient in DB
+			    Image::insertImage($patientID,$filename,'camera');
+			} else {
+				echo "Sorry, there was an error uploading your file.";
+			}
+		} else {
+			echo "File is not an image.";
+			$uploadOk = 0;
+		}
+	break;
+
+    case "post_image": //NOT USED ANYMORE!!!
         define('UPLOAD_DIR', 'userdata/camera_pictures/');
         //the vars that need to be posted
 		error_log('post_image_called');
