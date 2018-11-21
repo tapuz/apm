@@ -236,6 +236,14 @@ $(document).ready(function() {
     calendar.fullCalendar('removeEvents','not_working');
     calendar.fullCalendar('removeEvents','working');
     calendar.fullCalendar('removeEvents','break');
+    var ev = $('#calendar').fullCalendar('clientEvents', function(evt) {
+              return evt.thierry == 'yes';
+            });
+    //calendar.fullCalendar('removeEvents', ev);
+
+
+
+    //calendar.fullCalendar('removeEvents');
     $.ajax({
       type: "post",
       url: "ajax.php",
@@ -265,6 +273,7 @@ $(document).ready(function() {
                 },true);
                 calendar.fullCalendar('renderEvent', {
                   id:'working', //all need the same ID, else you would get cumulative layer coloring
+                  //id: clinic,
                   //className: className,
                   start: dayplan.start,
                   end: dayplan.end,
@@ -296,6 +305,7 @@ $(document).ready(function() {
           if(this.clinic == selectedClinic){
             log('WE HAVE A MATCH :' + this.clinic ); // only render this working plan
             $.each(this.workingPlan,function(){
+              
               $.each(this,function( day, dayplan ) {
                   calendar.fullCalendar('renderEvent', {
                     id:'not_working', //all need the same ID, else you would get cumulative layer coloring
@@ -304,8 +314,22 @@ $(document).ready(function() {
                     end: dayplan.end,
                     dow: [dayplan.dow], 
                     rendering: 'inverse-background',
-                    type:'bgEvent'
+                    type:'bgEvent',
+                    clinic:selectedClinic
                   },true); 
+
+                  calendar.fullCalendar('renderEvent', {
+                  id:'working', //all need the same ID, else you would get cumulative layer coloring
+                  //id: clinic,
+                  //className: className,
+                  start: dayplan.start,
+                  end: dayplan.end,
+                  dow: [dayplan.dow], 
+                  rendering: 'background',
+                  type:'bgEvent',
+                  clinic:selectedClinic
+                 
+                },true);
                 //render the breaks
               $.each(dayplan.breaks,function(){
                 log('break start:' + this.start + 'dow: ' + dayplan.dow);
@@ -575,6 +599,7 @@ $(document).ready(function() {
         //bring up the modal and push start and end into global vars
         $('#editEvent .modal-title').html('Book Appointment');
 				$('.clear-selected-patient').click();
+        //$("#editAppointment")[0].reset();
         $('#editEvent .datetime').html(moment(start).locale(locale).format('LLL'));
         appModalMode = 'newAppointment';
         $('#editEvent').modal('show');
@@ -839,25 +864,16 @@ $(document).ready(function() {
 
       eventOverlap: function(stillEvent, movingEvent) {
         
-         fcMessage = new Noty({
-                text: '<span class="text-center">Nie Meugelijk!!</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
-                //closeWith:'click',
-                layout:'top',
-                theme:'sunset',
-                type:'information',
-                
-                killer:true,
-                callbacks: {afterClose: function() {}}
-             })
 
         if (movingEvent.customAppointment == 1){return true;}
+        log(stillEvent.clinic + ' is still');
+         log(movingEvent.clinic + ' is moving');
         if ( movingEvent.clinic == stillEvent.clinic){
           return true;
         }else{
          
-            fcMessage.show();
-             log(fcMessage.closed);
-
+        
+        return false;
        
         
 

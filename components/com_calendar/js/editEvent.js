@@ -269,7 +269,10 @@ var patientLinkedClinic = null;
     //mode = 'newPatient';
     $('.selected').hide();
     $('.patient-select').show();
-    $('#editAppointment #patient-search #phone #email').val('');
+    $('.patient-select #patient-search').val('');
+    $('.patient-select #phone').val('');
+    $('.patient-select #email').val('');
+   
     $('#ui-id-1').hide();
     $('#patient-search').autocomplete('close').val('');
     $('#patient-search').focus();

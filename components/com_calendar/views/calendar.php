@@ -114,7 +114,7 @@
 										</div>
 										<div class="input-group" style="padding: 5px;">
 											<span class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
-											<input type="tel" class="form-control" id="phone" placeholder="Telephone" required>
+											<input type="tel" class="form-control" id="phone" placeholder="Telephone">
 										</div>
 										<div class="input-group" style="padding: 5px;">
 											<span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
