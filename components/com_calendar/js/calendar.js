@@ -549,47 +549,75 @@ $(document).ready(function() {
           objEvent.start = start;
           objEvent.end = start.clone().add(duration);
 
-          //calendar.fullCalendar('updateEvent', objEvent);
-          calendar.fullCalendar('removeEvents', objEvent.id);
-          calendar.fullCalendar('renderEvent',objEvent );
-          calendar.fullCalendar('unselect');
+         log(clinicID + ' is CLINIC and OBJ.clinic ' + objEvent.clinic);
+         
+        
+           
 
-          log(clinicID + ' is CLINIC');
-          if (selectedClinic != 'all'){
+         if (selectedClinic != 'all'){
             clinic = selectedClinic;
+            
+            if(objEvent.clinic != selectedClinic ){ 
+              // user needs to confirm that appoinment is to be moved to different clinic
+              showConfirm('Reschedule to different clinic?').then(function(result){
+                if(result){objEvent.clinic = selectedClinic;updateAppointment();}
+                
+              });
+            }else{updateAppointment();}
+              
+              
+            
           } else if (clinicID != ''){
             clinic = clinicID;
-            clinicID = '';
-          } else {
+            
+            //clinicID = '';
+            if(objEvent.clinic != clinicID ){
+              showConfirm('Reschedule to different clinic?').then(function(result){
+                if(result){objEvent.clinic = clinicID;updateAppointment();}
+                
+              });
+            }else{objEvent.clinic = clinicID;updateAppointment()};
+            
+          }else{ 
             clinic = objEvent.clinic;
+            updateAppointment();
+            
+
           }
 
-          Appointment.update({
-            id: objEvent.id,
-            start: objEvent.start.format(),
-            end: objEvent.end.format(),
-            user: objEvent.resourceId,
-            patientID: objEvent.patientID,
-            service: objEvent.serviceId,
-            status: objEvent.status,
-						clinic: clinic
-          }, function() {
-            renderRightPanelPatientAppointments();
-            if (bFlagRefetchEventsAfterReschedule === true) {
-              calendar.fullCalendar('refetchEvents');
-            }
-	
-            if (oldEventUsername != newEventUsername) {
-              Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + oldEventUsername + ' - ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + newEventUsername + ' - ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
-            } else {
-              Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
-            }
-						Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
-          },'yes'); //true = send email
+         
 
+          function updateAppointment(){
+            calendar.fullCalendar('removeEvents', objEvent.id);
+            calendar.fullCalendar('renderEvent',objEvent );
+            calendar.fullCalendar('unselect');
+            Appointment.update({
+              id: objEvent.id,
+              start: objEvent.start.format(),
+              end: objEvent.end.format(),
+              user: objEvent.resourceId,
+              patientID: objEvent.patientID,
+              service: objEvent.serviceId,
+              status: objEvent.status,
+              clinic: clinic
+            }, function() {
+              renderRightPanelPatientAppointments();
+              if (bFlagRefetchEventsAfterReschedule === true) {
+                calendar.fullCalendar('refetchEvents');
+              }
+    
+              if (oldEventUsername != newEventUsername) {
+                Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + oldEventUsername + ' - ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + newEventUsername + ' - ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
+              } else {
+                Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
+              }
+              Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
+            },'yes'); //true = send email
 
+          }
 
 					fcMessage.close();
+          fcMessage.close();
           bFlagReschedule = false;
 
           return;
@@ -667,7 +695,7 @@ $(document).ready(function() {
 
       eventDrop: function(event, delta, revertFunc) {
         objEvent = event;
-        log(clinicID + ' is CLINIC');
+        log(clinicID + ' is CLINIC shit');
         //if we have a customAppointment-> no need for confirmation and we need a different appointment update
         if(event.customAppointment == 1){
            Appointment.update({
@@ -684,58 +712,65 @@ $(document).ready(function() {
 
         } else {
 
-
-
-        bootbox.confirm({
-          message: "Confirm the move?",
-          buttons: {
-            cancel: {
-              label: 'No',
-              className: 'btn-primary'
-            },
-            confirm: {
-              label: 'Yes',
-              className: 'btn-primary'
-            }
-
-          },
-          callback: function(result) {
-            if (result === true) // update appointment in DB
-            {
-
+        
+       if (selectedClinic != 'all'){
+            clinic = selectedClinic;
+            
+            if(objEvent.clinic != selectedClinic ){ 
+              // user needs to confirm that appoinment is to be moved to different clinic
+              showConfirm('Reschedule to different clinic?').then(function(result){
+                if(result){objEvent.clinic = selectedClinic;updateAppointment();}else{revertFunc();}
+                
+              });
+            }else{updateAppointment();}
               
-              Appointment.update({
-									id: event.id,
-                  patientID: event.patientID,
-                  start: event.start.format(),
-                  end: event.end.format(),
-                  user: event.resourceId,
-                  service: event.serviceId,
-									status: event.status,
-									clinic: event.clinic
-				  
-              }, function() {
-                renderRightPanelPatientAppointments(); 
-                event.resourceName = users[event.resourceId].data.display_name;
-                var newEventUsername = event.resourceName;
-								
-                if (oldEventUsername != newEventUsername) {
-                  Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + oldEventUsername + ' - ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + newEventUsername + ' - ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
-                } else {
-                  Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
-                }
-								Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
-              }, 'no' ,function() { //true = send email 
-					revertFunc();
-					});
+              
+            
+          } else if (clinicID != ''){
+            clinic = clinicID;
+        
+            if(objEvent.clinic != clinicID ){
+              showConfirm('Reschedule to different clinic?').then(function(result){
+                if(result){objEvent.clinic = clinicID;updateAppointment();}else{revertFunc();}
+                
+              });
+            }else{objEvent.clinic = clinicID;updateAppointment()};
 
+          }else{
+            clinic = objEvent.clinic;
+            updateAppointment();
+
+          }
+
+          function updateAppointment(){
+            calendar.fullCalendar('updateEvent', objEvent); 
+           Appointment.update({
+                        id: objEvent.id,
+                        patientID: objEvent.patientID,
+                        start: objEvent.start.format(),
+                        end: objEvent.end.format(),
+                        user: objEvent.resourceId,
+                        service: objEvent.serviceId,
+                        status: objEvent.status,
+                        clinic: clinic
+                
+                        }, function() {
+                          renderRightPanelPatientAppointments(); 
+                          event.resourceName = users[event.resourceId].data.display_name;
+                          var newEventUsername = event.resourceName;
+                          
+                          if (oldEventUsername != newEventUsername) {
+                            Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + oldEventUsername + ' - ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + newEventUsername + ' - ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
+                          } else {
+                            Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
+                          }
+                          Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
+                        }, 'no' ,function() { //true = send email 
+                                    revertFunc();
+                                    });
 				    
 
-            } else { //revert the drop
-              revertFunc();
-            }
           }
-        });
 
       }
     },
@@ -864,21 +899,20 @@ $(document).ready(function() {
 
       eventOverlap: function(stillEvent, movingEvent) {
         
-
-        if (movingEvent.customAppointment == 1){return true;}
-        log(stillEvent.clinic + ' is still');
-         log(movingEvent.clinic + ' is moving');
-        if ( movingEvent.clinic == stillEvent.clinic){
-          return true;
-        }else{
+        clinicID = stillEvent.clinic;
+        //if (movingEvent.customAppointment == 1){return true;}
+       
+       // if ( movingEvent.clinic == stillEvent.clinic){
+        //  return true;
+        //}else{
          
         
-        return false;
+        return true;
        
         
 
 
-     }
+ //    }
     }
 
 
@@ -889,7 +923,31 @@ $(document).ready(function() {
   } // end initCal()
 
   $('.tip-init').tooltip();
-	
+
+
+	 function showConfirm(msg){
+            var deferred = $.Deferred();
+            bootbox.confirm({
+              message: msg,
+              buttons: {
+                cancel: {
+                  label: 'No',
+                  className: 'btn-primary'
+                },
+                confirm: {
+                  label: 'Yes',
+                  className: 'btn-primary'
+                }
+
+              },
+              callback: function(result) {
+                deferred.resolve(result);
+                
+              }
+            });
+
+            return deferred.promise();
+         }
 	
 });
 
