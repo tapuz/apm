@@ -130,8 +130,13 @@
 	<script src="assets/js/pages/page-inbox.js"></script> -->
 	
 	<!-- end: JavaScript-->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">-->
 	<script src="https://use.fontawesome.com/f8e4645dac.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/v4-shims.css">
+	
+	
+	
 	<script src="assets/js/alice.js"></script>
 	<script src="assets/js/printThis.js"></script>
 	<script src="assets/js/jstorage.js"></script>

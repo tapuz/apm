@@ -43,7 +43,7 @@ switch (getVar('task')){
 		
 		//link image with patient in DB
 		Image::insertImage($patientID,$filename,'pictureproof');
-		
+		//error_log($img);
 
 		
 	break;
@@ -60,7 +60,8 @@ switch (getView())
 {
 	
 	case 'pictureproof':
-		loadJS('pictureproof.js','pictureproof');
+		loadJS('fabric.min.js');
+		loadJS('pictureproofV2.js','pictureproof');
 		global $current_user;
       	get_currentuserinfo();
 		$username = $current_user->user_firstname . ' ' . $current_user->user_lastname;
@@ -74,7 +75,7 @@ switch (getView())
 		
 		
 		
-		include('views/pictureproof.php');
+		include('views/pictureproofV2.php');
 	break;
 
 	case 'test':

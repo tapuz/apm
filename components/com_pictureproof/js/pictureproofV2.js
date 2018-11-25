@@ -1,52 +1,43 @@
 $(function() {
-    
-    var canvasWidth = 750;
-	var canvasHeight = 1000;
+    var maxWidth = 1000;
+    var canvasWidth = 0;
+	var canvasHeight = 0;
+    var bgImage;
+    var bgImageCurAngle = 0;
 	
+    var topBar = 0;
+    var bottomBar;
 	var topbarY = 0;
 	var bottombarY = 0;
-	
+    var heightBarsPresent = false;
+    var lockHeightbars = false;
+
 	var patientHeight = 180;
 	var cpp;  //centimeters Per Pixel
-	var deltaLimit = 0.3; //absolute value difference greater than this will become red
+	var deltaLimit = 5; //absolute value difference greater than this will become red
+    
     
     var zoomImg;
+
     
     //minify the main menu
 	$('#main-menu-min').click ();
-    //lets create 3 canvasses: 1 for the image, 1 for the drawing and 1 for the analysing stuff
-    //var newLayer1 = $('<canvas/>',{id: 'imgLayer'}).prop({width: canvasWidth, height: canvasHeight});
-    //var newLayer2 = $('<canvas/>',{id: 'drawingLayer'}).prop({width: canvasWidth, height: canvasHeight});
-    //var newLayer3 = $('<canvas/>',{id: 'analyseLayer'}).prop({width: canvasWidth, height: canvasHeight});
-    //a temp layer for merging other layers into for printing and saving...
-    //var tempLayer = $('<canvas/>',{id: 'tempLayer'});
-    //append them to the board
-    //$('#board').append(tempLayer);
-    //$('#board').append(newLayer1);
-    //$('#board').append(newLayer2);
-    //$('#board').append(newLayer3);
+    //hide the toolbars
+    $('.toolbar').toggle();
+    //get the camera pictures
+    getCameraPictures(); 
+    // get the portfolio pictures
+    getPortfolioPictures();
     
-    //set the positions
-    //$("#board").css({position: 'relative'});
-    //$("#tempLayer").css({top: 0, left: 0, position:'absolute'});
-    //$("#imgLayer").css({top: 0, left: 0, position:'absolute'});
-    //$("#drawingLayer").css({top: 0, left: 0, position:'absolute'});
-    //$("#analyseLayer").css({top: 0, left: 0, position:'absolute'});
-    
-    //Get the anaylse layer
     var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :null, selection: false,allowTouchScrolling: true});
     canvas.setDimensions({width:canvasWidth, height:canvasHeight});
-    var zoom = new fabric.Canvas('zoom');
-    zoom.setDimensions({width:300,height:300});
     
-    //Get the drawing layer
-    //var drawingLayer =  new fabric.Canvas('drawingLayer', { isDrawingMode: true, backgroundColor :null, selection: false});
-    //disable drawing to start with
-    //drawingLayer.isDrawingMode = false;
     canvas.on('path:created', function(e){
         var newPath = e.path;
         groupPaths.add(newPath);
     });
+    
+
 
 	//do not delete the line below
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
@@ -56,16 +47,12 @@ $(function() {
     $( "#canvas-box" ).toggle();
     $( "#portfolio" ).toggle();
     
+    //render the height bars
     
-    //get the camera pictures
-    getCameraPictures(); 
-    // get the portfolio pictures
-    getPortfolioPictures();
-    
-    
+
     //START ANALYSE AP-PA//
      function calcCPP() {
-		cpp = patientHeight/(bottombarY-topbarY);
+		cpp = patientHeight/(bottomBar.get('top')-topBar.get('top'));
 		log('cpp = ' + cpp);
 	 }
 	 
@@ -94,10 +81,12 @@ $(function() {
             var pointer = canvas.getPointer(event.e);
             var posx = pointer.x;
             var posy = pointer.y;
-            log('DOWN!!! ' + posx + ' ### ' + posy);
+            
             });
         
 		c.on('moving', function() {
+
+                
 	
 				c.line1 && c.line1.set({ 'x2': c.left, 'y2': c.top });
 				c.line2 && c.line2.set({ 'x1': c.left, 'y1': c.top });	
@@ -160,13 +149,16 @@ $(function() {
 								 top: lijn.get('y2'),
 								 fontSize: 20,
 								 backgroundColor : 'green',
-								 fill: 'white'
+								 fill: 'white',
+                                 
 								 });
+        text.setVisible(true);
 		
 
 		var rect = new fabric.Rect({width: 100, height: 20, left: lijn.get('x2')+30, top: lijn.get('y2'), fill: 'red'});
 		var textGroup = new fabric.Group([text], {selectable: false, left: lijn.get('x2')+45, top: lijn.get('y2')});
-		
+		 
+      
 		canvas.add(textGroup);
 		
 		var circle1 = makeCircleAP(left,top,null,lijn,null,null,textGroup,false);
@@ -184,44 +176,32 @@ $(function() {
 	 
 	function makePatientHeightBars() {
 		
-		 var topbar =  new fabric.Line([0,30,canvasWidth,30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
-		 topbarY = topbar.get('top'); 
-		 topbar.on('modified', function() {
-			topbarY = topbar.get('top'); //use top instead of get('y1'), x and y are coords of bounding box.. not of the actual line
+		 topBar =  new fabric.Line([0,30,canvasWidth,30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
+		 //topbarY = topbar.get('top'); 
+		 topBar.on('modified', function() {
+			//topbarY = topbar.get('top'); //use top instead of get('y1'), x and y are coords of bounding box.. not of the actual line
 			calcCPP();
-			log(topbar.get('top'));
-			
-		 
-		});
-		 
-		var bottombar =  new fabric.Line([0,canvasHeight-30,canvasWidth,canvasHeight-30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
-		 bottombarY = bottombar.get('top'); 
-		 bottombar.on('modified', function() {
-			bottombarY = bottombar.get('top');
-			calcCPP();
-			log(bottombarY);
+			//log(topbar.get('top'));
 			
 		});
-		
-		
-		
-		
 		 
-		canvas.add(topbar);
-		canvas.add(bottombar);
-		canvas.renderAll();
+		bottomBar =  new fabric.Line([0,canvasHeight-30,canvasWidth,canvasHeight-30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
+		 //bottombarY = bottombar.get('top'); 
+		 bottomBar.on('modified', function() {
+			//bottombarY = bottombar.get('top');
+			calcCPP();
+			//log(bottombarY);
+			
+		});
 		
+		canvas.add(topBar);
+		canvas.add(bottomBar);
+        canvas.renderAll();
+        
 	}
 	
 	 
-	$('#btnAnalyseAPPA').click(function() {
-			makeYMeasureBar(100,100,300);
-			makeYMeasureBar(100,300,300);
-			makeYMeasureBar(100,450,300);
-			makePatientHeightBars();
-		
 
-	});
     
     canvas.on('object:moving', function (e) {
 		var obj = e.target;
@@ -246,39 +226,70 @@ $(function() {
     //END ANALYSE AP-PA//
     
     
-    $('.img-thumbnail').live('click', function() {
-        //var image = new Image();
-        //image.src = "http://dev.rugcentrumgent.be/wp_dev/alice/userdata/camera_pictures/1_test_posture_58036ccece8c2.jpg";
-        //set zoomImg for us while zooming 
-        zoomImg = new Image();
-        zoomImg.src = this.src;
-        //console.log(this.src);
-        
-        canvas.setBackgroundImage(this.src, canvas.renderAll.bind(canvas), {
-        backgroundImageOpacity: 1,
-        backgroundImageStretch: false,
-        originX: 'left',
-        originY: 'top'
-        //top: 500,
-        //left: 375
+    $('.img-thumbnail').live('click', function() {  
+            renderBackgroundImage(this.src);
             
-        });
-        
-        //fabric.Image.fromURL(this.src, function(myImg) {
-        //    var img1 = myImg.set({ left: 375, top: 500 ,width:canvasWidth,height:canvasHeight});
-         //   canvas.add(img1); 
-        //});
-        
-        
-       // context = document.getElementById("imgLayer").getContext("2d");
-        //context.drawImage(this, 0,0,canvasHeight,this.width * (canvasHeight/this.height));
-        //context.drawImage(this, 0,0,canvasWidth,this.height * (canvasWidth/this.width));
-        //ctx.drawImage(img, 300, 0, 300, img.height * (300/img.width));
-        //console.log('loading the image');
+   
         $( "#canvas-box" ).toggle();
         $( "#thumbnails" ).toggle();
     });
 
+
+//button actions
+    //top toolbar
+    $('#btnAnalyse').click(function() {
+       $(this).toggleClass('active'); 
+       $('.toolbar.analyse').toggle();
+        
+    });
+
+     $('#btnDraw').click(function() {
+       $(this).toggleClass('active'); 
+       $('.toolbar.draw').toggle();
+        
+    });
+
+    $('#btnRotatePlus90').click(function() {
+        log (canvas.getWidth());
+        rotateObject(bgImage,bgImageCurAngle + 1.5708,bgImage.width/2,bgImage.height/2);
+        bgImageCurAngle += 1.5708;  
+        //canvas.setWidth(canvasHeight);
+        //canvas.setHeight(canvasWidth);
+        //canvasHeight = canvas.getWidth();
+        //canvasWidth = canvas.getHeight();
+        
+        canvas.renderAll();
+    });
+
+    $('#btnRotateMin90').click(function() {
+        rotateObject(bgImage,-1.5708,bgImage.width/2,bgImage.height/2);
+        canvas.renderAll();
+    });
+
+    $('#btnRotate180').click(function() {
+        rotateObject(bgImage,3.14159,bgImage.width/2,bgImage.height/2);
+        canvas.renderAll();
+    });
+
+    //analyse toolbar
+    $('#btnAnalyseAP').click(function() {
+			makeYMeasureBar(100,300,300);
+	});
+
+    
+
+    $('#btnHeightBars').click(function() {
+        if(topBar == 0 ){makePatientHeightBars();}
+        $(this).toggleClass('active'); 
+       
+	    if ($(this).hasClass('active')){bottomBar.setVisible(true);topBar.setVisible(true);}
+        else{bottomBar.setVisible(false);topBar.setVisible(false);groupTextLabels.setVisible(false);}
+        canvas.renderAll();
+	});
+
+    //draw toolbar
+
+//end button actions
     $('#select-image').click(function() {
         $( "#canvas-box" ).toggle();
         $( "#thumbnails" ).toggle();
@@ -293,22 +304,12 @@ $(function() {
         $( "#portfolio" ).toggle();
     });
     
+
+
     
-    $('#saveToPatientPortfolio').click(function(){
-        //merge the layers
-       var printLayer = $('#tempLayer')[0];
-       var printLayerCtx=printLayer.getContext('2d');
-        
-       var img = $('#imgLayer')[0];
-       var drawing = $('#drawingLayer')[0];
-       //set printlayer BG to white
-       printLayerCtx.fillStyle = "white";
-       printLayerCtx.fillRect(0,0,canvasWidth,canvasHeight);
-       
-       printLayerCtx.drawImage(img,0,0);
-       printLayerCtx.drawImage(drawing,0,0);
-       
-       var dataURL = $('#tempLayer').get(0).toDataURL("image/jpeg"); //have to get the canvas element from the jquery object
+    $('#btnSaveToPatientPortfolio').click(function(){ 
+       var dataURL = $('#c').get(0).toDataURL('image/jpeg');//have to get the canvas element from the jquery object
+       log(dataURL);
         console.log(patientName);
         $.ajax({
   			type: "post",
@@ -320,40 +321,26 @@ $(function() {
                     patientName: patientName,
                     patientDOB: patientDOB}
 			}).success(function( response ) {
-                    //add the image to the portfolio
+                    //add the image to the portfolio 
                 	getPortfolioPictures();
                     console.log('image_added');
 					var n = noty({text: 'Saved to Patient Portfolio',type: 'success',layout:'topRight'});  				
 			});
         });
     
-    $('#print').click(function() {
-    	//var clinic_logo = $("#clinic_logo").val();
-    	//var header = $("#clinic_letter_heading").val() + "<br><br>";
-       //var header = $("#clinic").val() + "<br><br>";
-       
-       //merge imgLayer and drawingLayer to printLayer so we can print it.
-       
-       var printLayer = $('#tempLayer')[0];
-       var printLayerCtx=printLayer.getContext('2d');
-        
-       var img = $('#imgLayer')[0];
-       var drawing = $('#drawingLayer')[0];
-       printLayerCtx.drawImage(img,0,0);
-       printLayerCtx.drawImage(drawing,0,0);
-       //create an Image element because printThis will not print the Canvas element
+    $('#btnPrint').click(function() {	
        var tempImage = new Image();
            tempImage.id = "tempImage";
            tempImage.height=500;
            //tempImage.width =1100;
-           tempImage.src = printLayer.toDataURL();
+           tempImage.src = canvas.toDataURL();
         $('#board').append(tempImage);
         //print
         var header = $('#clinicHeader').val() + "<H3>Clinician: " + clinician+ "</H3>" + "<H3>Patient: " +patientName+" ("+patientDOB+")</H3>";
     	$('#tempImage').printThis({header: header});
         //delete the tempImage
         tempImage.remove();
-        clearTempLayer();
+       
 	
     });
     
@@ -440,6 +427,54 @@ $(function() {
 	        });
        
      }
+
+     function renderBackgroundImage(source){
+    
+           fabric.Image.fromURL(source, function (img) {
+                
+                imgWidth = img.width;
+  				imgHeight = img.height;
+                aspectRatio = imgHeight/imgWidth;
+                canvasWidth = maxWidth;
+                
+                canvasHeight = maxWidth * aspectRatio;
+                var scaleFactor = canvasWidth / imgWidth;
+       
+                    img.set({
+                        width: imgWidth, 
+                        height: imgHeight, 
+                        originX: 'left', 
+                        originY: 'top',
+                        scaleX: scaleFactor,
+                        scaleY: scaleFactor,
+                        
+                    });
+                    canvas.setWidth(canvasWidth);
+                    canvas.setHeight(canvasHeight);
+                    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+                    bgImage = img;
+                });
+}
+
+ function rotateObject(fabObj, angleRadian, pivotX, pivotY) {
+    ty = pivotY - fabObj.height / 2.0;
+    tx = pivotX - fabObj.width / 2.0;
+    if (angleRadian >= Math.PI * 2) {
+        angleRadian -= Math.PI * 2;
+    }
+    angle2 = Math.atan2(ty, tx);
+    angle3 = (2 * angle2 + angleRadian - Math.PI) / 2.0;
+    pdist_sq = tx * tx + ty * ty;
+    disp = Math.sqrt(2 * pdist_sq * (1 - Math.cos(angleRadian)));
+    fabObj.set({transformMatrix:[
+        Math.cos(angleRadian),
+        Math.sin(angleRadian),
+       -Math.sin(angleRadian),
+        Math.cos(angleRadian),
+        disp * Math.cos(angle3),
+        disp * Math.sin(angle3)
+    ]});
+    }
      
     
     
