@@ -139,6 +139,11 @@ $(document).ready(function() {
   $(document).on('click','#btn_goto_file',function(){
     $('#eventDetails').modal('hide');    
   });
+
+  $(document).on('click','.btn_viewInvoices',function(){
+    var invoiceWindow = window.open('index.php?com=invoice&view=list&patient_id=' + objEvent.patientID,objEvent.patientID) ;
+    $('#eventDetails').modal('hide');    
+  });
   
   $(document).on('click','#eventDetails .addPayment',function(){
     //get the Clinic to get the clinic name
@@ -182,10 +187,13 @@ $(document).ready(function() {
                  fee : $('#paymentModal .fee').val(),
                  date :  moment(objEvent.start)
                 });
-          window.location.href = 'index.php?com=invoice&view=edit_invoice&task=create_new_invoice&patient_id=' + objEvent.patientID ;
+    var new_window = window.open('index.php?com=invoice&view=edit_invoice&task=create_new_invoice&patient_id=' + objEvent.patientID,objEvent.patientID) ;
   });
   
 });
+
+
+
 
 
 
@@ -237,6 +245,7 @@ function loadEventDetails() {
 
 			body +='<a id="btn_goto_file" type="button" target="'+ objEvent.patientID +'"  href = "index.php?com=patient&view=patient&patient_id=' +objEvent.patientID  + '" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Goto File</a>';
       body +='<button type="button" class="btn btn-success addPayment"><i class="fa fa-eur" aria-hidden="true"></i>&nbsp;Add Payment</button>';
+      body +='<button type="button" class="btn btn-success btn_viewInvoices"><i class="fa fa-eur" aria-hidden="true"></i>&nbsp;View Invoices</button>';
       body += '</div></p>';
 			
 			body += '</div>'; //end appBox

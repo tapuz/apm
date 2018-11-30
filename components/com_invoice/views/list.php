@@ -6,6 +6,12 @@
  **/ 
 
 ?>
+
+<script>
+
+var pageTitle = '<?=$pageTitle?>';
+
+</script>
 <div class="col-sm-12 col-md-9"><!-- Start Left content -->
 	
 	<!-- start: patient_name -->

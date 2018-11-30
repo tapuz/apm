@@ -62,6 +62,9 @@ switch (getView())
 	case 'pictureproof':
 		loadJS('fabric.min.js');
 		loadJS('pictureproofV2.js','pictureproof');
+		?>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+		<?
 		global $current_user;
       	get_currentuserinfo();
 		$username = $current_user->user_firstname . ' ' . $current_user->user_lastname;

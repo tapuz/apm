@@ -1,5 +1,6 @@
 $(function() {
 	
+	document.title = pageTitle;
 	
 	$('.date-picker').datepicker();
 	

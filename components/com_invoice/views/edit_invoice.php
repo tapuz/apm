@@ -7,6 +7,12 @@
 
 ?>
 
+<script>
+
+var pageTitle = '<?=$pageTitle?>';
+
+</script>
+
 <input type="hidden" id="invoice_id" value="<?=$invoice->invoice_id?>">
 <input type="hidden" id="invoice_heading" value="<?=$invoice_heading->clinic_invoice_heading;?>">
 <div class="col-sm-12 col-md-9" id="invoice"><!-- Start Left content -->
@@ -143,10 +149,10 @@
 
 
 <div class="row visible-print">
-	<img src=<?=$signature?>>
+	<?=$signature?>
 </div>
 <div class="row visible-print">
-   <?=$user->user_lastname.' '.$user->user_firstname;?>
+   <?=$practitioner_name;?>
    		
 </div>
 

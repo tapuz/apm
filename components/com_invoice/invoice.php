@@ -78,6 +78,7 @@ switch (getView())
 		$patient = Patient::getPatient($patient_id);
 		//set the backLink
 		$backLink = "index.php?com=patient&view=patient&patient_id=" . $patient_id;
+		$pageTitle = "Invoices for " . $patient->patient_surname.' '.$patient->patient_firstname;
 		include('views/list.php');
 
 	break;
@@ -107,15 +108,21 @@ switch (getView())
 		
 		$invoice_heading = Invoice::getInvoiceHeading($patient->clinic);
 		
-		//get the practitioner name for the invoice
+		//get the practitioner name and signature for the invoice
 		
 		$user=get_userdata($patient->practitioner);
 		
-		//get the signature
-		$signature = "img/signatures/signature_thierry.png";
+		$practitioner = get_userdata($patient->practitioner);
+		$practitioner_name = $practitioner->user_lastname . ' ' . $practitioner->user_firstname;
+		
+		
+		$signature_url = $config['signature_path'] . get_user_meta($practitioner->ID,'signature',true) ;
+		$signature = sprintf('<img src="%s">',$signature_url); 
 		
 		//set the backLink
 		$backLink = "index.php?com=invoice&view=list&patient_id=" . $patient->patient_id;
+		
+		$pageTitle = "Invoice for " . $patient->patient_surname.' '.$patient->patient_firstname;
 		
 		include('views/edit_invoice.php');
 		

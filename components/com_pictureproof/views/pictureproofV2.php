@@ -68,16 +68,16 @@
                         <div class="spacer5"></div>
                          <div class='row with-margin-left toolbar draw'>
                             <div class="btn-toolbar">
-                                <button class="btn btn-success" id="select-image">Draw</button>
+                                <button class="btn btn-success" id="bnt">DrawOption</button>
                                 
                             </div>
                         </div>
                         <div class="spacer5"></div>
                         <div class='row with-margin-left toolbar analyse'>
                             <div class="form-inline">
-                                <button class="btn btn-warning" id="btnAnalyseAP">AP</button>
-                                <button class="btn btn-warning" id="btnAnalyseLat">Lateral</button>
-                                <button class="btn btn-warning" id="btnHeightBars">Height Bars</button>
+                                <button class="btn btn-warning" id="btnAnalyseX">X analyse</button>
+                                <button class="btn btn-warning" id="btnAnalyseY">Y analyse</button>
+                                
 
                                 <div class="form-group">
                                     

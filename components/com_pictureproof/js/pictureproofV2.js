@@ -10,15 +10,29 @@ $(function() {
 	var topbarY = 0;
 	var bottombarY = 0;
     var heightBarsPresent = false;
-    var lockHeightbars = false;
+    
+    var groupPaths;
 
-	var patientHeight = 180;
+	var patientHeight;
 	var cpp;  //centimeters Per Pixel
 	var deltaLimit = 5; //absolute value difference greater than this will become red
-    
-    
+
     var zoomImg;
 
+    var socket = io("https://192.168.0.2:3000");
+
+     // Active
+    window.addEventListener('focus', setActivePatient);
+
+    function setActivePatient(){
+        
+            // use your socket
+            socket.on("welcome", (message) => {
+                console.log(message);
+            })
+    }
+    // Inactive
+    //window.addEventListener('blur', stopTimer);
     
     //minify the main menu
 	$('#main-menu-min').click ();
@@ -29,9 +43,12 @@ $(function() {
     // get the portfolio pictures
     getPortfolioPictures();
     
-    var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :null, selection: false,allowTouchScrolling: true});
+    var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false,allowTouchScrolling: true});
     canvas.setDimensions({width:canvasWidth, height:canvasHeight});
     
+    groupPaths = new fabric.Group();
+    
+
     canvas.on('path:created', function(e){
         var newPath = e.path;
         groupPaths.add(newPath);
@@ -52,6 +69,7 @@ $(function() {
 
     //START ANALYSE AP-PA//
      function calcCPP() {
+        patientHeight = $('#patientHeight').val();
 		cpp = patientHeight/(bottomBar.get('top')-topBar.get('top'));
 		log('cpp = ' + cpp);
 	 }
@@ -123,6 +141,72 @@ $(function() {
         return c;
 
      }
+
+     function makeCircleLAT(left, top, line1, line2, line3, line4,deltaText,hasDeltaText) {
+		
+        var c = new fabric.Circle({
+        left: left,
+        top: top,
+        strokeWidth: 5,
+        radius: 12,
+        fill: 'rgba(0,0,0,0)',
+        stroke: '#666'
+        });
+        
+        c.hasControls = c.hasBorders = false;
+        c.line1 = line1;
+        c.line2 = line2;
+        c.line3 = line3;
+        c.line4 = line4;
+		c.deltaText = deltaText;
+		c.hasDeltaText = hasDeltaText;
+		
+        c.on('mousedown', function () {
+            var pointer = canvas.getPointer(event.e);
+            var posx = pointer.x;
+            var posy = pointer.y;
+            
+            });
+        
+		c.on('moving', function() {
+
+                
+	
+				c.line1 && c.line1.set({ 'x2': c.left, 'y2': c.top });
+				c.line2 && c.line2.set({ 'x1': c.left, 'y1': c.top });	
+				c.line3 && c.line3.set({ 'x1': c.left, 'y1': c.top });
+				c.line4 && c.line4.set({ 'x1': c.left, 'y1': c.top });
+				
+				var delta;
+	
+				
+					if (c.hasDeltaText === true) {
+						c.deltaText.set({ 'left': c.left + 45, 'top': c.top });
+						delta = c.line1.get('x1') - c.line1.get('x2');
+					} else {
+						delta = c.line2.get('x1') - c.line2.get('x2');	
+						
+					}
+				var text = c.deltaText._objects[0];
+				//calculate cm delta from pixels
+				calcCPP();
+				delta = cpp * delta;
+				delta = delta.toFixed(2);
+				
+				text.setText(delta.toString());
+				if (Math.abs(delta) > deltaLimit) {
+					text.textBackgroundColor = "red";
+				} else {
+					text.textBackgroundColor = "green";
+				}
+				
+			
+			});
+		
+		
+        return c;
+
+     }
 	 
 	 
 	 
@@ -172,7 +256,46 @@ $(function() {
 		canvas.renderAll();
 		
 		
-	 }
+     }
+
+     function makeXMeasureBar(left,top,length) {
+		
+		
+		var lijn = makeLine([ left, top, left, top+length ],'green',2,false);
+		
+		var text = new fabric.Text((0).toString(),
+								{selectable: false,
+								 left: lijn.get('x2')+30, 
+								 top: lijn.get('y2'),
+								 fontSize: 20,
+								 backgroundColor : 'green',
+								 fill: 'white',
+                                 
+								 });
+        text.setVisible(true);
+		
+
+		var rect = new fabric.Rect({width: 100, height: 20, left: lijn.get('x2')+30, top: lijn.get('y2'), fill: 'red'});
+		var textGroup = new fabric.Group([text], {selectable: false, left: lijn.get('x2')+45, top: lijn.get('y2')});
+		 
+      
+		canvas.add(textGroup);
+		
+		var circle1 = makeCircleLAT(left,top,null,lijn,null,null,textGroup,false);
+		var circle2 = makeCircleLAT(left,top+length,lijn,null,null,null,textGroup,true);
+		
+		canvas.add(lijn);
+		canvas.add(circle1);
+		canvas.add(circle2);
+		
+	
+		canvas.renderAll();
+		
+		
+     }
+     
+     
+
 	 
 	function makePatientHeightBars() {
 		
@@ -185,7 +308,7 @@ $(function() {
 			
 		});
 		 
-		bottomBar =  new fabric.Line([0,canvasHeight-30,canvasWidth,canvasHeight-30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
+		 bottomBar =  new fabric.Line([0,canvasHeight-30,canvasWidth,canvasHeight-30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
 		 //bottombarY = bottombar.get('top'); 
 		 bottomBar.on('modified', function() {
 			//bottombarY = bottombar.get('top');
@@ -193,10 +316,13 @@ $(function() {
 			//log(bottombarY);
 			
 		});
-		
+        
+        
+
 		canvas.add(topBar);
 		canvas.add(bottomBar);
         canvas.renderAll();
+        heightBarsPresent = true;
         
 	}
 	
@@ -240,12 +366,27 @@ $(function() {
     $('#btnAnalyse').click(function() {
        $(this).toggleClass('active'); 
        $('.toolbar.analyse').toggle();
-        
+       if(!heightBarsPresent){makePatientHeightBars();};
+       if ($(this).hasClass('active')){bottomBar.setVisible(true);topBar.setVisible(true);log('visible')}
+       else{bottomBar.setVisible(false);topBar.setVisible(false);}
+
+       if($(this).hasClass('active') && $('#btnDraw').hasClass('active')){$('#btnDraw').click();}
+       
+
+       canvas.renderAll();
+       
     });
 
      $('#btnDraw').click(function() {
        $(this).toggleClass('active'); 
        $('.toolbar.draw').toggle();
+       //start drawing
+       if($(this).hasClass('active') && $('#btnAnalyse').hasClass('active')){$('#btnAnalyse').click();}
+       //if($(this).hasClass('active')){canvas.isDrawingMode = true;}else{canvas.isDrawingMode = false;}
+       canvas.isDrawingMode = !canvas.isDrawingMode;
+
+       
+
         
     });
 
@@ -272,20 +413,19 @@ $(function() {
     });
 
     //analyse toolbar
-    $('#btnAnalyseAP').click(function() {
-			makeYMeasureBar(100,300,300);
-	});
+    $('#btnAnalyseY').click(function() {
+		makeYMeasureBar((canvasWidth/2)-150,200,400);
+    });
+
+    $('#btnAnalyseX').click(function() {
+        makeXMeasureBar(canvasWidth/2,200,300);
+    });
+    
+    
 
     
 
-    $('#btnHeightBars').click(function() {
-        if(topBar == 0 ){makePatientHeightBars();}
-        $(this).toggleClass('active'); 
-       
-	    if ($(this).hasClass('active')){bottomBar.setVisible(true);topBar.setVisible(true);}
-        else{bottomBar.setVisible(false);topBar.setVisible(false);groupTextLabels.setVisible(false);}
-        canvas.renderAll();
-	});
+
 
     //draw toolbar
 
