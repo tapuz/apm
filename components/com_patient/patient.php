@@ -46,7 +46,8 @@ switch(getView()){
 		$practitioner_id = get_current_user_id();
 		$userID = get_current_user_id();
 		
-	
+		//set active patient
+		Patient::setActivePatient($patientID);
 		
 		//$letterCount = letterCount();//used in de patient_menu module
 		
@@ -178,6 +179,11 @@ switch(getTask()){
 
 		
 	break;
+
+	case 'set_active_patient':
+		Patient::setActivePatient(getVar('patient'));
+	break;
+
 
 		
 

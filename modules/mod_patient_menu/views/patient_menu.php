@@ -25,7 +25,6 @@
 				
 					
 					
-					<!--<button onclick="sendPatientToSalesbinder();" type="button" class="btn btn-primary">Create SB Account</button> -->
 					<p></p>
 					
 					

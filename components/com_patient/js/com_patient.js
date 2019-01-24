@@ -18,6 +18,26 @@ $(document).ready(function(){
 	
 	document.title = patientName;
 	
+	//set the Active patient
+	window.addEventListener('focus', setActivePatient);
+
+    function setActivePatient(){
+        $.ajax({
+            url: "ajax.php",
+            type: 'post',
+            data: {
+              com: 'patient',
+              task: 'set_active_patient',
+              patient: patientID
+            },
+            success: function(data) {
+              //
+            }
+           });
+          }
+
+
+
 	//minify the main menu
 	$('#main-menu-min').click ();
 	

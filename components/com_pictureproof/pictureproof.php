@@ -76,7 +76,11 @@ switch (getView())
 		$clinic = Clinic::getClinic($patient->clinic);
 		$clinicHeader = $clinic->clinic_educate_heading;
 		
+		//set active patient
+		Patient::setActivePatient($patientID);
 		
+		//set the backLink
+		$backLink = "index.php?com=patient&view=patient&patient_id=" . $patient->patient_id;
 		
 		include('views/pictureproofV2.php');
 	break;

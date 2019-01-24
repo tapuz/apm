@@ -34,6 +34,13 @@ loadLib('image');
 
 //switch ($_POST('task')){
 switch (getVar('task')){
+	case 'getActivePatient':
+		loadLib('patient');
+		//get the user ID, we get the Email provided
+		$user = get_user_by( 'email', getVar('userEmail') );
+		echo json_encode(Patient::getActivePatient($user->ID));
+
+	break;
 	
     case 'getClinicsFromGroup':
 		
@@ -83,17 +90,17 @@ switch (getVar('task')){
 		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 		$check = getimagesize($_FILES["photo"]["tmp_name"]);
 		if($check !== false) {
-			echo "File is an image - " . $check["mime"] . ".";
+			error_log( "File is an image - " . $check["mime"] . ".");
 			$uploadOk = 1;
 			if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file)) {
-				echo "The file ". basename( $_FILES["photo"]["name"]). " has been uploaded.";
+				error_log( "The file ". basename( $_FILES["photo"]["name"]). " has been uploaded.");
 				//link image with patient in DB
 			    Image::insertImage($patientID,$filename,'camera');
 			} else {
-				echo "Sorry, there was an error uploading your file.";
+				error_log( "Sorry, there was an error uploading your file.");
 			}
 		} else {
-			echo "File is not an image.";
+			error_log( "File is not an image.");
 			$uploadOk = 0;
 		}
 	break;

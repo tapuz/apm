@@ -6,7 +6,10 @@
 </script>
 
 <input type="hidden" id="clinicHeader" value="<?=$clinicHeader?>">
-
+<!-- start: patient_name -->
+<?loadModule('patient_name');?>
+	
+<!-- /patient_name-->
 
 <div id="thumbnails" class="row">
     <div class="col-lg-12">

@@ -19,20 +19,30 @@ $(function() {
 
     var zoomImg;
 
-    var socket = io("https://192.168.0.2:3000");
+    //var socket = io("https://192.168.0.2:3000");
 
      // Active
+
+
+
     window.addEventListener('focus', setActivePatient);
 
     function setActivePatient(){
-        
-            // use your socket
-            socket.on("welcome", (message) => {
-                console.log(message);
-            })
-    }
-    // Inactive
-    //window.addEventListener('blur', stopTimer);
+        $.ajax({
+            url: "ajax.php",
+            type: 'post',
+            data: {
+              com: 'patient',
+              task: 'set_active_patient',
+              patient: patientID
+            },
+            success: function(data) {
+              //
+            }
+           });
+          }
+                    
+    
     
     //minify the main menu
 	$('#main-menu-min').click ();

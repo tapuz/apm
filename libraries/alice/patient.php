@@ -1,6 +1,21 @@
 <?php
 class Patient 
 {
+
+	public static function setActivePatient($patientID)
+	{
+		update_user_meta( get_current_user_id(), 'activePatient', $patientID );
+	}
+
+	public static function getActivePatient($user)
+	{
+		//get the activePatientID
+		$activePatientID = get_user_meta( $user, 'activePatient',true);
+		//get the patient
+		return self::getPatient($activePatientID);
+		
+
+	}
 	
 	public function addNewPatient($oPatient,$group){
 		
