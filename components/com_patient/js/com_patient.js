@@ -20,6 +20,7 @@ $(document).ready(function(){
 	
 	//set the Active patient
 	window.addEventListener('focus', setActivePatient);
+	setActivePatient();
 
     function setActivePatient(){
         $.ajax({
