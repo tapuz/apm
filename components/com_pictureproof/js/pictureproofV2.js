@@ -19,6 +19,9 @@ $(function() {
 
     var zoomImg;
 
+    var selectImageMode = false;
+    var selectedImages = [];
+
     //var socket = io("https://192.168.0.2:3000");
 
      // Active
@@ -44,7 +47,10 @@ $(function() {
           }
                     
     
-    
+    //hide some buttons
+    $('.btnDeleteImages').hide();
+
+
     //minify the main menu
 	$('#main-menu-min').click ();
     //hide the toolbars
@@ -361,14 +367,27 @@ $(function() {
     
     
     //END ANALYSE AP-PA//
-    
-    
-    $('.img-thumbnail').live('click', function() {  
+    $(document).on('click','.img-thumbnail',function(e) {            
+        if (!selectImageMode){
             renderBackgroundImage(this.src);
-            
-   
-        $( "#canvas-box" ).toggle();
-        $( "#thumbnails" ).toggle();
+            $( "#canvas-box" ).toggle();
+            $( "#thumbnails" ).toggle();
+        } else {
+            $(this).toggleClass('imageSelected');
+            if($(this).hasClass('imageSelected')){
+                selectedImages.push (e.target.id);
+                log(selectedImages);
+            } else {
+                
+                selectedImages = selectedImages.filter(function(item){
+                    return item !== e.target.id;
+                });
+                log(selectedImages);
+            }
+
+            //check if delete button has to be activated
+            if (selectedImages.length > 0) {$('.btnDeleteImages').prop('disabled',false)}else{$('.btnDeleteImages').prop('disabled',true)};
+        }
     });
 
 
@@ -454,7 +473,52 @@ $(function() {
         $( "#images" ).toggle();
         $( "#portfolio" ).toggle();
     });
+
+
+    $('.btnSelectImages').click(function() {
+        if(!selectImageMode){ //start selecting images
+            selectImageMode = true;
+           $(this).html('cancel');
+           $('.btnDeleteImages').show();
+
+        } else { //cancel selecting
+            cancelSelectingImages();
+
+        }
+
+    });
+
+    function cancelSelectingImages(){
+        selectImageMode = false;
+        $('.btnSelectImages').html('select');
+        $('.img-thumbnail').removeClass('imageSelected');
+        selectedImages = [];
+        $('.btnDeleteImages').prop('disabled',true)
+        $('.btnDeleteImages').hide();
+        log (selectedImages);
+
+    }
     
+    $('.btnDeleteImages').click(function() {
+        $.ajax({
+            url: "ajax.php",
+            type: 'post',
+            data: {
+              com: 'pictureproof',
+              task: 'deleteImages',
+              images: JSON.stringify(selectedImages)
+            },
+            success: function(data) {
+              getCameraPictures();
+              cancelSelectingImages();
+            }
+           });
+        
+
+
+
+    });
+
 
 
     
@@ -542,7 +606,7 @@ $(function() {
     }
     
      function getCameraPictures() {
-        console.log(patientID);
+       
         $.ajax({type: "post", url: "ajax.php", dataType: "json",
           data: { com: 'pictureproof',task: 'getCameraPictures', patientID : patientID}
             }).success(function( cameraPictures ) {

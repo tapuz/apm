@@ -16,14 +16,26 @@
         <div id="images" class="box">
             
 				<div class="box-header">
-					<h2><i class="icon-picture"></i><span class="break"></span>Camera pictures</h2>
+					<h2>
+                    <span><i class="icon-picture"></i><span class="break"></span>Camera pictures</span>
+                    
+                    </h2>
+                    <button class="btn btn-primary" id="btn_refresh_camera_pictures"><i class="fa fa-refresh"></i></button>
+
+
+                   
 					<div class="box-icon">
-						<a href="#refresh" class="" id="btn_refresh_camera_pictures"><i class="fa fa-refresh"></i></a>
+                        
+                        
 						<button class="btn btn-primary toggleImagesPortfolio">Portfolio</button>
 					</div>
 				</div>
 			
 				<div class="box-content">
+                <div class ="row"></div>
+                    
+                    <button class="btn btn-primary btnSelectImages">Select</button>
+                    <button class="btn btn-danger btnDeleteImages" disabled><i class="fas fa-trash-alt"></i></button>
                 <div class="row" id="cameraPictures">
                   <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                   <span class="sr-only">Loading...</span> 

@@ -48,6 +48,10 @@ switch (getVar('task')){
 		
 	break;
 	
+	case 'deleteImages':
+		error_log(getVar('images'));
+		Image::deleteImages(json_decode(stripslashes(getVar('images'))));
+	break;
 
 	
 }

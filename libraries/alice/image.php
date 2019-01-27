@@ -19,13 +19,30 @@ class Image {
 	
 	}
     
-    public function getImages($patient_id,$tag) {
+    public static function getImages($patient_id,$tag) {
         global $wpdb;
         $query=sprintf('SELECT * from table_images WHERE (patient_id = "%s" AND tag = "%s" )',$patient_id,$tag);
 		$images=$wpdb->get_results($query);
 		return  $images;
         
-    }
+	}
+	
+	public static function deleteImages($images) {
+		global $wpdb;
+		//$ids = implode("','", $images);
+		error_log(print_r($images,TRUE));
+		
+		foreach ($images as $image) {
+			$filename =  $wpdb->get_var( "SELECT filename from table_images where image_id =".$image );
+			$wpdb->delete('table_images',array('image_id' => $image));
+			unlink(ROOT . "/userdata/camera_pictures/" . $filename ) or die ("Could not delete file");
+
+			
+		}
+
+
+	}
+	
 
 }
 
