@@ -1,0 +1,155 @@
+<script id="tmpl_encounter_flow" type="x-tmpl-mustache">
+  <div class="box">
+    <div class="box-header">
+      <h2><i class="fa fa-stethoscope" aria-hidden="true" style="border-right: none;"></i></h2>
+      <ul class="nav nav-tabs" style="float:left">
+        <li id="tab_encounters" class="active"><a data-toggle="tab" href="#pane_encounters">Encounters</a></li>
+        <li id="tab_new_encounter"><a data-toggle="tab" href="#pane_new_encounter">New encounter</a></li>
+
+
+      </ul>
+      <div id="btn_new_encounter" class="box-icon pull-right">
+        <i class="fa fa-plus blue" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="box-content">
+      <div id="my2tabs" class="tab-content">
+        <div class="tab-pane active" id="pane_encounters">
+          <div id="timeline" class="timeline">
+
+
+          </div>
+          <!--/timeline-->
+        </div>
+        <!--/tab-pane #encounters-->
+
+
+
+        <div class="tab-pane" id="pane_new_encounter">
+
+          <div class="row">
+            <div class="col-sm-3 pull-right">
+              <span class="pull-right">
+								<span id="label_encounter_saved" class="label label-success">Saved &nbsp&nbsp&nbsp;</span>
+              <span id="label_encounter_saving" class="label label-success">Saving... &nbsp;</span>
+              <span id="label_encounter_saving_error" class="label label-danger">Not Saved!</span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+
+            <div class="col-sm-2">
+              <button type="button" class="btn btn-primary btn_close_encounter btn-block">Close</button>
+            </div>
+          </div>
+          <br>
+
+          <div class="panel panel-primary">
+            <div class="panel-heading">SOAP note</div>
+            <div class="panel-body">
+
+
+              <form id="editSOAP" role="form">
+
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group ">
+                      <input id="SOAP_ID" name="id" type="hidden">
+                      <label class="" for="subjective">Subjective</label>
+                      <textarea class="form-control" rows="5" id="subjective" name="subjective"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group ">
+                      <label class="" for="objective">Objective</label>
+                      <textarea class="form-control" rows="5" id="objective" name="objective"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group ">
+                      <label class="" for="assessment">Assessment</label>
+                      <textarea class="form-control" rows="5" id="assessment" name="assessment"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group ">
+                      <label class="" for="plan">Plan</label>
+                      <textarea class="form-control" rows="5" id="plan" name="plan"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          
+
+          
+
+
+
+          
+          <div class="row">
+
+            <div class="col-sm-2">
+              <button type="button" class="btn btn-primary btn_close_encounter btn-block">Close</button>
+            </div>
+          </div>
+
+        </div>
+        <!--/tab-pane #new encounter-->
+      </div>
+      <!--/tab-content-->
+    </div>
+    <!--/box-content-->
+  </div>
+  <!--/box-->
+</script>
+
+<script id='tmpl_encounter' type="x-tmpl-mustache">
+  <div class="timeslot alt" style="height: 130px;">
+
+
+    <!--<span class="label label-warning pull-right">New &nbsp;</span>-->
+    <div encounterID="{{encounterID}}" class="encounter">
+      <span>
+			
+			<span class="details"><span class="username text-right">{{username}}</span></span>
+										
+      <span class="details">
+											S: {{subjective}}
+										</span>
+      <span class="details">
+											O: {{objective}}
+										</span>
+      <span class="details">
+											A: {{assessment}}
+										</span>
+      <span class="details">
+											P: {{plan}}
+											<span class="remaining">
+												note: {{note}}
+											</span>
+      </span>
+
+      </span>
+      <div class="arrow"></div>
+    </div>
+    <div class="icon">
+      <i class="fa fa-stethoscope" aria-hidden="true"></i>
+    </div>
+    <div class="time">
+      {{date}}
+    </div>
+    <div class="complaint">
+
+      {{{diagnoses}}}
+
+    </div>
+
+  </div>
+</script>

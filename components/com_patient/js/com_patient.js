@@ -12,6 +12,8 @@ $(document).ready(function(){
 	var oPatient;
 	//hide the page and set the loading
 	var notys = []; //array that contains all the notyfications
+
+	var editingSOAP = false ;
 	
 	
 	//set the page title = patientName
@@ -32,7 +34,7 @@ $(document).ready(function(){
               patient: patientID
             },
             success: function(data) {
-              //
+              
             }
            });
           }
@@ -60,8 +62,11 @@ $(document).ready(function(){
 			
 			$('.left-content').show();
 			
-			renderTopPanel();
+			renderDemographicsPanel();
+			renderHistoryPanel();
 			renderEncounters();
+			renderInitComplaintTabs(false);
+			renderComplaints(true);
 			
 			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
 			oPrevEncounter = encounters[1];
@@ -123,28 +128,32 @@ $(document).ready(function(){
 	
 	
 	
-	$('.encounter').live("click", function(){
+	$(document).on('click','.encounter', function(){
+		
+		if (editingSOAP){return}
+
+		editingSOAP = !editingSOAP;
 		
 		resetEncounter();
 		var encounterID = $(this).attr('encounterID');
 		oEncounter = encounters.find(x => x.id === encounterID);
-		
+		$('#Encounter_title').html('Encounter: ' +  moment(this.start).format('LLLL'));
 		$('#SOAP_ID').val(oEncounter.soap_id);
 		$('#subjective').val(oEncounter.subjective);
 		$('#objective').val(oEncounter.objective);
 		$('#assessment').val(oEncounter.assessment);
 		$('#plan').val(oEncounter.plan);
 		
-		$('#tab_new_encounter').toggle();
-		$('.nav-tabs a[href="#pane_new_encounter"]').tab('show');
+		$('#encounter').show();
 		$('#btn_new_encounter').hide();
+		$(this).toggleClass("selected");
 		
 		
 		
-		renderHistory();
+		
 		//load the complaints
-		initComplaint();
-		renderComplaints();
+		renderInitComplaintTabs(true);
+		renderComplaints(false);
 		renderFlagnotifications();
 		//load the history
 
@@ -155,14 +164,14 @@ $(document).ready(function(){
 	$(document).on('click','#btn_new_encounter', function () {
 		//toggle new encounter tab and create new encounter
 		resetEncounter();
-		renderHistory();
+	
 		renderFlagnotifications();
-		$('#tab_new_encounter').toggle();
-		$('.nav-tabs a[href="#pane_new_encounter"]').tab('show');
+		$('#encounter').show();
 		$(this).hide();
+		$('#Encounter_title').html('New Encounter');
 		
 		
-		initComplaint();
+		renderInitComplaintTabs(true);
 		//load the history
 		
 		
@@ -207,8 +216,7 @@ $(document).ready(function(){
 	
 		//reset the encounter so there is no old data from another encounter
 	function resetEncounter(){
-		$('#general_history').html('');
-		$('#paediatric_history').html('');
+	
 		$('#editSOAP').trigger("reset");
 	}
 	
@@ -257,8 +265,7 @@ $(document).ready(function(){
             
 			
 			DiagnosisForm = form.serialize();
-			log('hier is m');
-			log(DiagnosisForm);
+			//log(DiagnosisForm);
 			Diagnosis.add(DiagnosisForm,function(data){
 				fSaveSuccess = data.success;
 				//fSOAPSaved = data.success;
@@ -288,28 +295,17 @@ $(document).ready(function(){
 	
 	
 	 $(document).on('click','.btn_close_encounter',function(){
-		//fAllSaved = 1;
-		//$.when(saveSOAP(),saveComplaint()).done(function(){
-			//log('second step');
-			//if (fAllSaved === 0) {// there was a problem saving
-			//	log('error saving');
-			//} else {// all was saved well..close encounter
+		editingSOAP = false;
+		
 				Noty.closeAll();
-				$('#tab_new_encounter').hide();
-				$('.nav-tabs a[href="#pane_encounters"]').tab('show');
+			
 				$('#btn_new_encounter').show();
 				renderMain();
 				
 				
 				
-				//$('#pane_new_complaint').removeClass('active');
-				//$('#complaints-panel').hide();
-				//$('#tab_new_complaint').hide();
-				//$('.nav-tabs a[href="#pane_new_complaint"]').tab('hide');
-				
-				
-			//}
-		//});
+	
+
 		
 	 });
 	 
@@ -447,7 +443,7 @@ $(document).ready(function(){
 		
 	}
 
-	function renderComplaints(){
+	function renderComplaints(disabled){ //disabled is a flag (true/false) to be set to false when the user is in an encounter and true when no encounter is active, this to prevent edits in complaints when not in an encounter.
 		//filter the duplicate complaints..complaints with more than 1 diagnosis
 		diagnoses.reverse();
 		// Array to keep track of duplicates
@@ -461,6 +457,10 @@ $(document).ready(function(){
 			return false;
 		});
 		
+		// if disabled = true the encounter_id in the template block should be empty or NULL 
+		var encounter_id;
+		if (disabled){ encounter_id = null} else {encounter_id = oEncounter.id};
+
 		$.each(filteredDiagnoses,function(){
 		    
 			var pane_id = 'complaint_' + this.complaint;
@@ -468,8 +468,9 @@ $(document).ready(function(){
 							//render the complaint
 							var rendered = Mustache.render(template_complaint,
 								{complaint_id : this.complaint,
+								 disabled : disabled,
 								 patient_id: this.patient,
-								 encounter_id : oEncounter.id,
+								 encounter_id : encounter_id,
 								 //active : 'active',
 								 pane_id : pane_id,
 								 cc: this.cc,
@@ -533,8 +534,9 @@ $(document).ready(function(){
 	}
 	
 	
-	function initComplaint(){
-		var rendered = Mustache.render(template_complaint_init);
+	function renderInitComplaintTabs(enabled){ //enabled is boolean flag to control whether the ADD COMPLAINT tab is visible.. should only be visble when in an active encounter
+		var rendered = Mustache.render(template_complaint_init,
+										{enabled:enabled});
 		$('#complaints-panel .panel-body').html(rendered);
 		
 		$('.add_complaint').click(function (e) {
@@ -612,10 +614,10 @@ $(document).ready(function(){
 	}
 	
 	
-	function renderTopPanel(){
+	function renderDemographicsPanel(){
 		
-		var template_top_panel = $('#tpml_top_panel').html();
-		Mustache.parse(template_top_panel);
+		var template_demographics_panel = $('#tpml_demographics_panel').html();
+		Mustache.parse(template_demographics_panel);
 		
 		var dob = moment(oPatient.dob,'YYYY-MM-DD').format('L');
 		var age = moment().diff(oPatient.dob, 'years',false); //false gives a non fraction value
@@ -635,11 +637,11 @@ $(document).ready(function(){
 					redflags : JSON.parse(oHistory.pmh),
 					yellowflags: JSON.parse(oHistory.pmh)
 					};
-		var top_panel = Mustache.render(template_top_panel,data);
+		var demographics_panel = Mustache.render(template_demographics_panel,data);
 		
 		
 		
-		$('#info').html(top_panel);
+		$('#demographics').html(demographics_panel);
 
 	}
 	
@@ -690,15 +692,20 @@ $(document).ready(function(){
 		Mustache.parse(template);
 		$('#timeline').html('');    
 		var encounterID;
+		var complaintID;
 		var Dx;
+		//var complaint = null;
 		$.each(encounters, function() {
 			Dx = '';
+
 			encounterID = this.id;
 			encounterDate = this.start;
 		$.each(diagnoses,function(){
 			if (encounterID == this.encounter) { //we have a match...
+				complaintID = this.complaint;
 				if(moment(encounterDate).isSame(this.open, 'day')){
-					Dx = Dx +  '<span><span class="diagnosis">CC: ' + this.cc + '<br>Dx: ' + this.diagnosis + '</span></span>';
+					
+					Dx = Dx +  '<span><span class="diagnosis" complaint="'+ this.complaint + '">CC: ' + this.cc + '<br>Dx: ' + this.diagnosis + '</span></span>';
 				}else {
 					Dx = Dx +  '<span><span class="diagnosis">CC: ' + this.cc + '<br>Dx: ' + this.diagnosis + ' (' + moment(this.open).format('L') +')</span></span>';
 				}
@@ -715,7 +722,8 @@ $(document).ready(function(){
 			 plan: this.plan,
 			 date: moment(this.start).format('L'),
 			 note:this.note,
-			 diagnoses:Dx
+			 diagnoses:Dx,
+			 complaintID:complaintID
 			 });
 		$('#timeline').append(rendered);
 		});
@@ -727,7 +735,7 @@ $(document).ready(function(){
 		
     }
 	
-	function renderHistory(){
+	function renderHistoryPanel(){
 		var data,render;
 		//get the templates
 		var template_general_history = $('#tmpl_general_history').html();
@@ -914,8 +922,18 @@ $(document).ready(function(){
 		//oPrevEncounter.
 		
 		});
+
+	$(document).on('click','.list-encounters .complaint',function(){
+			//open complaints tab en activate the right complaint
+			var complaintID = $(this).data('complaint-id');
+			$('.nav-tabs a[href="#complaints"]').tab('show');
+			$('.nav-tabs a[href="#complaint_' + complaintID +'"]').tab('show');
+
+			
+	});
 	
 });
+
 
 
 

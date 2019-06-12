@@ -136,7 +136,7 @@
 <!--/col /left content -->
 <div class="col-md-3 visible-md visible-lg" id="feed"><!-- Start Right content -->
 <?
-loadModule('activity_feed')?>
+//loadModule('activity_feed')?>
 </div>
 <!--/col /Right Content-->
 </div>

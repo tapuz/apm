@@ -19,14 +19,15 @@
 	<!-- /breadcrumb-->
 	<div class="row">
 	
-	
+
 	<div class="col-xs-12 top_panel">
 		<div class="box">
 						<div class="box-header">
-							<h2><i class="icon-user"></i><span class="break"></span><strong><?= $patient->patient_surname.' '.$patient->patient_firstname?></strong></h2>
+							<h2><i class="icon-user"></i><strong><?= $patient->patient_surname.' '.$patient->patient_firstname?></strong></h2>
 							<ul class="nav tab-menu nav-tabs" id="myTab">
-								<li class="active"><a href="#info">Info</a></li>
-								<li><a href="#details">Details</a></li>
+								<li class="active"><a href="#demographics">Demographics</a></li>
+								<li><a href="#History">History</a></li>
+								<li><a href="#complaints">Complaints</a></li>
 								<li><a href="#notes_tab">Notes</a></li>
 							</ul>
 							
@@ -34,17 +35,36 @@
 						<div class="box-content">
 							
 							<div id="myTabContent" class="tab-content">
-								<div class="tab-pane active" id="info">
-									
-									
-								</div>
-								<div class="tab-pane" id="details">
-									<div class="row">
-										<div class="col-xs-2"><img width="100%" src="assets/img/face-placeholder.jpg"></div>
-										<div class="col-xs-4">
-										
-										</div>
+								<div class="tab-pane active" id="demographics"></div>
+								<div class="tab-pane" id="History">
+									<div id="history-panel" class="panel panel-success history">
+            				<div class="panel-heading">History</div>
+            				<div class='panel-body'>
+              				<ul class="nav nav-tabs" id="history_tabs">
+                				<li class="active"><a href="#general_history" data-toggle="tab">General</a></li>
+                				<li><a href="#paediatric_history" data-toggle="tab">Peadiatric</a></li>
+              				</ul>
+
+              		<div class='tab-content'>
+                	<div class='tab-pane active' id='general_history'>
+                  	adult
+                	</div>
+                	<div class='tab-pane' id='paediatric_history'>
+                  	child
 									</div>
+									
+              </div>
+						</div>	
+					</div>
+					</div>
+								<div class="tab-pane" id="complaints">
+									<div id="complaints-panel" class="panel panel-success">
+            				<div class="panel-heading">Complaints</div>
+            				<div class='panel-body'>
+											Create a new encounter first to add a complaint.
+								  </div>
+          			</div>
+          			<!-- /panel -->
 								</div>
 								<div class="tab-pane" id="notes_tab">
 									<div class="row">
@@ -74,129 +94,7 @@
 
 <div class='row'>
 	<div class="col-md-12 visible-md visible-lg list-encounters"><!--Start encounter flow -->
-	<div class="box">
-						<div class="box-header">
-							<h2><i class="fa fa-stethoscope" aria-hidden="true" style="border-right: none;"></i></h2>
-							<ul class="nav nav-tabs" style="float:left">
-								<li id="tab_encounters" class="active"><a data-toggle="tab" href="#pane_encounters">Encounters</a></li>
-								<li id="tab_new_encounter" ><a data-toggle="tab" href="#pane_new_encounter">New encounter</a></li>
-								
-								
-							</ul>
-							<div id="btn_new_encounter" class="box-icon pull-right">
-								<i class="fa fa-plus blue" aria-hidden="true"></i>
-							</div>
-						</div>
-						
-						<div class="box-content">
-						<div id="my2tabs" class="tab-content">
-						<div class="tab-pane active" id="pane_encounters">		
-						<div id="timeline" class="timeline">
-						
-							
-						</div><!--/timeline-->
-						</div><!--/tab-pane #encounters-->
-						
-						
-						
-						<div class="tab-pane" id="pane_new_encounter">
-							
-							<div class="row">
-								<div class="col-sm-3 pull-right">
-								<span class="pull-right">
-								<span id="label_encounter_saved" class="label label-success">Saved &nbsp&nbsp&nbsp;</span>
-								<span id="label_encounter_saving" class="label label-success">Saving... &nbsp;</span>
-								<span id="label_encounter_saving_error" class="label label-danger">Not Saved!</span>
-								</span>
-								</div>
-						    </div>
-							<div class="row">
-								
-								<div class="col-sm-2">
-								<button type="button" class="btn btn-primary btn_close_encounter btn-block">Close</button>
-								</div>
-							</div>
-							<br>
-						
-							<div id="history-panel" class="panel panel-success history">
-								<div class="panel-heading">History</div>
-								<div class='panel-body'>
-									<ul class="nav nav-tabs" id="history_tabs">
-										<li class="active"><a href="#general_history" data-toggle="tab">General</a></li>
-										<li><a href="#paediatric_history" data-toggle="tab">Peadiatric</a></li>
-									</ul>
-									
-									<div class='tab-content'>
-										<div class='tab-pane active' id='general_history'>
-											adult
-										</div>
-										<div class='tab-pane' id='paediatric_history'>
-											child
-										</div>
-									</div>
-								</div>
-							</div><!-- /panel -->
-							
-							<div id="complaints-panel" class="panel panel-success">
-								<div class="panel-heading">Complaints</div>
-								<div class='panel-body'>
-									
-								</div>
-							</div><!-- /panel -->
-							
-							
-							
-							<div class="panel panel-primary">
-								<div class="panel-heading">SOAP note</div>
-								<div class="panel-body">
-							
-							
-							<form id="editSOAP" role="form">
-			
-							
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group ">
-										<input id="SOAP_ID" name="id" type="hidden">
-										<label class="" for="subjective">Subjective</label>
-										<textarea class="form-control" rows="5" id="subjective" name="subjective"></textarea>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="form-group ">
-										<label class="" for="objective">Objective</label>
-										<textarea class="form-control" rows="5" id="objective" name="objective"></textarea>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group ">
-										<label class="" for="assessment">Assessment</label>
-										<textarea class="form-control" rows="5" id="assessment" name="assessment"></textarea>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="form-group ">
-										<label class="" for="plan">Plan</label>
-										<textarea class="form-control" rows="5" id="plan" name="plan"></textarea>
-									</div>
-								</div>
-							</div>
-							</form>
-							</div>
-							</div>
-							<div class="row">
-								
-								<div class="col-sm-2">
-								<button type="button" class="btn btn-primary btn_close_encounter btn-block">Close</button>
-								</div>
-							</div>
-							
-						</div><!--/tab-pane #new encounter-->
-					 </div><!--/tab-content-->	
-					 </div><!--/box-content-->
-					 </div><!--/box-->
+	 Click on de + button to add a new encounter.
 					
 	</div><!--/history flow -->
 </div><!--/row-->
@@ -312,7 +210,7 @@
 									<div class="col-sm-12">
 								
 									<ul id="complaints_tabs" class="nav nav-tabs">
-										<li class="add_complaint"><a  href="#add">+ Add Complaint</a></li>	
+										{{#enabled}}<li class="add_complaint"><a  href="#add">+ Add Complaint</a></li>{{/enabled}}	
 									</ul>
 
 									<div id="complaints_panes" class="tab-content">
@@ -328,7 +226,7 @@
 
 
 
-<?include(TEMPLATES . 'top_panel.html'); ?>
+<?include(TEMPLATES . 'demographics_panel.html'); ?>
 <?include(TEMPLATES . 'encounter_flow.html'); ?>
 <?include(TEMPLATES . 'complaint.html'); ?>
 <?include(TEMPLATES . 'general_history.html'); ?>

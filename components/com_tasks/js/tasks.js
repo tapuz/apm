@@ -50,7 +50,8 @@ $( document ).ready(function() {
 		    url: "ajax.php",
   			data: { com: 'tasks',task: 'archive_task',task_id : task_id}
 			}).success(function( response ) {
-                    var n = noty({text: 'Task archived',type: 'success',layout:'topCenter'});
+                    var n = new Noty({text: 'Task archived',theme:'sunset',type: 'success',layout:'topCenter',timeout:2000});
+                    n.show();
 					$('#' + task_id).remove();
                     getTaskDropdown();
 		  	});

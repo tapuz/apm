@@ -108,10 +108,10 @@ switch (getVar('task')){
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		
 		echo json_encode($appointment);
-		//send confirmation email only of not a custom appoitment
+		//send confirmation email only if not a custom appoitment
 		
 		error_log(json_encode($appointment));
-		if ($terry){
+		//if ($terry){
 			$clinic = Clinic::getClinic($appointment->clinic);
 			
 			//add clinic name to $appointment object
@@ -143,7 +143,7 @@ switch (getVar('task')){
 			$email->ics = ICS::render($appointment);
 			
 			$email->send();
-		}	
+		//}	
 		
 		
 		

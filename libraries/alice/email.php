@@ -31,7 +31,7 @@ class Email {
         $mail->Port = 465;
         $mail->isHTML(true);    
         $mail->setFrom($this->from_email, $this->from_name);
-        $mail->addAddress($this->to, 'Thierry');
+        $mail->addAddress($this->to);
         $mail->Subject = $this->subject;
         $mail->Body = $this->message;
         $mail->addStringAttachment($this->ics, 'mijnafspraak.ics');

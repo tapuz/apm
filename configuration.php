@@ -2,10 +2,10 @@
 $config = array();
 
 // only change these values 
-$config['wp_root']					=   'https://dev.rugcentrumgent.be/wp_dev/';	
-$config['root']						= 	'https://dev.rugcentrumgent.be/wp_dev/alice/';
+$config['wp_root']					=   'https://192.168.0.2/alice/';	
+$config['root']						= 	'https://192.168.0.2/alice/app/';
 $config['path_wp-config']           =   '../wp-config.php';                                 
-$config['redirect_to']              =   'wp-login.php?redirect_to=alice/index.php';           //the page to redirect to after login
+$config['redirect_to']              =   'wp-login.php?redirect_to=app/index.php';           //the page to redirect to after login
 
 $config['debug_mode']               = 	true;
 

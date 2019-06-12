@@ -243,7 +243,7 @@ function loadEventDetails() {
       
       body += '<p><div class="btn-group">';
 
-			body +='<a id="btn_goto_file" type="button" target="'+ objEvent.patientID +'"  href = "index.php?com=patient&view=patient&patient_id=' +objEvent.patientID  + '" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Goto File</a>';
+			body +='<a id="btn_goto_file" type="button" target="'+ objEvent.patientID +'"  href = "index.php?com=patient&view=patient&patient_id=' +objEvent.patientID  + '" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Open File</a>';
       body +='<button type="button" class="btn btn-success addPayment"><i class="fa fa-eur" aria-hidden="true"></i>&nbsp;Add Payment</button>';
       body +='<button type="button" class="btn btn-success btn_viewInvoices"><i class="fa fa-eur" aria-hidden="true"></i>&nbsp;View Invoices</button>';
       body += '</div></p>';
