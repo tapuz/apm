@@ -15,15 +15,13 @@ var pageTitle = '<?=$pageTitle?>';
 
 <input type="hidden" id="invoice_id" value="<?=$invoice->invoice_id?>">
 <input type="hidden" id="invoice_heading" value="<?=$invoice_heading->clinic_invoice_heading;?>">
+<div class="col-md-1"></div>
 <div class="col-sm-12 col-md-9" id="invoice"><!-- Start Left content -->
 	
-	<!-- start: patient_name -->
-	<?loadModule('patient_name');?>
-	<!-- /patient_name-->
 	
 <div class="row">
 	
-<!--	<a class="btn btn-primary pull-right" a href="index.php?com=invoice&view=list&patient_id=<?=$patient->patient_id?>">Back</a>
+<!--	<a class="btn btn-primary pull-right" a href="index.php?com=invoice&view=list&patient_id=<?=$patient->patient_id?>">Close</a>
 -->
 	
 	
@@ -34,7 +32,7 @@ var pageTitle = '<?=$pageTitle?>';
 <div class="row">
   <div class="box" id="">
   <div class="box-header hidden-print">
-				<h2><i class="icon-edit"></i>Invoice</h2>
+				<h2><i class="icon-edit"></i>Invoice for: <?php echo $patientName?></h2>
 			</div>
   <div class="box-content">
  		
@@ -61,7 +59,11 @@ var pageTitle = '<?=$pageTitle?>';
 		</div>
   		
   		<div class="col-sm-2 pull-right">
+		  <div class="row">
 			<button onclick="printInvoice();" type="button" class="btn btn-primary">Print</button>
+			<button  type="button" class="btn btn-primary close_window">Close</button>
+		  </div>
+		 
 		</div>	
   	
   	
@@ -159,10 +161,14 @@ var pageTitle = '<?=$pageTitle?>';
 
 </div><!--/col /left content -->
 
-<div class="col-md-3 visible-md visible-lg" id="feed"><!-- Start Right content -->
+
+<div class="col-md-2"></div>
+<!-- <div class="col-md-3 visible-md visible-lg" id="feed">
+ Start Right content 
 		<?//loadModule('patient_menu');?>
 	
-</div><!--/col /Right Content-->
+	
+</div> /col /Right Content -->
 	
 </div><!--/row-->
 

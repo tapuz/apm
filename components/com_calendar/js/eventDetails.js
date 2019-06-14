@@ -74,6 +74,7 @@ $(document).ready(function() {
     renderServicesLookup(objEvent.clinic);	
 		$('#selectService').val(objEvent.serviceId);
     $('#clinicSelectEditApp').val(objEvent.clinic);
+    $('#note').val(objEvent.note);
 		$('.patient-select #patient-search').blur();
     $('#editEvent').appendTo("body").modal('show');
     $('#eventDetails').modal('hide');
@@ -99,6 +100,14 @@ $(document).ready(function() {
       //calendar.fullCalendar('removeEvents', objEvent.id);
 
     });
+
+  });
+
+
+  $(document).on('click','#eventDetails .delete',function(){
+    Appointment.delete(objEvent.id,calendar.fullCalendar('removeEvents',objEvent.id));
+    $('#eventDetails').modal('hide');
+
 
   });
 
@@ -187,7 +196,7 @@ $(document).ready(function() {
                  fee : $('#paymentModal .fee').val(),
                  date :  moment(objEvent.start)
                 });
-    var new_window = window.open('index.php?com=invoice&view=edit_invoice&task=create_new_invoice&patient_id=' + objEvent.patientID,objEvent.patientID) ;
+    var new_window = window.open('index.php?com=invoice&layout=component&view=edit_invoice&task=create_new_invoice&patient_id=' + objEvent.patientID,objEvent.patientID) ;
   });
   
 });
@@ -224,16 +233,17 @@ function loadEventDetails() {
 			body +='<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</button>';
 			body +='<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbsp;Reschedule</button>';
       body +='<button type="button" class="btn btn-primary booknext"><i class="fa fa-refresh"></i>&nbsp;Book Next</button>';
-			body +='<button type="button" class="btn btn-danger toggleCancelBox"><i class="fa fa-trash-o"></i>&nbsp;Cancel</button>';
-			body +='</div></p>';
+			body +='<button type="button" class="btn btn-danger toggleCancelBox"><i class="fas fa-slash"></i>&nbsp;Cancel</button>';  
+      body +='<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>';
+      body +='</div></p>';
 	
 			
 			body += '<div class="cancelBox input-group" style="display:none">';
-			body += '<input type="text" placeholder="Reason for cancellation" class="form-control reasonForCancel"><span class="input-group-btn"><button type="button" class="btn btn-danger cancelAppointment"><i class="fa fa-trash-o"></i>&nbsp;Cancel</button></span>';
+			body += '<input type="text" placeholder="Reason for cancellation" class="form-control reasonForCancel"><span class="input-group-btn"><button type="button" class="btn btn-danger cancelAppointment"><i class="fas fa-slash"></i>&nbsp;Cancel</button></span>';
 			body += '</div>';
 			
 			body += '<div class="appCancelledBox" style="display:none">';
-			body +='<h1 class="text-danger">Appointment was cancelled</h1></div>';
+			body +='<h2 class="text-danger">Appointment was cancelled</h2></div>';
 			
 			
 			body += '<div class="btn-group appStatusActions" data-toggle="buttons">';
@@ -253,14 +263,18 @@ function loadEventDetails() {
 			$('#eventDetails .modal-title').html(title);
 			$('#eventDetails .modal-body').html(body);
 		
-			$('#eventDetails').appendTo("body").modal('show');
+      $('#eventDetails').appendTo("body").modal('show');
+      
 			//set the status toggle
 			
 			if (objEvent.status == 1) {$(".set_status.arrived").button("toggle");}
 			if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
 			if (objEvent.status == 6) {
-				$(".appCancelledBox").show();
-				$(".appActions").hide();
+        $(".appCancelledBox").show();
+        $(".appActions .editapp").hide();
+        $(".appActions .reschedule").hide();
+        $(".appActions .toggleCancelBox").hide();
+				//$(".appActions").hide();
 				$(".appStatusActions").hide();
 				}
 }

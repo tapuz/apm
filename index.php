@@ -17,13 +17,15 @@ if ($config['debug_mode'] === true)
         ini_set('error_log', 'error.log');
 	}
 
-//include the mail lib
+//include the main lib
 include('libraries/alice/alice.php');
 
 //check if user is logged in
 if ( !is_user_logged_in() ) 
     login($config['redirect_to']); // alice lib
 
+
+	
 ?>
 
 <!DOCTYPE html>

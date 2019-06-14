@@ -280,18 +280,18 @@ switch (getView())
 
 	case 'copy':
 	    
-	    //lets copy all of User 1-> thierry
-		
-		
+		$user = getVar('user');
 		global $wpdb;
-		$query = "SELECT * from table_treatments WHERE practitioner = 1 and scheduled_date >= DATE_SUB(NOW(),INTERVAL 1 YEAR);";
+
+		$query = sprintf("SELECT *  FROM table_treatments WHERE practitioner = %s AND scheduled_date BETWEEN '2019-06-01' AND '2025-01-01'",$user);
+
 		$treatments = $wpdb->get_results($query);
 		
 		foreach($treatments as $treatment){
 			
 			
 			
-			$sql = "INSERT INTO table_appointments (user,start,end,patient_id,service,clinic) VALUES (%d,%s,%s,%d,%d,%d)";
+			$sql = "INSERT INTO table_appointments (user,start,end,patient_id,service,clinic,note) VALUES (%d,%s,%s,%d,%d,%d,%s)";
 			$user = 1;
 			$start = $treatment->scheduled_date . ' ' . $treatment->scheduled_time;
 			$end = date('Y-m-d H:i:s',strtotime('+15 minutes',strtotime($start)));
@@ -300,10 +300,13 @@ switch (getView())
 			if ($treatment->type == 2) {$service = 3;}
 			
 			$clinic = 1;
+
+			$note = $treatment->comment;
 			
-			$sql = $wpdb->prepare($sql,$user,$start,$end,$patient_id,$service,$clinic);
-			//var_dump($sql); // debug
-			$wpdb->query($sql);
+			$sql = $wpdb->prepare($sql,$user,$start,$end,$patient_id,$service,$clinic,$note);
+			var_dump($sql); // debug
+			echo '<BR>';
+			//$wpdb->query($sql);
 		}
 		
 		

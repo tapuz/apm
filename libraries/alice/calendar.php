@@ -101,7 +101,8 @@ class Calendar {
 					'status' => $app->status,
 					'service' => $app->service,
 					'clinic' => $app->clinic,
-					'customAppointment' => 0
+					'customAppointment' => 0,
+					'note' => $app->note
 					) 
 	 			);
 	 			
@@ -173,7 +174,8 @@ class Calendar {
 					'patient_id' => $appointment->patientID,
 					'status' => $appointment->status,
 					'service' => $appointment->service,
-					'clinic' => $appointment->clinic
+					'clinic' => $appointment->clinic,
+					'note' => $appointment->note
 					),
 				array( 'appointment_id' => $appointment->id)
 	 			);

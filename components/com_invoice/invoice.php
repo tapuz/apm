@@ -91,6 +91,8 @@ switch (getView())
         	
 		$appointments = Patient::getAppointments($patient_id);
 		$patient = Patient::getPatient($patient_id);
+		$patientName =  $patient->patient_surname.' '.$patient->patient_firstname;
+		$pageTitle = "Invoice for " . $patientName;
 		
 		if (getVar('invoice_id') != NULL) //a call was made from the list view
 		{
@@ -119,10 +121,8 @@ switch (getView())
 		$signature_url = $config['signature_path'] . get_user_meta($practitioner->ID,'signature',true) ;
 		$signature = sprintf('<img src="%s">',$signature_url); 
 		
-		//set the backLink
-		$backLink = "index.php?com=invoice&view=list&patient_id=" . $patient->patient_id;
+	
 		
-		$pageTitle = "Invoice for " . $patient->patient_surname.' '.$patient->patient_firstname;
 		
 		include('views/edit_invoice.php');
 		

@@ -168,16 +168,34 @@
 							</div>
 						</div>	
 					</div>
+
+					<div class="row">&nbsp</div>
 					<div class="row">
-						<div class="col-sm-3">
+						<div class="col-sm-2">
+							<label class="patient-name">Note</label>
+						</div>
+						<div class="col-sm-5">
+							<div class="row">
+								<input type="text" class="form-control" id="note" pattern="^[a-zA-Z '.-]+$" placeholder="">	
+								
+							</div>
+						</div>	
+					</div>
+
+					<div class="row">&nbsp;</div>
+					<div class="row">
+						<div class="col-sm-2">
 						 <button type="submit" class="btn btn-primary editAppSubmit">Save</button>
-        				 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						 </div>
+						</div>	
+						<div class="col-sm-2">
+        		 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+						<div class="col-sm-8"></div>
 					</div>
 				</form>
-                </div>
+      </div>
 				
-            </div>
+      </div>
 
 			<div class="tab-pane" id="busyTime">
 				<form id="editBusyTime" role="form" data-toggle="validator">

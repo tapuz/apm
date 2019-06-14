@@ -366,12 +366,12 @@ $(document).ready(function() {
 			firstDay: 1,
       defaultView: 'agendaWeek',
       hiddenDays: [0],
-      slotDuration: '00:10:00',
-      snapDuration: '00:05:00',
-      slotLabelInterval: '00:15:00',
+      slotDuration: '00:05:00',
+      snapDuration: '00:10:00',
+      slotLabelInterval: '00:10:00',
       slotEventOverlap: 'false',
       weekNumbers: true,
-      minTime: '07:00:00',
+      minTime: '08:00:00',
       maxTime: '22:30:00',
       slotLabelFormat: 'HH:mm',
       columnFormat: 'ddd D/M',
@@ -821,10 +821,18 @@ $(document).ready(function() {
               insurance = '<span class="event_insurance">[' + event.insurance + ']<span>';
             }
             
+            if (event.note === null || event.note === undefined || event.customAppointment == 1){
+              note = '';
+            }else{
+              note = '<span class="note">'+ event.note+'</span>';
+            }
+           
+            
             icons = '<i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
             icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
 
-            $(".fc-content", element).append(insurance);
+            $(".fc-title", element).append(insurance);
+            $(".fc-content", element).append(note);
             $(".fc-content", element).append(icons);
 
             if (event.status == 1) {

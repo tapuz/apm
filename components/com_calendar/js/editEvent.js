@@ -47,11 +47,12 @@ var patientLinkedClinic = null;
     switch (appModalMode) {
     case 'newAppointment':
        eventStatus = 0;
-       var duration = $('#selectService :selected').attr('duration');
+           var duration = $('#selectService :selected').attr('duration');
            var start = moment(eventStart).format();
            var end = eventStart.clone().add(duration, 'minutes').format();
            var service = $('#selectService').val();
            var clinic = $('#clinicSelectEditApp').val();
+           var note = $('#note').val();
         if (fNewPatient === true) {
             var aFullName = $('#patient-search').val().trim().replace(/ +(?= )/g, '').split(" ");
             var sFirstname = aFullName.pop();
@@ -65,7 +66,7 @@ var patientLinkedClinic = null;
                         practitioner: userID,
                         clinic: clinic
                       },function(newPatientID){
-                          Appointment.add({start:start,end:end,patientID:newPatientID,userID:userID,service:service,status:eventStatus,clinic:clinic},function (appointment){ 
+                          Appointment.add({start:start,end:end,patientID:newPatientID,userID:userID,service:service,status:eventStatus,clinic:clinic,note:note},function (appointment){ 
                             calendar.fullCalendar('renderEvent', appointment);
                             calendar.fullCalendar('unselect');
                             closeEditAppModal();
@@ -77,7 +78,7 @@ var patientLinkedClinic = null;
                       });
         } else {
           
-          Appointment.add({start:start,end:end,patientID:patientID,userID:userID,service:service,status:eventStatus,clinic:clinic},function (appointment){
+          Appointment.add({start:start,end:end,patientID:patientID,userID:userID,service:service,status:eventStatus,clinic:clinic,note:note},function (appointment){
             renderRightPanelPatientAppointments();
             eventIDtoHighlight = appointment.id;
             highlightEvent = true;
@@ -100,7 +101,8 @@ var patientLinkedClinic = null;
         objEvent.patientID = patientID;
         objEvent.serviceId = $('#selectService').val();
         //var service = $('#selectService').val();				
-				objEvent.end = objEvent.start.clone().add(duration, 'minutes');
+        objEvent.end = objEvent.start.clone().add(duration, 'minutes');
+        objEvent.note = $('#note').val();
         
         
         if (fNewPatient === true) {
@@ -124,6 +126,7 @@ var patientLinkedClinic = null;
                            status : objEvent.status,
                            user : objEvent.resourceId,
                            service : objEvent.serviceId,
+                           note: objEvent.note,
                            clinic: $('#clinicSelectEditApp').val()},
       
                            function(appointment){
@@ -142,6 +145,7 @@ var patientLinkedClinic = null;
                            status : objEvent.status,
                            user : objEvent.resourceId,
                            service : objEvent.serviceId,
+                           note: objEvent.note,
                            clinic: $('#clinicSelectEditApp').val()
                            },
                            function(appointment){

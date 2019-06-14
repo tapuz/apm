@@ -160,6 +160,11 @@ $(function() {
 	});
 	
 	updateSumInvoice();
+
+
+	$(".close_window").click(function(){
+		window.open('','_self').close();	
+	});
 		
 
 });

@@ -67,6 +67,7 @@ $(document).ready(function(){
 			renderEncounters();
 			renderInitComplaintTabs(false);
 			renderComplaints(true);
+			renderFlagnotifications();
 			
 			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
 			oPrevEncounter = encounters[1];
@@ -154,7 +155,7 @@ $(document).ready(function(){
 		//load the complaints
 		renderInitComplaintTabs(true);
 		renderComplaints(false);
-		renderFlagnotifications();
+		
 		//load the history
 
 		
@@ -165,7 +166,7 @@ $(document).ready(function(){
 		//toggle new encounter tab and create new encounter
 		resetEncounter();
 	
-		renderFlagnotifications();
+		
 		$('#encounter').show();
 		$(this).hide();
 		$('#Encounter_title').html('New Encounter');
@@ -187,7 +188,7 @@ $(document).ready(function(){
 				oEncounter = data;
 				log('Encounter: ');
 				log(oEncounter);
-				renderComplaints();
+				renderComplaints(false);
 				//create New soap note and link to this encounter
 				SOAP.add(
 				   {
@@ -196,8 +197,6 @@ $(document).ready(function(){
 					user:oEncounter.user,
 					created:oEncounter.start
 					},function(SOAP){
-						log('SOAP:');
-						log(SOAP);
 						log('the new SOAP ID : ' + SOAP.id);
 						$('#SOAP_ID').val(SOAP.id);
 						
@@ -656,7 +655,7 @@ $(document).ready(function(){
 					var textR = Mustache.render(redflagtmpl,{redflags : pmh, spacer : function (){ index++; if (index > 1){ return ',';} } });
 					redflags = new Noty({
 						text: '<span class="text-center">'+textR+'</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
-						layout:'topRight',
+						layout:'center',
 						theme:'sunset',
 						type:'error',
 						callbacks: {afterClose: function() {}}
@@ -672,7 +671,7 @@ $(document).ready(function(){
 					var textY = Mustache.render(yellowflagtmpl,{yellowflags : pmh, spacer : function (){ index++; if (index > 1){ return ',';} } });
 					yellowflags = new Noty({
 						text: '<span class="text-center">'+textY+'</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
-						layout:'topRight',
+						layout:'center',
 						theme:'sunset',
 						type:'warning',
 						callbacks: {afterClose: function() {}}
@@ -893,8 +892,12 @@ $(document).ready(function(){
 		
 		var jsonString = JSON.stringify(array);
 		//update the object and save to DB
-		oHistory.pmh = jsonString;
-		History.save(patientID,'pmh',jsonString);
+		
+		History.save(patientID,'pmh',jsonString,function(){
+			oHistory.pmh = jsonString;
+			renderDemographicsPanel();
+		});
+
 		
 	});
 	
