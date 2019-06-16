@@ -8,12 +8,19 @@
 //view calendar
 ?>
 
-<input type="hidden" id="selectedUserID" value="<?=$selectedUserID;?>"
+<input type="hidden" id="selectedUserID" value="<?=$selectedUserID;?>">
 
 <div class="row">
 	
-	
+	    <div id="calSelectToolbar">
+				<div class="col-md-12">
+					<form class="form-inline">
+					</form>
+				</div>
+		
+			</div>
 			
+			<br>
 			<!-- start: calendar -->
 			<div id="calendar" class="col-md-12">
 				

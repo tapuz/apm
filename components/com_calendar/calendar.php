@@ -72,12 +72,19 @@ switch (getVar('task')){
 		// The User Query
 			$user_query = new WP_User_Query( $args );
 			$users = $user_query->results;
-			echo $users = json_encode($user_query->results);
 			
-			error_log('HERE ARE THE USERS!!! :  ' . $users);
-		//foreach($users as $user){
-		 //error_log(print_r(get_user_meta ( $user->working_plan),1));;
-		//}
+			//include meta values in user object by making use of magic PHP __get 
+			//https://codex.wordpress.org/Class_Reference/WP_User_Query#Return_Fields_Parameter
+		foreach($users as $user){
+			$user->{"workingPlan"} = $user->working_plan_2;
+			$user->{"calSlotDuration"} = $user->calSlotDuration;
+			//error_log($user->working_plan_2);
+		 	//error_log(print_r(get_user_meta ($user->ID, 'working_plan_2'),1));;
+		}
+
+		error_log(json_encode($users));
+		echo json_encode($users);
+
 
 		
 		

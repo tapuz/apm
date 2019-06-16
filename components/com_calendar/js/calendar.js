@@ -57,7 +57,7 @@ $(document).ready(function() {
 
 		//store users 
     users = data;
-		
+		log (users);
     // make the practitioner selector 
     selectUser = "<select id='userSelect' name='userSelect' class='form-control' style='width:174px'>";
 		if (Object.keys(data).length > 1){//there is > 1 user.. show all practitioners option
@@ -89,7 +89,10 @@ $(document).ready(function() {
     selectedUser = $('#userSelect').val();
     getEvents(selectedUser);
     getResource(selectedUser);
-    renderWorkingPlan();
+    //log (users[selectedUser].data.workingPlan);
+
+    
+    renderWorkingPlan(users[selectedUser].data.workingPlan);
 
     $('#userSelect').on('change', function() {
       calendar.fullCalendar('removeEventSources');
@@ -100,6 +103,9 @@ $(document).ready(function() {
         calendar.fullCalendar('changeView', 'agendaDay');
         //set mode to 0
         mode = 0;
+        //change the slot duration
+        calendar.fullCalendar('option', 'slotDuration','00:10:00');
+
       } else {
         //remove the resources
         removeResources();
@@ -107,7 +113,13 @@ $(document).ready(function() {
         console.log('refetching events : ' + selectedUser);
         getResource(selectedUser);
         getEvents(selectedUser);
-        renderWorkingPlan();
+       
+        calendar.fullCalendar('option', 'slotDuration',users[selectedUser].data.calSlotDuration);
+        
+        renderWorkingPlan(users[selectedUser].data.workingPlan);
+       
+        
+        
         //set mode to 1
         mode = 1;
         //only show clinics in the clinic select the user is working in
@@ -124,7 +136,7 @@ $(document).ready(function() {
 			clinics = data;
 			
 			//render clinic select for the calendar
-			var selectClinic = "<select id='clinicSelect' name='clinicSelect' class='form-control' style='width:174px'>";
+			var selectClinic = "<select id='clinicSelect' name='clinicSelect' class='form-control' style='width:250px'>";
 			if (clinics.length > 1){
 			selectClinic += "<option value='all'>All Clinics</option>";
 			}
@@ -133,7 +145,8 @@ $(document).ready(function() {
 			});
 			selectClinic += "</select>";
 		
-			$('.fc-toolbar .fc-left').prepend(selectClinic);
+      //$('.fc-toolbar .fc-left').prepend(selectClinic);
+      $('#calSelectToolbar form').prepend(selectClinic);
 			
 			//render clinic select for the editApp modal
 			selectClinic = "<select id='clinicSelectEditApp' name='clinicSelectEditApp' class='form-control' style='width:250px'>";
@@ -159,7 +172,7 @@ $(document).ready(function() {
 			$('#clinicSelect').on('change', function() {
 				selectedClinic = $(this).val();
 				//log (selectedClinic + ' is the clinic');
-      renderWorkingPlan();	
+        renderWorkingPlan(users[selectedUser].data.workingPlan);	
       
 			switch(selectedClinic) {
 				case 'all':
@@ -179,7 +192,8 @@ $(document).ready(function() {
 	}
 	
   function addSelectUser() {
-    $('.fc-toolbar .fc-left').prepend(selectUser);
+    //$('.fc-toolbar .fc-left').prepend(selectUser);
+    $('#calSelectToolbar form').append(selectUser);
   }
 
   function getResources() {
@@ -232,7 +246,7 @@ $(document).ready(function() {
   }
 
 
-  function renderWorkingPlan() {
+  function renderWorkingPlan(workingPlan) {
     calendar.fullCalendar('removeEvents','not_working');
     calendar.fullCalendar('removeEvents','working');
     calendar.fullCalendar('removeEvents','break');
@@ -240,20 +254,13 @@ $(document).ready(function() {
               return evt.thierry == 'yes';
             });
     //calendar.fullCalendar('removeEvents', ev);
-
-
+         
+    workingPlan = JSON.parse(workingPlan);
+    
 
     //calendar.fullCalendar('removeEvents');
-    $.ajax({
-      type: "post",
-      url: "ajax.php",
-      dataType: "json",
-      data: {
-        com: 'calendar',
-        task: 'getWorkingPlan',
-        userID:selectedUser
-      }
-    }).done(function(workingPlan) {
+ 
+    
        $.each(workingPlan,function(){
         if(selectedClinic == 'all'){
           var color = this.color;
@@ -348,7 +355,7 @@ $(document).ready(function() {
           } 
         } 
       }); 
-    });
+    
   }
 
 	
@@ -381,8 +388,9 @@ $(document).ready(function() {
       nowIndicator: 'true',
       displayEventTime: false,
 			lazyFetching: true,
-      eventLongPressDelay:100,
-      selectLongPressDelay:100,
+      eventLongPressDelay:2000,
+      selectLongPressDelay:2000,
+      longPressDelay:2000,
 	  
       //theme:'false',
       //allDayDefault: false,
