@@ -1,5 +1,6 @@
 <?php 
-//Component Calendar
+//APM Component Calendar
+
 
 define('COMPONENT','calendar');
 define('TEMPLATES', ROOT . '/components/com_' . COMPONENT . '/templates/');

@@ -18,7 +18,7 @@
 var searchVisible = 0;
 var transparent = true;
 
-var apiURL = 'https://dev.rugcentrumgent.be/wp_dev/alice/api.php';
+var apiURL = 'http://192.168.0.2/alice/app/api.php';
 var objPatient;
 
 var mode; //newPatient or recurrentPatient

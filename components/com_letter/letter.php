@@ -164,7 +164,7 @@ switch (getVar('view')) {
 		//get the category templates
 		$query = sprintf('SELECT * from table_letter_templates WHERE category_id = %s',$letter->category_id); 
 		$templates = $wpdb->get_results($query);
-		$clinics = Clinic::getClinics();
+		$clinics = Clinic::getClinics(get_current_user_id());
 		//$clinic = getClinic($patient->clinic);
 		
 		$backLink = "index.php?com=letter&view=list&patient_id=" . $patient_id; 
