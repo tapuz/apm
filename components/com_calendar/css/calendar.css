@@ -2,6 +2,12 @@
     padding-right: 0px;
 }
 
+.ui-autocomplete-loading {
+    background: white url("../../../assets/img/loading_2.gif") right center no-repeat;
+  }
+
+
+
 #rightPanel{
     margin-top:-9px;    
     margin-left: 0px;

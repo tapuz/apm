@@ -40,7 +40,7 @@ $(document).ready(function() {
         $('#rightPanel .default').show();
         return;
       } //input string is empty
-        
+        var q = ($(this).val());
         
         $.ajax({
         url: "ajax.php",
@@ -61,6 +61,13 @@ $(document).ready(function() {
           });
 
         $('#rightPanel .search_results').html(rendered);
+
+        
+            var pattern=new RegExp("("+q+")", "gi");
+            var new_text= $('#rightPanel .search_results').html().replace(pattern, "<b>"+q+"</b>");
+            
+            $('#rightPanel .search_results').html(new_text);
+        
 		}
 
       });

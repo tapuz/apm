@@ -70,11 +70,12 @@ class Patient
 		error_log('THE TABLE DOES EXIST !!!');	
 		}
 		
-		//concat(patient_surname, ' ', patient_firstname) LIKE '%s'
+		//WHERE CONCAT( nameFirst,  ' ', nameLast ) LIKE  '%Joe%'  
+		//patient_surname LIKE '%s'
 		$query=sprintf("SELECT *, concat(patient_surname, ' ', patient_firstname) as fullname FROM temp_table_patients
 															WHERE (
-																   patient_surname LIKE '%s'
-																  
+																concat(patient_surname, ' ', patient_firstname) LIKE '%s'
+																   
 																  ) ORDER by patient_id DESC"
 																  ,'%'.$q.'%'
 																  );

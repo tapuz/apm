@@ -244,7 +244,13 @@ var patientLinkedClinic = null;
     close: function() {
       $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
-  });
+  }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+            let txt = String(item.value).replace(new RegExp(this.term, "gi"),"<b>$&</b>");
+            return $("<li></li>")
+                .data("ui-autocomplete-item", item)
+                .append("<a>" + txt + "</a>")
+                .appendTo(ul);
+        };
   // add this option so the search results are properly appended to the input box  
   $("#patient-search").autocomplete("option", "appendTo", ".patient-select");
   
