@@ -295,7 +295,7 @@ switch (getView())
 
 		$treatments = $wpdb->get_results($query);
 
-		var delta;
+		$delta=0;
 		if($user == 1){delta='+15 minutes'}else {delta='+10 minutes'};
 		
 		foreach($treatments as $treatment){
@@ -305,7 +305,7 @@ switch (getView())
 			$sql = "INSERT INTO table_appointments (user,start,end,patient_id,service,clinic,note) VALUES (%d,%s,%s,%d,%d,%d,%s)";
 			$user = 1;
 			$start = $treatment->scheduled_date . ' ' . $treatment->scheduled_time;
-			$end = date('Y-m-d H:i:s',strtotime(delta,strtotime($start)));
+			$end = date('Y-m-d H:i:s',strtotime($delta,strtotime($start)));
 			$patient_id = $treatment->patient_id;
 			if ($treatment->type == 1) {$service = 2;}
 			if ($treatment->type == 2) {$service = 3;}
