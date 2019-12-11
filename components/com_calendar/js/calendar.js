@@ -9,7 +9,10 @@ var highlightEvent = false;
 var eventIDtoHighlight;
 var datepicker;
 
+
+
 $(document).ready(function() {
+  
 	
 	document.title = 'Calendar';
   //set some vars
@@ -34,16 +37,28 @@ $(document).ready(function() {
   //minify the main menu
   $('#main-menu-toggle').click();
   //hide the side panel
-  $('#rightPanel').toggle();
+  
+  //$('#rightPanel').toggle();
 
 	//append the modals to the body to avoid Z-index problems
 	$('#editPatient').appendTo("body");
 	$('#editEvent').appendTo("body");
   $('#paymentModal').appendTo("body");
   $('#customEventDetails').appendTo("body");
-	
+  
+  //set the progress bar
+  var calendarPB = new NProgress({
+    container:'#calendarPB',
+    randomTrickle:true
+
+  });
+
+
   // get users for the calendar select and init calendar for the selected user
   initCal();
+
+  $('#calendar').prepend('<div style="height:3px;" id="calendarPB">&nbsp;</div>');
+  
 
   $.ajax({
     type: "post",
@@ -233,6 +248,8 @@ $(document).ready(function() {
 
 
   function getEvents(userID) {
+    calendarPB.start();
+    
     var events = {
       url: 'ajax.php',
       type: 'POST',
@@ -245,6 +262,7 @@ $(document).ready(function() {
     };
 
     calendar.fullCalendar('addEventSource', events);
+    
 
   }
 
@@ -824,7 +842,7 @@ $(document).ready(function() {
 
       eventRender: function(event, element) {
 				
-        
+        //calendarPB.start();
 				
             if (event.insurance === null || event.insurance === undefined){
               insurance = '';
@@ -886,7 +904,7 @@ $(document).ready(function() {
           }
           
         }
-
+        calendarPB.trickle();
     
 
       },
@@ -906,6 +924,8 @@ $(document).ready(function() {
           //$('.customAppointment').show();
 					//log('showing only specific clinic');
         }
+        
+        calendarPB.done();
 
 			},
 

@@ -27,6 +27,11 @@
 	<link href="assets/css/offline-theme-default.css" rel="stylesheet">
 	<link href="assets/css/offline-language-english.css" rel="stylesheet">
 	<link href="assets/css/noty.css" rel="stylesheet">
+	<link href="https://rawgit.com/pchiwan/nprogress/master/nprogress.css" rel="stylesheet">
+	
+
+	
+
 	
 	
 	<!-- end: CSS -->
@@ -89,6 +94,9 @@
 	<script src="assets/js/jquery.sparkline.min.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
 	<script src="assets/js/offline.min.js"></script>
+	<script src="https://rawgit.com/pchiwan/nprogress/master/nprogress.js"></script>
+
+	
 	
 	
 	
@@ -140,4 +148,8 @@
 	<script src="assets/js/alice.js"></script>
 	<script src="assets/js/printThis.js"></script>
 	<script src="assets/js/jstorage.js"></script>
+
+
+
+	
 	

@@ -10,6 +10,7 @@
 
 <input type="hidden" id="selectedUserID" value="<?=$selectedUserID;?>">
 
+
 <div class="row">
 	
 	    <div id="calSelectToolbar">
@@ -32,12 +33,18 @@
 						<input type="text" class="form-control patient-search" pattern="^[a-zA-Z '.-]+$" placeholder="Find patient" required>
 						<span class="input-group-addon"><i class="fa fa-search"></i></span>
 					</div>
+					
 				</div>
+				
 				<div class="content">
+				
 					<div class="default">
 						<div class="row">
 							<div id="datePicker"></div>
 						</div>
+					</div>
+					<div class="row">
+					<div style="height:3px;" id="rightPanelProgress">&nbsp;</div>
 					</div>
 					<div class="search_results"></div>
 					<div class="patient_details">

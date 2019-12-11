@@ -7,6 +7,13 @@ $(document).ready(function() {
   $('#rightPanel .patient_details').toggle();
   $('#rightPanel .search_results').toggle();
 
+  //init the progress bar
+  var rightPanelPB = new NProgress({
+    container:'#rightPanelProgress',
+    randomTrickle:true
+
+  });
+
   //load the datepicker
   datepicker = $('#datePicker').datepicker({
     calendarWeeks: true,
@@ -29,6 +36,8 @@ $(document).ready(function() {
   
     var results
 
+    var ajaxReq = 'ToCancelPrevReq'; // you can have it's value anything you like
+
     $('#rightPanel .patient-search').keyup(function() {
       $('#rightPanel .patient_details').hide();
       $('#rightPanel .default').hide();
@@ -42,7 +51,9 @@ $(document).ready(function() {
       } //input string is empty
         var q = ($(this).val());
         
-        $.ajax({
+        if ($(this).val().length > 2){
+
+        ajaxReq = $.ajax({
         url: "ajax.php",
         dataType: "json",
         type: 'post',
@@ -52,7 +63,15 @@ $(document).ready(function() {
           name: ($(this).val())
 
         },
+        beforeSend : function() {
+          if(ajaxReq != 'ToCancelPrevReq' && ajaxReq.readyState < 4) {
+          ajaxReq.abort();
+          } else {
+            rightPanelPB.start();
+          }
+        },
         success: function(patients) {
+          rightPanelPB.done();
   
 				$('#rightPanel .search_results').html(results);
                   
@@ -68,11 +87,19 @@ $(document).ready(function() {
             
             $('#rightPanel .search_results').html(new_text);
         
-		}
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      if(thrownError == 'abort' || thrownError == 'undefined') return;
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
 
       });
+    }
 
     });
+  
+
+
     $('.clear_right_panel_search').click(function(){
       $('#rightPanel .patient-search').val('');
       $('#rightPanel .search_results').html('')
@@ -84,11 +111,12 @@ $(document).ready(function() {
     $(document).on('click','#rightPanel .patient',function() {
       //get the patient details,push them into template
       patientID = $(this).attr('patient_id'); //set Global var
-
+      rightPanelPB.start();
       Patient.get(patientID,function(patient){
         oPatient = patient; //set the Global var
         log('this is the pat: ' + oPatient );
         renderRightPanelPatientDetails(oPatient);
+        rightPanelPB.done();
         
       });
       renderRightPanelPatientAppointments();
