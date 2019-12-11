@@ -73,6 +73,8 @@ $(document).ready(function() {
 	  addSelectClinic();
 		
     addSelectUser();
+
+    
 	  
     // check selectedUserID: if !=null then we have a practitioner who is logged in.. we want to show him his own calendar by default..
     // otherwize show first calendar in list
@@ -87,6 +89,7 @@ $(document).ready(function() {
     }
 
     selectedUser = $('#userSelect').val();
+    calendar.fullCalendar('option', 'slotDuration',users[selectedUser].data.calSlotDuration);
     getEvents(selectedUser);
     getResource(selectedUser);
     //log (users[selectedUser].data.workingPlan);
@@ -859,13 +862,19 @@ $(document).ready(function() {
               $(element).find('.fc-title').addClass('appointmentCancelled');
             }
 
+            
 
-
-            if (event.type != 'bgEvent'){
+            if (event.type != 'bgEvent'){ //bgEvent is used to display the working plan
               element.addClass('clinic' + event.clinic);
               element.addClass('appointment');
             }
 
+            if (event.customAppointment == 1){
+              element.addClass('customAppointment');
+              element.removeClass('appointment');
+
+              };
+           
         
 
         
@@ -893,7 +902,8 @@ $(document).ready(function() {
 				} else {
         //show events for selected clinic
 					$('.appointment').hide();
-					$('.clinic' + selectedClinic).show();
+          $('.clinic' + selectedClinic).show();
+          //$('.customAppointment').show();
 					//log('showing only specific clinic');
         }
 
