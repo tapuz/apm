@@ -38,7 +38,7 @@ $(document).ready(function() {
   $('#main-menu-toggle').click();
   //hide the side panel
   
-  //$('#rightPanel').toggle();
+  $('#rightPanel').toggle();
 
 	//append the modals to the body to avoid Z-index problems
 	$('#editPatient').appendTo("body");
@@ -57,7 +57,7 @@ $(document).ready(function() {
   // get users for the calendar select and init calendar for the selected user
   initCal();
 
-  $('#calendar').prepend('<div style="height:3px;" id="calendarPB">&nbsp;</div>');
+  $('#calendar').prepend('<div style="height:1px;" id="calendarPB">&nbsp;</div>');
   
 
   $.ajax({
@@ -248,6 +248,7 @@ $(document).ready(function() {
 
 
   function getEvents(userID) {
+    log ('START PB');
     calendarPB.start();
     
     var events = {
