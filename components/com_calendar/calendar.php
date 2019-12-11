@@ -286,17 +286,16 @@ switch (getView())
 
 	break;
 
-	case 'copy':
+	case 'copy1':
 	    
-		$user = getVar('user');
+		$user = 1;
 		global $wpdb;
 
 		$query = sprintf("SELECT *  FROM table_treatments WHERE practitioner = %s AND scheduled_date BETWEEN '2019-01-01' AND '2025-01-01'",$user);
 
 		$treatments = $wpdb->get_results($query);
 
-		$delta=0;
-		if($user == 1){delta='+15 minutes'}else {delta='+10 minutes'};
+	
 		
 		foreach($treatments as $treatment){
 			
@@ -305,7 +304,7 @@ switch (getView())
 			$sql = "INSERT INTO table_appointments (user,start,end,patient_id,service,clinic,note) VALUES (%d,%s,%s,%d,%d,%d,%s)";
 			$user = 1;
 			$start = $treatment->scheduled_date . ' ' . $treatment->scheduled_time;
-			$end = date('Y-m-d H:i:s',strtotime($delta,strtotime($start)));
+			$end = date('Y-m-d H:i:s',strtotime('+15 minutes',strtotime($start)));
 			$patient_id = $treatment->patient_id;
 			if ($treatment->type == 1) {$service = 2;}
 			if ($treatment->type == 2) {$service = 3;}
@@ -322,7 +321,83 @@ switch (getView())
 		
 		
 		
-		include('views/copy.php');
+		include('views/copy.php'); 
+
+	break;
+	case 'copy2':
+	    
+		$user = 2;
+		global $wpdb;
+
+		$query = sprintf("SELECT *  FROM table_treatments WHERE practitioner = %s AND scheduled_date BETWEEN '2019-01-01' AND '2025-01-01'",$user);
+
+		$treatments = $wpdb->get_results($query);
+
+	
+		
+		foreach($treatments as $treatment){
+			
+			
+			
+			$sql = "INSERT INTO table_appointments (user,start,end,patient_id,service,clinic,note) VALUES (%d,%s,%s,%d,%d,%d,%s)";
+			$user = 2;
+			$start = $treatment->scheduled_date . ' ' . $treatment->scheduled_time;
+			$end = date('Y-m-d H:i:s',strtotime('+10 minutes',strtotime($start)));
+			$patient_id = $treatment->patient_id;
+			if ($treatment->type == 1) {$service = 2;}
+			if ($treatment->type == 2) {$service = 3;}
+			
+			$clinic = 1;
+
+			$note = $treatment->comment;
+			
+			$sql = $wpdb->prepare($sql,$user,$start,$end,$patient_id,$service,$clinic,$note);
+			var_dump($sql); // debug
+			echo '<BR>';
+			$wpdb->query($sql);
+		}
+		
+		
+		
+		include('views/copy.php'); 
+
+	break;
+	case 'copy3':
+	    
+		$user = 3;
+		global $wpdb;
+
+		$query = sprintf("SELECT *  FROM table_treatments WHERE practitioner = %s AND scheduled_date BETWEEN '2019-01-01' AND '2025-01-01'",$user);
+
+		$treatments = $wpdb->get_results($query);
+
+	
+		
+		foreach($treatments as $treatment){
+			
+			
+			
+			$sql = "INSERT INTO table_appointments (user,start,end,patient_id,service,clinic,note) VALUES (%d,%s,%s,%d,%d,%d,%s)";
+			$user = 3;
+			$start = $treatment->scheduled_date . ' ' . $treatment->scheduled_time;
+			$end = date('Y-m-d H:i:s',strtotime('+10 minutes',strtotime($start)));
+			$patient_id = $treatment->patient_id;
+			if ($treatment->type == 1) {$service = 2;}
+			if ($treatment->type == 2) {$service = 3;}
+			
+			$clinic = 1;
+
+			$note = $treatment->comment;
+			
+			$sql = $wpdb->prepare($sql,$user,$start,$end,$patient_id,$service,$clinic,$note);
+			var_dump($sql); // debug
+			echo '<BR>';
+			$wpdb->query($sql);
+		}
+		
+		
+		
+		include('views/copy.php'); 
 
 	break;
 
