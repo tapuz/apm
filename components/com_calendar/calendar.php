@@ -291,7 +291,7 @@ switch (getView())
 		$user = getVar('user');
 		global $wpdb;
 
-		$query = sprintf("SELECT *  FROM table_treatments WHERE practitioner = %s AND scheduled_date BETWEEN '2019-06-01' AND '2025-01-01'",$user);
+		$query = sprintf("SELECT *  FROM table_treatments WHERE practitioner = %s AND scheduled_date BETWEEN '2019-01-01' AND '2025-01-01'",$user);
 
 		$treatments = $wpdb->get_results($query);
 		

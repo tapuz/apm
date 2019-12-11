@@ -44,7 +44,7 @@
 						</div>
 					</div>
 					<div class="row">
-					<div style="height:3px;" id="rightPanelProgress">&nbsp;</div>
+					<div style="height:2px;" id="rightPanelProgress">&nbsp;</div>
 					</div>
 					<div class="search_results"></div>
 					<div class="patient_details">

@@ -844,6 +844,7 @@ $(document).ready(function() {
       eventRender: function(event, element) {
 				
         //calendarPB.start();
+        log("rendering");
 				
             if (event.insurance === null || event.insurance === undefined){
               insurance = '';
@@ -905,7 +906,7 @@ $(document).ready(function() {
           }
           
         }
-        calendarPB.trickle();
+        
     
 
       },
@@ -925,8 +926,10 @@ $(document).ready(function() {
           //$('.customAppointment').show();
 					//log('showing only specific clinic');
         }
+        log('STOP');
+
+        if(calendarPB.isStarted())calendarPB.done();
         
-        calendarPB.done();
 
 			},
 

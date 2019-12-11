@@ -24,7 +24,9 @@
 #rightPanel .content {
     
     border-top: solid #d7d7d7 1px;
-    padding: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top:0px;
     background-color: #FFFFFF;
     
 }
