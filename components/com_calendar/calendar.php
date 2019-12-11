@@ -314,7 +314,7 @@ switch (getView())
 			$sql = $wpdb->prepare($sql,$user,$start,$end,$patient_id,$service,$clinic,$note);
 			var_dump($sql); // debug
 			echo '<BR>';
-			//$wpdb->query($sql);
+			$wpdb->query($sql);
 		}
 		
 		
