@@ -77,7 +77,7 @@ switch (getVar('task')){
 			//include meta values in user object by making use of magic PHP __get 
 			//https://codex.wordpress.org/Class_Reference/WP_User_Query#Return_Fields_Parameter
 		foreach($users as $user){
-			$user->{"workingPlan"} = $user->working_plan_2;
+			$user->{"workingPlan"} = $user->working_plan;
 			$user->{"calSlotDuration"} = $user->calSlotDuration;
 			//error_log($user->working_plan_2);
 		 	//error_log(print_r(get_user_meta ($user->ID, 'working_plan_2'),1));;
@@ -98,7 +98,7 @@ switch (getVar('task')){
 	break;
 
 	case 'getWorkingPlan':
-		echo $workingPlan = get_user_meta( getVar('userID'), 'working_plan_2',1);
+		echo $workingPlan = get_user_meta( getVar('userID'), 'working_plan',1);
 
 	break;
 

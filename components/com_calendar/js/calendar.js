@@ -128,13 +128,14 @@ $(document).ready(function() {
         //remove the resources
         removeResources();
         selectedUser = $('#userSelect').val();
-        console.log('refetching events : ' + selectedUser);
+        console.log('refetching events for user : ' + selectedUser);
         getResource(selectedUser);
         getEvents(selectedUser);
        
         calendar.fullCalendar('option', 'slotDuration',users[selectedUser].data.calSlotDuration);
         
         renderWorkingPlan(users[selectedUser].data.workingPlan);
+        log(users[selectedUser].data.workingPlan);
        
         
         
@@ -272,9 +273,9 @@ $(document).ready(function() {
     calendar.fullCalendar('removeEvents','not_working');
     calendar.fullCalendar('removeEvents','working');
     calendar.fullCalendar('removeEvents','break');
-    var ev = $('#calendar').fullCalendar('clientEvents', function(evt) {
-              return evt.thierry == 'yes';
-            });
+    //var ev = $('#calendar').fullCalendar('clientEvents', function(evt) {
+    //          return evt.thierry == 'yes';
+    //        });
     //calendar.fullCalendar('removeEvents', ev);
          
     workingPlan = JSON.parse(workingPlan);
@@ -844,7 +845,7 @@ $(document).ready(function() {
       eventRender: function(event, element) {
 				
         //calendarPB.start();
-        log("rendering");
+        
 				
             if (event.insurance === null || event.insurance === undefined){
               insurance = '';
@@ -926,7 +927,7 @@ $(document).ready(function() {
           //$('.customAppointment').show();
 					//log('showing only specific clinic');
         }
-        log('STOP');
+        
 
         if(calendarPB.isStarted())calendarPB.done();
         

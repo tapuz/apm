@@ -75,7 +75,7 @@ public function getPractitionersFromClinic($clinic) {
 	//get all user details
 
 	$args = array(
-			'role'           => 'practitioner',
+		    'role__in'       => array('practitioner','clinic_admin'),
 			'include'        => $arrayUserIDS,
 			'order'          => 'ASC',
 			'orderby'        => 'display_name',
