@@ -13,7 +13,7 @@ if ($config['debug_mode'] === true)
 	{
 		error_reporting(E_ALL);
         ini_set('display_errors', 'off');
-        ini_set('log_errors', 'on');
+		ini_set('log_errors', 'on');
         ini_set('error_log', 'error.log');
 	}
 

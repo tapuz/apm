@@ -32,6 +32,9 @@ var patientLinkedClinic = null;
 
   $('#editAppointment').on('submit', function(e) {
     e.preventDefault();
+    $('.editAppSubmit').prop('disabled',true);
+    $('.editAppSubmit').text("Saving...");
+   
     
     if ($('#clinicSelectEditApp').val() === null ) {//clinic has not been selected.. display message and break
       new Noty({
@@ -67,6 +70,8 @@ var patientLinkedClinic = null;
                         clinic: clinic
                       },function(newPatientID){
                           Appointment.add({start:start,end:end,patientID:newPatientID,userID:userID,service:service,status:eventStatus,clinic:clinic,note:note},function (appointment){ 
+                            $('.editAppSubmit').prop('disabled',false);
+                            $('.editAppSubmit').text("Save");
                             calendar.fullCalendar('renderEvent', appointment);
                             calendar.fullCalendar('unselect');
                             closeEditAppModal();
@@ -79,6 +84,8 @@ var patientLinkedClinic = null;
         } else {
           
           Appointment.add({start:start,end:end,patientID:patientID,userID:userID,service:service,status:eventStatus,clinic:clinic,note:note},function (appointment){
+            $('.editAppSubmit').prop('disabled',false);
+            $('.editAppSubmit').text("Save");
             renderRightPanelPatientAppointments();
             eventIDtoHighlight = appointment.id;
             highlightEvent = true;
@@ -92,6 +99,7 @@ var patientLinkedClinic = null;
           fNewPatient = true;
           bFlagBookNext = false;
         }
+      
       break;
       case 'editAppointment':
         
@@ -119,6 +127,8 @@ var patientLinkedClinic = null;
                         clinic: $('#clinicSelectEditApp').val()
                         
                       },function(newPatientID){
+                        $('.editAppSubmit').prop('disabled',false);
+                        $('.editAppSubmit').text("Save");
                         Appointment.update({id : objEvent.id,
                            start: objEvent.start.format(),
                            end : objEvent.end.format(),
@@ -149,6 +159,8 @@ var patientLinkedClinic = null;
                            clinic: $('#clinicSelectEditApp').val()
                            },
                            function(appointment){
+                            $('.editAppSubmit').prop('disabled',false);
+                            $('.editAppSubmit').text("Save");
                             renderRightPanelPatientAppointments();
                             calendar.fullCalendar('removeEvents' , objEvent.id );
                             calendar.fullCalendar('renderEvent', appointment);

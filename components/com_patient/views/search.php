@@ -37,7 +37,7 @@
    
 
 
-<div class="col-md-4 visible-md visible-lg" id="feed"><!-- Start Right content -->
+<div class="col-md-4 visible-md visible-lg" id="feed" style="display:none;"><!-- Start Right content -->
 <!--start right menu -->
 	<h2>Patients for Today <a class="icon-repeat"></a></h2>
 		<ul class="nav main-menu blue"> <!-- the blue class is specified in com_patients/css/search.css-->

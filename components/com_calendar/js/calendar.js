@@ -8,6 +8,7 @@ var fcMessage;
 var highlightEvent = false;
 var eventIDtoHighlight;
 var datepicker;
+var selectedUser = "";
 
 
 
@@ -30,7 +31,7 @@ $(document).ready(function() {
 
 
   var selectUser = "";
-  var selectedUser = "";
+  //var selectedUser = "";
 	
 
   var mode; //do not set this var as GLOBAL as it WILL interfere with other mode vars (ex. editEvent.js)!!
@@ -72,7 +73,7 @@ $(document).ready(function() {
 
 		//store users 
     users = data;
-		log (users);
+		//log (users);
     // make the practitioner selector 
     selectUser = "<select id='userSelect' name='userSelect' class='form-control' style='width:174px'>";
 		if (Object.keys(data).length > 1){//there is > 1 user.. show all practitioners option
@@ -113,7 +114,12 @@ $(document).ready(function() {
     renderWorkingPlan(users[selectedUser].data.workingPlan);
 
     $('#userSelect').on('change', function() {
+      calendar.fullCalendar('removeEvents','not_working');
+      calendar.fullCalendar('removeEvents','working');
+      calendar.fullCalendar('removeEvents','break');
+
       calendar.fullCalendar('removeEventSources');
+     
       if ($('#userSelect').val() == 'all_practitioners') {
         //get all the resources
         getResources();
@@ -131,11 +137,14 @@ $(document).ready(function() {
         console.log('refetching events for user : ' + selectedUser);
         getResource(selectedUser);
         getEvents(selectedUser);
-       
+        
         calendar.fullCalendar('option', 'slotDuration',users[selectedUser].data.calSlotDuration);
         
+        
+
+
         renderWorkingPlan(users[selectedUser].data.workingPlan);
-        log(users[selectedUser].data.workingPlan);
+        //log(users[selectedUser].data.workingPlan);
        
         
         
@@ -191,6 +200,9 @@ $(document).ready(function() {
 			$('#clinicSelect').on('change', function() {
 				selectedClinic = $(this).val();
 				//log (selectedClinic + ' is the clinic');
+        calendar.fullCalendar('removeEvents','not_working');
+      calendar.fullCalendar('removeEvents','working');
+      calendar.fullCalendar('removeEvents','break');
         renderWorkingPlan(users[selectedUser].data.workingPlan);	
       
 			switch(selectedClinic) {
@@ -217,10 +229,10 @@ $(document).ready(function() {
 
   function getResources() {
     //add each user as a Resource
-    log('getting the resources!!!');
+    //log('getting the resources!!!');
 
     $.each(users, function() {
-      log('the color is : ' + this.calendar_color);
+      //log('the color is : ' + this.calendar_color);
       calendar.fullCalendar('addResource', {
         id: this.data.ID,
         title: this.data.display_name,
@@ -249,8 +261,8 @@ $(document).ready(function() {
 
 
   function getEvents(userID) {
-    log ('START PB');
-    calendarPB.start();
+    
+   
     
     var events = {
       url: 'ajax.php',
@@ -260,6 +272,10 @@ $(document).ready(function() {
         task: 'get_data',
         user_id: userID,
 
+      },
+      beforeSend : function() {
+        log ('START PB');
+        calendarPB.start();
       }
     };
 
@@ -270,9 +286,7 @@ $(document).ready(function() {
 
 
   function renderWorkingPlan(workingPlan) {
-    calendar.fullCalendar('removeEvents','not_working');
-    calendar.fullCalendar('removeEvents','working');
-    calendar.fullCalendar('removeEvents','break');
+    //log('the user is = ' + selectedUser);
     //var ev = $('#calendar').fullCalendar('clientEvents', function(evt) {
     //          return evt.thierry == 'yes';
     //        });
@@ -315,7 +329,7 @@ $(document).ready(function() {
                 },true);
               //render the breaks
               $.each(dayplan.breaks,function(){
-                log('break start:' + this.start + 'dow: ' + dayplan.dow);
+                //log('break start:' + this.start + 'dow: ' + dayplan.dow);
                   calendar.fullCalendar('renderEvent', {
                   id:'break', //all need the same ID, else you would get cumulative layer coloring
                   className: 'fc-nonbusiness',
@@ -333,7 +347,7 @@ $(document).ready(function() {
         }else{ 
           
           if(this.clinic == selectedClinic){
-            log('WE HAVE A MATCH :' + this.clinic ); // only render this working plan
+            //log('WE HAVE A MATCH :' + this.clinic ); // only render this working plan
             $.each(this.workingPlan,function(){
               
               $.each(this,function( day, dayplan ) {
@@ -362,8 +376,8 @@ $(document).ready(function() {
                 },true);
                 //render the breaks
               $.each(dayplan.breaks,function(){
-                log('break start:' + this.start + 'dow: ' + dayplan.dow);
-                calendar.fullCalendar('renderEvent', {
+                //log('break start:' + this.start + 'dow: ' + dayplan.dow);
+                calendar.fullCalendar('selectedUser', {
                   id:'break', //all need the same ID, else you would get cumulative layer coloring
                   className: 'fc-nonbusiness',
                   start: this.start,
@@ -537,6 +551,7 @@ $(document).ready(function() {
             clinicID ='';
           } else {
             $('.selectService').html('Select a clinic first');
+            $('#clinicSelectEditApp').val('');
           }
 
           
@@ -928,7 +943,7 @@ $(document).ready(function() {
 					//log('showing only specific clinic');
         }
         
-
+        log('all is rendered!!');
         if(calendarPB.isStarted())calendarPB.done();
         
 

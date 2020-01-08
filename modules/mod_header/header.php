@@ -6,10 +6,10 @@
 			      <span class="icon-bar"></span>
 			</button>
 			<a id="main-menu-toggle" class="hidden-xs open"><i class="icon-reorder"></i></a>		
-			<a class="navbar-brand col-md-2 col-sm-1 col-xs-2" href="index.html"><span>Alice PM</span></a>
+			<a class="navbar-brand col-md-2 col-sm-1 col-xs-2" href=""><span>Alice PM</span></a>
 			<!--Start: Search -->
 			<div id="search" class="col-sm-5 col-xs-8 col-lg-3">
-				<?loadModule('search');?>
+				<?//loadModule('search');?>
 			<!--/search -->	
 			</div>
 			

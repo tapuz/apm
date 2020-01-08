@@ -262,14 +262,26 @@ class Calendar {
 		
 		//error_log($timing_entries_for_day);
 		//error_log('PATIENT TIMING->>'. print_r($timing,1));
-		//error_log('PATIENT TIMING->>'. print_r($appointments,1));
+		///error_log('PATIENT TIMING->>'. print_r($appointments,1));
 		
 		
 		
 		//echo PHP_EOL . print_r($appointments,1);
 		
-		$working_plan = json_decode(get_user_meta( $user, 'working_plan',1),TRUE);
-		
+		$working_plan_all = json_decode(get_user_meta( $user, 'working_plan',1),TRUE);
+		error_log('working plan-->' . print_r($working_plan_all,1));
+
+		//search the working_plan_all for the working plan according to the clinic
+		$working_plan_temp = null;
+	foreach($working_plan_all as $working_plan_clinic) {
+    	if ($clinic == $working_plan_clinic->clinic) {
+        	$working_plan_temp = $working_plan_clinic;
+        	break;
+    	}
+	}
+	error_log('working plan temp-->' . print_r($working_plan_temp,1));
+
+	exit;	
 		if (!array_key_exists($day, $working_plan)) {
 			// there is no working plan for this day, return FALSE
 			return FALSE;

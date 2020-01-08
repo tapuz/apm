@@ -96,7 +96,7 @@
     <div><label>{{title_future_appointments}}</label> 
         <ul>
             {{#future_appointments}}
-                <li start="{{start}}" appointmentID={{id}} class="right_panel_appointment" style="border-color:{{borderColor}}">
+                <li start="{{start}}" appointmentID={{id}} resourceId = {{resourceId}} class="right_panel_appointment" style="border-color:{{borderColor}}">
                     <div><label>{{strStart}}</label</div>
                     <div><a href="#">{{service}}</a></div>
                     <div><label>with {{resourceName}}</label></div>
@@ -115,7 +115,7 @@
     <div><label>{{title_last_appointment}}</label> 
         <ul>
             {{#last_appointment}}
-                <li start="{{start}}" appointmentID={{id}} class="right_panel_appointment" style="border-color:{{borderColor}}">
+                <li start="{{start}}" appointmentID={{id}} resourceId = {{resourceId}} class="right_panel_appointment" style="border-color:{{borderColor}}">
                     <div><label>{{strStart}}</label</div>
                     <div><a href="#">{{service}}</a></div>
                     <div><label>with {{resourceName}}</label></div>

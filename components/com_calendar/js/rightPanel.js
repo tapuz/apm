@@ -37,6 +37,8 @@ $(document).ready(function() {
     var results
 
     var ajaxReq = 'ToCancelPrevReq'; // you can have it's value anything you like
+    let timeout = null;
+    
 
     $('#rightPanel .patient-search').keyup(function() {
       $('#rightPanel .patient_details').hide();
@@ -49,52 +51,63 @@ $(document).ready(function() {
         $('#rightPanel .default').show();
         return;
       } //input string is empty
-        var q = ($(this).val());
-        
-        if ($(this).val().length > 2){
 
-        ajaxReq = $.ajax({
-        url: "ajax.php",
-        dataType: "json",
-        type: 'post',
-        data: {
-          com: 'calendar',
-          task: 'searchPatients',
-          name: ($(this).val())
+      clearTimeout(timeout);
+      timeout = setTimeout(function () {
+        let q = $('#rightPanel .patient-search').val();
+        if ($('#rightPanel .patient-search').val().length > 2){
 
-        },
-        beforeSend : function() {
-          if(ajaxReq != 'ToCancelPrevReq' && ajaxReq.readyState < 4) {
-          ajaxReq.abort();
-          } else {
-            rightPanelPB.start();
-          }
-        },
-        success: function(patients) {
-          rightPanelPB.done();
+          ajaxReq = $.ajax({
+          url: "ajax.php",
+          dataType: "json",
+          type: 'post',
+          data: {
+            com: 'calendar',
+            task: 'searchPatients',
+            name: q
   
-				$('#rightPanel .search_results').html(results);
-                  
-        var rendered = Mustache.render(tmpl_patient_search_results,
-          {patients : patients
-          });
-
-        $('#rightPanel .search_results').html(rendered);
-
-        
-            var pattern=new RegExp("("+q+")", "gi");
-            var new_text= $('#rightPanel .search_results').html().replace(pattern, "<b>"+q+"</b>");
+          },
+          beforeSend : function() {
+             rightPanelPB.start(); 
+          },
+          success: function(patients) {
+            if(patients.length == 0) {
+              $('#rightPanel .search_results').html("<strong>No matches for this search</strong><br>Sorry we haven't been able to find any patients matching this search.<br><br><br><br><br><br><br><br><br>");
+              rightPanelPB.done();
+              return
+            }
             
-            $('#rightPanel .search_results').html(new_text);
-        
-    },
-    error: function(xhr, ajaxOptions, thrownError) {
-      if(thrownError == 'abort' || thrownError == 'undefined') return;
-      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-    }
+            rightPanelPB.done();
+            
+             $('#rightPanel .search_results').html(results);
+                    
+              var rendered = Mustache.render(tmpl_patient_search_results,
+                {patients : patients
+               });
+  
+              $('#rightPanel .search_results').html(rendered);
+  
+          
+              var pattern=new RegExp("("+q+")", "gi");
+              var new_text= $('#rightPanel .search_results').html().replace(pattern, "<b>"+q+"</b>");
+              
+              $('#rightPanel .search_results').html(new_text);
+          
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        if(thrownError == 'abort' || thrownError == 'undefined') return;
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+  
+        });
+      }  // end if
+      }, 1000); // end timeout
 
-      });
-    }
+
+     
+       
+        
+       
 
     });
   
@@ -152,12 +165,24 @@ $(document).ready(function() {
     });
   
      $(document).on('click','#rightPanel .right_panel_appointment',function() {
-       
-       var start = $(this).attr('start');
+         
+       let start = $(this).attr('start');
+       let resourceId = $(this).attr('resourceId');
        eventIDtoHighlight = $(this).attr('appointmentID');
        highlightEvent = true;
-       calendar.fullCalendar( 'gotoDate', moment(start,'YYYY-MM-DD')); 
-       calendar.fullCalendar( 'rerenderEvents' );
+
+       if (selectedUser == resourceId) { //no need to switch user.. just calendar.. 
+        calendar.fullCalendar( 'gotoDate', moment(start,'YYYY-MM-DD')); 
+        calendar.fullCalendar( 'rerenderEvents' );
+      
+       } else { // we need to switch user.. 
+        //$('#userSelect option[value=' + resourceId + ']').attr('selected', 'selected');
+        $('#userSelect').val(resourceId);
+        calendar.fullCalendar( 'gotoDate', moment(start,'YYYY-MM-DD')); 
+        $("#userSelect").trigger("change");
+       }
+
+       
       
      });
 
