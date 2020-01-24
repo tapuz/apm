@@ -2,6 +2,7 @@
 //patient component
 loadLib('patient');
 loadCSS('search.css','patient');
+loadCSS('patient.css','patient');
 
 
 define('COMPONENT','patient');
@@ -39,7 +40,7 @@ switch(getView()){
 		//get user info
 		$user=get_userdata($patient->practitioner);
 		//get appointments
-		$appointments = Patient::getAppointments($patient->patient_id);
+		//$appointments = Patient::getAppointments($patient->patient_id);
 	
 		//get user_id
 		
@@ -152,6 +153,17 @@ switch(getTask()){
 
 	case 'saveHistory': //save history field
 		Patient::saveHistory(getVar('patient_id'),getVar('field'),stripslashes(getVar('value')));
+	break;
+
+	case 'addVitals':
+		error_log('got the task');
+		Patient::addVitals(getVar('vitals'));
+
+	break;
+	case 'getVitals': //save history field
+		$vitals = Patient::getVitals(getVar('patient_id'));
+		echo json_encode($vitals);
+		error_log(json_encode($vitals));
 	break;
 
 	case 'save_notes':

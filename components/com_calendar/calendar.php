@@ -130,6 +130,7 @@ switch (getVar('task')){
 			$email = new Email();
 			
 			$email->smtp_server = $clinic->smtp_server;
+			$email->smtp_port = $clinic->smtp_port; //
 			$email->smtp_username = $clinic->smtp_username;
 			$email->smtp_password = $clinic->smtp_password;
 			
@@ -199,7 +200,7 @@ switch (getVar('task')){
 		
 			$email->message = $message;
 			$email->ics = ICS::render($appointment);
-			$email->send(); 
+			//$email->send(); 
 				
 		}
 		 //add a log that an email was sent

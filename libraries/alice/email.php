@@ -2,7 +2,8 @@
 include_once(ABSPATH . WPINC . '/class-phpmailer.php'); 
 class Email {
     var
-	$smtp_server,
+    $smtp_server,
+    $smtp_port,
 	$smtp_username,
 	$smtp_password,
 	$to,
@@ -27,9 +28,9 @@ class Email {
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = $this->smtp_username;           // SMTP username
         $mail->Password = $this->smtp_password;               // SMTP password
-        $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-        $mail->Port = 465;
-        $mail->isHTML(true);    
+        $mail->SMTPSecure = 'ssl';    // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = $this->smtp_port;
+        $mail->isHTML(true);    //
         $mail->setFrom($this->from_email, $this->from_name);
         $mail->addAddress($this->to);
         $mail->Subject = $this->subject;

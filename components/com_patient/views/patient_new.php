@@ -25,10 +25,11 @@
 						<div class="box-header">
 							<h2><i class="icon-user"></i><strong><?= $patient->patient_surname.' '.$patient->patient_firstname?></strong></h2>
 							<ul class="nav tab-menu nav-tabs" id="myTab">
-								<li class="active"><a href="#demographics">Demographics</a></li>
-								<li><a href="#History">History</a></li>
-								<li><a href="#complaints">Complaints</a></li>
-								<li><a href="#notes_tab">Notes</a></li>
+								<li class="active"><a href="#demographics"><i class="fas fa-id-card-alt"></i> Demographics</a></li>
+								<li><a href="#vitals"><i class="fas fa-heartbeat"></i> Vitals</a></li>
+								<li><a href="#History"><i class="fas fa-file-medical-alt"></i> History</a></li>
+								<li><a href="#complaints"><i class="fas fa-notes-medical"></i> Complaints</a></li>
+								<li><a href="#notes_tab"><i class="far fa-sticky-note"></i> Notes</a></li>
 							</ul>
 							
 						</div>
@@ -36,33 +37,38 @@
 							
 							<div id="myTabContent" class="tab-content">
 								<div class="tab-pane active" id="demographics"></div>
+								<div class="tab-pane" id="vitals">vitals</div>
 								<div class="tab-pane" id="History">
 									<div id="history-panel" class="panel panel-success history">
-            				<div class="panel-heading">History</div>
+            				<div class="panel-heading"><i class="fas fa-file-medical-alt"></i> History</div>
             				<div class='panel-body'>
               				<ul class="nav nav-tabs" id="history_tabs">
-                				<li class="active"><a href="#general_history" data-toggle="tab">General</a></li>
+								<li class="active"><a href="#general_history" data-toggle="tab">General</a></li>
+								<li><a href="#social_history" data-toggle="tab">Social</a></li>
                 				<li><a href="#paediatric_history" data-toggle="tab">Peadiatric</a></li>
               				</ul>
 
               		<div class='tab-content'>
                 	<div class='tab-pane active' id='general_history'>
-                  	adult
-                	</div>
+                  		adult
+					</div>
+					<div class='tab-pane' id='social_history'>
+                  		social
+					</div>
                 	<div class='tab-pane' id='paediatric_history'>
-                  	child
-									</div>
+                  		child
+					</div>
 									
-              </div>
+            </div>
 						</div>	
 					</div>
 					</div>
 								<div class="tab-pane" id="complaints">
 									<div id="complaints-panel" class="panel panel-success">
-            				<div class="panel-heading">Complaints</div>
+            				<div class="panel-heading"><i class="fas fa-notes-medical"></i> Complaints</div>
             				<div class='panel-body'>
 											Create a new encounter first to add a complaint.
-								  </div>
+							</div>
           			</div>
           			<!-- /panel -->
 								</div>
@@ -227,6 +233,7 @@
 
 
 <?include(TEMPLATES . 'demographics_panel.html'); ?>
+<?include(TEMPLATES . 'vitals_panel.html'); ?>
 <?include(TEMPLATES . 'encounter_flow.html'); ?>
 <?include(TEMPLATES . 'complaint.html'); ?>
 <?include(TEMPLATES . 'general_history.html'); ?>

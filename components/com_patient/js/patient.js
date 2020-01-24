@@ -36,6 +36,48 @@ class Patient {
       }
     });
   }
+
+  static getVitals(patient_id, callback){
+    return $.ajax({
+      url: "ajax.php",
+      //dataType: "json",
+      type: 'post',
+      dataType: "json",
+      data: {
+        com: 'patient',
+        task: 'getVitals',
+        patient_id:patient_id
+
+      },
+      success: function(data) {
+        if(callback){callback(data);}
+        log('got the vitals');
+        //return data;
+      }
+    });
+  }
+
+  static addVitals(oVitals, callback){
+    return $.ajax({
+      url: "ajax.php",
+      //dataType: "json",
+      type: 'post',
+      //dataType: "json",
+      data: {
+        com: 'patient',
+        task: 'addVitals',
+        vitals: JSON.stringify(oVitals)
+
+      },
+      success: function(data) {
+        if(callback){callback(data);}
+        //return data;
+      },
+      error : function(jqXHR, textStatus, errorThrown){
+        log(textStatus);
+      }
+    });
+  }
   
   static update(id,oPatient, callback){
     

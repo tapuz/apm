@@ -435,6 +435,10 @@
 			</div>
 			<div class="col-sm-6">
 				<div class="form-group ">
+					<label class="" for="Patient_Profession">Profession</label>
+					<input autocomplete="off" class="first form-control" id="Patient_profession" name="profession" type="text">
+				</div>
+				<div class="form-group ">
 					<label class="" for="Patient_Insurance">Insurance</label>
 					<input autocomplete="off" class="first form-control" id="Patient_Insurance" name="insurance" type="text">
 				</div>

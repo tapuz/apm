@@ -12,6 +12,7 @@ function editPatient(patientID){
             $('#Patient_Sex').val(patient.sex);
             $('#Patient_Phone').val(patient.phone);
             $('#Patient_Email').val(patient.email);
+            $('#Patient_Profession').val(patient.profession);
             $('#Patient_Insurance').val(patient.insurance);
             $('#clinicSelectEditPatient').val(patient.clinic);
            

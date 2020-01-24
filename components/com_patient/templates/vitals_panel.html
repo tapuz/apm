@@ -1,0 +1,82 @@
+<script id='tpml_vitals_panel' type="x-tmpl-mustache">
+    
+  <div id="vitals-panel" class="panel panel-info">
+    <div class="panel-heading"><i class="fas fa-heartbeat"></i> Vitals</div>
+    <div class='panel-body'>
+      {{^disabled}}
+      <form id="form-vitals">
+        <input type="hidden" class="vitals_timestamp" name="timestamp">
+        <input type="hidden" class="vitals_encounter_id" name="encounter_id">
+        <input type="hidden" class="vitals_patient_id" name="patient_id" value="{{patient_id}}">
+       <div class='row'>
+          <div class="col-sm-2"><label>Height</label><input name="height" class="form-control vitals_height" type="text" placeholder="height" value=""></div>
+          <div class="col-sm-2"><label>Weight</label> <input name="weight" class="form-control vitals_weight" type="text" placeholder="weight" value=""></div>
+          <div class="col-sm-2"><label>BMI</label><input name="bmi" class="form-control vitals_bmi" type="text" placeholder="bmi" disabled></div>
+          <div class="col-sm-2"><label>BP</label><input name="systolic" class="form-control vitals_systolic" type="text" placeholder="systolic" value=""></div>
+          <div class="col-sm-2"><label>&nbsp</label><input name="diastolic" class="form-control vitals_dias" type="text" placeholder="diastolic" value=""></div>
+          <div class="col-sm-2"><label>Body temp.</label><input name="temperature" class="form-control vitals_temperature" type="text" placeholder="temp" value=""></div> 
+          
+        </div>
+       
+       <div class="row">
+        <div class="col-sm-2"><label>Pulse</label><input name="pulse" class="form-control vitals_pulse" type="text" placeholder="pulse" value=""></div>
+        <div class="col-sm-2"><label>Resp. rate</label><input name="respiratory_rate" class="form-control vitals_rr" type="text" placeholder="resp.rate" value=""></div>
+        <div class="col-sm-2"><label>Oxygen sat.</label> <input name="oxygen_sat" class="form-control vitals_oxygen_sat" type="text" placeholder="oxygen sat." value=""></div>
+        
+      </div>
+      <div class="row">&nbsp</div>
+      <div class="row">
+          <div class="col-sm-2"><button type="submit" class="btn btn-primary btn_add_vitals">add Vitals</button></div> 
+      </div>
+    </form>
+    {{/disabled}}
+          
+          
+        <table class='table table-hover'>
+            <thead>
+              <tr>
+                <th>timestamp</th>
+                <th>weight(kg)</th>
+                <th>height(cm)</th>
+                <th>BMI</th>
+                <th>BP</th>
+                <th>Temp(°C)</th>
+                <th>Pulse</th>
+                <th>Resp. Rate</th>
+                <th>Oxygen sat.</th>
+                
+               
+              </tr>
+            </thead>
+            <tbody>
+        </tr>
+        {{#vitals.length}}
+        {{#vitals}}
+          <tr>
+            <td>{{timestamp}}</td>
+            <td>{{weight}}</td>
+            <td>{{height}}</td>
+            <td>{{bmi}}</td>
+            <td>{{systolic}}/{{diastolic}}</td>
+            <td>{{temperature}}</td>
+            <td>{{pulse}}</td>
+            <td>{{respiratory_rate}}</td>
+            <td>{{oxygen_sat}}</td>
+
+          </tr>
+        {{/vitals}}     
+        {{/vitals.length}}
+        
+        </tbody>
+      </table>
+
+
+{{^vitals.length}}
+    <p>No vitals yet</p>
+{{/vitals.length}}
+  
+</div>
+</div>
+</script>
+
+

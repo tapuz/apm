@@ -6,7 +6,8 @@ $(document).ready(function(){
 	var encounters;
 	var oPrevEncounter;	
 	var diagnoses;
-	var oHistory =null;
+	var oHistory = null;
+	var vitals = null;
 	//var to store diagnosis form to input elements after diagnosis selection
 	var formDiagnosis;
 	var oPatient;
@@ -19,6 +20,12 @@ $(document).ready(function(){
 	//set the page title = patientName
 	
 	document.title = patientName;
+	//init the progress bar
+	var patientPB = new NProgress({
+		container:'#main_content',
+		randomTrickle:true
+	
+	  });
 	
 	//set the Active patient
 	window.addEventListener('focus', setActivePatient);
@@ -49,20 +56,25 @@ $(document).ready(function(){
 	renderMain();
 	
 	function renderMain(){
+		//$('#patientPB').html("getting <strong>" + patientName + "'s </strong> file...");
+		patientPB.start();
+
 		$.when(Patient.get(patientID),
 			   History.get(patientID),
 			   Encounter.getAll(patientID),
-			   Diagnosis.getDiagnosesPatient(patientID)
-			   ).then(function( data1,data2,data3,data4 ) {
+			   Diagnosis.getDiagnosesPatient(patientID),
+			   Patient.getVitals(patientID),
+			   ).then(function( data1,data2,data3,data4,data5 ) {
 			
 			oPatient = data1[0];
 			oHistory = data2[0];
 			encounters = data3[0];
 			diagnoses = data4[0];
-			
+			vitals = data5[0];
 			$('.left-content').show();
 			
 			renderDemographicsPanel();
+			renderVitalsPanel(true);
 			renderHistoryPanel();
 			renderEncounters();
 			renderInitComplaintTabs(false);
@@ -71,6 +83,7 @@ $(document).ready(function(){
 			
 			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
 			oPrevEncounter = encounters[1];
+			patientPB.done();
 			
 		});
 	}
@@ -97,10 +110,6 @@ $(document).ready(function(){
 	Mustache.parse(template);
 	
 
-	
-	
-	
-	
 	
 	//populate the select diagnosis modal with diagnoses
 	Diagnosis.search('%',function(data){
@@ -138,7 +147,7 @@ $(document).ready(function(){
 		resetEncounter();
 		var encounterID = $(this).attr('encounterID');
 		oEncounter = encounters.find(x => x.id === encounterID);
-		$('#Encounter_title').html('Encounter: ' +  moment(this.start).format('LLLL'));
+		$('#Encounter_title').html('Encounter: ' +  moment(oEncounter.start).format('LLLL'));
 		$('#SOAP_ID').val(oEncounter.soap_id);
 		$('#subjective').val(oEncounter.subjective);
 		$('#objective').val(oEncounter.objective);
@@ -154,6 +163,7 @@ $(document).ready(function(){
 		
 		//load the complaints
 		renderInitComplaintTabs(true);
+		renderVitalsPanel(false);
 		renderComplaints(false);
 		
 		//load the history
@@ -173,6 +183,7 @@ $(document).ready(function(){
 		
 		
 		renderInitComplaintTabs(true);
+		renderVitalsPanel(false);
 		//load the history
 		
 		
@@ -637,12 +648,80 @@ $(document).ready(function(){
 					yellowflags: JSON.parse(oHistory.pmh)
 					};
 		var demographics_panel = Mustache.render(template_demographics_panel,data);
-		
-		
-		
 		$('#demographics').html(demographics_panel);
 
 	}
+	//VITALS//
+	function renderVitalsPanel(disabled){
+		var template_vitals_panel = $('#tpml_vitals_panel').html();
+		//convert the ISO datetime from db into local datetime
+		
+		$.each(vitals, function( ) {
+  			this.timestamp = moment(this.timestamp).format('lll');
+		});
+		log(JSON.stringify(vitals));
+
+
+		Mustache.parse(template_vitals_panel);
+			data = {
+				disabled:disabled,
+				patient_id:oPatient.patient_id,
+				vitals:vitals};
+			var vitals_panel = Mustache.render(template_vitals_panel,data);
+		$('#vitals').html(vitals_panel);
+		log('redering the vitals : ' + disabled);
+		
+		
+	}
+
+	$(document).on('change','.vitals_weight, .vitals_height',function() {
+		if($(this).val() != ''){
+			//calculate BMI
+			height = ($('.vitals_height').val())/100;
+			weight = $('.vitals_weight').val()
+			bmi = weight /Math.pow(height,2);
+			bmi = bmi.toFixed(2);
+			$('.vitals_bmi').val(bmi);
+			
+		}
+	});
+
+	$(document).on('submit','#form-vitals', function(e){
+		e.preventDefault();
+		//set some extra values
+		//$('.vitals_timestamp').val( moment().format("YYYY-MM-DD HH:mm:ss").toString());
+		$('.vitals_timestamp').val( moment().format("YYYY-MM-DD HH:mm:ss"));
+		
+		
+		
+		
+		form = ($(this).serializeArray());
+		//log('form--> ' + JSON.stringify(vitals));
+		$('.btn_add_vitals').text('saving...');
+		$('.btn_add_vitals').prop('disabled',true);
+
+		Patient.addVitals(form,function(){
+			$.when(Patient.getVitals(patientID).then(function(data){
+				
+				vitals = data;
+				renderVitalsPanel();
+				$('.btn_add_vitals').text('add Vitals');
+				$('.btn_add_vitals').prop('disabled',false);
+			}
+			))
+		}
+		);
+		
+		
+
+	});
+
+
+
+	//VITALS//
+
+
+
 	
 	function renderFlagnotifications () {
 		//render the red and yellow flag notys only when there are any
@@ -749,14 +828,14 @@ $(document).ready(function(){
 		
 		
 		//render the general history tab
-		log(oHistory.allergies);
+		
 		var general_history =  Mustache.render(template_general_history,
 											   {allergies : oHistory.allergies});
 		$('#general_history').html(general_history);
 		
 		//render the PMH
 		if (oHistory.pmh !== '' ){
-				data = {pmh:JSON.parse(oHistory.pmh)};
+				data = {pmh:JSON.parse(oHistory.pmh)}; 
 				render = Mustache.render(template_general_history_pmh,data);
 				$('#general_history .pmh').html(render);
 				render = Mustache.render(template_general_history_pmh,{pmh:[{"year":"","condition":""}]});
@@ -902,14 +981,16 @@ $(document).ready(function(){
 	});
 	
 	//inputs clone when full 
-	$(document).on("keypress",".cloneWhenFull input",function(){
-			var allHaveText;
+	$(document).on("keypress",".cloneWhenFull",function(){
+			log('fjsdklfjsd');
 			var parentNode = $(this).closest("ul");
+			log (parentNode);
 			var nodeToClone = $(this).closest("li");
-			emptyInputs=parentNode.find("input[type=text]").filter(function () {
+			emptyInputs=parentNode.find(".cloneWhenFull").filter(function () {
             return !this.value;
 			});                  
 			if(emptyInputs.length==0)
+			
 			{
 				newGroup = nodeToClone.clone().appendTo(parentNode); 
 				newGroup.find("input[type=text]").each(function(){

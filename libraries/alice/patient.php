@@ -193,6 +193,29 @@ class Patient
 		$encounters = $wpdb->get_results($query);
         return  $encounters;
 	}
+
+	public static function getVitals($patient_id){
+		global $wpdb;
+		$query = sprintf("SELECT * from table_vitals WHERE patient_id = '%s' ORDER BY `timestamp` DESC",$patient_id);
+		$vitals = $wpdb->get_results($query);
+		return $vitals;
+	}
+
+	public static function addVitals($vitals){
+		error_log('adding the vitals in DB');
+		global $wpdb;
+		$vitals = json_decode(stripslashes($vitals),true);
+		$data = array();
+		foreach ($vitals as $value) {
+			$data[$value["name"]] = $value["value"];
+			
+		}
+		error_log(print_r($data,1));
+
+		$wpdb->insert('table_vitals',$data);
+		
+	}
+
 	
 	public function getDiagnoses($patient_id){
 		global $wpdb;

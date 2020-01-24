@@ -41,7 +41,7 @@ if ( !is_user_logged_in() )
 		<?if (!componentOnly()){loadModule('header');}?>
 	<!-- end: Header -->
 		<!-- start: Container -->
-		<div class="container">
+		<div id="main_content" class="container">
 			<div class="row">
 				
 				<!-- start: Main Menu -->
