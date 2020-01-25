@@ -35,7 +35,7 @@ class Email {
         $mail->addAddress($this->to);
         $mail->Subject = $this->subject;
         $mail->Body = $this->message;
-        $mail->addStringAttachment($this->ics, 'mijnafspraak.ics');
+        //$mail->addStringAttachment($this->ics, 'mijnafspraak.ics');
         //$mail->Body.= 'Nieuwe afsrpaaak bij blablabla';
         //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
         if(!$mail->send()) {
