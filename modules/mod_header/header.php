@@ -26,6 +26,7 @@
 				</ul>
 			</div>-->
 				<ul class="nav navbar-nav pull-right">
+					<li class="version"><?echo VERSION?></li>
 			
 					<!--Start notification Dropdown -->
 						<?if (current_user_can('debug'))

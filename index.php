@@ -1,9 +1,12 @@
 <?
-//test line
+$ver='0.5.1';
+define('VERSION','v.' . $ver);
+
 include('configuration.php');
 require_once ($config['path_wp-config']);
 
 define('ROOT', dirname(__FILE__));
+
 
 
 

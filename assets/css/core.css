@@ -4,6 +4,10 @@
     display: none;
 }
 
+.version {
+    margin-top:18px;
+    margin-right:20px;  
+}
 
 .onlyprint {
 	display:none;
@@ -50,6 +54,3 @@ font-size: 12px;
     display: none;
 }
 
-input[type="text"]:disabled {
-    background: #5bce38;
-  }
