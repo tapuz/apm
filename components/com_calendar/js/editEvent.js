@@ -313,6 +313,16 @@ var patientLinkedClinic = null;
     });
   });
 
+ 
+
+
+  $(document).on('keydown','#editAppointment #phone',function(e){
+    if (e.keyCode == 32) {
+      return false;
+  }
+
+  });
+
 
   //get all the services related to group or groups
   //$.ajax({

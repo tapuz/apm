@@ -32,6 +32,7 @@ loadJS('email.js','calendar');
 loadJS('payment.js','calendar');
 loadJS('rightPanel.js','calendar');
 loadJS('mustache.min.js');
+loadJS('validator.js');
 
 //loadJS('jquery.balloon.min.js');
 

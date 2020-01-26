@@ -50,3 +50,6 @@ font-size: 12px;
     display: none;
 }
 
+input[type="text"]:disabled {
+    background: #5bce38;
+  }

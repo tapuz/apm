@@ -128,11 +128,12 @@
 										</div>
 										<div class="input-group" style="padding: 5px;">
 											<span class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
-											<input type="tel" class="form-control" id="phone" placeholder="Telephone">
+											<input type="tel" class="form-control" id="phone" pattern="/^[\w]+$/" placeholder="Telephone">
 										</div>
 										<div class="input-group" style="padding: 5px;">
 											<span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
 											<input type="email" class="form-control" id="email" placeholder="Email">
+											
 										</div>
 									</div>
 								</div>
@@ -190,7 +191,8 @@
 						</div>
 						<div class="col-sm-5">
 							<div class="row">
-								<input type="text" class="form-control" id="note" pattern="^[a-zA-Z '.-]+$" placeholder="">	
+								<input type="text" class="form-control" id="note" pattern="^[a-zA-Z0-9 '.-]+$" placeholder="" >	
+								
 								
 							</div>
 						</div>	

@@ -450,19 +450,35 @@ $(document).ready(function() {
             });
           }
         },
-        plus4m: {
-          text: '+4M',
+        plus2m: {
+          text: '+2M',
           click: function() {
             calendar.fullCalendar('incrementDate', {
-              months: 3
+              months: 2
             });
           }
         },
-        plus6m: {
-          text: '+6M',
+        plus1m: {
+          text: '+1M',
           click: function() {
             calendar.fullCalendar('incrementDate', {
-              months: 6
+              months: 1
+            });
+          }
+        },
+        plus6w: {
+          text: '+6w',
+          click: function() {
+            calendar.fullCalendar('incrementDate', {
+              weeks: 6
+            });
+          }
+        },
+        plus3w: {
+          text: '+3w',
+          click: function() {
+            calendar.fullCalendar('incrementDate', {
+              weeks: 3
             });
           }
         },
@@ -489,7 +505,7 @@ $(document).ready(function() {
 				*/
 
       header: {
-        left: 'prev,next today plus3m,plus4m,plus6m',
+        left: 'prev,next today plus3w,plus6w plus1m,plus2m,plus3m',
         center: 'title',
         right: 'agendaDay,agendaWeek,month toggleSidebarRight'
           //        left: 'add,sell,locationSelect,staffSelect',

@@ -692,13 +692,14 @@ $(document).ready(function(){
 		//$('.vitals_timestamp').val( moment().format("YYYY-MM-DD HH:mm:ss").toString());
 		$('.vitals_timestamp').val( moment().format("YYYY-MM-DD HH:mm:ss"));
 		
-		
+		$('.vitals_bmi').prop('disabled',false); //if disabled the BMI is no accessible
 		
 		
 		form = ($(this).serializeArray());
 		//log('form--> ' + JSON.stringify(vitals));
 		$('.btn_add_vitals').text('saving...');
 		$('.btn_add_vitals').prop('disabled',true);
+		$('.vitals_bmi').prop('disabled',true);
 
 		Patient.addVitals(form,function(){
 			$.when(Patient.getVitals(patientID).then(function(data){
