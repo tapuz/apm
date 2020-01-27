@@ -216,7 +216,8 @@ function renderRightPanelPatientDetails(){
            street:oPatient.address,
            city:oPatient.postcode + ' ' + oPatient.city,
            country:oPatient.country,
-           insurance:oPatient.insurance 
+           insurance:oPatient.insurance,
+           practitioner:oPatient.practitioner
           });
 
   $('#rightPanel .patient_details').show();
