@@ -206,7 +206,8 @@ var patientLinkedClinic = null;
               email: item.email,
               dob: item.dob,
               phone: item.phone,
-              clinic: item.clinic
+              clinic: item.clinic,
+              practitioner:item.practitioner
 
             };
           }));
@@ -219,13 +220,14 @@ var patientLinkedClinic = null;
       //patient id selected
       //mode = 'existingPatient';
       fNewPatient = false;
-      log(ui.item.id + ' ' + ui.item.value);
+      //log(ui.item.id + ' ' + ui.item.value);
       var patient_name = ui.item.value;
       var patient_id = ui.item.id;
       patientID = patient_id;
       eventTitle = patient_name;
       patientName = patient_name;
       patientLinkedClinic = ui.item.clinic;
+     
       //insert selected values into modal
       $('.patient-select').hide();
       $('.selected').show();
@@ -233,6 +235,7 @@ var patientLinkedClinic = null;
       $('.selected-dob').html(ui.item.dob);
       $('.selected-telephone').html(ui.item.phone);
       $('.selected-email').html(ui.item.email);
+      $('.selected-practitioner').html(users[ui.item.practitioner].data.display_name);
       $('#editAppointment #phone').val(ui.item.phone).blur();
       $('#editAppointment :submit').focus();
         

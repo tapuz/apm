@@ -161,6 +161,9 @@
 										<span class="selected-clinic-holder">
 											<i class="fa fa-hospital-o"></i> <span class="selected-clinic">RUGCENTRUM GENT</span>
 										</span>
+										<span class="selected-practitioner-holder">
+										<i class="fas fa-user-md"></i> <span class="selected-practitioner">RUGCENTRUM GENT</span>
+										</span>
 										
 										
 

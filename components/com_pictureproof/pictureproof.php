@@ -79,6 +79,8 @@ switch (getView())
 		$patientDOB = $patient->dob;
 		$clinic = Clinic::getClinic($patient->clinic);
 		$clinicHeader = $clinic->clinic_educate_heading;
+		//get patient height
+		//Patient::getVitals($patientID);
 		
 		//set active patient
 		Patient::setActivePatient($patientID);
@@ -109,25 +111,7 @@ switch (getView())
 		include('views/test.php');
 	break;
 	
-	case 'pictureproofV2':
-		loadJS('fabric.min.js');
-		loadJS('pictureproofV2.js','pictureproof');
-		
-		global $current_user;
-      	get_currentuserinfo();
-		$username = $current_user->user_firstname . ' ' . $current_user->user_lastname;
-		
-		$patientID = getVar('patient_id');
-		$patient = Patient::getPatient($patientID);
-		$patientName = $patient->patient_surname.' '.$patient->patient_firstname;
-		$patientDOB = $patient->dob;
-		$clinic = Clinic::getClinic($patient->clinic);
-		$clinicHeader = $clinic->clinic_educate_heading;
-		
-		
-		
-		include('views/pictureproofV2.php');
-	break;
+	
 	
 	
 	

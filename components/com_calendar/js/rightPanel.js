@@ -223,7 +223,7 @@ function renderRightPanelPatientDetails(){
            city:oPatient.postcode + ' ' + oPatient.city,
            country:oPatient.country,
            insurance:oPatient.insurance,
-           practitioner:oPatient.practitioner
+           practitioner:users[oPatient.practitioner].data.display_name
           });
 
   $('#rightPanel .patient_details').show();
