@@ -130,6 +130,7 @@ $(document).ready(function() {
         log('this is the pat: ' + oPatient );
         renderRightPanelPatientDetails(oPatient);
         rightPanelPB.done();
+        log(JSON.stringify(oPatient));
         
       });
       renderRightPanelPatientAppointments();
@@ -205,6 +206,11 @@ function renderRightPanelPatientDetails(){
         sexIcon = '<i class="far fa-question-square"></i>';
         
     }
+
+    //get the practitioner name
+   log(users);
+   //var oUser = users.find(x => x.data.ID === oPatient.practitioner.toString());
+
    var rendered = Mustache.render(tmpl_patient_demographics,
           {patient_id : oPatient.patient_id,
            patient_name : oPatient.patient_surname + ' ' + oPatient.patient_firstname,
@@ -216,7 +222,8 @@ function renderRightPanelPatientDetails(){
            street:oPatient.address,
            city:oPatient.postcode + ' ' + oPatient.city,
            country:oPatient.country,
-           insurance:oPatient.insurance 
+           insurance:oPatient.insurance,
+           practitioner:oPatient.practitioner
           });
 
   $('#rightPanel .patient_details').show();

@@ -1,36 +1,45 @@
 <?
-//echo date('Y-m-d H:i:s');
+$data = array(
+    'email'     => 'johndoe@example.com',
+    'status'    => 'subscribed',
+    'firstname' => 'john',
+    'lastname'  => 'doe'
+);
 
-//function age($birthday){
-// list($day,$month,$year) = explode("/",$birthday);
-// $year_diff  = date("Y") - $year;
-// $month_diff = date("m") - $month;
-// $day_diff   = date("d") - $day;
-// if ($day_diff < 0 && $month_diff==0){$year_diff--;}
-// if ($day_diff < 0 && $month_diff < 0){$year_diff--;}
-// return $year_diff;
-//}
-//
-//$dob = '24/03/1981';
+echo syncMailchimp($data);
 
-//echo age($dob);
+function syncMailchimp($data) {
+    $apiKey = '2877a6f4c7b1d2d8db8b3f4fe6948462-us6';
+    $listId = 'd2803de68a';
 
+    $memberId = md5(strtolower($data['email']));
+    $dataCenter = substr($apiKey,strpos($apiKey,'-')+1);
+    $url = 'https://' . $dataCenter . '.api.mailchimp.com/3.0/lists/' . $listId . '/members/' . $memberId;
 
-phpinfo();
+    $json = json_encode([
+        'email_address' => $data['email'],
+        'status'        => $data['status'], // "subscribed","unsubscribed","cleaned","pending"
+        'merge_fields'  => [
+            'FNAME'     => $data['firstname'],
+            'LNAME'     => $data['lastname']
+        ]
+    ]);
 
-//error_reporting(E_ALL);
-//echo '<pre>';
+    $ch = curl_init($url);
 
-// A FUNCTION TO RETURN THE AGE ON A GIVEN DATE
-//function your_age($birth_day, $test_date='Today')
-//{
-//    $alpha_date = new DateTime($birth_day);
-//    $omega_date = new DateTime($test_date);
-//    $diff = $omega_date->diff($alpha_date);
-//    return $diff->y;
-//}
-//
-//var_dump( your_age('May 12, 1993') );
+    curl_setopt($ch, CURLOPT_USERPWD, 'user:' . $apiKey);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);                                                                                                                 
 
+    echo $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $httpCode;
+}
 
 ?>
