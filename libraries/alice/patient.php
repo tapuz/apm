@@ -216,6 +216,12 @@ class Patient
 		
 	}
 
+	public static function getHeight($patient_id){
+		global $wpdb;
+		return $height = $wpdb->get_var($wpdb->prepare("SELECT height FROM table_vitals WHERE patient_id = %d AND height IS NOT NULL ORDER BY 'timestamp' DESC",$patient_id));
+		
+	}
+
 	
 	public function getDiagnoses($patient_id){
 		global $wpdb;

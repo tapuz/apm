@@ -80,8 +80,8 @@ switch (getView())
 		$clinic = Clinic::getClinic($patient->clinic);
 		$clinicHeader = $clinic->clinic_educate_heading;
 		//get patient height
-		//Patient::getVitals($patientID);
-		
+		$height = Patient::getHeight($patientID);
+
 		//set active patient
 		Patient::setActivePatient($patientID);
 		

@@ -73,6 +73,7 @@
                                 <button class="btn btn-success" id="btn_portfolio">Portfolio</button>
                                 <button class="btn btn-danger"  id="clear_drawing">Clear drawing</button>
                                 <button class="btn btn-danger"  id="clear_board">Clear board</button>
+                                <button class="btn btn-warning" id="btnHideEyes"><i class="fas fa-eye-slash"></i></button>
                                 <button class="btn btn-warning" id="btnAnalyse"><i class="fas fa-draw-polygon"></i></button>
                                 <button class="btn btn-warning" id="btnDraw"><i class="fas fa-paint-brush"></i></button>
                                 <button class="btn btn-warning" id="btnRotatePlus90"><i class="fas fa-sync-alt"></i></button>
@@ -90,13 +91,14 @@
                         <div class="spacer5"></div>
                         <div class='row with-margin-left toolbar analyse'>
                             <div class="form-inline">
-                                <button class="btn btn-warning" id="btnAnalyseX">X analyse</button>
-                                <button class="btn btn-warning" id="btnAnalyseY">Y analyse</button>
+                                <button class="btn btn-warning" id="btnAnalyseX"><i class="fas fa-arrows-alt-v"></i></button>
+                                <button class="btn btn-warning" id="btnAnalyseY"><i class="fas fa-arrows-alt-h"></i></button>
+                                <button class="btn btn-warning" id="btnAnalyseSpine"><i class="fas fa-ellipsis-v"></i></button>
                                 
 
                                 <div class="form-group">
                                     
-                                    <input type="text" class="form-control" id="patientHeight" placeholder="Patient Height">
+                                    <input type="text" class="form-control" id="patientHeight" placeholder="Patient Height" value="<?=$height?>">
                                 </div>
                                
                                 
