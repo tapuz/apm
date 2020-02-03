@@ -895,12 +895,13 @@ $(document).ready(function() {
             icons = '<i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
             icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
             patid = '<span class="note">' + event.patientID + ' </span>';
-           
+            //log(showPatientID);
             $(".fc-title", element).append(insurance);
-            if (showPatientID){$(".fc-content", element).append(patid);}
+            //if (showPatientID){$(".fc-content", element).append(patid);}
             
             $(".fc-content", element).append(note);
             $(".fc-content", element).append(icons);
+            $(".fc-content", element).append(patid);
 
             if (event.status == 1) {
               $(element).find('.icon-thumbs-up').show();
@@ -972,9 +973,11 @@ $(document).ready(function() {
       viewRender: function(view, element) {
         if (view.name == 'agendaDay') {
           showPatientID = true;
+          log('SHOW! ID');
 
         } else {
           showPatientID = false;
+          log('dont show ID');
         }
 
       },
