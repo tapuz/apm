@@ -1,0 +1,138 @@
+<script id="tmpl_encounter_print" type="x-tmpl-mustache">
+  <h2><i class="fas fa-user"></i> {{patient_name}} - {{dob}}</h2>
+  <h3><i class="fas fa-user-md"></i> {{practitioner}}</h3>
+  
+<div class="row">
+    <div class="col-sm-6">
+    <h4>Vitals</h4>
+    <table class='table table-bordered w-auto' style="width:50%">
+                <tbody>
+                <tr>
+                    <th scope="row">weight(kg)</td>
+                    <td>{{vitals.weight}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">height(cm)</td>
+                    <td>{{vitals.height}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">BMI</td>
+                    <td>{{vitals.bmi}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Blood pressure</td>
+                    <td>{{vitals.systolic}}/{{vitals.diastolic}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Temp(celcius)</td>
+                    <td>{{vitals.temperature}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Pulse(bpm)</td>
+                    <td>{{vitals.pulse}}</td>
+                </tr>  
+                <tr>
+                    <th scope="row">Respiratory rate</td>
+                    <td>{{vitals.respiratory_rate}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">O2 saturation</td>
+                    <td>{{vitals.oxygen_sat}}</td>
+                </tr>   
+                <tbody>
+            
+        </table>
+   
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+        <h4>Past medical history</h4>
+        
+            <table class="table table-bordered" style="width:50%"> 
+                <thead> 
+                    <tr> 
+                        <th>Date</th> 
+                        <th>Condition</th> 
+                        
+                    </tr> </thead> 
+                <tbody> 
+                {{#pmh}}
+                    <tr> 
+                        <th scope="row">{{year}}</th> 
+                        <td>{{condition}}</td>  
+                {{/pmh}}                 
+                    </tr>  
+                </tbody> 
+            </table>
+            
+           </div>
+        
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+        <h4>Complaints</h4>
+        {{#complaints}}
+        <table class="table table-bordered" style="width:90%"> 
+                <thead> 
+                    <tr> 
+                        <th>Klacht: {{cc}} <h5>Nevenklacht: {{ac}}</h5></th> 
+                        <th>Diagnose: {{diagnosis}} <h5>{{diagnosis_comment}}</h5></th> 
+                        
+                    </tr> 
+                </thead> 
+                <tbody> 
+                
+                    <tr> 
+                        <th scope="row">Nevenklacht</th> 
+                        <td>{{ac}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Locatie</th> 
+                        <td>{{location}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Start</th> 
+                        <td>{{onset}}</td>
+                    </tr> 
+                    <tr>
+                        <th scope="row">Locatie</th> 
+                        <td>{{location}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Timing</th> 
+                        <td>{{timing}}</td>
+                    </tr> 
+                    <tr>
+                        <th scope="row">Locatie</th> 
+                        <td>{{location}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Pijnintensiteit</th> 
+                        <td>{{intensity}}/10</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Pijnkarakter</th> 
+                        <td>{{character}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Aggravating</th> 
+                        <td>{{aggravating}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Pijnverlichtend</th> 
+                        <td>{{relieving}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Vorige behandelingen</th> 
+                        <td>{{previous_treatments}}</td>
+                    </tr>
+                </tbody> 
+            </table>
+        {{/complaints}}                     
+        </div>
+    </div>
+
+
+</script>

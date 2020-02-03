@@ -6,6 +6,7 @@ $(document).ready(function(){
 	var encounters;
 	var oPrevEncounter;	
 	var diagnoses;
+	var filteredDiagnoses;
 	var oHistory = null;
 	var vitals = null;
 	//var to store diagnosis form to input elements after diagnosis selection
@@ -453,12 +454,11 @@ $(document).ready(function(){
 		
 	}
 
-	function renderComplaints(disabled){ //disabled is a flag (true/false) to be set to false when the user is in an encounter and true when no encounter is active, this to prevent edits in complaints when not in an encounter.
-		//filter the duplicate complaints..complaints with more than 1 diagnosis
+	function filterComplaints(){
 		diagnoses.reverse();
 		// Array to keep track of duplicates
 		var dups = [];
-		var filteredDiagnoses = diagnoses.filter(function(el) {
+		filteredDiagnoses = diagnoses.filter(function(el) {
 		 // If it is not a duplicate, return true
 			if (dups.indexOf(el.complaint) == -1) {
 				dups.push(el.complaint);
@@ -466,7 +466,12 @@ $(document).ready(function(){
 			}
 			return false;
 		});
+	}
+
+	function renderComplaints(disabled){ //disabled is a flag (true/false) to be set to false when the user is in an encounter and true when no encounter is active, this to prevent edits in complaints when not in an encounter.
+		//filter the duplicate complaints..complaints with more than 1 diagnosis
 		
+		filterComplaints();
 		// if disabled = true the encounter_id in the template block should be empty or NULL 
 		var encounter_id;
 		if (disabled){ encounter_id = null} else {encounter_id = oEncounter.id};
@@ -640,7 +645,7 @@ $(document).ready(function(){
 					sex : oPatient.sex,
 					profession : oPatient.profession,
 					insurance : oPatient.insurance,
-					practitioner : ' ',
+					practitioner : oPatient.practitioner_name,
 					phone : oPatient.phone,
 					email : oPatient.email,
 					address : address,
@@ -1015,6 +1020,31 @@ $(document).ready(function(){
 			$('.nav-tabs a[href="#complaint_' + complaintID +'"]').tab('show');
 
 			
+	});
+
+	$(document).on('click','.btn_print_encounter',function(){
+		log(vitals);
+		var template_encounter_print = $('#tmpl_encounter_print').html();
+		Mustache.parse(template_encounter_print);
+
+		var encounterPrint = Mustache.render(template_encounter_print,
+		{patient_name : oPatient.patient_surname + ' ' + oPatient.patient_firstname,
+		 practitioner:oPatient.practitioner_name,
+		 dob:moment(oPatient.dob).format('l'),
+		 vitals:vitals[0],
+		 pmh:JSON.parse(oHistory.pmh),
+		 complaints : filteredDiagnoses
+		
+		}
+		)
+
+		$("body").append("<div id='encounter_print'></div>");
+
+		$('#encounter_print').html(encounterPrint);
+		$('#encounter_print').printThis({printDelay: 500});
+		$('#encounter_print').remove();
+
+
 	});
 	
 });

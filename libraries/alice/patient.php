@@ -121,8 +121,15 @@ class Patient
 	global $wpdb;
 	// get patient object 
 	// take into account-> only get patients from clinic // to be added
-	$query=sprintf('SELECT * from table_patients WHERE patient_id = "%s"',$patient_id);
+	$query=sprintf('SELECT a.*, 
+						b.display_name as practitioner_name
+					FROM
+	   					table_patients AS a
+	   				INNER JOIN wp_users AS b ON a.practitioner=b.id  
+					WHERE a.patient_id = "%s"',$patient_id);
+	
 	$patient=$wpdb->get_row($query);
+	
 	return  $patient;
 	}
 	

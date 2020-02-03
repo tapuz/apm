@@ -9,6 +9,7 @@ var highlightEvent = false;
 var eventIDtoHighlight;
 var datepicker;
 var selectedUser = "";
+var showPatientID = false;
 
 
 
@@ -893,8 +894,11 @@ $(document).ready(function() {
             
             icons = '<i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
             icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
-
+            patid = '<span class="note">' + event.patientID + ' </span>';
+           
             $(".fc-title", element).append(insurance);
+            if (showPatientID){$(".fc-content", element).append(patid);}
+            
             $(".fc-content", element).append(note);
             $(".fc-content", element).append(icons);
 
@@ -967,7 +971,10 @@ $(document).ready(function() {
 
       viewRender: function(view, element) {
         if (view.name == 'agendaDay') {
-          //do something
+          showPatientID = true;
+
+        } else {
+          showPatientID = false;
         }
 
       },

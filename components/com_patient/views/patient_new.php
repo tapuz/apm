@@ -238,5 +238,7 @@
 <?include(TEMPLATES . 'complaint.html'); ?>
 <?include(TEMPLATES . 'general_history.html'); ?>
 <?include(TEMPLATES . 'paediatric_history.html'); ?>
+<?include(TEMPLATES . 'encounter_print.html'); ?>
+
 
 

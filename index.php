@@ -1,5 +1,5 @@
 <?
-$ver='0.5.2';
+$ver='0.5.3';
 define('VERSION','v.' . $ver);
 
 include('configuration.php');
