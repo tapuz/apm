@@ -1,3 +1,7 @@
+#btn_new_encounter {
+    cursor: pointer;
+}
+
 .list-encounters .encounters {
     background: white;
     padding: 0;
@@ -56,7 +60,8 @@
 .list-encounters .encounter {
     border-bottom: 1px solid #f9f9f9;
     margin-bottom: 1px;
-    position: relative
+    position: relative;
+    cursor: pointer;
 }
 
 .list-encounters .encounter .desc {
@@ -219,7 +224,8 @@
 
 .list-encounters .timeslot .complaint span span.diagnosis {
     font-size: 16px;
-    margin-bottom: 0px
+    margin-bottom: 0px;
+    cursor: pointer;
 }
 
 
@@ -441,3 +447,9 @@
         font-size: 12px
     }
 }
+
+
+tr {
+   height:15px
+      
+    }

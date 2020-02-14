@@ -80,7 +80,10 @@ switch (getVar('task')){
 	case "upload_image":
 		//$patientID = getVar('patientID');
 		$patientID = $_POST['patientID'];
+		$tag = $_POST['tag'];
 		error_log('UPLOADING!!!');
+		error_log('TAG: ' + $tag);
+
 		error_log(dirname(__FILE__));
 		$filename = basename($_FILES["photo"]["name"]);
 		error_log($filename);
@@ -95,7 +98,7 @@ switch (getVar('task')){
 			if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file)) {
 				error_log( "The file ". basename( $_FILES["photo"]["name"]). " has been uploaded.");
 				//link image with patient in DB
-			    Image::insertImage($patientID,$filename,'camera');
+			    Image::insertImage($patientID,$filename,$tag);
 			} else {
 				error_log( "Sorry, there was an error uploading your file.");
 			}

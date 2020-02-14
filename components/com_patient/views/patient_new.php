@@ -30,6 +30,7 @@
 								<li><a href="#History"><i class="fas fa-file-medical-alt"></i> History</a></li>
 								<li><a href="#complaints"><i class="fas fa-notes-medical"></i> Complaints</a></li>
 								<li><a href="#notes_tab"><i class="far fa-sticky-note"></i> Notes</a></li>
+								<li><a href="#docs_tab"><i class="far fa-file"></i> Docs</a></li>
 							</ul>
 							
 						</div>
@@ -71,6 +72,9 @@
 							</div>
           			</div>
           			<!-- /panel -->
+								</div>
+								<div class="tab-pane" id="docs_tab">
+								those are the docs..
 								</div>
 								<div class="tab-pane" id="notes_tab">
 									<div class="row">

@@ -1041,7 +1041,10 @@ $(document).ready(function(){
 		$("body").append("<div id='encounter_print'></div>");
 
 		$('#encounter_print').html(encounterPrint);
-		$('#encounter_print').printThis({printDelay: 500});
+		$('#encounter_print').printThis({
+			printDelay: 500
+			
+		});
 		$('#encounter_print').remove();
 
 
