@@ -196,7 +196,7 @@ switch(getTask()){
 		Patient::setActivePatient(getVar('patient'));
 	break;
 
-	case 'get_documents':
+	case 'getDocuments':
 		
 			$docs = Image::getImages(getVar('patientID'),'doc');
 			echo json_encode($docs);

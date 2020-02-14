@@ -822,7 +822,7 @@ $(document).ready(function(){
 	
 	function renderDocsPanel(){
 		$.ajax({type: "post", url: "ajax.php", dataType: "json",
-          data: { com: 'patient',task: 'getCameraPictures', patientID : patientID}
+          data: { com: 'patient',task: 'getDocuments', patientID : patientID}
             }).success(function( docs ) {
                $('#docsPanel').empty();
 		        console.log(docs);
