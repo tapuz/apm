@@ -1,6 +1,7 @@
 <?php
 //patient component
 loadLib('patient');
+loadLib('image');
 loadCSS('search.css','patient');
 loadCSS('patient.css','patient');
 
