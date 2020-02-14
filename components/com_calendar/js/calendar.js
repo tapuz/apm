@@ -74,7 +74,7 @@ $(document).ready(function() {
 
 		//store users 
     users = data;
-		//log (users);
+		log (users);
     // make the practitioner selector 
     selectUser = "<select id='userSelect' name='userSelect' class='form-control' style='width:174px'>";
 		if (Object.keys(data).length > 1){//there is > 1 user.. show all practitioners option
@@ -901,7 +901,10 @@ $(document).ready(function() {
             
             $(".fc-content", element).append(note);
             $(".fc-content", element).append(icons);
-            $(".fc-content", element).append(patid);
+            if((users[selectedUser].data.showpatIDinCalendar)==1){
+              $(".fc-content", element).append(patid);
+            }
+            
 
             if (event.status == 1) {
               $(element).find('.icon-thumbs-up').show();

@@ -80,6 +80,7 @@ switch (getVar('task')){
 		foreach($users as $user){
 			$user->{"workingPlan"} = $user->working_plan;
 			$user->{"calSlotDuration"} = $user->calSlotDuration;
+			$user->{"showpatIDinCalendar"} = $user->showpatIDinCalendar;
 			//error_log($user->working_plan_2);
 		 	//error_log(print_r(get_user_meta ($user->ID, 'working_plan_2'),1));;
 		}
