@@ -81,6 +81,7 @@ $(document).ready(function(){
 			renderInitComplaintTabs(false);
 			renderComplaints(true);
 			renderFlagnotifications();
+			renderDocsPanel();
 			
 			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
 			oPrevEncounter = encounters[1];
@@ -817,7 +818,24 @@ $(document).ready(function(){
 		//hide the #tab_new_encounter tab
 		$('#tab_new_encounter').hide();
 		
-    }
+	}
+	
+	function renderDocsPanel(){
+		$.ajax({type: "post", url: "ajax.php", dataType: "json",
+          data: { com: 'patient',task: 'getCameraPictures', patientID : patientID}
+            }).success(function( docs ) {
+               $('#docsPanel').empty();
+		        console.log(docs);
+                $.each(docs, function(){
+                      console.log(this.filename);
+                      var div = $('<div>',{class:'col-sm-3 col-xs-6 thumbnail-container'}).html('<img class="img-thumbnail" id="'+ this.image_id +'" src="userdata/camera_pictures/'+ this.filename +'">');
+                      $('#docsPanel').append(div);
+                      
+	            });
+                
+		
+	        });
+	}
 	
 	function renderHistoryPanel(){
 		var data,render;

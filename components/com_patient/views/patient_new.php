@@ -74,7 +74,15 @@
           			<!-- /panel -->
 								</div>
 								<div class="tab-pane" id="docs_tab">
-								those are the docs..
+								
+
+									<div id="docs-panel" class="panel panel-info">
+    									<div class="panel-heading"><i class="far fa-file"></i> Docs</div>
+										<div class='panel-body' id="docsPanel">BODY</div>
+								</div>
+
+
+									
 								</div>
 								<div class="tab-pane" id="notes_tab">
 									<div class="row">
