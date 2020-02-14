@@ -77,8 +77,18 @@
 								
 
 									<div id="docs-panel" class="panel panel-info">
-    									<div class="panel-heading"><i class="far fa-file"></i> Docs</div>
-										<div class='panel-body' id="docsPanel">BODY</div>
+										<div class="panel-heading"><i class="far fa-file"></i> Docs
+										
+										</div>
+										<div class='panel-body'>
+											<div class="row">
+												<div class="btn-group pull-right">
+													<button class="btn btn-primary btnSelectImages">Select</button>
+                    								<button class="btn btn-danger btnDeleteImages"><i class="fas fa-trash-alt"></i></button>
+      											</div>
+											</div>
+											<div id="docsPanel" class="row"></div>
+										</div>
 								</div>
 
 

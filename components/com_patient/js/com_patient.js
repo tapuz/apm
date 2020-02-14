@@ -16,6 +16,9 @@ $(document).ready(function(){
 	var notys = []; //array that contains all the notyfications
 
 	var editingSOAP = false ;
+
+	var selectImageMode = false;
+    var selectedImages = [];
 	
 	
 	//set the page title = patientName
@@ -819,8 +822,9 @@ $(document).ready(function(){
 		$('#tab_new_encounter').hide();
 		
 	}
-	
+	//DOCS
 	function renderDocsPanel(){
+		$('.btnDeleteImages').hide();
 		$.ajax({type: "post", url: "ajax.php", dataType: "json",
           data: { com: 'patient',task: 'getDocuments', patientID : patientID}
             }).success(function( docs ) {
@@ -836,6 +840,75 @@ $(document).ready(function(){
 		
 	        });
 	}
+
+	$(document).on('click','.img-thumbnail',function(e) {            
+        if (!selectImageMode){
+            //renderBackgroundImage(this.src);
+            //$( "#canvas-box" ).toggle();
+            //$( "#thumbnails" ).toggle();
+        } else {
+            $(this).toggleClass('imageSelected');
+            if($(this).hasClass('imageSelected')){
+                selectedImages.push (e.target.id);
+                log(selectedImages);
+            } else {
+                
+                selectedImages = selectedImages.filter(function(item){
+                    return item !== e.target.id;
+                });
+                log(selectedImages);
+            }
+
+            //check if delete button has to be activated
+            if (selectedImages.length > 0) {$('.btnDeleteImages').prop('disabled',false)}else{$('.btnDeleteImages').prop('disabled',true)};
+        }
+    });
+
+	$('.btnSelectImages').click(function() {
+        if(!selectImageMode){ //start selecting images
+            selectImageMode = true;
+           $(this).html('cancel');
+           $('.btnDeleteImages').show();
+
+        } else { //cancel selecting
+            cancelSelectingImages();
+
+        }
+
+    });
+
+    function cancelSelectingImages(){
+        selectImageMode = false;
+        $('.btnSelectImages').html('select');
+        $('.img-thumbnail').removeClass('imageSelected');
+        selectedImages = [];
+        $('.btnDeleteImages').prop('disabled',true)
+        $('.btnDeleteImages').hide();
+        log (selectedImages);
+
+    }
+    
+    $('.btnDeleteImages').click(function() {
+        $.ajax({
+            url: "ajax.php",
+            type: 'post',
+            data: {
+              com: 'pictureproof',
+              task: 'deleteImages',
+              images: JSON.stringify(selectedImages)
+            },
+            success: function(data) {
+             renderDocsPanel();
+              cancelSelectingImages();
+            }
+           });
+        
+
+
+
+    });
+
+	//DOCS
 	
 	function renderHistoryPanel(){
 		var data,render;
