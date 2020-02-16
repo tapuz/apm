@@ -9,7 +9,6 @@ var highlightEvent = false;
 var eventIDtoHighlight;
 var datepicker;
 var selectedUser = "";
-var showPatientID = false;
 
 
 
@@ -974,14 +973,7 @@ $(document).ready(function() {
 			},
 
       viewRender: function(view, element) {
-        if (view.name == 'agendaDay') {
-          showPatientID = true;
-          log('SHOW! ID');
-
-        } else {
-          showPatientID = false;
-          log('dont show ID');
-        }
+       
 
       },
       selectOverlap: function(event) {

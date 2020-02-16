@@ -78,16 +78,21 @@
 
 									<div id="docs-panel" class="panel panel-info">
 										<div class="panel-heading"><i class="far fa-file"></i> Docs
-										
+
+										<button class="pull-right btn btn-sm btn-primary btnRefreshDocs"><i class="fas fa-sync-alt"></i></button>
+										<button class="pull-right btn btn-sm btn-primary btnSelectDocs">Select</button>
+                    					<button class="pull-right btn btn-sm btn-danger btnDeleteDocs"><i class="fas fa-trash-alt"></i></button>
 										</div>
 										<div class='panel-body'>
-											<div class="row">
-												<div class="btn-group pull-right">
-													<button class="btn btn-primary btnSelectImages">Select</button>
-                    								<button class="btn btn-danger btnDeleteImages"><i class="fas fa-trash-alt"></i></button>
-      											</div>
-											</div>
+											
 											<div id="docsPanel" class="row"></div>
+											<div id="canvasPanel" class="row">
+											<button class="btn btn-warning" id="btnRotatePlus90"><i class="fas fa-sync-alt"></i></button>
+											<button class="btn btn-warning" id="btnSaveDoc"><i class="fas fa-save"></i></button>
+											<button class="btn btn-danger" id="btnCloseDoc"><i class="fas fa-window-close"></i></button>
+											<canvas id="c" style="border:1px solid black;" ></canvas>
+											</div>
+											
 										</div>
 								</div>
 

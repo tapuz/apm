@@ -18,7 +18,13 @@ $(document).ready(function(){
 	var editingSOAP = false ;
 
 	var selectImageMode = false;
-    var selectedImages = [];
+	var selectedImages = [];
+	
+	var canvasWidth=0;
+	var canvasHeight=0;
+	var maxWidth=1000;
+	var bgImage;
+    var bgImageCurAngle = 0;
 	
 	
 	//set the page title = patientName
@@ -58,6 +64,11 @@ $(document).ready(function(){
 	//append modals to body to avoid bg issue
 	$('#diagnosesModal').appendTo("body");
 	renderMain();
+	
+
+	//prepare the canvas for the docs
+	var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false,allowTouchScrolling: true});
+	canvas.setDimensions({width:canvasWidth, height:canvasHeight});
 	
 	function renderMain(){
 		//$('#patientPB').html("getting <strong>" + patientName + "'s </strong> file...");
@@ -823,13 +834,19 @@ $(document).ready(function(){
 		
 	}
 	//DOCS
+	$('.btnRefreshDocs').click(function(){
+		renderDocsPanel();
+	});
 	function renderDocsPanel(){
-		$('.btnDeleteImages').hide();
+		$('.btnDeleteDocs').hide();
+		$('#canvasPanel').hide();
+		$('#docsPanel').html('Loading documents...');
 		$.ajax({type: "post", url: "ajax.php", dataType: "json",
           data: { com: 'patient',task: 'getDocuments', patientID : patientID}
             }).success(function( docs ) {
                $('#docsPanel').empty();
-		        console.log(docs);
+				console.log(docs);
+				if(docs.length>0){$('.btnSelectDocs').show()}else{$('.btnSelectDocs').hide()}
                 $.each(docs, function(){
                       console.log(this.filename);
                       var div = $('<div>',{class:'col-sm-3 col-xs-6 thumbnail-container'}).html('<img class="img-thumbnail" id="'+ this.image_id +'" src="userdata/camera_pictures/'+ this.filename +'">');
@@ -843,9 +860,9 @@ $(document).ready(function(){
 
 	$(document).on('click','.img-thumbnail',function(e) {            
         if (!selectImageMode){
-            //renderBackgroundImage(this.src);
-            //$( "#canvas-box" ).toggle();
-            //$( "#thumbnails" ).toggle();
+            renderBackgroundImage(this.src);
+			$('#canvasPanel').show();
+            $( "#docsPanel" ).hide();
         } else {
             $(this).toggleClass('imageSelected');
             if($(this).hasClass('imageSelected')){
@@ -860,15 +877,15 @@ $(document).ready(function(){
             }
 
             //check if delete button has to be activated
-            if (selectedImages.length > 0) {$('.btnDeleteImages').prop('disabled',false)}else{$('.btnDeleteImages').prop('disabled',true)};
+            if (selectedImages.length > 0) {$('.btnDeleteDocs').prop('disabled',false)}else{$('.btnDeleteDocs').prop('disabled',true)};
         }
     });
 
-	$('.btnSelectImages').click(function() {
+	$('.btnSelectDocs').click(function() {
         if(!selectImageMode){ //start selecting images
             selectImageMode = true;
            $(this).html('cancel');
-           $('.btnDeleteImages').show();
+           $('.btnDeleteDocs').show();
 
         } else { //cancel selecting
             cancelSelectingImages();
@@ -879,16 +896,16 @@ $(document).ready(function(){
 
     function cancelSelectingImages(){
         selectImageMode = false;
-        $('.btnSelectImages').html('select');
+        $('.btnSelectDocs').html('select');
         $('.img-thumbnail').removeClass('imageSelected');
         selectedImages = [];
-        $('.btnDeleteImages').prop('disabled',true)
-        $('.btnDeleteImages').hide();
+        $('.btnDeleteDocs').prop('disabled',true)
+        $('.btnDeleteDocs').hide();
         log (selectedImages);
 
     }
     
-    $('.btnDeleteImages').click(function() {
+    $('.btnDeleteDocs').click(function() {
         $.ajax({
             url: "ajax.php",
             type: 'post',
@@ -906,8 +923,103 @@ $(document).ready(function(){
 
 
 
-    });
+	});
+	
+	
 
+	function renderBackgroundImage(source){
+    
+		fabric.Image.fromURL(source, function (img) {
+			 
+			 imgWidth = img.width;
+			   imgHeight = img.height;
+			 aspectRatio = imgHeight/imgWidth;
+			 canvasWidth = maxWidth;
+			 
+			 canvasHeight = maxWidth * aspectRatio;
+			 var scaleFactor = canvasWidth / imgWidth;
+	
+				 img.set({
+					 width: imgWidth, 
+					 height: imgHeight, 
+					 originX: 'left', 
+					 originY: 'top',
+					 scaleX: scaleFactor,
+					 scaleY: scaleFactor,
+					 
+				 });
+				 canvas.setWidth(canvasWidth);
+				 canvas.setHeight(canvasHeight);
+				 canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+				 bgImage = img;
+			 });
+	}
+	$('#btnRotatePlus90').click(function() {
+        log (canvas.getWidth());
+        rotateObject(bgImage,bgImageCurAngle + 1.5708,bgImage.width/2,bgImage.height/2);
+        bgImageCurAngle += 1.5708;  
+        //canvas.setWidth(canvasHeight);
+        //canvas.setHeight(canvasWidth);
+        //canvasHeight = canvas.getWidth();
+        //canvasWidth = canvas.getHeight();
+        
+        canvas.renderAll();
+	});
+	
+	function rotateObject(fabObj, angleRadian, pivotX, pivotY) {
+		ty = pivotY - fabObj.height / 2.0;
+		tx = pivotX - fabObj.width / 2.0;
+		if (angleRadian >= Math.PI * 2) {
+			angleRadian -= Math.PI * 2;
+		}
+		angle2 = Math.atan2(ty, tx);
+		angle3 = (2 * angle2 + angleRadian - Math.PI) / 2.0;
+		pdist_sq = tx * tx + ty * ty;
+		disp = Math.sqrt(2 * pdist_sq * (1 - Math.cos(angleRadian)));
+		fabObj.set({transformMatrix:[
+			Math.cos(angleRadian),
+			Math.sin(angleRadian),
+		   -Math.sin(angleRadian),
+			Math.cos(angleRadian),
+			disp * Math.cos(angle3),
+			disp * Math.sin(angle3)
+		]});
+		}
+
+		$('#btnSaveDoc').click(function(){ 
+			//bottomBar.setVisible(false);topBar.setVisible(false);
+			var dataURL = $('#c').get(0).toDataURL('image/jpeg');//have to get the canvas element from the jquery object
+			//bottomBar.setVisible(true);topBar.setVisible(true);
+			//log(dataURL);
+			log(oPatient);
+			 console.log(patientName);
+			 $.ajax({
+				   type: "post",
+				 url: "ajax.php",
+				   data: { com: 'patient', 
+						   task: 'saveDoc', 
+						   imgBase64: dataURL,
+						 patientID: oPatient.patient_id}
+				 }).success(function( response ) {
+						 //add the image to the portfolio 
+						 //renderDocsPanel();
+						 console.log('image_added');
+						 fcMessage = new Noty({
+							text: '<span class="text-center">Saved to new document...</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
+							//closeWith:'click',
+							layout:'top',
+							theme:'sunset',
+							type:'information',
+							timeout: 3000
+							}).show();				
+				 });
+			 });
+	
+			$('#btnCloseDoc').click(function(){
+				$('#canvasPanel').hide();
+				$('#docsPanel').show();
+				renderDocsPanel();
+			});
 	//DOCS
 	
 	function renderHistoryPanel(){

@@ -31,6 +31,7 @@ switch(getView()){
 		loadJS('history.js','patient');
 		loadJS('bootstrap-list-filter.min.js');
 		loadJS('bootstrap-tagsinput.min.js');
+		loadJS('fabric.min.js');
 		loadCSS('bootstrap-tagsinput.css');
 		
 		//loadView();
@@ -59,6 +60,29 @@ switch(getView()){
 	break;
 }
 switch(getTask()){
+	case 'saveDoc':
+		
+		// create the image
+	 	define('UPLOAD_DIR', 'userdata/camera_pictures/');
+		$patientID = getVar('patientID');
+		
+		$img = getVar('imgBase64');
+		$img = str_replace('data:image/jpeg;base64,', '', $img);
+		$img = str_replace(' ', '+', $img);
+		$data = base64_decode($img);
+		$myimage = imagecreatefromstring($data);
+		$filename = uniqid($patientID.'_') . '.jpg';
+		//compress the png
+		//imagepng($myimage, $file);
+		$savePath = UPLOAD_DIR . $filename;
+		imagejpeg($myimage,$savePath);
+		
+		//link image with patient in DB
+		Image::insertImage($patientID,$filename,'doc');
+		//error_log($img);
+
+		
+	break;
 		
 	case 'search':// has to be updated in the future.. keep as is for now
 		$name = getVar('name');
