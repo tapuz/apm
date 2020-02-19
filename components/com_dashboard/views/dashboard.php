@@ -4,7 +4,7 @@
 	<!-- /breadcrumb-->
 				
 
-<!--<div class="row">
+<div class="row">
 	<div class="col-lg-3 col-sm-6 col-xs-6 col-xxs-12">
 		<div class="smallstat box">
 			<div class="boxchart-overlay blue">
@@ -13,10 +13,10 @@
 				</div>
 			</div>
 			<span class="title">
-				Patients
+				Patients today
 			</span>
 			<span class="value">
-				16200
+				<?=$numberOfPatientsToday?>
 			</span>
 			<a href="" class="more">
 				<span>
@@ -39,7 +39,7 @@
 				Patients this week
 			</span>
 			<span class="value">
-				223
+				<?=$numberOfPatientsThisWeek?>
 			</span>
 			<a href="" class="more">
 				<span>

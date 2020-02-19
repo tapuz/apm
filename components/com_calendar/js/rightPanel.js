@@ -121,6 +121,9 @@ $(document).ready(function() {
       $('#rightPanel .default').show();
     });
 
+    
+ 
+
     $(document).on('click','#rightPanel .patient',function() {
       //get the patient details,push them into template
       patientID = $(this).attr('patient_id'); //set Global var

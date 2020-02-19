@@ -67,7 +67,8 @@ $(document).ready(function(){
 	
 
 	//prepare the canvas for the docs
-	var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false,allowTouchScrolling: true});
+	var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false,allowTouchScrolling: true,originX: 'center',
+    originY: 'center'});
 	canvas.setDimensions({width:canvasWidth, height:canvasHeight});
 	
 	function renderMain(){
@@ -100,6 +101,7 @@ $(document).ready(function(){
 			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
 			oPrevEncounter = encounters[1];
 			patientPB.done();
+			disableform('editSOAP',false);
 			
 		});
 	}
@@ -321,12 +323,15 @@ $(document).ready(function(){
 	
 	
 	 $(document).on('click','.btn_close_encounter',function(){
+		 log('disabling the form!!');
+		disableform('editSOAP',true);
 		editingSOAP = false;
 		
-				Noty.closeAll();
-			
-				$('#btn_new_encounter').show();
-				renderMain();
+		Noty.closeAll();
+			    
+		$('#btn_new_encounter').show();
+		
+		renderMain();
 				
 				
 				
@@ -955,16 +960,23 @@ $(document).ready(function(){
 			 });
 	}
 	$('#btnRotatePlus90').click(function() {
-        log (canvas.getWidth());
+		
+
+
+		log (canvas.backgroundImage.width + ' is the width;');
+		canvas.setWidth(canvas.backgroundImage.height);
+        canvas.setHeight(canvas.backgroundImage.width);
+        canvasHeight = canvas.getHeight();
+        canvasWidth = canvas.getWidth();
         rotateObject(bgImage,bgImageCurAngle + 1.5708,bgImage.width/2,bgImage.height/2);
         bgImageCurAngle += 1.5708;  
-        //canvas.setWidth(canvasHeight);
-        //canvas.setHeight(canvasWidth);
-        //canvasHeight = canvas.getWidth();
-        //canvasWidth = canvas.getHeight();
+        
         
         canvas.renderAll();
 	});
+
+
+
 	
 	function rotateObject(fabObj, angleRadian, pivotX, pivotY) {
 		ty = pivotY - fabObj.height / 2.0;
@@ -1252,6 +1264,15 @@ $(document).ready(function(){
 
 
 	});
+
+	function disableform(formId, yesNo) {
+		var f = document.getElementById(formId), s, opacity;
+		s = f.style;
+		opacity = yesNo? '40' : '100';
+		s.opacity = s.MozOpacity = s.KhtmlOpacity = opacity/100;
+		s.filter = 'alpha(opacity='+opacity+')';
+		for(var i=0; i<f.length; i++) f[i].disabled = yesNo;
+	 }
 	
 });
 
