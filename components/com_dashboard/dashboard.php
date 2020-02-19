@@ -11,7 +11,7 @@ loadLib('calendar');
 
 $patientsForToday=Calendar::getAppointmentsForToday(get_current_user_id());
 $patientsForThisWeek = Calendar::getAppointmentsThisWeek(get_current_user_id());
-$numberOfPatientsToday = $patientsForToday;//count($patientsForToday);
+$numberOfPatientsToday = count($patientsForToday);
 $numberOfPatientsThisWeek = count($patientsForThisWeek);
 
 
