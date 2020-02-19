@@ -32,7 +32,7 @@
 		<div class="smallstat box">
 			<div class="boxchart-overlay green">
 				<div class="linechart">
-					1,2,6,4,0,8,2,4,5,3,1,7,5
+					120,140,150,100,30,120
 				</div>
 			</div>
 			<span class="title">
@@ -82,10 +82,10 @@
 				</div>
 			</div>
 			<span class="title">
-				Tasks
+				Earnings this week
 			</span>
 			<span class="value">
-				12
+				<?=$numberOfPatientsThisWeek*45?>
 			</span>
 			<a href="" class="more">
 				<span>
@@ -97,7 +97,7 @@
 		</div>
 	</div>
 	<!--/col-->
-</div>-->
+</div>
 <!--/row-->
 <div class=row>
 	<a href="https://github.com/tapuz/apm/projects/1?fullscreen=true" target="_blank"><h2> Wonderering what we are working on? Follow the project here! </h2></a> 
