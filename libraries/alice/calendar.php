@@ -17,7 +17,7 @@ class Calendar {
 	
 	public static function getAppointmentsForToday($userID){
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT `patientName` , DATE_FORMAT(START , '%Y-%m-%d' ) FROM `view_appointments` WHERE DATE_FORMAT (START , '%Y-%m-%d' ) = CURDATE( ) AND resourceId=%d",$userID);
+		$query = $wpdb->prepare("SELECT `patientName` , DATE_FORMAT(start , '%Y-%m-%d' ) FROM `view_appointments` WHERE DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) AND resourceId=%d",$userID);
 		
 		$appointments = $wpdb->get_results($query);
 		return  $appointments;
@@ -29,6 +29,8 @@ class Calendar {
 		$appointments = $wpdb->get_results($query);
 		return  $appointments;
 	}
+
+	
 
 
 	

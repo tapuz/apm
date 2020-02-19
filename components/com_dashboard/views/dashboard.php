@@ -85,7 +85,7 @@
 				Earnings this week
 			</span>
 			<span class="value">
-				<?=$numberOfPatientsThisWeek*45?>
+				<?=$numberOfPatientsThisWeek*45?> euro
 			</span>
 			<a href="" class="more">
 				<span>
