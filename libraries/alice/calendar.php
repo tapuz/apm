@@ -20,15 +20,18 @@ class Calendar {
 		$query = $wpdb->prepare("SELECT `patientName` , DATE_FORMAT(start , '%Y-%m-%d' ) FROM `view_appointments` WHERE DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) AND resourceId=%d",$userID);
 		
 		$appointments = $wpdb->get_results($query);
-		return  $appointments;
+		//return  $appointments;
+		return $wpdb->num_rows;
 	}
 
 	public static function getAppointmentsThisWeek($userID){
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT * FROM `view_appointments` WHERE YEARWEEK(start)=YEARWEEK(NOW()) AND resourceId=%d",$userID);
+		$query = $wpdb->prepare("SELECT * FROM `view_appointments` WHERE YEARWEEK(start)=YEARWEEK(NOW()) AND resourceId='%d'",$userID);
 		$appointments = $wpdb->get_results($query);
 		return  $appointments;
-	}
+		
+		
+	} 
 
 	
 
