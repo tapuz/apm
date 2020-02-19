@@ -25,7 +25,7 @@ class Calendar {
 
 	public static function getAppointmentsThisWeek($userID){
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT * FROM `table_appointments` WHERE YEARWEEK(start)=YEARWEEK(NOW()) AND resourceId=%d",$userID);
+		$query = $wpdb->prepare("SELECT * FROM `view_appointments` WHERE YEARWEEK(start)=YEARWEEK(NOW()) AND resourceId=%d",$userID);
 		$appointments = $wpdb->get_results($query);
 		return  $appointments;
 	}
