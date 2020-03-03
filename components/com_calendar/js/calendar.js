@@ -10,7 +10,7 @@ var eventIDtoHighlight;
 var datepicker;
 var selectedUser = "";
 
-
+//$('[data-time]:not(.fc-minor)');
 
 $(document).ready(function() {
   
@@ -482,6 +482,14 @@ $(document).ready(function() {
             });
           }
         },
+        refreshCalendar: {
+          icon:'fa fa-refresh',
+          
+          click: function() {
+            calendar.fullCalendar( 'refetchEvents' );
+          
+          }
+      },
         
 				
 		toggleSidebarRight:{
@@ -505,7 +513,7 @@ $(document).ready(function() {
 				*/
 
       header: {
-        left: 'prev,next today plus3w,plus6w plus1m,plus2m,plus3m',
+        left: 'prev,next today plus3w,plus6w plus1m,plus2m,plus3m refreshCalendar',
         center: 'title',
         right: 'agendaDay,agendaWeek,month toggleSidebarRight'
           //        left: 'add,sell,locationSelect,staffSelect',

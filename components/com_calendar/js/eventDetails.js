@@ -208,7 +208,7 @@ $(document).ready(function() {
 
 function loadEventDetails() {
       $('#tab_busyTime').hide();
-      var title ='<a class="btn btn-sm editPatient">' + objEvent.patientName + '&nbsp;&nbsp;&nbsp;<i class="fa fa-pencil-square-o">&nbsp;</i></a>';
+      var title ='<a class="btn btn-sm editPatient">' + objEvent.patientName + '&nbsp;&nbsp;- '+objEvent.insurance+'&nbsp;&nbsp;&nbsp;<i class="fa fa-pencil-square-o">&nbsp;</i></a>';
 			var body='';
 			title +='<div>';
 			if (objEvent.phone != null){
@@ -227,8 +227,9 @@ function loadEventDetails() {
 			body += '<p><i class="fa fa-user summary"></i>&nbsp;' + objEvent.resourceName + '</p>';
 
 			body += '<p><i class="fa fa-clock-o summary"></i>&nbsp;' + moment(objEvent.start).locale(locale).format('LLLL') + ' &mdash; ' + moment(objEvent.end).format('HH:mm') + '</p>';
-
-			
+      if (objEvent.note != ''){
+        body += '<p><i class="far fa-sticky-note"></i><strong> ' + objEvent.note + ' </strong><a href="#" class="editapp">edit</a></p>';
+      };
 			body += '<p><div class="btn-group appActions" role="group" aria-label="btnGrpEditEvents">';
 			body +='<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</button>';
 			body +='<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbsp;Reschedule</button>';

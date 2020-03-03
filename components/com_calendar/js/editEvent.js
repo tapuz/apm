@@ -32,8 +32,7 @@ var patientLinkedClinic = null;
 
   $('#editAppointment').on('submit', function(e) {
     e.preventDefault();
-    $('.editAppSubmit').prop('disabled',true);
-    $('.editAppSubmit').text("Saving...");
+    
    
     
     if ($('#clinicSelectEditApp').val() === null ) {//clinic has not been selected.. display message and break
@@ -47,6 +46,8 @@ var patientLinkedClinic = null;
       }).show();
       return;
     }
+    $('.editAppSubmit').prop('disabled',true);
+    $('.editAppSubmit').text("Saving...");
     switch (appModalMode) {
     case 'newAppointment':
        eventStatus = 0;
