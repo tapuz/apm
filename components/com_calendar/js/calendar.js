@@ -428,6 +428,7 @@ $(document).ready(function() {
       eventLongPressDelay:2000,
       selectLongPressDelay:2000,
       longPressDelay:2000,
+      contentHeight:"auto",
 	  
       //theme:'false',
       //allDayDefault: false,
@@ -977,6 +978,7 @@ $(document).ready(function() {
         log('all is rendered!!');
         if(calendarPB.isStarted())calendarPB.done();
         
+        renderCalendarTimes();
 
 			},
 
@@ -1015,11 +1017,21 @@ $(document).ready(function() {
 
     }); // end calendar
 
+    //repeat the calendar times
+   
+
   } // end initCal()
 
   $('.tip-init').tooltip();
 
 
+  function renderCalendarTimes(){
+    $( "tr[data-time]" ).not('.fc-minor').each(function() {
+      var time = $( this ).find("td").first().find("span").html();
+      var html = '<div class="fc-slot-times" style="position:relative"><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div>';
+      $(this).find("td").last().html(html);
+    });
+  }
 	 function showConfirm(msg){
             var deferred = $.Deferred();
             bootbox.confirm({

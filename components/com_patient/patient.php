@@ -22,6 +22,7 @@ switch(getView()){
 	case 'patient':
 		loadCSS('encounters.css','patient');
 		loadJS('encounter.js','patient');
+		loadJS('appointment.js','calendar');
 		loadJS('diagnosis.js','patient');
 		loadJS('complaint.js','patient');
 		loadJS('soap.js','patient');

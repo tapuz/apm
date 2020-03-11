@@ -1,3 +1,17 @@
 .imageSelected{
     opacity: 0.5;
   }
+  #patient_appointments ul {
+    list-style-type: none;
+  }
+
+  #patient_appointments .patient_appointment {
+    border-style: solid;
+    border-width: 0 0 0 10px;
+    padding-left: 10px;
+    cursor: pointer;
+  }
+  
+  #patient_appointments .patient_appointment label {
+    cursor: pointer;
+  }

@@ -97,6 +97,7 @@ $(document).ready(function(){
 			renderComplaints(true);
 			renderFlagnotifications();
 			renderDocsPanel();
+			renderPatientAppointments();
 			
 			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
 			oPrevEncounter = encounters[1];
@@ -115,6 +116,8 @@ $(document).ready(function(){
 	var template_complaint_tab = $('#tmpl_complaint_tab').html();
 	var template_complaint = $('#tmpl_complaint').html();
 	var template_complaint_init = $('#tmpl_complaint_init').html();
+	var tmpl_patient_appointments = $('#tmpl_patient_appointments').html();
+		
 	
 	
 	//Parse it 
@@ -122,7 +125,7 @@ $(document).ready(function(){
 	Mustache.parse(template_complaint);
 	Mustache.parse(template_complaint_tab);
 	Mustache.parse(template_complaint_init);
-	
+	Mustache.parse(tmpl_patient_appointments);
 	
 	var template = $('#tmpl_encounter').html();
 	Mustache.parse(template);
@@ -333,13 +336,18 @@ $(document).ready(function(){
 		
 		renderMain();
 				
-				
-				
-	
-
-		
-	 });
+	});
 	 
+	$(document).on('click','.btn_close_encounter_and_close_file',function(){
+		
+	   disableform('editSOAP',true);
+	   editingSOAP = false;
+	   
+	   Noty.closeAll();
+			   
+	   window.close();
+			   
+   });
 	 
 	 $("#complaints_tabs .nav-tabs").on("click", function (e) {
         e.preventDefault();
@@ -851,6 +859,7 @@ $(document).ready(function(){
             }).success(function( docs ) {
                $('#docsPanel').empty();
 				console.log(docs);
+				$('.docCount').html('(' + docs.length + ')');
 				if(docs.length>0){$('.btnSelectDocs').show()}else{$('.btnSelectDocs').hide()}
                 $.each(docs, function(){
                       console.log(this.filename);
@@ -1236,6 +1245,34 @@ $(document).ready(function(){
 
 			
 	});
+	//show appointments
+	function renderPatientAppointments(){
+		
+		var futureAppointments, lastAppointment
+		$.when(
+		  Appointment.getFutureAppointments(patientID,function(appointments){futureAppointments = appointments}),
+		  Appointment.getLastAppointment(patientID,function(appointment){lastAppointment = appointment})
+	  
+		
+		).then(function() {
+		  var title_future_appointments = 'Next Appointment';
+		  var title_last_appointment = 'Last Appointment';
+		  if (futureAppointments.length > 1){title_future_appointments = 'Next Appointments'};
+		  if (futureAppointments.length < 1){title_future_appointments = 'No future appointments'};
+		  if (lastAppointment.length <1 ){title_last_appointment = "No last appointment"}
+	  
+			var rendered = Mustache.render(tmpl_patient_appointments,
+				{ title_future_appointments:title_future_appointments,
+				  title_last_appointment: title_last_appointment,
+				  future_appointments : futureAppointments,
+				  last_appointment : lastAppointment
+				});
+			$('#patient_appointments').html(rendered);  
+		
+		});
+		
+	  
+	  }
 
 	$(document).on('click','.btn_print_encounter',function(){
 		log(vitals);

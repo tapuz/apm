@@ -202,7 +202,7 @@ p.selected-patient-details{
     font-size: 1.1em !important;
     margin-left: 5px;
     color: black;
-    font-weight: 900;
+    font-weight: 600;
     
 }
 
@@ -272,7 +272,49 @@ td.fc-day.fc-widget-content.fc-wed.fc-today.fc-state-highlight {
 }
 
 .fc-bgevent{opacity:.1}
-.fc-nonbusiness{background-color:#3b3b3b}
+.fc-nonbusiness{
+  /*background-color:#3b3b3b}*/
+  background-image: -o-linear-gradient(45deg,#303b42 10%,#292a2b 10%,#292a2b 50%,#303b42 50%,#303b42 60%,#292a2b 60%,#292a2b 100%);
+    background-image: linear-gradient(45deg,#303b42 10%,#292a2b 0,#292a2b 50%,#303b42 0,#303b42 60%,#292a2b 0,#292a2b);
+    background-size: 7.07px 7.07px;
+    opacity: .3
+
+}
+
+
+.fc-slot-times {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  line-height: 19px
+}
+
+.fc-unselectable .fc-slot-times {
+  cursor: default
+}
+
+.fc-slot-time {
+  display: table-cell;
+  text-align: right;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #444444;
+  font-size: 11px;
+  cursor: pointer;
+  position: relative
+}
+
+.fc-slot-time-inner {
+  position: absolute;
+  top: 1px;
+  right: 0
+}
+
+.fc-unselectable .fc-slot-time {
+  cursor: default
+}
+
+
 
 .nav-pills>li>a {
     border-radius: 1px;

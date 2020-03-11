@@ -30,7 +30,7 @@
 								<li><a href="#History"><i class="fas fa-file-medical-alt"></i> History</a></li>
 								<li><a href="#complaints"><i class="fas fa-notes-medical"></i> Complaints</a></li>
 								<li><a href="#notes_tab"><i class="far fa-sticky-note"></i> Notes</a></li>
-								<li><a href="#docs_tab"><i class="far fa-file"></i> Docs (5)</span></a></li>
+								<li><a href="#docs_tab"><i class="far fa-file"></i> Docs</span><span class="docCount">(0)</span></a></li>
 							</ul>
 							
 						</div>
@@ -187,6 +187,8 @@
 				
 					
 	<!--/right menu -->
+	<div id="patient_appointments">
+	</div>
 	
 
 </div><!--/col /Right Content-->
@@ -266,6 +268,9 @@
 <?include(TEMPLATES . 'general_history.html'); ?>
 <?include(TEMPLATES . 'paediatric_history.html'); ?>
 <?include(TEMPLATES . 'encounter_print.html'); ?>
+<?include(TEMPLATES . 'patient_appointments.html'); ?>
+
+
 
 
 

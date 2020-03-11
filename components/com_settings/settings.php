@@ -1,5 +1,7 @@
 <?php 
 //Component Settings
+define('COMPONENT','settings');
+define('TEMPLATES', ROOT . '/components/com_' . COMPONENT . '/templates/');
 
 loadCSS('settings.css','settings');
 loadJS('settings.js','settings');
@@ -39,6 +41,7 @@ switch (getTask())
 	 			//get the letter_id just created to pass to the select_category view
 	 	$template_id = $wpdb->insert_id;		
 	break;
+
 	
 	
 }
@@ -51,6 +54,22 @@ switch (getView()) {
 	include('views/general.php');
 		
 	break;
+
+	case 'working_plan':
+		loadLib('clinic');
+		loadJS('mustache.min.js');
+		loadJS('working_plan.js','settings');
+		//get the clinics in which the user is working
+		$user = get_current_user_id();
+		$clinics = json_encode(Clinic::getClinics($user));
+
+		$workingPlan = get_user_meta( $user, 'working_plan',1);
+
+
+
+		include('views/working_plan.php');
+	break;
+
 	case 'select_category':
 		// get letter categories to select from
 		
