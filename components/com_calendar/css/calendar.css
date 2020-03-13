@@ -1,6 +1,20 @@
 #calendar{
     padding-right: 0px;
+    
+  
 }
+/*Following styles can create a set width in which the user can scroll for the calendar*/
+/*.fc-view-container {
+  width: auto;
+}
+
+.fc-view-container .fc-view {
+  overflow-x: scroll;
+}
+
+.fc-view-container .fc-view > table {
+  width: 1400px;
+}*/
 
 .ui-autocomplete-loading {
     background: white url("../../../assets/img/loading_2.gif") right center no-repeat;
@@ -298,7 +312,7 @@ td.fc-day.fc-widget-content.fc-wed.fc-today.fc-state-highlight {
   text-align: right;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  color: #444444;
+  color: #737373;
   font-size: 11px;
   cursor: pointer;
   position: relative

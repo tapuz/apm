@@ -116,11 +116,20 @@ function saveLetter()
 
 
 function printLetter() {
-	var clinic_logo = $("#clinic_logo").val();
+	//get the clinic header
+	var clinicID = $('#clinic').val();
+	$.ajax({
+		type: "post",
+	  	url: "ajax.php",
+		data: { com:'letter',task:'getClinic',clinic_id: clinicID }
+	  }).success(function( data ) {
+		  data = JSON.parse(data);
+    	  var header = data.clinic_letter_heading + "<br><br>";
+		  $('#editor').printThis({header: header});
 	
-	//var header = $("#clinic_letter_heading").val() + "<br><br>";
-    var header = $("#clinic").val() + "<br><br>";
-	$('#editor').printThis({header: header});
+		  	
+	  });
+
 	
 }
 

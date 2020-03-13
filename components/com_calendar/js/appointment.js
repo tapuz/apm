@@ -183,8 +183,30 @@ class Appointment {
     });
   }
 
+  static updateCustom(oAppointment,callback,fail){
+    $.ajax({
+      url: "ajax.php",
+      dataType: "json",
+      type: 'post',
+      data: {
+        com: 'calendar',
+        task: 'updateCustomAppointment',
+        appointment : JSON.stringify(oAppointment)
+        
+
+      },
+      success: function(data) {
+        if (callback) {
+          callback(data);
+        }
+      },
+      fail: function(){
+        log('tis failing');
+        fail();}
+    });
+  }
   static update(oAppointment,callback,sendEmail,fail){
-    log(JSON.stringify(oAppointment));
+    
     $.ajax({
       url: "ajax.php",
       dataType: "json",

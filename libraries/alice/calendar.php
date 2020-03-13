@@ -183,7 +183,25 @@ class Calendar {
 		$wpdb->delete( 'table_appointments', array( 'appointment_id' => $id ) );
 	}
 
-	public function updateAppointment($appointment){
+	public static function updateCustomAppointment($appointment){
+		$appointment = json_decode($appointment);
+		error_log('updating custom !!');
+		global $wpdb;
+		$wpdb->update( 
+				'table_appointments', 
+				array( 
+					'start' => $appointment->start, 
+					'end' => $appointment->end, 
+					'user' => $appointment->user
+					),
+				array( 'appointment_id' => $appointment->id)
+	 			);
+		
+				 error_log(print_r( self::getAppointment($appointment->id)),1);		
+	}
+
+
+	public static function updateAppointment($appointment){
 		$appointment = json_decode($appointment);
 		//error_log($appointment->service . ' :service');
 		global $wpdb;

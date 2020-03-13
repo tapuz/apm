@@ -202,13 +202,16 @@ $(document).ready(function() {
 });
 
 
-
+$(document).on('click','.loadPatientRightPanel',function(){
+  loadPatientDetailsRightPanel( $(this).attr("patient_id"));
+  $('#eventDetails').modal('hide');
+});
 
 
 
 function loadEventDetails() {
       $('#tab_busyTime').hide();
-      var title ='<a class="btn btn-sm editPatient">' + objEvent.patientName + '&nbsp;&nbsp;- '+objEvent.insurance+'&nbsp;&nbsp;&nbsp;<i class="fa fa-pencil-square-o">&nbsp;</i></a>';
+      var title ='<a class="btn btn-sm loadPatientRightPanel" patient_id="'+objEvent.patientID+'">' + objEvent.patientName + '&nbsp;&nbsp;- '+objEvent.insurance+'&nbsp;&nbsp;&nbsp;<i class="fa fa-pencil-square-o">&nbsp;</i></a>';
 			var body='';
 			title +='<div>';
 			if (objEvent.phone != null){

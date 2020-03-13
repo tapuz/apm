@@ -21,11 +21,12 @@ public function getClinics($user) {
     
 }
 
-public function getClinic($clinic_id) {
+public static function getClinic($clinic_id) {
 	global $wpdb;
 	//get clinic object
 	$query= sprintf('SELECT * from table_clinics WHERE clinic_id = %d',$clinic_id); 
 	$clinic = $wpdb->get_row($query);
+	
 	return $clinic;
 	}
 	

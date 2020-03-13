@@ -1,6 +1,11 @@
 var tmpl_patient_search_results;
 var tmpl_patient_demographics;
-var tmpl_patient_appointments
+var tmpl_patient_appointments;
+var rightPanelPB = new NProgress({
+  container:'#rightPanelProgress',
+  randomTrickle:true
+
+});
 
 $(document).ready(function() {
   //hide the patient_details div
@@ -8,11 +13,7 @@ $(document).ready(function() {
   $('#rightPanel .search_results').toggle();
 
   //init the progress bar
-  var rightPanelPB = new NProgress({
-    container:'#rightPanelProgress',
-    randomTrickle:true
 
-  });
 
   //load the datepicker
   datepicker = $('#datePicker').datepicker({
@@ -127,20 +128,14 @@ $(document).ready(function() {
     $(document).on('click','#rightPanel .patient',function() {
       //get the patient details,push them into template
       patientID = $(this).attr('patient_id'); //set Global var
-      rightPanelPB.start();
-      Patient.get(patientID,function(patient){
-        oPatient = patient; //set the Global var
-        log('this is the pat: ' + oPatient );
-        renderRightPanelPatientDetails(oPatient);
-        rightPanelPB.done();
-        log(JSON.stringify(oPatient));
-        
-      });
-      renderRightPanelPatientAppointments();
+      loadPatientDetailsRightPanel(patientID);
 
 
 
     });
+
+
+    
 
     $(document).on('click','#rightPanel .patient_details .back',function() {
       $('#rightPanel .patient_details').toggle();
@@ -194,6 +189,24 @@ $(document).ready(function() {
 
 });
 
+function loadPatientDetailsRightPanel(patientID){
+  if($("#rightPanel").is(":visible")){
+
+  }else{
+    $('.fc-toggleSidebarRight-button').click();
+  }
+  $('#rightPanel .default').hide();
+  rightPanelPB.start();
+  Patient.get(patientID,function(patient){
+    oPatient = patient; //set the Global var
+    renderRightPanelPatientDetails(oPatient);
+    rightPanelPB.done();
+    
+    
+  });
+  renderRightPanelPatientAppointments();
+
+}
 
 function renderRightPanelPatientDetails(){
    // check the sex of the patient and set the correct icon
@@ -211,7 +224,7 @@ function renderRightPanelPatientDetails(){
     }
 
     //get the practitioner name
-   log(users);
+   //log(users);
    //var oUser = users.find(x => x.data.ID === oPatient.practitioner.toString());
 
    var rendered = Mustache.render(tmpl_patient_demographics,
@@ -228,7 +241,7 @@ function renderRightPanelPatientDetails(){
            insurance:oPatient.insurance,
            practitioner:users[oPatient.practitioner].data.display_name
           });
-
+          
   $('#rightPanel .patient_details').show();
   $('#rightPanel .search_results').hide();
   $('#rightPanel .patient_demographics').html(rendered);

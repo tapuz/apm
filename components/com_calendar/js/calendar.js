@@ -429,6 +429,7 @@ $(document).ready(function() {
       selectLongPressDelay:2000,
       longPressDelay:2000,
       contentHeight:"auto",
+      allDaySlot: false,
 	  
       //theme:'false',
       //allDayDefault: false,
@@ -766,10 +767,10 @@ $(document).ready(function() {
 
       eventDrop: function(event, delta, revertFunc) {
         objEvent = event;
-        log(clinicID + ' is CLINIC shit');
         //if we have a customAppointment-> no need for confirmation and we need a different appointment update
         if(event.customAppointment == 1){
-           Appointment.update({
+        
+           Appointment.updateCustom({
 									id: event.id,
                   start: event.start.format(),
                   end: event.end.format(),
@@ -777,7 +778,7 @@ $(document).ready(function() {
                  
               }, function() {
                //do stuff?
-              }, 'no' ,function() { //true = send email 
+              } ,function() { //true = send email 
 					revertFunc();
 					});
 
@@ -848,17 +849,17 @@ $(document).ready(function() {
 
       eventResize: function(event, delta, revertFunc) {
 
-      if (event.customAppointment ==true)
-      {
-         Appointment.update({
-            id: event.id,
-               
-                start: event.start.format(),
-                end: event.end.format(),
-                user: event.resourceId,
-                }, function() {
+        if(event.customAppointment == 1){
+        
+          Appointment.updateCustom({
+                 id: event.id,
+                 start: event.start.format(),
+                 end: event.end.format(),
+                 user: event.resourceId
+                
+             }, function() {
                   log ('app updated');
-                }, 'no' ,function () {
+                },function () {
             revertFunc();
             });
       }else{

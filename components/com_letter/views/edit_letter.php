@@ -15,9 +15,9 @@
 			<?
 			foreach($clinics as $clinic) {
 				if ($clinic->clinic_id == $letter->clinic_id) {
-					echo sprintf('<option clinic_id ="%s" value="%s" selected>%s</option>',$clinic->clinic_id,$clinic->clinic_letter_heading,$clinic->clinic_name);
+					echo sprintf('<option clinic_id ="%s" value="%s" selected>%s</option>',$clinic->clinic_id,$clinic->clinic_id,$clinic->clinic_name);
 				} else {
-					echo sprintf('<option clinic_id ="%s" value="%s">%s</option>',$clinic->clinic_id,$clinic->clinic_letter_heading,$clinic->clinic_name);
+					echo sprintf('<option clinic_id ="%s" value="%s">%s</option>',$clinic->clinic_id,$clinic->clinic_id,$clinic->clinic_name);
 				}
 			}
 			?>

@@ -161,6 +161,10 @@ switch (getVar('task')){
 		
 	break;
 
+	case 'updateCustomAppointment':
+		Calendar::updateCustomAppointment(stripslashes(getVar('appointment')));
+	break;
+
 	case 'updateAppointment':
 		//Calendar::updateAppointment(getVar('id'),getVar('start'),getVar('end'),getVar('user'),getVar('patientID'),getVar('status'),getVar('service'));
 		$appointment =  Calendar::updateAppointment(stripslashes(getVar('appointment')));

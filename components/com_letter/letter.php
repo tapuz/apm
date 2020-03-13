@@ -118,6 +118,15 @@ switch (getVar('task')){
 		echo sprintf('<div id="template">%s</div>',$template->template);
 		
 	break;
+
+	case "getClinic":
+		
+		echo $clinic = json_encode(Clinic::getClinic(getVar('clinic_id')));
+		error_log($clinic);
+		error_log("hehee " + getVar('clinic_id'));
+
+	break;
+	
 }
 
 switch (getVar('view')) {
@@ -165,6 +174,7 @@ switch (getVar('view')) {
 		$query = sprintf('SELECT * from table_letter_templates WHERE category_id = %s',$letter->category_id); 
 		$templates = $wpdb->get_results($query);
 		$clinics = Clinic::getClinics(get_current_user_id());
+		error_log(json_encode($clinics));
 		//$clinic = getClinic($patient->clinic);
 		
 		$backLink = "index.php?com=letter&view=list&patient_id=" . $patient_id; 
