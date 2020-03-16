@@ -8,7 +8,7 @@
 	
 	<!-- start: Meta -->
 	<meta charset="utf-8">
-	<title>Alice - Patient Management</title>
+	<title>Timegenics</title>
 
 	<!-- end: Meta -->
 	
