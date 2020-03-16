@@ -271,7 +271,7 @@ function editorToolbar()
 
 
 
-<?
+<?php
 }
 
 ?>

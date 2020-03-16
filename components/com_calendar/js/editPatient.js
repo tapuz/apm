@@ -11,6 +11,9 @@ function editPatient(patientID){
             $('#Patient_DOB').val(moment(patient.dob,'YYYY-MM-DD').format('L'));
             $('#Patient_Sex').val(patient.sex);
             $('#Patient_Phone').val(patient.phone);
+            $('#Patient_Mobile').val(patient.gsm);
+            $('#Patient_Mobile').prop('disabled',true);
+            
             $('#Patient_Email').val(patient.email);
             log('this is the PROFF ' +  patient.profession);
             $('#Patient_profession').val(patient.profession);

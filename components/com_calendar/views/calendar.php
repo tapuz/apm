@@ -407,10 +407,16 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-6">
+			<div class="col-sm-3">
 				<div class="form-group ">
 					<label class="" for="Patient_FirstName">Telephone</label>
 					<input autocomplete="off" class="first form-control" id="Patient_Phone" name="phone" type="text">
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="form-group ">
+					<label class="" for="Patient_FirstName">Mobile</label>
+					<input autocomplete="off" class="first form-control" id="Patient_Mobile" name="gsm" type="text">
 				</div>
 			</div>
 			<div class="col-sm-6">

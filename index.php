@@ -1,11 +1,12 @@
-<?
+<?php
 $ver='0.5.7';
 define('VERSION','v.' . $ver);
+define('ROOT', dirname(__FILE__));
 
 include('configuration.php');
 require_once ($config['path_wp-config']);
 
-define('ROOT', dirname(__FILE__));
+
 
 
 
@@ -41,7 +42,7 @@ if ( !is_user_logged_in() )
 <body>
 
 	<!-- start: Header -->
-		<?if (!componentOnly()){loadModule('header');}?>
+		<?php if (!componentOnly()){loadModule('header');}?>
 	<!-- end: Header -->
 		<!-- start: Container -->
 		<div id="main_content" class="container">
@@ -52,19 +53,19 @@ if ( !is_user_logged_in() )
 				<!-- end: Main Menu -->
 						
 			<!-- start: Content -->
-			<?if (!componentOnly()){?>
+			<?php if (!componentOnly()){?>
 				
 				<div id="content" class="col-lg-10 col-sm-11 ">
 				
-			<?}else{?>
+			<?php }else{?>
 				<div id="content" class="col-sm-12 full">
-			<?}?>
+			<?php }?>
 			
 			<div class="row"> <!-- start row that holds all content-->
 				
 				
 				<!-- start: Component -->
-				<?include('includes/component_selector.php');?>
+				<?php include('includes/component_selector.php');?>
 				<!-- /component-->
 				</div>
 			</div> <!-- /row that holds all content -->
@@ -73,8 +74,8 @@ if ( !is_user_logged_in() )
 		
 	</div><!--/container-->
 	
- <?loadModule('footer');?>
-<?
+ <?php loadModule('footer');?>
+<?php
 ?>
 <div id="overlay"></div>
 </body>
