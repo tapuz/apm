@@ -54,7 +54,7 @@
 						<?//loadModule('messages');?>
 					<!-- end: Message Dropdown -->
 					<!-- <li>
-						<a class="btn" href="index.html#">
+						<a class="btn" href="index.html">
 							<i class="icon-wrench"></i>
 						</a>
 					</li> -->

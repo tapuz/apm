@@ -42,6 +42,12 @@ switch (getTask())
 	 	$template_id = $wpdb->insert_id;		
 	break;
 
+	case 'save_workingplan':
+		$user = get_current_user_id();
+		update_user_meta( $user, 'working_plan', getVar('working_plan') );
+		
+	break;
+
 	
 	
 }
@@ -55,10 +61,24 @@ switch (getView()) {
 		
 	break;
 
+	case 'clinics':
+		loadLib('clinic');
+		loadJS('mustache.min.js');
+		loadJS('clinics.js','settings');
+		//get the clinics in which the user is working
+		$user = get_current_user_id();
+		$clinics = json_encode(Clinic::getClinics($user));
+		include('views/clinics.php');
+	
+	break;
+
 	case 'working_plan':
+		loadCSS('jquery.timepicker.min.css');
+		loadJS('jquery.timepicker.min.js');
 		loadLib('clinic');
 		loadJS('mustache.min.js');
 		loadJS('working_plan.js','settings');
+	
 		//get the clinics in which the user is working
 		$user = get_current_user_id();
 		$clinics = json_encode(Clinic::getClinics($user));

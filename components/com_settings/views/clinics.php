@@ -1,11 +1,11 @@
 
 <script>
-    var workingPlan = <?=$workingPlan?>; 
+    
     var clinics = <?=$clinics?>;
 
 </script>
 
-<?$view_title='Settings - Working Plan'?>
+<?$view_title='Settings - Clinics'?>
 	<!-- start: Breadcrumb -->
 	<?loadModule('view_title');?>
 	<!-- /breadcrumb-->
@@ -13,7 +13,7 @@
 <div class="col-sm-12 col-md-9"><!-- Start Left content -->
 
 <button type="button" class="btn btn-primary save_working_plan btn-block"><i class="fas fa-save"></i>&nbsp;Save</button>
-<div class="working_plan_container" style="">
+<div class="clinics_container" style="">
     
                   
 </div>                

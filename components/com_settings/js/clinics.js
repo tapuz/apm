@@ -1,8 +1,8 @@
 $(function() {
 
-  var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+ 
     
-    var tmpl_working_plan = $('#tmpl_working_plan').html();
+    var tmpl_clinics = $('#tmpl_clinics').html();
     Mustache.parse(tmpl_working_plan);
 
     log(workingPlan);

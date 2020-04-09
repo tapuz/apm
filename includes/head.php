@@ -20,6 +20,7 @@
 	
 	<!-- start: CSS -->
 	<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+	<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">-->
 	<link href="assets/css/style.min.css" rel="stylesheet">
 	<link href="assets/css/retina.min.css" rel="stylesheet">
 	<link href="assets/css/print.css" rel="stylesheet" type="text/css" media="print"/>
@@ -28,9 +29,15 @@
 	<link href="assets/css/offline-language-english.css" rel="stylesheet">
 	<link href="assets/css/noty.css" rel="stylesheet">
 	<link href="https://rawgit.com/pchiwan/nprogress/master/nprogress.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.css">
+	
 	
 
+
+
+
 	
+
 
 	
 	
@@ -59,8 +66,11 @@
 
 	<!-- start: JavaScript-->
 	<!--[if !IE]>-->
-
-			<script src="assets/js/jquery-2.0.3.min.js"></script>
+	
+	<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.1.0.js"></script>
+  
+			<!--<script src="assets/js/jquery-2.0.3.min.js"></script>-->
 
 	<!--<![endif]-->
 
@@ -72,9 +82,9 @@
 
 	<!--[if !IE]>-->
 
-		<script type="text/javascript">
+		<!--<script type="text/javascript">
 			window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
-		</script>
+		</script>-->
 
 	<!--<![endif]-->
 
@@ -85,24 +95,30 @@
 		</script>
 		
 	<![endif]-->
-	<script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+	<!--<script src="assets/js/jquery-migrate-1.2.1.min.js"></script>-->
 	<!-- page scripts -->
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js'></script>
 
 	<script src="assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 	<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script src="assets/js/jquery.sparkline.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>-->
 	<script src="assets/js/bootstrap.min.js"></script>
 	<script src="assets/js/offline.min.js"></script>
 	<script src="https://rawgit.com/pchiwan/nprogress/master/nprogress.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.js">
 
-	
-	
-	
-	
-	
-	
-	
 
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="assets/js/excanvas.min.js"></script><![endif]-->
 	<!--<script src="assets/js/jquery.flot.min.js"></script>

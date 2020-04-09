@@ -70,29 +70,38 @@ function getResponse(response){
  * 
 **/
 
+
+
 function getTaskDropdown() {
-    $.ajax({type: "post", url: "ajax.php", dataType: "json",
-          data: { com: 'tasks',task: 'get_tasks'}
-            }).success(function( data ) {
-                 $('#dropdown_menu_task_count').html(data.length);
-                 var dropdown = $('#dropdown_menu_tasks');
-                 dropdown.empty();
-                 $('<span>',{class:'dropdown-menu-title'}).html('You have '+ data.length +' tasks in progress').appendTo(dropdown);
-                 
-                 $.each(data, function(){
-                  header = $('<span>',{class:"header"});
-                  title =  $('<span>',{class:"title"}).html(this.task);
-                  a = $('<a>',{ href:"index.php?com=tasks&view=edit_task&task_id=" + this.task_id});
-                  e= header.append(title);  
-                  a.append(e);
-                  $('<li>').append(a).appendTo(dropdown);
-                });		
-	           footer = $('<a>',{class:"dropdown-menu-sub-footer",href:"index.php?com=tasks&view=list"}).html('View all tasks');
-               $('<li>')
-               .append(footer)
-               .appendTo(dropdown);
-	        });
+    $.ajax({
+        type: "post", 
+        url: "ajax.php", 
+        dataType: "json",
+        data: { com: 'tasks',task: 'get_tasks'},
+        success: function( data ) {
+            $('#dropdown_menu_task_count').html(data.length);
+            var dropdown = $('#dropdown_menu_tasks');
+            dropdown.empty();
+            $('<span>',{class:'dropdown-menu-title'}).html('You have '+ data.length +' tasks in progress').appendTo(dropdown);
+            
+            $.each(data, function(){
+             header = $('<span>',{class:"header"});
+             title =  $('<span>',{class:"title"}).html(this.task);
+             a = $('<a>',{ href:"index.php?com=tasks&view=edit_task&task_id=" + this.task_id});
+             e= header.append(title);  
+             a.append(e);
+             $('<li>').append(a).appendTo(dropdown);
+           });		
+          footer = $('<a>',{class:"dropdown-menu-sub-footer",href:"index.php?com=tasks&view=list"}).html('View all tasks');
+          $('<li>')
+          .append(footer)
+          .appendTo(dropdown);
+       }
+            
+});
+
 }
+
 
 
 //console.log(PreviousUrl);

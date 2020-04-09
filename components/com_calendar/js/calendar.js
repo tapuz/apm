@@ -348,6 +348,7 @@ $(document).ready(function() {
           
           if(this.clinic == selectedClinic){
             //log('WE HAVE A MATCH :' + this.clinic ); // only render this working plan
+            var color = this.color
             $.each(this.workingPlan,function(){
               
               $.each(this,function( day, dayplan ) {
@@ -371,13 +372,14 @@ $(document).ready(function() {
                   dow: [dayplan.dow], 
                   rendering: 'background',
                   type:'bgEvent',
+                  color:color,
                   clinic:selectedClinic
                  
                 },true);
                 //render the breaks
               $.each(dayplan.breaks,function(){
                 //log('break start:' + this.start + 'dow: ' + dayplan.dow);
-                calendar.fullCalendar('selectedUser', {
+                calendar.fullCalendar('renderEvent', {
                   id:'break', //all need the same ID, else you would get cumulative layer coloring
                   className: 'fc-nonbusiness',
                   start: this.start,

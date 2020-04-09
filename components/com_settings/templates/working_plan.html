@@ -1,171 +1,321 @@
 <script id='tmpl_working_plan' type="x-tmpl-mustache">
+ 
 <div class="panel panel-default">
   <div class="panel-heading">Working Plan</div>
   <div class="panel-body">
-    <ul class="nav tab-menu nav-tabs" id="workingPlanTabs">
+      
+   
+    <ul class="nav nav-tabs workingPlanTabs" id="workingPlanTabs">
         {{#clinics}}
-            <li><a href="#{{clinic_id}}">{{clinic_name}}</a></li>
+            <li><a href="#{{clinic_id}}" data-toggle="tab">{{clinic_name}}</a></li>
         {{/clinics}}
 								
 	</ul>
 
     <div id="workingPlanTabsContent" class="tab-content">
          {{#clinics}}
-             <div class="tab-pane" id="{{clinic_id}}">{{clinic_name}}</div>
+             <div class="tab-pane working_plan_" id="{{clinic_id}}">
+                <h3>Working Plan for <strong>{{clinic_name}}</strong></h3>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>Calendar color: </label>    
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="colorpicker form-control input" value="{{color}}">
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+
+                {{#working_plan}}
+
+                <div class="day-group monday">
+                    <div class="day-hours row">
+                        <div class="col-sm-2">
+                            <label class="customcheck"><input type="checkbox" class="{{clinic_id}}monday" {{#monday}}checked{{/monday}}> Monday <span class="checkmark"></span></label>
+                        </div>
+                        <span class="time-select {{^monday}}inactive{{/monday}}">
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-start form-control input" value="{{monday.start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-end form-control input" value="{{monday.end}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-sm add-break"><span class="glyphicon glyphicon-plus"></span></button> break
+                        </div>
+                        </span>
+                    </div>
+                    <span class="time-select {{^monday}}inactive{{/monday}}">
+                    <div class="day-breaks">
+                        <div class="row">&nbsp;</div>
+                    {{#monday.breaks}}
+                        <div class="row day-break">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-start form-control input" type="text" value="{{start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-end form-control input" type="text" value="{{end}}">
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>
+                    {{/monday.breaks}}
+                    </div>
+                    </span>
+                
+                </div>
+                <div class="row">&nbsp;</div>
+
+                <div class="day-group tuesday">
+                    <div class="day-hours row">
+                        <div class="col-sm-2">
+                            <label class="customcheck"><input type="checkbox" class="{{clinic_id}}tuesday" {{#tuesday}}checked{{/tuesday}}> Tuesday <span class="checkmark"></span></label>
+                        </div>
+                        <span class="time-select {{^tuesday}}inactive{{/tuesday}}">
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-start form-control input" value="{{tuesday.start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-end form-control input" value="{{tuesday.end}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-sm add-break"><span class="glyphicon glyphicon-plus"></span></button> break
+                        </div>
+                        </span>
+                    </div>
+                    <span class="time-select {{^tuesday}}inactive{{/tuesday}}">
+                    <div class="day-breaks">
+                        <div class="row">&nbsp;</div>
+                    {{#tuesday.breaks}}
+                        <div class="row day-break">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-start form-control input" type="text" value="{{start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-end form-control input" type="text" value="{{end}}">
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>
+                    {{/tuesday.breaks}}
+                    </div>
+                    </span>
+                
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="day-group wednesday">
+                    <div class="day-hours row">
+                        <div class="col-sm-2">
+                            <label class="customcheck"><input type="checkbox" class="{{clinic_id}}wednesday" {{#wednesday}}checked{{/wednesday}}> Wednesday <span class="checkmark"></span></label>
+                        </div>
+                        <span class="time-select {{^wednesday}}inactive{{/wednesday}}">
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-start form-control input" value="{{wednesday.start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-end form-control input" value="{{wednesday.end}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-sm add-break"><span class="glyphicon glyphicon-plus"></span></button> break
+                        </div>
+                        </span>
+                    </div>
+                    <span class="time-select {{^wednesday}}inactive{{/wednesday}}">
+                    <div class="day-breaks">
+                        <div class="row">&nbsp;</div>
+                    {{#wednesday.breaks}}
+                        <div class="row day-break">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-start form-control input" type="text" value="{{start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-end form-control input" type="text" value="{{end}}">
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>
+                    {{/wednesday.breaks}}
+                    </div>
+                    </span>
+                
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="day-group thursday">
+                    <div class="day-hours row">
+                        <div class="col-sm-2">
+                            <label class="customcheck"><input type="checkbox" class="{{clinic_id}}thursday" {{#thursday}}checked{{/thursday}}> Thursday <span class="checkmark"></span></label>
+                        </div>
+                        <span class="time-select {{^thursday}}inactive{{/thursday}}">
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-start form-control input" value="{{thursday.start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-end form-control input" value="{{thursday.end}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-sm add-break"><span class="glyphicon glyphicon-plus"></span></button> break
+                        </div>
+                        </span>
+                    </div>
+                    <span class="time-select {{^thursday}}inactive{{/thursday}}">
+                    <div class="day-breaks">
+                        <div class="row">&nbsp;</div>
+                    {{#thursday.breaks}}
+                        <div class="row day-break">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-start form-control input" type="text" value="{{start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-end form-control input" type="text" value="{{end}}">
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>
+                    {{/thursday.breaks}}
+                    </div>
+                    </span>
+                
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="day-group friday">
+                    <div class="day-hours row">
+                        <div class="col-sm-2">
+                            <label class="customcheck"><input type="checkbox" class="{{clinic_id}}friday" {{#friday}}checked{{/friday}}> Friday <span class="checkmark"></span></label>
+                        </div>
+                        <span class="time-select {{^friday}}inactive{{/friday}}">
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-start form-control input" value="{{friday.start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-end form-control input" value="{{friday.end}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-sm add-break"><span class="glyphicon glyphicon-plus"></span></button> break
+                        </div>
+                        </span>
+                    </div>
+                    <span class="time-select {{^friday}}inactive{{/friday}}">
+                    <div class="day-breaks">
+                        <div class="row">&nbsp;</div>
+                    {{#friday.breaks}}
+                        <div class="row day-break">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-start form-control input" type="text" value="{{start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-end form-control input" type="text" value="{{end}}">
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>
+                    {{/friday.breaks}}
+                    </div>
+                    </span>
+                
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="day-group saturday">
+                    <div class="day-hours row">
+                        <div class="col-sm-2">
+                            <label class="customcheck"><input type="checkbox" class="{{clinic_id}}saturday" {{#saturday}}checked{{/saturday}}> Saturday <span class="checkmark"></span></label>
+                        </div>
+                        <span class="time-select {{^saturday}}inactive{{/saturday}}">
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-start form-control input" value="{{saturday.start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-end form-control input" value="{{saturday.end}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-sm add-break"><span class="glyphicon glyphicon-plus"></span></button> break
+                        </div>
+                        </span>
+                    </div>
+                    <span class="time-select {{^saturday}}inactive{{/saturday}}">
+                    <div class="day-breaks">
+                        <div class="row">&nbsp;</div>
+                    {{#saturday.breaks}}
+                        <div class="row day-break">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-start form-control input" type="text" value="{{start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-end form-control input" type="text" value="{{end}}">
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>
+                    {{/saturday.breaks}}
+                    </div>
+                    </span>
+                
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="day-group sunday">
+                    <div class="day-hours row">
+                        <div class="col-sm-2">
+                            <label class="customcheck"><input type="checkbox" class="{{clinic_id}}sunday" {{#sunday}}checked{{/sunday}}> Sunday <span class="checkmark"></span></label>
+                        </div>
+                        <span class="time-select {{^sunday}}inactive{{/sunday}}">
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-start form-control input" value="{{sunday.start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text"  class="timepicker work-end form-control input" value="{{sunday.end}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-sm add-break"><span class="glyphicon glyphicon-plus"></span></button> break
+                        </div>
+                        </span>
+                    </div>
+                    <span class="time-select {{^sunday}}inactive{{/sunday}}">
+                    <div class="day-breaks">
+                        <div class="row">&nbsp;</div>
+                    {{#sunday.breaks}}
+                        <div class="row day-break">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-start form-control input" type="text" value="{{start}}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="timepicker break-end form-control input" type="text" value="{{end}}">
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>
+                    {{/sunday.breaks}}
+                    </div>
+                    </span>
+                
+                </div>
+                    
+
+
+                </div>
+                {{/working_plan}}
+               
           {{/clinics}}
 	    
     </div>
 
-</div>
-    {{#clinics}}  
-        <h3>Working Plan for <strong>{{clinic_name}}</strong></h3>
-            
-        <table class="working-plan table">
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>Start</th>
-                    <th>End</th>
-                </tr>
-            </thead>
-            <tbody>
-            
-            {{#working_plan}}
-                <tr>
-               
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="{{clinic_id}}monday" {{#monday}}checked{{/monday}}>
-                                Monday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="{{clinic_id}}monday work-start form-control input"  {{^monday}}disabled{{/monday}} value="{{monday.start}}"></td>
-                    <td><input type="text"  class="{{clinic_id}}monday work-end form-control input" {{^monday}}disabled{{/monday}} value="{{monday.end}}"></td>
-                </tr>
-                
-                <tr class="breaks">
-                    <td></td>
-                    <td colspan="2"><strong>Breaks<strong></td>
-                    
-                    <td><button type="button" class="btn btn-primary btn-sm add-break">
-                        <span class="glyphicon glyphicon-plus"></span>
-                                               </button></td>
-                </tr>
-                
-                {{#monday.breaks}}
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><input class="{{clinic_id}}monday form-control input" type="text" value="{{start}}"</td>
-                        <td><input class="{{clinic_id}}monday form-control input" type="text" value="{{end}}"</td>
-                        <td><button type="button" class="btn btn-danger btn-sm delete-break" title="Delete"><span class="glyphicon glyphicon-remove"></span></button></td>
 
-                    </tr>
-                {{/monday.breaks}}
+ 
 
-
-
-                <tr>
-               
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="{{clinic_id}}tuesday" {{#tuesday}}checked{{/tuesday}}>
-                                Tuesday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="{{clinic_id}}tuesday work-start hasDatepicker"  {{^tuesday}}disabled{{/tuesday}} value="{{tuesday.start}}"></td>
-                    <td><input type="text"  class="{{clinic_id}}tuesday work-end hasDatepicker" {{^tuesday}}disabled{{/tuesday}} value="{{tuesday.end}}"></td>
-                </tr>
-                
-                <tr class="breaks">
-                    <td></td>
-                    <td colspan="2"><strong>Breaks</strong></td>
-                    <td><button type="button" class="btn btn-primary btn-sm add-break">
-                        <span class="glyphicon glyphicon-plus"></span>
-                                               </button></td>
-                </tr>
-                
-                {{#tuesday.breaks}}
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><input class="{{clinic_id}}tuesday" type="text" value="{{start}}"</td>
-                        <td><input class="{{clinic_id}}tuesday" type="text" value="{{end}}"</td>
-
-                    </tr>
-                {{/tuesday.breaks}}
-            
-                
-
-                <tr>
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="tuesday" {{#tuesday}}checked{{/tuesday}}>
-                                Tuesday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="work-start hasDatepicker" {{^tuesday}}disabled{{/tuesday}} value="{{tuesday.start}}"></td>
-                    <td><input type="text"  class="work-end hasDatepicker" {{^tuesday}}disabled{{/tuesday}}  value="{{tuesday.end}}"></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="wednesday" {{#wednesday}}checked{{/wednesday}}>
-                                Wednesday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="work-start hasDatepicker" {{^wednesday}}disabled{{/wednesday}} value="{{wednesday.start}}"></td>
-                    <td><input type="text"  class="work-end hasDatepicker" {{^wednesday}}disabled{{/wednesday}} value="{{wednesday.end}}"></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="thursday" {{#thursday}}checked{{/thursday}}>
-                                Thursday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="work-start hasDatepicker" {{^thursday}}disabled{{/thursday}} value="{{thursday.start}}"></td>
-                    <td><input type="text"  class="work-end hasDatepicker" {{^thursday}}disabled{{/thursday}} value="{{thursday.end}}"></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="friday" {{#friday}}checked{{/friday}}>
-                                Friday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="work-start hasDatepicker"  {{^friday}}disabled{{/friday}} value="{{friday.start}}"></td>
-                    <td><input type="text"  class="work-end hasDatepicker"  {{^friday}}disabled{{/friday}} value="{{friday.end}}"></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="saturday" {{#saturday}}checked{{/saturday}} >
-                                Saturday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="work-start hasDatepicker" {{^saturday}}disabled{{/saturday}} value="{{saturday.start}}"></td>
-                    <td><input type="text"  class="work-end hasDatepicker" {{^saturday}}disabled{{/saturday}} value="{{saturday.end}}"></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="checkbox">
-                            <label><input type="checkbox" class="sunday" {{#sunday}}checked{{/sunday}} >
-                                Sunday</label>
-                        </div>
-                    </td>
-                    <td><input type="text"  class="work-start hasDatepicker" {{^sunday}}disabled{{/sunday}} value="{{sunday.start}}"></td>
-                    <td><input type="text"  class="work-end hasDatepicker" {{^sunday}}disabled{{/sunday}} value="{{sunday.end}}"></td>
-                </tr>
-                
-
-            {{/working_plan}}
-            <tbody>
-        </table>
-    {{/clinics}}
+   
 
  
  

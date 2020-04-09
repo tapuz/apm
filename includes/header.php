@@ -24,7 +24,7 @@
 					<li><a href="">Patients</a></li>
 					
 					<li class="dropdown hidden-xs">
-						<a class="btn dropdown-toggle" data-toggle="dropdown" href="index.html#">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="index.html">
 							<i class="icon-warning-sign"></i>
 							<span class="number">11</span>
 						</a>
@@ -33,70 +33,70 @@
 								<span>You have 11 notifications</span>
 							</li>	
                         	<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon blue"><i class="icon-user"></i></span>
 									<span class="message">New user registration</span>
 									<span class="time">1 min</span> 
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon green"><i class="icon-comment-alt"></i></span>
 									<span class="message">New comment</span>
 									<span class="time">7 min</span> 
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon green"><i class="icon-comment-alt"></i></span>
 									<span class="message">New comment</span>
 									<span class="time">8 min</span> 
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon green"><i class="icon-comment-alt"></i></span>
 									<span class="message">New comment</span>
 									<span class="time">16 min</span> 
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon blue"><i class="icon-user"></i></span>
 									<span class="message">New user registration</span>
 									<span class="time">36 min</span> 
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon yellow"><i class="icon-shopping-cart"></i></span>
 									<span class="message">2 items sold</span>
 									<span class="time">1 hour</span> 
                                 </a>
                             </li>
 							<li class="warning">
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon red"><i class="icon-user"></i></span>
 									<span class="message">User deleted account</span>
 									<span class="time">2 hour</span> 
                                 </a>
                             </li>
 							<li class="warning">
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon red"><i class="icon-shopping-cart"></i></span>
 									<span class="message">Transaction was canceled</span>
 									<span class="time">6 hour</span> 
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon green"><i class="icon-comment-alt"></i></span>
 									<span class="message">New comment</span>
 									<span class="time">yesterday</span> 
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="icon blue"><i class="icon-user"></i></span>
 									<span class="message">New user registration</span>
 									<span class="time">yesterday</span> 
@@ -109,7 +109,7 @@
 					</li>
 					<!-- start: Notifications Dropdown -->
 					<li class="dropdown hidden-xs">
-						<a class="btn dropdown-toggle" data-toggle="dropdown" href="index.html#">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="index.html">
 							<i class="icon-tasks"></i>
 							<span class="number">17</span>
 						</a>
@@ -118,7 +118,7 @@
 								<span class="dropdown-menu-title">You have 17 tasks in progress</span>
                         	</li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="header">
 										<span class="title">iOS Development</span>
 										<span class="percent"></span>
@@ -127,7 +127,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="header">
 										<span class="title">Android Development</span>
 										<span class="percent"></span>
@@ -136,7 +136,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="header">
 										<span class="title">Django Project For Google</span>
 										<span class="percent"></span>
@@ -145,7 +145,7 @@
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="header">
 										<span class="title">SEO for new sites</span>
 										<span class="percent"></span>
@@ -154,7 +154,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="header">
 										<span class="title">New blog posts</span>
 										<span class="percent"></span>
@@ -170,7 +170,7 @@
 					<!-- end: Notifications Dropdown -->
 					<!-- start: Message Dropdown -->
 					<li class="dropdown hidden-xs">
-						<a class="btn dropdown-toggle" data-toggle="dropdown" href="index.html#">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="index.html">
 							<i class="icon-envelope"></i>
 							<span class="number">9</span>
 						</a>
@@ -179,7 +179,7 @@
 								<span class="dropdown-menu-title">You have 9 messages</span>
 							</li>	
                         	<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="avatar"><img src="assets/img/avatar.jpg" alt="Avatar"></span>
 									<span class="header">
 										<span class="from">
@@ -195,7 +195,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="avatar"><img src="assets/img/avatar2.jpg" alt="Avatar"></span>
 									<span class="header">
 										<span class="from">
@@ -211,7 +211,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="avatar"><img src="assets/img/avatar3.jpg" alt="Avatar"></span>
 									<span class="header">
 										<span class="from">
@@ -227,7 +227,7 @@
                                 </a>
                             </li>
 							<li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="avatar"><img src="assets/img/avatar4.jpg" alt="Avatar"></span>
 									<span class="header">
 										<span class="from">
@@ -243,7 +243,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="index.html#">
+                                <a href="index.html">
 									<span class="avatar"><img src="assets/img/avatar5.jpg" alt="Avatar"></span>
 									<span class="header">
 										<span class="from">
@@ -265,13 +265,13 @@
 					</li>
 					<!-- end: Message Dropdown -->
 					<li>
-						<a class="btn" href="index.html#">
+						<a class="btn" href="index.html">
 							<i class="icon-wrench"></i>
 						</a>
 					</li>
 					<!-- start: User Dropdown -->
 					<li class="dropdown">
-						<a class="btn account dropdown-toggle" data-toggle="dropdown" href="index.html#">
+						<a class="btn account dropdown-toggle" data-toggle="dropdown" href="index.html">
 							<div class="avatar"><img src="assets/img/avatar.jpg" alt="Avatar"></div>
 							<div class="user">
 								<span class="hello">Welcome!</span>
@@ -279,9 +279,9 @@
 							</div>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="index.html#"><i class="icon-user"></i> Profile</a></li>
-							<li><a href="index.html#"><i class="icon-cog"></i> Settings</a></li>
-							<li><a href="index.html#"><i class="icon-envelope"></i> Messages</a></li>
+							<li><a href="index.html"><i class="icon-user"></i> Profile</a></li>
+							<li><a href="index.html"><i class="icon-cog"></i> Settings</a></li>
+							<li><a href="index.html"><i class="icon-envelope"></i> Messages</a></li>
 							<li><a href="page-login.html"><i class="icon-off"></i> Logout</a></li>
 						</ul>
 					</li>
