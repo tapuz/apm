@@ -15,7 +15,8 @@ var selectedUser = "";
 $(document).ready(function() {
   
 	
-	document.title = 'Calendar';
+  document.title = 'Calendar';
+  window.name = 'calendar';
   //set some vars
 
   /*

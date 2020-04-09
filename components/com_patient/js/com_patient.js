@@ -159,6 +159,10 @@ $(document).ready(function(){
 	
 	
 	
+	$(document).on('click','.bookAppointment', function(){
+		
+	});
+
 	$(document).on('click','.encounter', function(){
 		
 		if (editingSOAP){return}
@@ -366,8 +370,8 @@ $(document).ready(function(){
 	 
 	 
 	
+	$(document).on('click','.unknown-diagnosis',function(){ 
 	 
-	 $('.unknown-diagnosis').live('click',function(){
 		 Diagnosis.addNew($(this).attr('diagnosis'),function(data){
 					formDiagnosis.find('.diagnosis').val(data.diagnosis);
 					formDiagnosis.find('.diagnosis_id').val(data.id);

@@ -275,7 +275,7 @@ var patientLinkedClinic = null;
     
   });
 
-  $('#clinicSelectEditApp').live('change', function() {
+  $(document).on('change','#clinicSelectEditApp',function(){
     log('changing');
     renderServicesLookup($('#clinicSelectEditApp').val());
     //give a warning if selected clinic is different from the clinic the patient is linked to...
@@ -307,7 +307,8 @@ var patientLinkedClinic = null;
     
   });
 
-  $('.deleteAppointment').click(function(){
+  $('#customEventDetails .deleteAppointment').click(function(){
+
     log('deleting!!');
     Appointment.delete(objEvent.id,function(){
       calendar.fullCalendar('removeEvents' , objEvent.id );

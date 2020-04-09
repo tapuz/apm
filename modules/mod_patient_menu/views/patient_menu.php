@@ -5,9 +5,9 @@
 						<li><a href="index.php?com=pictureproof&view=pictureproof&patient_id=<?=$patient_id?>"><i class="fa fa-camera"></i><span class="hidden-sm text"> PictureProof</span></a></li>
 						<li><a href="index.php?com=letter&view=list&patient_id=<?=$patient_id?>"><i class="icon-file-alt"></i><span class="hidden-sm text"> Letters </span><span class="badge"></span></a></li>	
 						<li><a href="index.php?com=invoice&view=list&patient_id=<?=$patient_id?>"><i class="icon-money"></i><span class="hidden-sm text"> Invoices</span></a></li>
-						<li><a href="index.php?com=insoles&view=default&patient_id=<?=$patient_id?>"><i class="icon-money"></i><span class="hidden-sm text"> Insoles</span></a></li>
-						<li><a href="index.php?com=calendar"><i class="icon-calendar"></i><span class="hidden-sm text"> Make Appointment</span></a></li>
-						<li><a href="index.php?com=settings"><i class="icon-envelope-alt"></i><span class="hidden-sm text"> Email</span></a></li>
+					
+						
+					
 					
 						
 						

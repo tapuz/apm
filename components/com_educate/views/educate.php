@@ -6,7 +6,7 @@
 </script>
 
 <input type="hidden" id="clinicHeader" value="<?=$clinicHeader?>">
-
+<?loadModule('patient_name');?>
 
 <div id="thumbnails" class="row">
     <div class="col-lg-12">

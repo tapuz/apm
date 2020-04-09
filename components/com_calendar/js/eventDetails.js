@@ -98,6 +98,7 @@ $(document).ready(function() {
   
     Appointment.addLog(objEvent.id, 'Cancelled', $('.reasonForCancel').val(),'label-danger');
     Appointment.setStatus(objEvent.id, 6, function() {
+      log('setting the status !!');
       $('#eventDetails').modal('hide');
 			objEvent.status = 6;
 			calendar.fullCalendar('updateEvent',objEvent);

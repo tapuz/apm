@@ -56,7 +56,7 @@ switch(getView()){
 		//$letterCount = letterCount();//used in de patient_menu module
 		
 		
-		include('views/patient_new.php');
+		include('views/patient.php');
 		
 	break;
 }

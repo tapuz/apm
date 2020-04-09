@@ -103,7 +103,7 @@ class Appointment {
   static setStatus(appointment_id, status, callback) {
     $.ajax({
       url: "ajax.php",
-      dataType: "json",
+      //dataType: "json",
       type: 'post',
       data: {
         com: 'calendar',

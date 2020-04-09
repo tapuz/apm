@@ -51,8 +51,8 @@ $(function() {
     var whiteBoard = $("#drawingLayer");
    // var newImage = new Image();
    //    newImage.src = "http://tlccrx.com/wp-content/uploads/2013/11/Dermatome.jpg";
+   $(document).on('click','.img-thumbnail',function(){
     
-    $('.img-thumbnail').live("click", function() {
         context = document.getElementById("imgLayer").getContext("2d");
         //context.drawImage(this, 0,0,canvasHeight,this.width * (canvasHeight/this.height));
         context.drawImage(this, 0,0,canvasWidth,this.height * (canvasWidth/this.width));

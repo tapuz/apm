@@ -1,0 +1,38 @@
+<script id='tmpl_clinics' type="x-tmpl-mustache">
+ 
+<div class="panel panel-default">
+  <div class="panel-heading">Clinics</div>
+  <div class="panel-body">
+      
+   
+    <ul class="nav nav-tabs clinicsTabs" id="clinicsTabs">
+        {{#clinics}}
+            <li><a href="#{{clinic_id}}" data-toggle="tab">{{clinic_name}}</a></li>
+        {{/clinics}}
+								
+	</ul>
+
+    <div id=clinicTabsContent" class="tab-content">
+         {{#clinics}}
+             <div class="tab-pane clinic_" id="{{clinic_id}}">
+                <h3>Settings for <strong>{{clinic_name}}</strong></h3>
+
+                <div class="row">
+                    
+                </div>
+                <div class="row">&nbsp;</div>
+
+            </div>
+               
+          {{/clinics}}
+	    
+    </div>
+
+
+ 
+
+   
+
+ 
+ 
+ </script>

@@ -27,4 +27,4 @@
 
 <!--load the Templates-->
 
-<?include(TEMPLATES . 'working_plan.html'); ?>
+<?include(TEMPLATES . 'clinics.html'); ?>
