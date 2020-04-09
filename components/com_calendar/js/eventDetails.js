@@ -3,7 +3,8 @@ var bFlagBookNext = false;
 var theLogs;
 $(document).ready(function() {
 
-  $('.set_status').live("click", function() {
+  $(document).on('click','.set_status',function(){ 
+ 
     var newStatus = $(this).attr('status');
     objEvent.status = newStatus;
 
@@ -24,7 +25,7 @@ $(document).ready(function() {
   });
 
 
-  $('.reschedule').live("click", function() {
+  $(document).on('click','.reschedule',function(){ 
     //set the global flag to true.. the next event click on the calendar should fire a reschedule and not a new event        
     bFlagReschedule = true;
     $('#eventDetails').modal('hide');
@@ -40,7 +41,8 @@ $(document).ready(function() {
     
   });
   
-  $('.booknext').live("click",function(){
+  $(document).on('click','.booknext',function(){ 
+ 
     bFlagBookNext = true;
     fNewPatient = false;
     $('#eventDetails').modal('hide');
@@ -56,7 +58,8 @@ $(document).ready(function() {
     
     });
     
-  $('.editapp').live("click",function(){
+  $(document).on('click','.editapp',function(){    
+  
     
     $('#editEvent .modal-title').html('Edit appointment');
     appModalMode = 'editAppointment';
@@ -83,15 +86,16 @@ $(document).ready(function() {
     
     });
 
-
-  $('.toggleCancelBox').live("click", function() {
+  $(document).on('click','.toggleCancelBox',function(){  
+  
     $('.cancelBox').show();
     $('.appActions').hide();
     $('.appStatusActions').hide();
     $('.reasonForCancel').focus();
   });
 
-  $('.cancelAppointment').live("click", function() {
+  $(document).on('click','.cancelAppointment',function(){
+  
     Appointment.addLog(objEvent.id, 'Cancelled', $('.reasonForCancel').val(),'label-danger');
     Appointment.setStatus(objEvent.id, 6, function() {
       $('#eventDetails').modal('hide');
@@ -110,8 +114,8 @@ $(document).ready(function() {
 
 
   });
+  $(document).on('click','.history',function(){
 
-  $('.history').live("click", function() {
 		
 		Appointment.getLog(eventID,function(log){
 				console.log(log);
@@ -134,8 +138,7 @@ $(document).ready(function() {
   });
 
 
-
-  $('#eventDetails .editPatient').live("click",function(){
+  $(document).on('click','#eventDetails .editPatient',function(){
     $('#eventDetails').modal('hide');
     editPatient(objEvent.patientID);
 
