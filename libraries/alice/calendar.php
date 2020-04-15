@@ -274,9 +274,8 @@ class Calendar {
 	
 	public static function getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing){
 		$day = strtolower(date('l', strtotime($selected_date))); //ex 'monday'
-		
-		$q = sprintf("select * from table_appointments where user = %d AND clinic = %d AND DATE(start) = '%s' ORDER BY start ASC
-			",$user,$clinic,$selected_date);
+		//clinic_id is not needed in the query.. if included, custom appts are excluded.. they do not have a clinic_id
+		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' ORDER BY start ASC",$user,$selected_date);
 		global $wpdb;
 		
 		$appointments=$wpdb->get_results($q);
