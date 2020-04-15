@@ -55,9 +55,9 @@ switch (getVar('task')){
     case 'getClinicsFromGroup':
 		
 		loadLib('clinic');
-		$clincs = Clinic::getClinicsFromGroup(getVar('group'));
-		error_log('CLINICS --> ' . print_r($clincs,1));
-		echo json_encode($clincs);			
+		$clinics = Clinic::getClinicsFromGroup(getVar('group'));
+		error_log('CLINICS --> ' . print_r($clinics,1));
+		echo json_encode($clinics);			
 		
 		
 	break;
@@ -96,6 +96,8 @@ switch (getVar('task')){
 	case 'addAppointment':
 		loadLib('calendar');
 		$appointment =  json_decode(stripslashes(getVar('appointment')));
+		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
+		echo json_encode($appointment);
 		
 		//add the email
 		//test CURL
@@ -106,7 +108,7 @@ switch (getVar('task')){
 		$params['task']='addAppointment';
 		$params['appointment'] =json_encode($appointment);
 
-		$test = httpPost_c('http://www.timegenics.com/app/ajax.php',$params);
+		//$test = httpPost_c('http://www.timegenics.com/app/ajax.php',$params);
 
 
 

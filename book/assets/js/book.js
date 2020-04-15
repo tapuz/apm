@@ -37,7 +37,7 @@ var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 $(document).ready(function() {
  
    var html = '<div class="col-sm-4"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="clinic" value="%clinicID%" clinicName="%clinicName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-home"></i><p>%clinicName%</p></div></div></div>';
-   
+   console.log('helloooo');
    
   // get the clinics from group
    $.ajax({
@@ -48,6 +48,8 @@ $(document).ready(function() {
   			group : getGroup}
 		}).done(function( clinics ) {
                   $.each(clinics, function() {
+                    console.log(clinics);
+                    console.log('helloooo');
                         newhtml = html.replace('%clinicID%',this.clinic_id);
                         newhtml = newhtml.replace('%clinicName%',this.clinic_name);
                         newhtml = newhtml.replace('%clinicName2%',this.clinic_name);

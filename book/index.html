@@ -1,20 +1,476 @@
-<script
+<!doctype html>
+<html lang="nl">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png" />
+	<link rel="icon" type="image/png" href="https://www.rugcentrumgent.be/wp-content/uploads/2015/09/icon-chiropractor.png" />
+	<title>Boek uw afspraak online</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+	
+	<script src="https://use.fontawesome.com/666e5e9f3f.js"></script>
+	<!-- CSS Files -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="assets/css/paper-bootstrap-wizard.css" rel="stylesheet" />
+	
+
+	<!-- Fonts and Icons --
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">-->
+	<link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+	<link href="assets/css/themify-icons.css" rel="stylesheet">
+	
+	
+</head>
+
+<body>
+	<div class="image-container set-full-height" style="background-color: rgb(36, 36, 36)">
+	    
+
+	    <!--   Big container   -->
+	    <div class="container">
+	        <div class="row">
+		        <div class="col-sm-10 col-sm-offset-1">
+
+		            <!--      Wizard container        -->
+		            <div class="wizard-container">
+		                <div class="card wizard-card" data-color="azure" id="wizard">
+		                
+		                <!--        You can switch " data-color="green" "  with one of the next bright colors: "blue", "azure", "orange", "red"       -->
+
+		                    	<div class="wizard-header">
+		                        	<h3 class="wizard-title">Afspraak maken</h3>
+									<p class="category">Volg de stappen hieronder om een afspraak te maken</p>
+									<h3 class="group-description"></h3>
+		                    	</div>
+								<div class="wizard-navigation hidden-xs">
+									<div class="progress-with-circle">
+									    <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 15%;"></div>
+									</div>
+									<ul>
+										<li>
+											<a href="#patient" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-id-badge"></i>
+												</div>
+												Patient
+											</a>
+										</li>
+			                            <li>
+											<a href="#location" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-location-pin"></i>
+												</div>
+												Locatie
+											</a>
+										</li>
+			                            <li>
+											<a href="#practitioner" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-user"></i>
+												</div>
+												Chiropractor
+											</a>
+										</li>
+			                            <li>
+											<a href="#timing" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-timer"></i>
+												</div>
+												Timing
+											</a>
+										</li>
+										<li>
+											<a href="#timeslot_select" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-calendar"></i>
+												</div>
+												Tijdstip
+											</a>
+										</li>
+			                            <li>
+											<a href="#resume" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-check"></i>
+												</div>
+												Samenvatting
+											</a>
+										</li>
+			                        </ul>
+								</div>
+		                        <div class="tab-content">
+		                            <div class="tab-pane" id="patient">
+		                            	<div class="row">
+		                                	<div class="col-sm-12">
+		                                    	<h5 class="info-text"> Wie bent u?</h5>
+		                            		</div>
+											<div id="selectRecurrentNewPatient">
+											
+												<div class="col-sm-10>">
+													
+													<div class="col-sm-6 col-md-offset-3">
+													<div class="choice">
+		                                                <div class="card card-checkboxes card-hover-effect recurrent">
+															<p>Ik ben reeds patient</p>
+		                                                </div>
+		                                            </div>
+													</div>
+													
+													
+													<div class="col-sm-6 col-md-offset-3">
+													<div class="choice">
+		                                                <input type="checkbox" name="jobb" value="Design">
+		                                                <div class="card card-checkboxes card-hover-effect new">
+															<p>Ik ben nog geen patient</p>
+		                                                </div>
+		                                            </div>
+													</div>
+												
+												</div>
+											</div>
+											
+											<div id="recurrentPatient" class="col-sm-offset-1" style="display: none;">
+												<div class='row'>
+													<div class="col-sm-6 col-sm-offset-3">
+														<div class="error" id="message">&nbsp;</div>
+													</div>
+												</div>
+												
+											<form action="" method="">
+		                                	<div class="col-sm-5">
+		                                    	<div class="form-group">
+		                                        	<label>Voornaam</label>
+		                                        	<input type="text" name="firstName" class="form-control" id="firstName" placeholder="Voornaam" value="thierry">
+		                                    	</div>
+												<div class="form-group">
+		                                        	<label>Achternaam</label>
+		                                        	<input type="text" name="surName" class="form-control" id="surName" placeholder="Achternaam" value="duhameeuw">
+		                                    	</div>
+												
+		                                	</div>
+		                                	<div class="col-sm-5">
+		                                    	
+												<div class="form-group">
+		                                        	<label>Geboortedatum</label>
+		                                        	<input type="text" name="DOB" class="form-control" id="DOB" placeholder="Geboortedatum" value="24/03/1981">
+		                                    	</div>
+												<div class="form-group">
+		                                        	<label>Email</label>
+		                                        	<input type="text" name="email" class="form-control" id="email" placeholder="Email adres" value="thierry.duhameeuw@gmail.com">
+		                                    	</div>
+												
+		                                	</div>
+		                                	<div class='row'>
+												<div class="col-sm-2 col-sm-offset-4">
+													<!--<input type='submit' class='btn btn-checkMatch btn-fill btn-success btn-wd' name='next' value='Volgende' />-->
+												</div>
+											</div>
+		                                	</form>	
+											</div>
+											
+											<div id="newPatient" class="col-sm-offset-1" style="display:none;">
+											<form action="" method="">
+		                                	<div class="col-sm-5">
+		                                    	<div class="form-group">
+		                                        	<label>Voornaam</label>
+		                                        	<input type="text" name="firstName" class="form-control" id="firstName" placeholder="Voornaam" value="thierry">
+		                                    	</div>
+												<div class="form-group">
+		                                        	<label>Achternaam</label>
+		                                        	<input type="text" name="surName" class="form-control" id="surName" placeholder="Achternaam" value="duhameeuw">
+		                                    	</div>
+												<div class="form-group">
+		                                        	<label>Geboortedatum</label>
+		                                        	<input type="text" name="DOB" class="form-control" id="DOB" placeholder="Geboortedatum" value="24/03/1981">
+		                                    	</div>
+												
+		                                	</div>
+		                                	<div class="col-sm-5">
+		                                    	
+												
+												<div class="form-group">
+		                                        	<label>Email</label>
+		                                        	<input type="text" name="email" class="form-control" id="email" placeholder="Email adres" value="thierry.duhameeuw@gmail.com">
+												</div>
+												<div class="form-group">
+		                                        	<label>Telefoonnummer</label>
+		                                        	<input type="text" name="phone" class="form-control" id="phone" placeholder="Telefoonnummer" value="093339393">
+		                                    	</div>
+												
+		                                	</div>
+		                                	<div class='row'>
+												<div class="col-sm-2 col-sm-offset-4">
+													<!--<input type='submit' class='btn btn-checkMatch btn-fill btn-success btn-wd' name='next' value='Volgende' />-->
+												</div>
+											</div>
+		                                	</form>	
+											</div>
+											
+											
+		                            	</div>
+		                            </div>
+									<div class="tab-pane" id="location">
+		                                <h5 class="info-text">Waar wenst u een afspraak? </h5>
+										<div class='row'>
+											<div class="col-sm-6 col-sm-offset-5">
+												<div id="message">&nbsp;</div>
+											</div>
+										</div>
+		                                <div class="row">
+											<form>
+		                                    <div class="row">
+											<div class="container-fluid">
+												<div class="row centered clinics">
+												</div>
+											</div>
+											</div>
+											</form>
+		                                </div>
+		                            </div>
+		                            <div class="tab-pane" id="practitioner">
+		                                <h5 class="info-text">Bij welke chiropractor? </h5>
+										<div class='row'>
+											<div class="col-sm-6 col-sm-offset-5">
+												<div id="message">&nbsp;</div>
+											</div>
+										</div>
+										<form>
+										<div class="row">
+		                                <div class="container-fluid">
+											<div class="row centered practitioners">
+											</div>
+										</div>
+										</div>
+										</form>
+		                            </div>
+		                            <div class="tab-pane" id="timing">
+		                                <h5 class="info-text">Duid de momenten aan die NIET lukken voor jou. </h5>
+		                                <div class="row">
+											
+											<div class="col-sm-2">
+												<p class="text-center">Maandag</p>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"monday","start":"08:00","end":"12:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Voormiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"monday","start":"12:00","end":"17:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Namiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"monday","start":"17:00","end":"21:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Avond</p>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<p class="text-center">Dinsdag</p>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"tuesday","start":"08:00","end":"12:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Voormiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"tuesday","start":"12:00","end":"17:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Namiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"tuesday","start":"17:00","end":"21:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Avond</p>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<p class="text-center">Woensdag</p>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"wednesday","start":"08:00","end":"12:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Voormiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"wednesday","start":"12:00","end":"17:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Namiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"wednesday","start":"17:00","end":"21:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Avond</p>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<p class="text-center">Donderdag</p>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"thursday","start":"08:00","end":"12:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Voormiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"thursday","start":"12:00","end":"17:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Namiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"thursday","start":"17:00","end":"21:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Avond</p>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<p class="text-center">Vrijdag</p>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"friday","start":"08:00","end":"12:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Voormiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"friday","start":"12:00","end":"17:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Namiddag</p>
+													</div>
+												</div>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"friday","start":"17:00","end":"21:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Avond</p>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<p class="text-center">Zaterdag</p>
+												<div class="choice" data-toggle="wizard-checkbox">
+													<input type="checkbox" name="timing" value='{"day":"saturday","start":"08:00","end":"12:00"}'>
+													<div class="card card-checkboxes card-hover-effect">
+														<p>Voormiddag</p>
+													</div>
+												</div>
+												
+											</div>
+		                                </div>
+										<div class="row centered hidden">
+											<div class="col-sm-8">
+												<textarea class="form-control" id="comment" name="comment" placeholder="Geef hier extra opmerkingen" rows="2"></textarea>
+											</div>
+										</div>
+		                            </div>
+									<div class="tab-pane" id="timeslot_select">
+		                                <h5 class="info-text"> Kies een tijdstip</h5>
+		                                <div class='row'>
+											<div class="col-sm-6 col-sm-offset-5">
+												<div id="message">&nbsp;</div>
+											</div>
+										</div>
+										<div class="row">
+											<form>
+		                                    <div class="row">
+											<div class="container-fluid">
+												<div class="row centered propositions">
+													
+												</div>
+											</div>
+											</div>
+											</form>
+											
+										</div>
+		                            </div>
+		                            <div class="tab-pane" id="resume">
+										<div id = "resume_details">
+		                                <div class="row">
+		                                    <h5 class="info-text"> Samenvatting </h5>
+		                                    
+		                                </div>
+										<div class='row'>
+											<div class="col-sm-6 col-sm-offset-5">
+												<div id="message">&nbsp;</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6 col-sm-offset-2">
+												<div><span>Jouw naam: </span><span class="resume-text patient"></span></div>
+												<div><span>Locatie: </span><span class="resume-text location"></span></div>
+												<div><span>Chiropractor: </span><span class="resume-text practitioner"></span></div>
+												<div><span>Tijdstip: </span><span class="resume-text timeslot"></span></div>
+											</div>
+										</div>
+										</div>
+										<div id="confirmed" style="display: none;">
+											<div class="row">
+		                                    <h5 class="info-text"> Afspraak bevestigd </h5>
+		                                    
+		                                </div>
+										<div class="row">
+											<div class="col-sm-6 col-sm-offset-2 info-text">
+												<div>Je afspraak is bevestigd!! Tot dan! </div>
+												<div>Bedankt om gebruik te maken van onze online booking.</div>
+												<!--<div><button class='btn btn-restart btn-fill btn-success btn-wd' name='restart'>Restart</button></div>-->
+											</div>
+										</div>
+										</div>
+		                            </div>
+		                        </div>
+		                        <div class="wizard-footer">
+									
+	                            	<div class="pull-right">
+	                                    <input type='button' class='btn btn-next btn-fill btn-success btn-wd' name='next' value='Volgende' />
+	                                    <!--<input type='button' class='btn btn-finish btn-fill btn-success btn-wd' name='finish' value='OK' />-->
+										<button class='btn btn-finish btn-fill btn-success btn-wd' name='finish'>Bevestig</button>
+										<button class='btn btn-finish-saving btn-fill btn-success btn-wd'><i class='fa fa-circle-o-notch fa-spin'></i> Bevestigen</button>
+										
+									</div>
+
+	                                <div class="pull-left">
+	                                    <input type='button' class='btn btn-previous btn-default btn-wd' name='previous' value='Vorige' />
+	                                </div>
+	                                <div class="clearfix"></div>
+		                        </div>
+		                    
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	        </div> <!-- row -->
+	    </div> <!--  big container -->
+
+	    <div class="footer">
+	        <div class="container text-center">
+	             Timegenics.com
+	        </div>
+	    </div>
+	</div>
+
+</body>
+
+	<!--   Core JS Files   -->
+	<script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
+	
+	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="assets/js/jquery.bootstrap.wizard.js" type="text/javascript"></script>
 
+	
+	<script src="assets/js/book.js" type="text/javascript"></script>
 
+	
+	<!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
+	<script src="assets/js/jquery.validate.min.js" type="text/javascript"></script>
+	<script src="assets/js/moment.js" type="text/javascript"></script>
 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src='book.js'></script>
-
-
-
-<div id=""></div>
+</html>
