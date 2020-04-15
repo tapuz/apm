@@ -5,7 +5,7 @@ require_once ($config['path_wp-config']);
 
 define('ROOT',						dirname(__FILE__));
 
-
+$APIKey = 'USxgbPOrHHI$bZ1Mos7Bp*q4Q3av8CaUZfaga7*kBp90DEB4s';
 
 //check debug mode
 
@@ -22,7 +22,7 @@ include('libraries/alice/alice.php');
 
 //API methods
 
-error_log('API Called');
+error_log('API Called !!');
 
 loadLib('patient');
 //loadLib('clinic');
@@ -38,20 +38,48 @@ switch (getVar('task')){
 		loadLib('patient');
 		//get the user ID, we get the Email provided
 		$user = get_user_by( 'email', getVar('userEmail') );
+		
 		echo json_encode(Patient::getActivePatient($user->ID));
 
+	break;
+
+	case 'addNewPatient':
+	
+		$oPatient = json_decode(stripslashes(getVar('patient')));
+		$group = $oPatient->group;
+		$newPatientID = Patient::addNewPatient($oPatient,$group);
+		echo  $newPatientID;
+		//setResponse($newPatientID);
 	break;
 	
     case 'getClinicsFromGroup':
 		
 		loadLib('clinic');
 		$clincs = Clinic::getClinicsFromGroup(getVar('group'));
-		echo json_encode($clincs);						   
+		error_log('CLINICS --> ' . print_r($clincs,1));
+		echo json_encode($clincs);			
+		
 		
 	break;
 	case 'getPractitionersFromClinic':
 		loadLib('clinic');
-		echo json_encode(Clinic::getPractitionersFromClinic(getVar('clinic')));
+		loadLib('service');
+		$clinic = getVar('clinic');
+		$practitioners = Clinic::getPractitionersFromClinic($clinic);
+		
+
+		foreach($practitioners as $practitioner){
+
+			
+			$practitioner->{"default_service"} = Service::getRecurrentService($clinic,$practitioner->ID);
+			$practitioner->{"default_service_np"} = Service::getNPService($clinic,$practitioner->ID);
+			
+			
+		 	
+		}
+
+		error_log('PRACS --> ' . print_r($practitioners,1));
+		echo json_encode($practitioners);
 		//error_log(json_encode(Clinic::getPractitionersFromClinic(getVar('clinic'))));
 	break;
 
@@ -69,12 +97,19 @@ switch (getVar('task')){
 		loadLib('calendar');
 		$appointment =  json_decode(stripslashes(getVar('appointment')));
 		
-		$appointment->service = get_user_meta( $appointment->userID, $appointment->service,1);
+		//add the email
+		//test CURL
 		
-		
-		error_log(print_r($appointment,1));
-		$appointment = Calendar::addAppointment($appointment);
-		echo json_encode($appointment);
+		$params = [];
+		$params['APIKey'] = $APIKey;
+		$params['com']='calendar';
+		$params['task']='addAppointment';
+		$params['appointment'] =json_encode($appointment);
+
+		$test = httpPost_c('http://www.timegenics.com/app/ajax.php',$params);
+
+
+
 	break;
 
 	case "upload_image":
@@ -172,15 +207,17 @@ switch (getVar('task')){
 	
 	case 'getAvailableTimes':
 		loadLib('calendar');
+		loadLib('service');
 		$user = getVar('user'); //1;
 		$clinic = getVar('clinic');
 		$timing = getVar('timing');
 		//how many working days we want to check??
 		$start = getVar('start'); 
+		$duration = getVar('duration');
+
 		$days = 10;
 		$timeslots_to_retain_per_day = 3;
 		$max_timeslots_search_for = 6;
-		$service_duration = 15;
 		$try_block_book = FALSE;
 		$timeslots_to_present = array();
 		$date = new DateTime($start);
@@ -188,20 +225,20 @@ switch (getVar('task')){
 			
 			$date->modify('+' . 1 . ' days');
 			$selected_date = $date->format('Y-m-d');
-			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing);
+			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$duration,$timing);
 			
 			if ($availableTimeslots!=FALSE){
 				
-				//error_log(print_r($availableTimeslots,1));
+				error_log(print_r($availableTimeslots,1));
 				usort($timeslots_to_present, function($a, $b) {
 					return $a['priority'] - $b['priority'];
 				});
 				$timeslots_to_retain = array_slice($availableTimeslots,0,$timeslots_to_retain_per_day);
 				$timeslots_to_present = array_merge($timeslots_to_present,$timeslots_to_retain);
-				//error_log(print_r($timeslots_to_retain,1));
+				error_log(print_r($timeslots_to_retain,1));
 			} else {
 				//no available timeslots for this day , look in an extra day
-				$days++;
+				//$days++;
 			}
 			
 				
@@ -211,6 +248,9 @@ switch (getVar('task')){
 			
 			error_log(count($timeslots_to_present));
 			//error_log($selected_date);
+			error_log('this is I = ' . $i);
+			error_log('days: ' .$days);
+			if ($i>20){break;}
 		}
 		
 		
@@ -278,6 +318,29 @@ switch (getVar('task')){
 		
 	break;
 	
+}
+
+
+function httpPost_c($url, $data){
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($curl);
+    curl_close($curl);
+    return $response;
+}
+
+function httpPost($url, $data){
+	$options = array(
+		'http' => array(
+			 'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+			'method'  => 'POST',
+			'content' => http_build_query($data)
+		)
+	);
+	$context  = stream_context_create($options);
+	return file_get_contents($url, false, $context);
 }
 
 

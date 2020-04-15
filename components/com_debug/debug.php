@@ -17,7 +17,7 @@ switch (getVar('task')){
         while (($line = fgets($fp)) !== false) {
         $lines[] = $line;
 
-        while (count($lines) > 50)
+        while (count($lines) > 400)
             array_shift($lines);
         }
 

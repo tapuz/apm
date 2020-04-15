@@ -1,5 +1,5 @@
 $(function() {
-    var maxWidth = 1000;
+    var maxWidth = 400;
     var canvasWidth = 0;
 	  var canvasHeight = 0;
     var bgImage;
@@ -851,7 +851,7 @@ $(function() {
            fabric.Image.fromURL(source, function (img) {
                 
                 imgWidth = img.width;
-  				imgHeight = img.height;
+  				      imgHeight = img.height;
                 aspectRatio = imgHeight/imgWidth;
                 canvasWidth = maxWidth;
                 

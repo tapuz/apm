@@ -25,7 +25,7 @@
 </head>
 
 <body>
-	<div class="image-container set-full-height" style="background-color: #7a9e9f">
+	<div class="image-container set-full-height" style="background-color: rgb(36, 36, 36)">
 	    
 
 	    <!--   Big container   -->
@@ -41,9 +41,10 @@
 
 		                    	<div class="wizard-header">
 		                        	<h3 class="wizard-title">Afspraak maken</h3>
-		                        	<p class="category">Volg de stappen hieronder om een afspraak te maken</p>
+									<p class="category">Volg de stappen hieronder om een afspraak te maken</p>
+									<h3 class="group-description"></h3>
 		                    	</div>
-								<div class="wizard-navigation">
+								<div class="wizard-navigation hidden-xs">
 									<div class="progress-with-circle">
 									    <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" style="width: 15%;"></div>
 									</div>
@@ -142,18 +143,18 @@
 		                                        	<label>Voornaam</label>
 		                                        	<input type="text" name="firstName" class="form-control" id="firstName" placeholder="Voornaam" value="thierry">
 		                                    	</div>
-												
 												<div class="form-group">
-		                                        	<label>Geboortedatum</label>
-		                                        	<input type="text" name="DOB" class="form-control" id="DOB" placeholder="Geboortedatum" value="24/03/1981">
-		                                    	</div>
-		                                	</div>
-		                                	<div class="col-sm-5">
-		                                    	<div class="form-group">
 		                                        	<label>Achternaam</label>
 		                                        	<input type="text" name="surName" class="form-control" id="surName" placeholder="Achternaam" value="duhameeuw">
 		                                    	</div>
 												
+		                                	</div>
+		                                	<div class="col-sm-5">
+		                                    	
+												<div class="form-group">
+		                                        	<label>Geboortedatum</label>
+		                                        	<input type="text" name="DOB" class="form-control" id="DOB" placeholder="Geboortedatum" value="24/03/1981">
+		                                    	</div>
 												<div class="form-group">
 		                                        	<label>Email</label>
 		                                        	<input type="text" name="email" class="form-control" id="email" placeholder="Email adres" value="thierry.duhameeuw@gmail.com">
@@ -175,25 +176,26 @@
 		                                        	<label>Voornaam</label>
 		                                        	<input type="text" name="firstName" class="form-control" id="firstName" placeholder="Voornaam" value="thierry">
 		                                    	</div>
-												
+												<div class="form-group">
+		                                        	<label>Achternaam</label>
+		                                        	<input type="text" name="surName" class="form-control" id="surName" placeholder="Achternaam" value="duhameeuw">
+		                                    	</div>
 												<div class="form-group">
 		                                        	<label>Geboortedatum</label>
 		                                        	<input type="text" name="DOB" class="form-control" id="DOB" placeholder="Geboortedatum" value="24/03/1981">
 		                                    	</div>
-												<div class="form-group">
-		                                        	<label>Telefoonnummer</label>
-		                                        	<input type="text" name="phone" class="form-control" id="phone" placeholder="Telefoonnummer" value="093339393">
-		                                    	</div>
+												
 		                                	</div>
 		                                	<div class="col-sm-5">
-		                                    	<div class="form-group">
-		                                        	<label>Achternaam</label>
-		                                        	<input type="text" name="surName" class="form-control" id="surName" placeholder="Achternaam" value="duhameeuw">
-		                                    	</div>
+		                                    	
 												
 												<div class="form-group">
 		                                        	<label>Email</label>
 		                                        	<input type="text" name="email" class="form-control" id="email" placeholder="Email adres" value="thierry.duhameeuw@gmail.com">
+												</div>
+												<div class="form-group">
+		                                        	<label>Telefoonnummer</label>
+		                                        	<input type="text" name="phone" class="form-control" id="phone" placeholder="Telefoonnummer" value="093339393">
 		                                    	</div>
 												
 		                                	</div>
@@ -243,7 +245,7 @@
 										</form>
 		                            </div>
 		                            <div class="tab-pane" id="timing">
-		                                <h5 class="info-text">Welke momenten lukken NIET voor u </h5>
+		                                <h5 class="info-text">Duid de momenten aan die NIET lukken voor jou. </h5>
 		                                <div class="row">
 											
 											<div class="col-sm-2">
@@ -362,14 +364,14 @@
 												
 											</div>
 		                                </div>
-										<div class="row centered">
+										<div class="row centered hidden">
 											<div class="col-sm-8">
 												<textarea class="form-control" id="comment" name="comment" placeholder="Geef hier extra opmerkingen" rows="2"></textarea>
 											</div>
 										</div>
 		                            </div>
 									<div class="tab-pane" id="timeslot_select">
-		                                <h5 class="info-text"> Mogelijkheden </h5>
+		                                <h5 class="info-text"> Kies een tijdstip</h5>
 		                                <div class='row'>
 											<div class="col-sm-6 col-sm-offset-5">
 												<div id="message">&nbsp;</div>
@@ -401,10 +403,10 @@
 										</div>
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-2">
-												<div><span>Patient: </span><span class="patient"></span></div>
-												<div><span>Locatie: </span><span class="location"></span></div>
-												<div><span>Chiropractor: </span><span class="practitioner"></span></div>
-												<div><span>Tijdstip: </span><span class="timeslot"></span></div>
+												<div><span>Jouw naam: </span><span class="resume-text patient"></span></div>
+												<div><span>Locatie: </span><span class="resume-text location"></span></div>
+												<div><span>Chiropractor: </span><span class="resume-text practitioner"></span></div>
+												<div><span>Tijdstip: </span><span class="resume-text timeslot"></span></div>
 											</div>
 										</div>
 										</div>
@@ -414,8 +416,9 @@
 		                                    
 		                                </div>
 										<div class="row">
-											<div class="col-sm-6 col-sm-offset-2">
+											<div class="col-sm-6 col-sm-offset-2 info-text">
 												<div>U ontvangt dadelijk een mail met de details van uw afspraak.</div>
+												<div>Bedankt om gebruik te maken van onze online booking.</div>
 												<!--<div><button class='btn btn-restart btn-fill btn-success btn-wd' name='restart'>Restart</button></div>-->
 											</div>
 										</div>
@@ -446,7 +449,7 @@
 
 	    <div class="footer">
 	        <div class="container text-center">
-	             Alice Patient Management
+	             Timegenics.com
 	        </div>
 	    </div>
 	</div>

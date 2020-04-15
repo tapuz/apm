@@ -15,19 +15,22 @@
 
 // Paper Bootstrap Wizard Functions
 
+
 var searchVisible = 0;
 var transparent = true;
 
-var apiURL = 'http://192.168.0.2/alice/app/api.php';
-var objPatient;
+var apiURL = 'https://www.timegenics.com/app/api.php';
+var objPatient={};
 
 var mode; //newPatient or recurrentPatient
 var match = false;
-var clinic;
-var practitioner;
+var clinic; 
+var practitioner= new Object;
+var practitioners;
 var selected_timeslot;
 var timing;
 var group;
+
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 
 
@@ -49,6 +52,7 @@ $(document).ready(function() {
                         newhtml = newhtml.replace('%clinicName%',this.clinic_name);
                         newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
                         $('#location .clinics').append(newhtml);
+                        $('.group-description').html(this.description);
                         
                         //set the group ID
                         group = {ID:this.group_id, name:this.groupname};
@@ -141,6 +145,8 @@ $(document).ready(function() {
       }
     },
     messages: {
+      firstName:"vul je voornaam in",
+      surName:"vul je achternaam in",
       email: "ongeldig email formaat: vb. tom@domain.com",
       DOB: "ongeldig formaat: vb. 21/03/1995",
       phone: "gelieve uw telefoonnummer in te geven"
@@ -171,6 +177,8 @@ $(document).ready(function() {
       }
     },
     messages: {
+      firstName:"vul je voornaam in",
+      surName:"vul je achternaam in",
       email: "ongeldig email formaat: vb. tom@domain.com",
       DOB: "ongeldig formaat: vb. 21/03/1995"
 
@@ -230,8 +238,20 @@ $(document).ready(function() {
               if (!$valid) {
                 $validatorNewPatient.focusInvalid();
                 return false; //do not navigate to next slide
-              } else { //form is valid, send data to server and move to nxt slide
-                  createNewPatient();
+              } else { //form is valid,  will only save to DB if app is confirmed
+                  form = $('#newPatient form').serializeArray();
+                  
+                  objPatient.firstname = form[0].value;
+                  objPatient.surname = form[1].value;
+                  // the following 2 lines are needed because table_patients has patient_firstname and patients_surname as fields... 
+                  objPatient.patient_firstname = form[0].value;
+                  objPatient.patient_surname = form[1].value;
+                  
+                  objPatient.dob = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
+                  objPatient.email = form[3].value;
+                  objPatient.phone = form[4].value;
+                  console.log(objPatient);
+
               }
             break;
           }
@@ -257,9 +277,11 @@ $(document).ready(function() {
                 //$validator.focusInvalid();
                 return false; //do not navigate to next slide
               }else{
-               var practitioner_id = $("input:radio[name ='practitioner']:checked").val();
-               var practitioner_name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
-               practitioner = {ID:practitioner_id,name:practitioner_name};
+               practitioner = new Object();
+               practitioner.ID =  $("input:radio[name ='practitioner']:checked").val();
+               practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
+               console.log('blabal--> ' + practitioner.id);
+               
               }
           break;
          
@@ -290,7 +312,7 @@ $(document).ready(function() {
                      //alert(selected_timeslot);
                      
                      $('#resume .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
-                     $('#resume .practitioner').html(practitioner.name);
+                     $('#resume .practitioner').html(practitioner.data.display_name);
                      $('#resume .location').html(clinic.name);
                      $('#resume .timeslot').html(moment(selected_timeslot.start).locale('nl-be').format('LLLL'));
                   }
@@ -364,64 +386,93 @@ $(document).ready(function() {
    $('.btn-finish').hide();
    
    //construct the appointment
-   
-   if (mode == 'recurrentPatient') {service = 'default_service';}
-   if (mode == 'newPatient') {service = 'default_service_NP';}
-   
-   
-   var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:service,status:0};
-   appointment = JSON.stringify(appointment);
-   //alert(appointment);
-   
-   
-   if(mode == 'newPatient'){
-      //save new patient
+
+   switch (mode)
+   {
+     case 'recurrentPatient':
+       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.data.default_service.service,status:0}
+       appointment = JSON.stringify(appointment);
+       addAppointment(appointment);
+
+       
+
+
+     break;
+     case 'newPatient':
+     
+
+      //create the new patient in DB
+      objPatient.group = group.ID;
+      objPatient.clinic = clinic.ID;
+      objPatient.practitioner = practitioner.ID;
+
       $.ajax({
-         dataType: "json",
-         url: apiURL,
-         data: {
-            task: 'addNewPatientandAddAppointmentRequest',
-            timing:JSON.stringify(timing),
-            practitioner:practitioner.ID,
-            clinic:clinic.ID,
-            patient:JSON.stringify(objPatient)
-         },
          
-         }).done(function() {
-         });
-                  
-   }else{
+        url: apiURL,
+        dataType: "json",
+        data: {
+           task: 'addNewPatient',
+           patient:JSON.stringify(objPatient)
+           
+        },
+        
+        }).done(function(data) {
+          objPatient.patient_id = data;
+
+          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.data.default_service_np.service,status:0}
+          appointment = JSON.stringify(appointment);
+
+
+          console.log('data--> ' + data);
+          addAppointment(appointment);
+           
+        }).fail(function(){
+           $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
+           $('.btn-finish-saving').hide();
+           $('.btn-finish').show();
+        });
       
-      $.ajax({
-         
-         url: apiURL,
-         dataType: "json",
-         data: {
-            task: 'addAppointment',
-            appointment:appointment
-            
-            //comment:$('#timing #comment').val()
-         },
-         
-         }).done(function() {
-            $('.btn-finish-saving').hide();
-            $('.btn-previous').hide();
-            $('#resume_details').hide();
-            $('#confirmed').show();
-            $('.btn-restart').show();
-            //$('.btn-finish').show();
-            //show the confirmation page
-            
-         }).fail(function(){
-            $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
-            $('.btn-finish-saving').hide();
-            $('.btn-finish').show();
-         });
-                  
-   }  
+
+
+     break;
+   }
+   
+   
+   
+   
+   
+  
   });
 
   
+  function addAppointment(appointment){
+    $.ajax({
+         
+      url: apiURL,
+      dataType: "json",
+      data: {
+         task: 'addAppointment',
+         appointment:appointment
+         
+         //comment:$('#timing #comment').val()
+      },
+      
+      }).done(function() {
+         $('.btn-finish-saving').hide();
+         $('.btn-previous').hide();
+         $('#resume_details').hide();
+         $('#confirmed').show();
+         $('.btn-restart').show();
+         //$('.btn-finish').show();
+         //show the confirmation page
+         
+      }).fail(function(){
+         $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
+         $('.btn-finish-saving').hide();
+         $('.btn-finish').show();
+      });
+
+  }
  
   
   
@@ -502,6 +553,22 @@ function getAvailableTimes(timing){
    //clear the propositions if there would be any...
    $('#timeslot_select .propositions').html(loadingImg);
    var html="<div class='col-sm-3'><div class='choice' data-toggle='wizard-radio'><input type='radio' name='proposition' value='%timeslot%'><div class='card card-checkboxes card-hover-effect'><i class='ti-calendar'></i><p>%timeslot_text%</p></div></div></div>";
+
+   
+   practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
+
+
+
+   switch(mode){
+     case 'recurrentPatient':
+       duration = practitioner.data.default_service.duration;
+     break;
+     case 'newPatient':
+      duration = practitioner.data.default_service_np.duration;
+     break;
+    }
+    console.log("duration--> " + duration);
+
    $.ajax({
                   dataType: "json",
                   url: apiURL,
@@ -509,7 +576,7 @@ function getAvailableTimes(timing){
                     task: 'getAvailableTimes',
                     clinic: clinic.ID,
                     user : practitioner.ID,
-                    service: mode, //newPatient or recurrentPatient
+                    duration:duration,
                     timing : JSON.stringify(timing)
                   }
                 }).done(function(propositions) {
@@ -552,9 +619,9 @@ function checkMatch() {
                 //save the data to the server
                 console.log(form[1].value);
                 
-                var surname = form[2].value;
                 var firstname = form[0].value;
-                var dob = form[1].value = moment(form[1].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
+                var surname = form[1].value;
+                var dob = form[2].value = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
                 var email = form[3].value;
                 var patient = {
                   surname: surname,
@@ -591,20 +658,42 @@ function checkMatch() {
                 //save the data to the server
                 console.log(form[1].value);
                 
-                var surname = form[2].value;
+                var surname = form[3].value;
                 var firstname = form[0].value;
                 var dob = form[1].value = moment(form[1].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
-                var email = form[3].value;
+                var email = form[4].value;
+                var phone = form[2].value;
                 var patient = {
-                  patient_surname: surname,
-                  patient_firstname: firstname,
+                  surname: surname,
+                  firstname: firstname,
+                  group:group.ID,
                   dob: dob,
-                  email: email
+                  email: email,
+                  phone:phone,
+                  practitioner:1,
+                  clinic:1
                 };
                 
                 objPatient = patient;
                 console.log(patient);
+               //make the patient id DB
+              
+               $.ajax({
+                url: apiURL,
+                //dataType: "json",
                
+                data: {
+                  task: 'addNewPatient',
+                  patient:JSON.stringify(patient)
+          
+                },
+                success: function(data) {
+                  
+                      //callback(patientID);
+                      console.log('PAT ID = ' + data);
+                }
+              });
+
             
       }
       
@@ -620,8 +709,9 @@ function checkMatch() {
                     task: 'getPractitionersFromClinic',
                     clinic: clinic
                   }
-                }).done(function(practitioners) {
-                  console.log(practitioners);
+                }).done(function(data) {
+                  console.log(data);
+                  practitioners = data;
                   $('#practitioner .practitioners').html('');
                    $.each(practitioners, function() {
                           newhtml = html.replace('%practitionerID%',this.data.ID);
@@ -638,7 +728,7 @@ function checkMatch() {
             });
       }
       
-      function getGroup() {
+function getGroup() {
     var params = {};
 
     if (location.search) {
@@ -650,6 +740,7 @@ function checkMatch() {
         params[nv[0]] = nv[1] || true;
       }
     }
+    //error.log('this is the group=' + params.group);
     return params.group;
   }
 

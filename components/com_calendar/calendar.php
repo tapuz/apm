@@ -114,7 +114,6 @@ switch (getVar('task')){
 		loadLib('email');
 		loadLib('ics');//generate ICS file
 		
-		
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		
 		echo json_encode($appointment);

@@ -7,10 +7,11 @@
 
 <?$view_title='Settings - Working Plan'?>
 	<!-- start: Breadcrumb -->
-	<?loadModule('view_title');?>
+	
 	<!-- /breadcrumb-->
 
 <div class="col-sm-12 col-md-9"><!-- Start Left content -->
+<?loadModule('view_title');?>
 
 <button type="button" class="btn btn-primary save_working_plan btn-block"><i class="fas fa-save"></i>&nbsp;Save</button>
 <div class="working_plan_container" style="">

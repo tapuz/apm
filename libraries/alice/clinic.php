@@ -49,6 +49,7 @@ public function getClinicsFromGroup($groupName){
 		table_clinics.clinic_id,
 
 		table_group.name as groupname,
+		table_group.description,
 		table_group.group_id
 
 		FROM `table_clinics`
@@ -88,7 +89,7 @@ public function getPractitionersFromClinic($clinic) {
 	error_log(print_r($args,1));
 	$user_query = new WP_User_Query( $args );
 	return $user_query->results;
-	
+
 	}
 
 }

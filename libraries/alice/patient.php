@@ -26,6 +26,7 @@ class Patient
 				array( 
 					'patient_surname' => $oPatient->surname,
 					'patient_firstname' => $oPatient->firstname, 
+					'dob' => $oPatient->dob,
 					'phone' => $oPatient->phone,
 					'email' => $oPatient->email,
 					'practitioner' => $oPatient->practitioner,

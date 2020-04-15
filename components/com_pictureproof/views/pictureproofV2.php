@@ -7,6 +7,7 @@
 
 <input type="hidden" id="clinicHeader" value="<?=$clinicHeader?>">
 <!-- start: patient_name -->
+<div class="col-sm-12 col-md-12"><!-- Start Left content -->
 <?loadModule('patient_name');?>
 	
 <!-- /patient_name-->
@@ -116,7 +117,7 @@
                     
                     <div id="canvas-col" class="col-lg-12">
 						<div id="board">
-                            <canvas id="c" style="border:1px solid black;" ></canvas>
+                            <canvas id="c" style="border:2px solid black;" ></canvas>
                             <!--<canvas id="zoom" style="border:1px solid black;" ></canvas>-->
                             
 						</div>
@@ -126,6 +127,7 @@
         </div>
     </div>
 </div><!-- end row -->
+</div>
 
 
 

@@ -23,12 +23,26 @@ include('libraries/alice/alice.php');
 
 
 
-if ( !is_user_logged_in() ) {
+// login is not needed if API key is set
+$api = false;
+$api_key = 'USxgbPOrHHI$bZ1Mos7Bp*q4Q3av8CaUZfaga7*kBp90DEB4s';
+
+if (getVar('APIKey') == $api_key){
+    $api=true;
+}
+
+
+
+if ( is_user_logged_in() || $api ) {
+   
+} else {
     die();
     login();
 }
 if (getVar('com')<>'debug'){
-	error_log('AJAX called -> component [' . getVar('com') . '] and task [' . getVar('task') .']' );
+    error_log('AJAX called -> component [' . getVar('com') . '] and task [' . getVar('task') .']' );
+    error_log('page called!!');
+error_log('APIkey--> ' . getVar('APIKey'));
 }
 include('includes/component_selector.php');
 

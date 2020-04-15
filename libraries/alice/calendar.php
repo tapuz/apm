@@ -111,7 +111,7 @@ class Calendar {
 		return $customAppointment;
   	}
 	
-	public function addAppointment($appointment) {
+	public static function addAppointment($appointment) {
         global $wpdb;
 		$app = $appointment;
 		$wpdb->insert( 
@@ -272,7 +272,7 @@ class Calendar {
 		return $wpdb->get_results($query);
 	}
 	
-	public function getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing){
+	public static function getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing){
 		$day = strtolower(date('l', strtotime($selected_date))); //ex 'monday'
 		
 		$q = sprintf("select * from table_appointments where user = %d AND clinic = %d AND DATE(start) = '%s' ORDER BY start ASC
@@ -310,23 +310,30 @@ class Calendar {
 		//echo PHP_EOL . print_r($appointments,1);
 		
 		$working_plan_all = json_decode(get_user_meta( $user, 'working_plan',1),TRUE);
-		error_log('working plan-->' . print_r($working_plan_all,1));
+		//error_log('working plan for user-->' . print_r($working_plan_all,1));
+		
 
 		//search the working_plan_all for the working plan according to the clinic
 		$working_plan_temp = null;
+		$working_plan = null;
+		
 	foreach($working_plan_all as $working_plan_clinic) {
-    	if ($clinic == $working_plan_clinic->clinic) {
-        	$working_plan_temp = $working_plan_clinic;
+		error_log('clinic ID ' . $working_plan_clinic['clinic'] );
+    	if ($clinic == $working_plan_clinic['clinic']) {
+			$working_plan_temp = $working_plan_clinic;
+			$working_plan = $working_plan_clinic['workingPlan'];
         	break;
     	}
 	}
-	error_log('working plan temp-->' . print_r($working_plan_temp,1));
+	error_log('working plan temp for the selected clinic-->' . print_r($working_plan,1));
 
-	exit;	
+		$working_plan = $working_plan[0];
 		if (!array_key_exists($day, $working_plan)) {
 			// there is no working plan for this day, return FALSE
+			error_log('this is the day ' .$day . ' and does not exists');
 			return FALSE;
 		}
+		error_log($day . 'does exits');
 		$selected_date_working_plan = $working_plan[$day];
 	   
 		$available_periods_with_breaks = array();
