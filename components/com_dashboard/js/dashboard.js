@@ -1,5 +1,6 @@
 var urlToGetAllOpenBugs = "https://api.github.com/repos/tapuz/apm/issues?state=open&labels=bug";
 var urlToGetAllOpenEnhancements = "https://api.github.com/repos/tapuz/apm/issues?state=open&labels=enhancement";
+var urlToGetAllClosedIssues = "https://api.github.com/repos/tapuz/apm/issues?state=closed";
 //var urlToGetAllOpenBugs = "https://api.github.com/repos/tapuz/apm/projects";
  
  
@@ -23,9 +24,7 @@ $(document).ready(function () {
             html+="<td><b>"+issue.number+"</b></td>";
             html+="</tr>";
             
-            $("#issues")
-
-                .append(html)
+            $("#issues").append(html)
                 
                 
         });
@@ -49,6 +48,27 @@ $(document).ready(function () {
                 
         });
     });
+
+    $.getJSON(urlToGetAllClosedIssues, function (allIssues) {
+        console.log('here are they!! ' + allIssues);
+      
+        $.each(allIssues, function (i, issue) {
+         
+            
+            html = "<tr>";
+            html+="<td style='width:5%'><span class='label label-primary' >done</span></td>";
+            html+="<td style='width:10%'>"+moment(issue.created_at).format('ll')+"</td>";
+            html+="<td style='width:30%'><a target='blank' href='"+issue.html_url+"'>"+issue.title+"</a></td>";
+            html+="<td style='width:40%'>"+issue.body+"</td>";
+            html+="<td><b>"+issue.number+"</b></td>";
+            html+="</tr>";
+            
+            $("#done").append(html)
+                
+                
+        });
+    });
+
 
 
 

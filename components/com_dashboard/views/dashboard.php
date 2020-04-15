@@ -39,13 +39,40 @@
 </div>
 <div class="row"></div>
 <div class="row">
-&nbsp;<br>
-<p>
-<h2>&nbsp; Issue tracker</h2>
-</p>
+	&nbsp;<br>
+	<p>
+	<h2>&nbsp; Issue tracker</h2>
+	</p>
 </div>
-
-<div class="col-lg-10">
+	<div class="col-lg-10">
+					<div class="box">
+						<div class="box-header">
+							<h2><i class="fas fa-bug red"></i>Work done</h2>
+							<div class="box-icon">
+								
+							</div>
+						</div>
+						<div class="box-content">
+							<table class="table bootstrap-datatable datatable small-font">
+								<thead>
+									<tr>
+										<th>Type</th>
+										<th>Date</th>
+										<th>Issue</th>
+										<th>Description</th>
+										<th>Number</th>
+									</tr>
+								</thead>   
+								<tbody id='done'>
+								
+									
+																			
+								</tbody>
+							</table>
+						</div>
+					</div>
+	</div>
+	<div class="col-lg-10">
 					<div class="box">
 						<div class="box-header">
 							<h2><i class="fas fa-bug red"></i>List of known bugs</h2>
