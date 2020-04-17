@@ -15,18 +15,177 @@
     <div id=clinicTabsContent" class="tab-content">
          {{#clinics}}
              <div class="tab-pane clinic_" id="{{clinic_id}}">
-                <h3>Settings for <strong>{{clinic_name}}</strong></h3>
+            <div class="container">
+              <form id='clinic_setting_{{clinic_id}}' class="clinic_settings_form">
+              <div class="row">
+                <button type="submit" class="btn btn-primary save_clinic_settings pull-right"><i class="fas fa-save"></i>&nbsp;Save</button>
+                <input type="hidden" name="clinic_id" value="{{clinic_id}}"
 
-                <div class="row">
-                    
+                <h2>General</h2>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="clinic_name">Clinic Name</label>  
+                    <input id="clinic_name" name="clinic_name" type="text" placeholder="" class="form-control input-md" required="" value="{{clinic_name}}">
+                  </div><!--/form-group-->
                 </div>
-                <div class="row">&nbsp;</div>
+              </div>
 
-            </div>
+
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="clinic_street">Address</label>  
+                   
+                    <input id="clinic_street" name="clinic_street" type="text" placeholder="Street and number" class="form-control input-md" required="" value="{{clinic_street}}">
+                      
+                   
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="clinic_postcode"></label>  
+                    
+                    <input id="clinic_postcode" name="clinic_postcode" type="text" placeholder="postcode" class="form-control input-md" required="" value="{{clinic_postcode}}">
+                      
+                    
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="clinic_name"></label>  
+                    
+                    <input id="clinic_city" name="clinic_city" type="text" placeholder="city" class="form-control input-md" required="" value="{{clinic_city}}">
+                      
+                    
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="clinic_name"></label>  
+                    
+                    <input id="clinic_country" name="clinic_country" type="text" placeholder="country" class="form-control input-md" required="" value="{{clinic_country}}">
+                      
+                    
+                  </div><!--/form-group-->
+                  
+                </div><!--col-->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label  for="clinic_tel">Tel</label>  
+                    
+                    <input id="clinic_tel" name="clinic_tel" type="text" placeholder="" class="form-control input-md" required="" value="{{clinic_tel}}">
+                      
+                   
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="clinic_fax">Fax</label>  
+                   
+                    <input id="clinic_fax" name="clinic_fax" type="text" placeholder="" class="form-control input-md" value="{{clinic_fax}}">
+                      
+                    
+                  </div><!--/form-group-->
+                      
+                  <div class="form-group">
+                    <label for="clinic_web">Web</label>  
+                   
+                    <input id="clinic_web" name="clinic_web" type="text" placeholder="ex. www.myclinic.com" class="form-control input-md" required="" value="{{clinic_web}}">
+                  
+                  </div><!--/form-group-->
+                </div><!--col-->
+
+              </div><!--/row-->
+
+
+
+
+
+              <div class="row">
+                <h2>Headings</h2>
+                <div class="col-md-10">
+                  <div class="form-group">
+                    <label for="clinic_logo">Logo</label>  
+                    <input id="clinic_logo" name="clinic_logo" type="text" placeholder="" class="form-control input-md" required="" value="{{clinic_logo}}">
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label  control-label" for="clinic_invoice_heading">Invoice heading</label>                                    
+                      <textarea class="form-control" id="textarea" name="clinic_invoice_heading" rows="3">{{clinic_invoice_heading}}</textarea>                    
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                  <label for="clinic_letter_heading">Letter heading</label>                                    
+                      <textarea class="form-control" id="textarea" name="clinic_letter_heading" rows="3">{{clinic_letter_heading}}</textarea>                   
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label  for="clinic_educate_heading">Printout heading</label>                                      
+                      <textarea class="form-control" id="textarea" name="clinic_educate_heading" rows="3">{{clinic_educate_heading}}</textarea>                  
+                  </div><!--/form-group-->
+                </div><!--col-->  
+              </div><!--/row-->
+
+            
+
+              <div class="row">
+                <h2>Email settings</h2>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label for="clinic_email">Email address</label>      
+                    <input id="clinic_email" name="clinic_email" type="text" placeholder="ex. nathalie@myclinic.com" class="form-control input-md" required="" value="{{clinic_email}}">
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="From name">Email from name</label>                      
+                    <input id="email_name" name="email_name" type="text" placeholder="ex. Nathalie" class="form-control input-md" required="" value="{{email_name}}">                   
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="clinic_web">Appointment confirmation subject</label>                      
+                    <input id="email_appointment_confirmation_subject" name="email_appointment_confirmation_subject" type="text" placeholder="" class="form-control input-md" required="" value="{{email_appointment_confirmation_subject}}">                    
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="email_appointment_confirmation_text ">Appointment confirmation body</label>                   
+                      <textarea class="form-control" id="email_appointment_confirmation_text" name="email_appointment_confirmation_text" rows="4">{{email_appointment_confirmation_text}}</textarea>
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="clinic_web">Appointment amended subject</label>  
+                    <input id="email_appointment_amended_subject" name="email_appointment_amended_subject" type="text" placeholder="" class="form-control input-md" required="" value="{{email_appointment_amended_subject}}">
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="email_appointment_amended_text">Appointment amended body</label>                
+                      <textarea class="form-control" id="email_appointment_amended_text" name="email_appointment_amended_text" rows="4">{{email_appointment_amended_text}}</textarea>
+                  </div><!--/form-group-->
+                </div><!--col-->
+              </div><!--row-->
+
+              <div class="row">
+                <h2>Email server</h2>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <label  for="smtp_server">SMTP server</label>  
+                    <input id="smtp_server" name="smtp_server" type="text" placeholder="" class="form-control input-md" required="" value="{{smtp_server}}">
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="smtp_port">SMTP port</label>  
+                    <input id="smtp_port" name="smtp_port" type="text" placeholder="" class="form-control input-md" required="" value="{{smtp_port}}">
+                  </div><!--/form-group-->   
+                  <div class="form-group">
+                    <label for="smtp_username">SMTP username</label>  
+                    <input id="smtp_username" name="smtp_username" type="text" placeholder="" class="form-control input-md" required="" value="{{smtp_username}}">
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="smtp_password">SMTP password</label>  
+                    <input id="smtp_password" name="smtp_password" type="text" placeholder="" class="form-control input-md" required="" value="{{smtp_password}}">
+                  </div><!--/form-group-->
+                </div><!--/col-->
+              </div><!--/row-->
+            
+            </form>
+            </div><!--/container-->
+
+
+
+
+
+
+                
+                    
+
+            </div><!--/tab-->
                
           {{/clinics}}
-	    
-    </div>
+      
+    </div><!--/panel-->
 
 
  

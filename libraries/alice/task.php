@@ -35,7 +35,7 @@ public function getTasksByUser($creator_id) {
     
 }
 
-public function getTasksForUser($user_id,$statusMax) { 
+public static function getTasksForUser($user_id,$statusMax) { 
     global $wpdb;
 	$query=sprintf("
 	SELECT

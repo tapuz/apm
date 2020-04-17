@@ -1,11 +1,37 @@
 <?php
 class Clinic {
 
-public function getClinics($user) {
+	public static function updateClinic($clinic){
+		global $wpdb;
+		$array = array();
+		foreach ($clinic as $value) {
+			$array[$value["name"]] = $value["value"];
+
+		}
+		$wpdb->update( 
+				'table_clinics',$array ,
+				array( 'clinic_id' => $array['clinic_id'])
+	 	);
+
+		//return self::getPatient($patient_id);
+		
+		
+	}
+
+public static function getClinics($user) {
 	//get all the clinics a user is affiliated to and the services... 
 	
     global $wpdb;
-	$query = $wpdb->prepare('SELECT * from view_clinics_active_users WHERE user_id = %d', $user);
+	$query = $wpdb->prepare('SELECT 
+		view_clinics_active_users.group,
+		view_clinics_active_users.user_id,
+
+		table_clinics.*
+
+		from view_clinics_active_users 
+		INNER JOIN table_clinics
+		ON table_clinics.clinic_id = view_clinics_active_users.clinic_id
+		WHERE user_id = %d', $user);
 	$clinics=$wpdb->get_results($query);
 	
 	
@@ -30,7 +56,7 @@ public static function getClinic($clinic_id) {
 	return $clinic;
 	}
 	
-public function getClinicGroupID($clinic_id) {
+public static function getClinicGroupID($clinic_id) {
 	global $wpdb;
 	//get clinic object
 	$query= sprintf('SELECT table_clinics.group from table_clinics WHERE clinic_id = %d',$clinic_id);
@@ -40,7 +66,7 @@ public function getClinicGroupID($clinic_id) {
 
 	
 	
-public function getClinicsFromGroup($groupName){
+public static function getClinicsFromGroup($groupName){
 	global $wpdb;
 	$query = $wpdb->prepare('
 		SELECT 
@@ -61,7 +87,7 @@ public function getClinicsFromGroup($groupName){
 	return  $clinics;
 	}
 
-public function getPractitionersFromClinic($clinic) {
+public static function getPractitionersFromClinic($clinic) {
 	global $wpdb;
 	//get all user id's active in clinic
  	$query = $wpdb->prepare('SELECT user_id FROM table_clinic_user WHERE clinic_id=%d AND active=1', $clinic);

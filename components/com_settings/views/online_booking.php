@@ -5,7 +5,7 @@
 
 </script>
 
-<?$view_title='Settings - Clinics'?>
+<?$view_title='Settings - Online Booking'?>
 	<!-- start: Breadcrumb -->
 	
 	<!-- /breadcrumb-->
@@ -27,4 +27,4 @@
 
 <!--load the Templates-->
 
-<?include(TEMPLATES . 'clinics.html'); ?>
+<?include(TEMPLATES . 'clinics.html');?>

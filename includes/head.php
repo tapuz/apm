@@ -164,6 +164,7 @@
 	<script src="assets/js/alice.js"></script>
 	<script src="assets/js/printThis.js"></script>
 	<script src="assets/js/jstorage.js"></script>
+	<!--<script type="text/javascript" src="assets/js/live.js"></script>-->
 
 
 

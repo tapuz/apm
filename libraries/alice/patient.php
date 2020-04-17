@@ -134,7 +134,7 @@ class Patient
 	return  $patient;
 	}
 	
-	public function updatePatient($patient_id,$patient){
+	public static function updatePatient($patient_id,$patient){
 		$patient = json_decode(stripslashes($patient),true);
 		global $wpdb;
 		$array = array();

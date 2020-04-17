@@ -48,6 +48,14 @@ switch (getTask())
 		
 	break;
 
+	case 'update_clinic':
+		loadLib('clinic');
+		error_log('CLINIC update --> ' . print_r(json_decode(stripslashes(getVar('clinic')),true),1));
+		$clinic = json_decode(stripslashes(getVar('clinic')),true);
+		Clinic::updateClinic($clinic);
+		
+	break;
+
 	
 	
 }
@@ -59,6 +67,18 @@ switch (getView()) {
 		
 	include('views/general.php');
 		
+	break;
+
+	case 'online_booking':
+		loadLib('clinic');
+		loadJS('mustache.min.js');
+		loadJS('online_booking.js','settings');
+		//get the clinics in which the user is working
+		//$user = get_current_user_id();
+		//$clinics = json_encode(Clinic::getClinics($user));
+		include('views/online_booking.php');
+		
+	
 	break;
 
 	case 'clinics':
