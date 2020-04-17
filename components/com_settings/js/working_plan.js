@@ -6,9 +6,7 @@ $(function() {
     Mustache.parse(tmpl_working_plan);
 
     log(workingPlan);
-    //clinics[0].working_plan = workingPlan[];
-    var result1 = $.grep(workingPlan, function(e){ return e.clinic == '1'; });
-    log(result1[0].workingPlan);
+   
     log(clinics);
     
     $.each(clinics, function() {

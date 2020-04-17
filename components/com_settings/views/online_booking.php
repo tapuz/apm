@@ -1,7 +1,7 @@
 
 <script>
     
-    var clinics = <?=$clinics?>;
+    var settings = <?=$clinics?>;
 
 </script>
 
