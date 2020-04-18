@@ -52,16 +52,36 @@ switch (getVar('task')){
 	break;
 	   
 	case 'getUsers':
-		//only get
+		$userID = get_current_user_id();
+		error_log('THIS IS ID USER  ' . $userID);
 		if ( current_user_can('view_all_calendars') ) {
+			//only include ID's from the group
+			//get the users group ID 
+			$query = $wpdb->prepare('SELECT 
 		
+			b.user_id 
+			
+			from view_clinics_active_users as a
+			join view_clinics_active_users as b
+			on a.group = b.group
+			
+			WHERE a.user_id = %d', $userID);
+			$users=$wpdb->get_results($query);
+			$users_to_include = [];
+			//get the id's into a nice array 
+			foreach($users as $user ){
+				$users_to_include[]= $user->user_id;
+				
+			}
+
+			
 			$args = array(
 			//user role__in to select multiple roles
 			'role__in'       => array('practitioner','clinic_admin'),
 			'order'          => 'ASC',
 			'orderby'        => 'display_name',
 			'fields'         => 'all_with_meta',
-			
+			'include'        => $users_to_include
 			);
 			
 		} else {
