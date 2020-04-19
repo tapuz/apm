@@ -6,10 +6,11 @@
 </script>
 
 <input type="hidden" id="clinicHeader" value="<?=$clinicHeader?>">
-<?loadModule('patient_name');?>
+
 
 <div id="thumbnails" class="row">
     <div class="col-lg-12">
+	<?loadModule('patient_name');?>
         <div id="images" class="box">
             
 				<div class="box-header">

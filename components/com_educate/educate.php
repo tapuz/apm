@@ -75,7 +75,7 @@ switch (getView())
 		
 		//get the portfolio images
 		$images = Image::getImages($patientID,'educate');
-		$backLink = "index.php?com=patient&view=patient&patient_id=" . $patient->patient_id;
+		$backLink = "index.php?com=patient&view=patient&layout=component&patient_id=" . $patient->patient_id;
 		
 		include('views/educate.php');
 	break;

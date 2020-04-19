@@ -74,7 +74,7 @@ if ( !is_user_logged_in() )
 		
 	</div><!--/container-->
 	
- <?php loadModule('footer');?>
+ <?php //loadModule('footer');?>
 <?php
 ?>
 <div id="overlay"></div>

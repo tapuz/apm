@@ -1,4 +1,9 @@
 $(function() {
+$('canvas').ontouchstart = function(e) {
+    if (e.touches) e = e.touches[0];
+    return false;
+  }
+    
     var canvasWidth = '1100';
     var canvasHeight = '1100';
     //minify the main menu

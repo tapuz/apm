@@ -62,13 +62,14 @@ switch (getVar('task')){
 
 switch (getView())
 {
-	
+	case 'drag':
+		loadJS('fabric.min.js');
+		include('views/drag.php');
+	break;
 	case 'pictureproof':
 		loadJS('fabric.min.js');
-		loadJS('pictureproofV2.js','pictureproof');
-		?>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
-		<?
+		loadJS('pictureproof.js','pictureproof');
+		
 		global $current_user;
       	get_currentuserinfo();
 		$username = $current_user->user_firstname . ' ' . $current_user->user_lastname;
@@ -86,7 +87,7 @@ switch (getView())
 		Patient::setActivePatient($patientID);
 		
 		//set the backLink
-		$backLink = "index.php?com=patient&view=patient&patient_id=" . $patient->patient_id;
+		$backLink = "index.php?com=patient&view=patient&layout=component&patient_id=" . $patient->patient_id;
 		
 		include('views/pictureproofV2.php');
 	break;
