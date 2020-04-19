@@ -14,6 +14,7 @@
 	<?loadModule('view_title');?>
 
 	<div class="clinics_container" style="">
+	HERE COME THE SETTINGS
 
 	</div>                
 	
