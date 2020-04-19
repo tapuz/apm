@@ -1,7 +1,7 @@
 
 <script>
     
-    var settings = <?=$clinics?>;
+    var settings = <?=$settings?>;
 
 </script>
 
@@ -12,9 +12,9 @@
 
 <div class="col-sm-12 col-md-9"><!-- Start Left content -->
 	<?loadModule('view_title');?>
+	
+	<div class="container settings_container" style="">
 
-	<div class="clinics_container" style="">
-	HERE COME THE SETTINGS
 
 	</div>                
 	
@@ -28,4 +28,4 @@
 
 <!--load the Templates-->
 
-<?include(TEMPLATES . 'clinics.html');?>
+<?include(TEMPLATES . 'online_booking.html');?>

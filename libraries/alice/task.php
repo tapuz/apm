@@ -7,7 +7,7 @@
 
 class Task {
 
-public function getTasksByUser($creator_id) {  
+public static function getTasksByUser($creator_id) {  
     global $wpdb;
 	$query=sprintf("
 	SELECT
@@ -62,7 +62,7 @@ public static function getTasksForUser($user_id,$statusMax) {
     
 }
 
-public function getLatestActivity($user_id) {
+public static function getLatestActivity($user_id) {
 	global $wpdb;
 	$query=sprintf(" 
 	SELECT t.task_id,
@@ -92,7 +92,7 @@ public function getLatestActivity($user_id) {
 	
 }
 
-public function getTask($task_id) { 
+public static function getTask($task_id) { 
     global $wpdb;
 	$query=sprintf("
 	SELECT
@@ -119,7 +119,7 @@ public function getTask($task_id) {
     
 }
 
-public function getTask__test($task_id) { 
+public static function getTask__test($task_id) { 
     global $wpdb;
 	$query=sprintf("
 	SELECT
@@ -150,7 +150,7 @@ public function getTask__test($task_id) {
     
 }
 
-public function getComments($task_id){
+public static function getComments($task_id){
 	 global $wpdb;
 	$query=sprintf("
 	SELECT
@@ -173,7 +173,7 @@ public function getComments($task_id){
 
 
 
-public function toggleStatus($task_id){
+public static function toggleStatus($task_id){
 	global $wpdb;
 	$query = sprintf("UPDATE table_tasks SET status = 1 - status where task_id = %s",$task_id); //toggles value from 0 to 1 or 1 to 0
 	$wpdb->query($query);
@@ -181,7 +181,7 @@ public function toggleStatus($task_id){
 	
 }
 
-public function addTask($creator_id,$assigned_to_id,$task,$note){
+public static function addTask($creator_id,$assigned_to_id,$task,$note){
     global $wpdb;
     $wpdb->insert( 
 				'table_tasks', 
@@ -200,7 +200,7 @@ public function addTask($creator_id,$assigned_to_id,$task,$note){
 	return $new_task;
 }
 
-public function archiveTask($task_id) {
+public static function archiveTask($task_id) {
     global $wpdb;
 	$query = sprintf("UPDATE table_tasks SET status = 2 where task_id = %s",$task_id); 
 	$wpdb->query($query);
@@ -208,7 +208,7 @@ public function archiveTask($task_id) {
     
 }
 
-public function addComment($task_id,$user_id,$timestamp,$comment){
+public static function addComment($task_id,$user_id,$timestamp,$comment){
 	global $wpdb;	
 	$wpdb->insert( 
 				'table_tasks_comments', 
@@ -225,12 +225,12 @@ public function addComment($task_id,$user_id,$timestamp,$comment){
 
 }
 
-public function deleteComment($comment_id){
+public static function deleteComment($comment_id){
 	global $wpdb;
 	$wpdb->delete( 'table_tasks_comments', array( 'id' => $comment_id));
 }
 
-public function saveValue($task_id,$thekey,$thevalue){
+public static function saveValue($task_id,$thekey,$thevalue){
 	global $wpdb;
 	$query = sprintf("UPDATE table_tasks SET %s = '%s' where task_id = %s",$thekey,$thevalue,$task_id);
 	$wpdb->query($query);

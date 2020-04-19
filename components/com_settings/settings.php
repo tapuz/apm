@@ -56,6 +56,19 @@ switch (getTask())
 		
 	break;
 
+	case 'update_online_booking_settings':
+		loadLib('users');
+		error_log('hellooooo');
+		$user = get_current_user_id();
+		$settings = json_decode(stripslashes(getVar('settings')),true);
+		foreach($settings as $meta){
+			update_user_meta($user,$meta['name'],$meta['value']);	
+		}
+
+		
+		
+	break;
+
 	
 	
 }
@@ -64,7 +77,9 @@ switch (getView()) {
 	
 	case 'general':
 		// display the settings menu
-		
+		goto clinics;
+
+
 	include('views/general.php');
 		
 	break;
@@ -76,12 +91,23 @@ switch (getView()) {
 		//get the clinics in which the user is working
 		//$user = get_current_user_id();
 		//$clinics = json_encode(Clinic::getClinics($user));
+		$settings =  new stdClass();
+		$user = get_current_user_id();
+
+		$settings->online_booking_days_in_future= get_user_meta( $user, 'online_booking_days_in_future');
+		$settings->online_booking_timeslots_per_day= get_user_meta( $user, 'online_booking_timeslots_per_day');
+		$settings->online_booking_timeslots_to_propose= get_user_meta( $user, 'online_booking_timeslots_to_propose');
+
+
+		$settings = json_encode($settings);
+
 		include('views/online_booking.php');
 		
 	
 	break;
 
 	case 'clinics':
+		clinics:
 		loadLib('clinic');
 		loadJS('mustache.min.js');
 		loadJS('clinics.js','settings');

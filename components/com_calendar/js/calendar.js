@@ -982,11 +982,15 @@ $(document).ready(function() {
         log('all is rendered!!');
         if(calendarPB.isStarted())calendarPB.done();
         
-        renderCalendarTimes();
+        //renderCalendarTimes();
 
 			},
 
       viewRender: function(view, element) {
+        if (view.name == 'agendaWeek') {renderCalendarTimes();}
+        else{
+          removeCalendarTimes();
+        } 
        
 
       },
@@ -1033,6 +1037,14 @@ $(document).ready(function() {
     $( "tr[data-time]" ).not('.fc-minor').each(function() {
       var time = $( this ).find("td").first().find("span").html();
       var html = '<div class="fc-slot-times" style="position:relative"><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="fc-slot-time"><span class="fc-slot-time-inner">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;</span></div>';
+      $(this).find("td").last().html(html);
+    });
+  }
+
+  function removeCalendarTimes(){
+    $( "tr[data-time]" ).not('.fc-minor').each(function() {
+      //var time = $( this ).find("td").first().find("span").html();
+      var html = '';
       $(this).find("td").last().html(html);
     });
   }

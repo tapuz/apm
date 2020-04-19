@@ -1,0 +1,46 @@
+<script id='tmpl_online_booking' type="x-tmpl-mustache">
+ 
+<div class="panel panel-default">
+  <div class="panel-heading">Online Bookings</div>
+  <div class="panel-body">
+      
+    <div class="row">
+      <div class="col-md-6">
+        <form id="online_booking_settings">
+          <button type="submit" class="btn btn-primary save_online_booking_settings pull-right"><i class="fas fa-save"></i>&nbsp;Save</button>
+          <div class="form-group">
+            <label for="online_booking_days_in_future">How many days should the system look in advance to book</label>  
+          
+            <input id="online_booking_days_in_future" name="online_booking_days_in_future" type="text" placeholder="" class="form-control input-md" required="" value="{{settings.online_booking_days_in_future}}">
+              
+          
+          </div><!--/form-group-->
+          <div class="form-group">
+            <label for="online_booking_timelots">How many timeslots should the system propose per day</label>  
+            
+            <input id="online_booking_timeslots_per_day" name="online_booking_timeslots_per_day" type="text" placeholder="" class="form-control input-md" required="" value="{{settings.online_booking_timeslots_per_day}}">
+              
+            
+          </div><!--/form-group-->
+          <div class="form-group">
+            <label for="online_booking_timeslots_to_propose">How many timeslots should the system propose in total</label>  
+            
+            <input id="online_booking_timeslots_to_propose" name="online_booking_timeslots_to_propose" type="text" placeholder="" class="form-control input-md" required="" value="{{settings.online_booking_timeslots_to_propose}}">
+          </div><!--/form-group-->    
+        </form>
+        
+      </div><!--col-->
+
+    </div><!--/row-->
+
+   </div>
+  </div><!--/panel-->
+
+
+ 
+
+   
+
+ 
+ 
+ </script>

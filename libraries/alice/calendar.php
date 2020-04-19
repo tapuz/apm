@@ -317,14 +317,14 @@ class Calendar {
 		$working_plan = null;
 		
 	foreach($working_plan_all as $working_plan_clinic) {
-		error_log('clinic ID ' . $working_plan_clinic['clinic'] );
+		//error_log('clinic ID ' . $working_plan_clinic['clinic'] );
     	if ($clinic == $working_plan_clinic['clinic']) {
 			$working_plan_temp = $working_plan_clinic;
 			$working_plan = $working_plan_clinic['workingPlan'];
         	break;
     	}
 	}
-	error_log('working plan temp for the selected clinic-->' . print_r($working_plan,1));
+	//error_log('working plan temp for the selected clinic-->' . print_r($working_plan,1));
 
 		$working_plan = $working_plan[0];
 		if (!array_key_exists($day, $working_plan)) {
@@ -332,7 +332,7 @@ class Calendar {
 			error_log('this is the day ' .$day . ' and does not exists');
 			return FALSE;
 		}
-		error_log($day . 'does exits');
+		//error_log($day . 'does exits');
 		$selected_date_working_plan = $working_plan[$day];
 	   
 		$available_periods_with_breaks = array();

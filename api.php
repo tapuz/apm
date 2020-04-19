@@ -217,9 +217,11 @@ switch (getVar('task')){
 		$start = getVar('start'); 
 		$duration = getVar('duration');
 
-		$days = 10;
-		$timeslots_to_retain_per_day = 3;
-		$max_timeslots_search_for = 6;
+
+		$days=get_user_meta( $user, 'online_booking_days_in_future',true);
+		$timeslots_to_retain_per_day = get_user_meta( $user, 'online_booking_timeslots_per_day',true);
+		$max_timeslots_search_for = get_user_meta( $user, 'online_booking_timeslots_to_propose',true);
+
 		$try_block_book = FALSE;
 		$timeslots_to_present = array();
 		$date = new DateTime($start);
@@ -231,13 +233,13 @@ switch (getVar('task')){
 			
 			if ($availableTimeslots!=FALSE){
 				
-				error_log(print_r($availableTimeslots,1));
+				//error_log(print_r($availableTimeslots,1));
 				usort($timeslots_to_present, function($a, $b) {
 					return $a['priority'] - $b['priority'];
 				});
 				$timeslots_to_retain = array_slice($availableTimeslots,0,$timeslots_to_retain_per_day);
 				$timeslots_to_present = array_merge($timeslots_to_present,$timeslots_to_retain);
-				error_log(print_r($timeslots_to_retain,1));
+				//error_log(print_r($timeslots_to_retain,1));
 			} else {
 				//no available timeslots for this day , look in an extra day
 				//$days++;
@@ -245,10 +247,10 @@ switch (getVar('task')){
 			
 				
 			if(count($timeslots_to_present) >= $max_timeslots_search_for){
-				error_log('we shourld break!!');
+				error_log('we should break stop searching!!');
 				break;}
 			
-			error_log(count($timeslots_to_present));
+			//error_log(count($timeslots_to_present));
 			//error_log($selected_date);
 			error_log('this is I = ' . $i);
 			error_log('days: ' .$days);

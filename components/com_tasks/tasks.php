@@ -1,6 +1,7 @@
 <?php 
 //Component Tasks
 loadLib('task');
+loadLib('users');
 loadCSS('tasks.css','tasks');
 
 
@@ -28,8 +29,9 @@ switch (getVar('task')){
 	break;
 
 	case 'get_users':
-		 echo $users = json_encode(get_users());
-		 error_log('getting the users');
+		$users = Users::getAllUsers();
+		 echo json_encode($users);
+		 
 	break;
 
 	case 'get_comments':
