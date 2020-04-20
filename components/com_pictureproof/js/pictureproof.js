@@ -1,5 +1,6 @@
 $(function() {
     var maxWidth = $( window ).width()-50;
+    if (maxWidth > 1300){maxWidth=1300;};
     var canvasWidth = 0;
 	  var canvasHeight = 0;
     var bgImage;
@@ -446,7 +447,7 @@ $(function() {
             strokeWidth: 5,
             radius: 12,
             fill: 'rgba(0,0,0,0)',
-            stroke: 'white'
+            stroke: 'blue'
             });
             
             topBarC.hasControls = topBarC.hasBorders = false;
@@ -471,7 +472,7 @@ $(function() {
             strokeWidth: 5,
             radius: 12,
             fill: 'rgba(0,0,0,0)',
-            stroke: 'white'
+            stroke: 'blue'
             });
             
             bottomBarC.hasControls = bottomBarC.hasBorders = false;

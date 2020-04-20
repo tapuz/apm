@@ -37,7 +37,55 @@ class Patient
 		return $wpdb->insert_id;
 	}
 	
-	public function searchPatients($q,$user){
+	public function searchPatients__($q,$user){
+		
+		//create a temp table containing only patients belonging to a group
+		global $wpdb;
+		
+		
+		$query = $wpdb->prepare('CREATE TEMPORARY TABLE IF NOT EXISTS temp_table_patients AS
+				(SELECT 
+				 table_patients.patient_id,
+				 table_patients.dob,
+				 table_patients.patient_surname,
+				 table_patients.patient_firstname,
+				 table_patients.phone,
+				 table_patients.email,
+				 table_patients.clinic,
+				 table_patients.practitioner,
+			
+				 table_group_user.group,
+				 table_group_user.user
+
+				 FROM table_patients
+				 INNER JOIN table_group_user
+				 on table_group_user.group = table_patients.group
+				 WHERE table_group_user.user = %d)',$user);
+		
+		$wpdb->query($query);
+		$table_name = 'temp_table_patients';
+		if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+		//table not in database. Create new table
+		error_log('THE TABLE DOES NOT EXIST');
+		}else{
+		error_log('THE TABLE DOES EXIST !!!');	
+		}
+		
+		//WHERE CONCAT( nameFirst,  ' ', nameLast ) LIKE  '%Joe%'  
+		//patient_surname LIKE '%s'
+		$query=sprintf("SELECT *, concat(patient_surname, ' ', patient_firstname) as fullname FROM temp_table_patients
+															WHERE (
+																concat(patient_surname, ' ', patient_firstname) LIKE '%s'
+																   
+																  ) ORDER by patient_id DESC"
+																  ,'%'.$q.'%'
+																  );
+		$patients=$wpdb->get_results($query);
+		return $patients;
+		
+	}
+
+	public static function searchPatients($q,$user){
 		
 		//create a temp table containing only patients belonging to a group
 		global $wpdb;
