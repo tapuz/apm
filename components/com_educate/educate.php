@@ -3,6 +3,7 @@
 loadLib('patient');
 loadLib('clinic');
 loadLib('image');
+loadJS('fabric.min.js');
 loadJS('educate.js','educate');
 //loadCSS('educate.css','educate');
 
@@ -34,7 +35,7 @@ switch (getVar('task')){
 		Image::insertImage($patientID,$filename,'educate');
 		
 		
-		loadExtLib('fpdf');
+		/* loadExtLib('fpdf');
 		$pdf = new FPDF();
 		$pdf->AddPage();
 		$pdf->SetFont('Arial','B',16);
@@ -43,9 +44,14 @@ switch (getVar('task')){
 		$pdf->Image($savePath	,null,null,-150);
 		//$pdf->Output();
 		$filename="/var/www/clients/client2/web51/web/wp_dev/alice/userdata/pdf/mysuperpdf.pdf";
-		$pdf->Output($filename,'F');
+		$pdf->Output($filename,'F'); */
 		
 	break;
+
+	case 'getPortfolioPictures':
+        $portfolioPictures = Image::getImages(getVar('patientID'),'educate');
+        echo json_encode($portfolioPictures);
+    break;
 	
 
 	

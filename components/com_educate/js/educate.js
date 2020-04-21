@@ -1,277 +1,179 @@
-$(function() {
-$('canvas').ontouchstart = function(e) {
-    if (e.touches) e = e.touches[0];
-    return false;
-  }
-    
-    var canvasWidth = '1100';
-    var canvasHeight = '1100';
-    //minify the main menu
-	$('#main-menu-min').click ();
-    //lets create 2 canvasses: 1 for the image and 1 for the drawing
-    var newLayer1 = $('<canvas/>',{
-                    id: 'imgLayer'                   
-                }).prop({
-                    width: canvasWidth,
-                    height: canvasHeight});
-    var newLayer2 = $('<canvas/>',{
-                    id: 'drawingLayer'                   
-                }).prop({
-                    width: canvasWidth,
-                    height: canvasHeight
-                });
-    //a temp layer for merging other layers into for printing and saving...
-    var tempLayer = $('<canvas/>',{
-                    id: 'tempLayer'                   
-                }).prop({
-                    width: canvasWidth,
-                    height: canvasHeight
-                });
-    //append them to the board
-    $('#board').append(tempLayer);
-    $('#board').append(newLayer1);
-    $('#board').append(newLayer2);
-    
-    //set the positions
-    $("#board").css({position: 'relative'});
-    $("#tempLayer").css({top: 0, left: 0, position:'absolute'});
-    $("#imgLayer").css({top: 0, left: 0, position:'absolute'});
-    $("#drawingLayer").css({top: 0, left: 0, position:'absolute'});
-    
+var canvas;
 
-    var position = $('#imgLayer').position();
-    
-    console.log(position.top);
-    console.log(position.left);
-    
-    
-    //hide the canvas and portfolio
+$(function() {
+    var maxWidth = $( window ).width()-50;
+    if (maxWidth > 1300){maxWidth=1300;};
+    var canvasWidth = 0;
+	var canvasHeight = 0;
+    var bgImage;
+    var bgImageCurAngle = 0;
+	
+   
+
+	
+    var zoomImg;
+
+    //hide and show
     $( "#canvas-box" ).toggle();
     $( "#portfolio" ).toggle();
     
-    var clickX = new Array();
-    var clickY = new Array();
-    var clickDrag = new Array();
-    var paint;
-    var whiteBoard = $("#drawingLayer");
-   // var newImage = new Image();
-   //    newImage.src = "http://tlccrx.com/wp-content/uploads/2013/11/Dermatome.jpg";
-   $(document).on('click','.img-thumbnail',function(){
+
+    //init the canvas
+    canvas =  new fabric.Canvas('c', { isDrawingMode: true, backgroundColor :'white', selection: false,allowTouchScrolling: false});
+    canvas.setDimensions({width:canvasWidth, height:canvasHeight});
     
-        context = document.getElementById("imgLayer").getContext("2d");
-        //context.drawImage(this, 0,0,canvasHeight,this.width * (canvasHeight/this.height));
-        context.drawImage(this, 0,0,canvasWidth,this.height * (canvasWidth/this.width));
-        //ctx.drawImage(img, 300, 0, 300, img.height * (300/img.width));
-        console.log('loading the image');
+    
+    //do not delete the line below
+    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+    //do not delete the line above
+
+    //event handlers
+
+    //set the drawing brush
+    canvas.freeDrawingBrush.color = 'red';
+    canvas.freeDrawingBrush.width =  5;
+    
+
+
+    $(document).on('click','.img-thumbnail',function(){
+
+        renderBackgroundImage(this.src);
         $( "#canvas-box" ).toggle();
         $( "#thumbnails" ).toggle();
         
     
     });
 
-    $('#select-image').click(function() {
-        $( "#canvas-box" ).toggle();
-        $( "#thumbnails" ).toggle();
-        
-        clearDrawing();
-        clearImage();
-        clearTempLayer();
-        
-    });
-    
-    
-    $('.toggleImagesPortfolio').click(function() {
-        $( "#images" ).toggle();
-        $( "#portfolio" ).toggle();
-    });
-    
-    
-    $('#saveToPatientPortfolio').click(function(){
-        //merge the layers
-       var printLayer = $('#tempLayer')[0];
-       var printLayerCtx=printLayer.getContext('2d');
-        
-       var img = $('#imgLayer')[0];
-       var drawing = $('#drawingLayer')[0];
-       //set printlayer BG to white
-       printLayerCtx.fillStyle = "white";
-       printLayerCtx.fillRect(0,0,canvasWidth,canvasHeight);
-       
-       printLayerCtx.drawImage(img,0,0);
-       printLayerCtx.drawImage(drawing,0,0);
-       
-       var dataURL = $('#tempLayer').get(0).toDataURL("image/jpeg"); //have to get the canvas element from the jquery object
-        console.log(patientName);
-        $.ajax({
-  			type: "post",
-		    url: "ajax.php",
-  			data: { com: 'educate', 
-  					task: 'saveToPatientPortfolio', 
-  					imgBase64: dataURL,
-                    patientID: patientID,
-                    patientName: patientName,
-                    patientDOB: patientDOB}
-			}).success(function( response ) {
-                    //add the image to the portfolio
-                	var image = new Image();
-                    image.src = dataURL;
-                    image.className  = "img-thumbnail";
-                    //image.attr('class', "img-thumbnail");
-                    $('<div>',{class:'col-sm-3 col-xs-6'}).append(image).appendTo('#portfolio_images');
-                
-                    console.log('image_added');
-					var n = noty({text: 'Saved to Patient Portfolio',type: 'success',layout:'topRight'});  				
-			});
-        });
-    
-    $('#print').click(function() {
-    	//var clinic_logo = $("#clinic_logo").val();
-    	//var header = $("#clinic_letter_heading").val() + "<br><br>";
-       //var header = $("#clinic").val() + "<br><br>";
-       
-       //merge imgLayer and drawingLayer to printLayer so we can print it.
-       
-       var printLayer = $('#tempLayer')[0];
-       var printLayerCtx=printLayer.getContext('2d');
-        
-       var img = $('#imgLayer')[0];
-       var drawing = $('#drawingLayer')[0];
-       printLayerCtx.drawImage(img,0,0);
-       printLayerCtx.drawImage(drawing,0,0);
-       //create an Image element because printThis will not print the Canvas element
-       var tempImage = new Image();
-           tempImage.id = "tempImage";
-           //tempImage.height=800;
-           //tempImage.width =1100;
-           tempImage.src = printLayer.toDataURL();
-        $('#board').append(tempImage);
-        //print
-        var header = $('#clinicHeader').val() + "<H3>Clinician: " + clinician+ "</H3>" + "<H3>Patient: " +patientName+" ("+patientDOB+")</H3>";
-
-    	$('#tempImage').printThis({header: header});
-        //delete the tempImage
-        tempImage.remove();
-        clearTempLayer();
-	
-    });
-    
     $('#clear_drawing').click(function(){
-        clearDrawing();
-        });
-    
-    $('#clear_board').click(function(){
-        clearDrawing();
-        clearImage();
-        });
-
-    
+        canvas.getObjects('path').forEach((path) => {
+              canvas.remove(path);
+          });
+    });
+    $('#undo').click(function(){
+        var paths = canvas.getObjects('path');
+        //delete the latest
+        canvas.remove(paths[paths.length - 1]);
+        
+    });
     $('#btn_portfolio').click(function(){
         //clearDrawing();
+        canvas.clear();
           $( "#canvas-box" ).toggle();
           $( "#thumbnails" ).toggle();
           $( "#portfolio" ).show();
           $( "#images").hide();         
         });
-    
-    
-    function clearImage(){
-         // Clears the image
-        imgLayerCtx = $("#imgLayer")[0].getContext("2d");
-        imgLayerCtx.clearRect(0, 0, imgLayerCtx.canvas.width, imgLayerCtx.canvas.height);
-        imgLayerCtx.fillStyle = "white";
-        imgLayerCtx.fillRect(0,0,canvasWidth,canvasHeight);
-    }
-    
-    function clearDrawing(){
-        drawingLayerCtx = $("#drawingLayer")[0].getContext("2d");
-        drawingLayerCtx.clearRect(0, 0, drawingLayerCtx.canvas.width, drawingLayerCtx.canvas.height);
-        
-        clickX = new Array();
-        clickY = new Array();
-        clickDrag = new Array();
-        redraw();
-    }
-    
-    function clearTempLayer(){
-        tempLayerCtx = $("#tempLayer")[0].getContext("2d");
-        tempLayerCtx.clearRect(0, 0, tempLayerCtx.canvas.width, tempLayerCtx.canvas.height);
-    }
-    
-    function getMousePos(canvas, evt) {
-       var rect = document.getElementById("drawingLayer").getBoundingClientRect();
-       
-       return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
-    }
-    function addClick(x, y, dragging)
-    {
-      clickX.push(x);
-      clickY.push(y);
-      clickDrag.push(dragging);
-    }
-    
-    function redraw(){
-        context = document.getElementById("drawingLayer").getContext("2d");
-        //context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-  
-        context.strokeStyle = "#df4b26";
-        context.lineJoin = "round";
-        context.lineWidth = 5;
-			
-    for(var i=0; i < clickX.length; i++) {		
-        context.beginPath();
-    if(clickDrag[i] && i){
-      context.moveTo(clickX[i-1], clickY[i-1]);
-     }else{
-       context.moveTo(clickX[i]-1, clickY[i]);
-     }
-     context.lineTo(clickX[i], clickY[i]);
-     context.closePath();
-     context.stroke();
-    }
-    } 
-    
-   $('#drawingLayer').mousedown(function(e){
-        var pos = getMousePos(whiteBoard,e);
-        var mouseX = pos.x;
-        var mouseY = pos.y;
-		
-        paint = true;
-        addClick(mouseX, mouseY);
-        redraw();
-        console.log("mousedown");
-        
+
+    $('.toggleImagesPortfolio').click(function() {
+        $( "#images" ).toggle();
+        $( "#portfolio" ).toggle();
     });
-   
-   $('#drawingLayer').mousemove(function(e){
-        if(paint){
-            var pos = getMousePos(whiteBoard,e);
-            var mouseX = pos.x;
-            var mouseY = pos.y;
-            addClick(mouseX, mouseY, true);
-            redraw();
-        }
+    
+    $('#select-image').click(function() {
+        canvas.clear();
+        $( "#canvas-box" ).toggle();
+        $( "#thumbnails" ).toggle();
+            
+        
+            
     });
-   
-   $('#drawingLayer').mouseup(function(e){
-        paint = false;
+
+    $('#print').click(function() {	
+       var tempImage = new Image();
+           tempImage.id = "tempImage";
+           tempImage.height=500;
+           //tempImage.width =1100;
+           tempImage.src = canvas.toDataURL();
+        
+        $('#board').append(tempImage);
+        //print
+        var header = $('#clinicHeader').val() + "<H3>Clinician: " + clinician+ "</H3>" + "<H3>Patient: " +patientName+" ("+patientDOB+")</H3>";
+    	$('#tempImage').printThis({header: header});
+        //delete the tempImage
+        tempImage.remove();
+    });
+
+    $('#saveToPatientPortfolio').click(function(){ 
+        
+        var dataURL = $('#c').get(0).toDataURL('image/jpeg');//have to get the canvas element from the jquery object
+        
+        log(dataURL);
  
+         console.log(patientName);
+         $.ajax({
+               type: "post",
+               url: "ajax.php",
+               data: { com: 'educate', 
+                       task: 'saveToPatientPortfolio', 
+                       imgBase64: dataURL,
+                     patientID: patientID,
+                     patientName: patientName,
+                     patientDOB: patientDOB}
+             }).success(function( response ) {
+                     //add the image to the portfolio 
+                     getPortfolioPictures();
+                    
+                     Message = new Noty({
+                        text: '<span class="text-center">Image saved to portfolio!</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
+                        //closeWith:'click',
+                        layout:'top',
+                        theme:'sunset',
+                        type:'success',
+                        timeout: 1500 
+                        
+                        }).show();	
+                });
     });
+     
+
+    //end - envent handlers
+
+    function renderBackgroundImage(source){
     
-    $('#drawingLayer').mouseleave(function(e){
-        paint = false;
-    });
+        fabric.Image.fromURL(source, function (img) {
+             
+             imgWidth = img.width;
+             imgHeight = img.height;
+             aspectRatio = imgHeight/imgWidth;
+             canvasWidth = maxWidth;
+             
+             canvasHeight = maxWidth * aspectRatio;
+             var scaleFactor = canvasWidth / imgWidth;
     
-    
-    
-    
+                 img.set({
+                     width: imgWidth, 
+                     height: imgHeight, 
+                     originX: 'left', 
+                     originY: 'top',
+                     scaleX: scaleFactor,
+                     scaleY: scaleFactor,
+                     
+                 });
+                 canvas.setWidth(canvasWidth);
+                 canvas.setHeight(canvasHeight);
+                 canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+                 bgImage = img;
+             });
+    }
+
+    function getPortfolioPictures() {
+        //console.log(patientID);
+        $.ajax({type: "post", url: "ajax.php", dataType: "json",
+          data: { com: 'educate',task: 'getPortfolioPictures', patientID : patientID}
+            }).success(function( portfolioPictures ) {
+               $('#portfolio_images').empty();
+		        console.log(portfolioPictures);
+                $.each(portfolioPictures, function(){
+                      
+                      var div = $('<div>',{class:'col-sm-3 col-xs-6 thumbnail-container'}).html('<img class="img-thumbnail" id="'+ this.image_id +'" src="userdata/portfolio_images/'+ this.filename +'">');
+                      $('#portfolio_images').append(div);
+                      
+	            });
+                
+		
+	        });
+       
+     }
+
+
 });
-
-
-
-
-
-
-

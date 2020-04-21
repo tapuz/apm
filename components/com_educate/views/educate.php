@@ -7,10 +7,10 @@
 
 <input type="hidden" id="clinicHeader" value="<?=$clinicHeader?>">
 
-
+<?loadModule('patient_name');?>
 <div id="thumbnails" class="row">
     <div class="col-lg-12">
-	<?loadModule('patient_name');?>
+	
         <div id="images" class="box">
             
 				<div class="box-header">
@@ -78,12 +78,13 @@
             <div class="">
                 <div class="row">
                     <div class="col-lg-12">
-                        <button class="btn btn-primary" id="select-image">Select new image</button>
-                        <button class="btn btn-primary" id="saveToPatientPortfolio">Save to Portfolio</button>
-                        <button class="btn btn-primary" id="print">Print</button>
-                        <button class="btn btn-primary" id="clear_drawing">Clear drawing</button>
-						<button class="btn btn-primary" id="clear_board">Clear board</button>
-						<button class="btn btn-primary" id="btn_portfolio">Portfolio</button>
+                        <button class="btn btn-success" id="select-image">Select new image</button>
+						<button class="btn btn-success" id="btn_portfolio">Portfolio</button>
+                        <button class="btn btn-primary" id="saveToPatientPortfolio"><i class="far fa-save"></i> Save to Portfolio</button>
+                        <button class="btn btn-primary" id="print"><i class="fas fa-print"></i></button>
+                        <button class="btn btn-danger"  id="clear_drawing">Clear drawing</button>
+						<button class="btn btn-warning" id="undo"><i class="fas fa-undo-alt"></i></button>
+						
                         
                     </div>
                 </div>
@@ -91,6 +92,7 @@
                     
                     <div id="canvas-col" class="col-lg-12">
 						<div id="board">
+							<canvas id="c"></canvas>
 						</div>
 					</div>
                 </div>
