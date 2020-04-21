@@ -778,7 +778,7 @@ $(function() {
                     console.log('image_added');
 					var n = noty({text: 'Saved to Patient Portfolio',type: 'success',layout:'topRight'});  				
 			});
-        });
+    });
     
     $('#btnPrint').click(function() {	
 
