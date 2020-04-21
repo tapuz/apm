@@ -19,8 +19,7 @@
 var searchVisible = 0;
 var transparent = true;
 
-//var apiURL = 'https://www.timegenics.com/app/api.php';
-var apiURL = 'https://192.168.0.2/alice/app/api.php';
+
 var objPatient={};
 
 var mode; //newPatient or recurrentPatient

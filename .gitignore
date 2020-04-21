@@ -1,3 +1,4 @@
 userdata/
 *.log
 configuration.php
+/book/assets/js/config.js
