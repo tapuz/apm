@@ -562,6 +562,7 @@ $(document).ready(function() {
 					
           $('.patient-select').hide();
           $('.selected').show();
+          $('#editEvent .confirmed').button("toggle");
 
           $('.selected-patient-name').html(objNewAppointment.patientName);
           $('.selected-dob').html(objNewAppointment.dob);
@@ -707,7 +708,7 @@ $(document).ready(function() {
         appModalMode = 'newAppointment';
         $('#editEvent').modal('show');
         $('#editEvent :input').val('');
-				
+				$('#editEvent .confirmed').button("toggle");
 				log('selected clinic is : ' + selectedClinic);
 				if (selectedClinic != 'all'){
           $('#clinicSelectEditApp').val(selectedClinic);
@@ -932,6 +933,11 @@ $(document).ready(function() {
 
             if (event.status == 6) {
               $(element).find('.fc-title').addClass('appointmentCancelled');
+            }
+
+            if (event.status == 2) {
+              log('HIER!!! -> ' + element);
+              $(element).addClass('appToBeMoved');
             }
 
             

@@ -5,10 +5,16 @@ var customAppModalMode;//newCustomAppointment or editCustomAppointment
 $(document).ready(function() {
   //init some stuff
 var patientLinkedClinic = null;
+var eventStatus = null;
+
 
   $('.selected').hide();
 
   //$('#btnSaveNewAppointment').prop('disabled', true);
+  $(document).on('click','#patientAppointment .status',function(){ 
+    eventStatus = $(this).attr('status');
+  
+  });
 
   $('#editBusyTime').on('submit', function(e){
     e.preventDefault();
@@ -50,7 +56,7 @@ var patientLinkedClinic = null;
     $('.editAppSubmit').text("Saving...");
     switch (appModalMode) {
     case 'newAppointment':
-       eventStatus = 0;
+       
            var duration = $('#selectService :selected').attr('duration');
            var start = moment(eventStart).format();
            var end = eventStart.clone().add(duration, 'minutes').format();
@@ -153,7 +159,7 @@ var patientLinkedClinic = null;
                            start: objEvent.start.format(),
                            end : objEvent.end.format(),
                            patientID : objEvent.patientID,
-                           status : objEvent.status,
+                           status : eventStatus,
                            user : objEvent.resourceId,
                            service : objEvent.serviceId,
                            note: objEvent.note,

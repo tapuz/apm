@@ -12,8 +12,14 @@ $(document).ready(function() {
       calendar.fullCalendar('updateEvent', objEvent);
       $('#eventDetails').modal('hide');
       switch (objEvent.status) {
+        case '0':
+          Appointment.addLog(objEvent.id,'Confirmed','Appointment confirmed','label-success');
+        break;
         case '1':
           Appointment.addLog(objEvent.id,'Arrived','Patient arrived','label-success');
+        break;
+        case '2':
+          Appointment.addLog(objEvent.id,'Pencilled','Appointment Pencilled','label-warning');
         break;
         case '8':
           Appointment.addLog(objEvent.id,'Did not show','Patient did not show','label-danger');
@@ -82,6 +88,8 @@ $(document).ready(function() {
     $('#editEvent').appendTo("body").modal('show');
     $('#eventDetails').modal('hide');
     
+    if(objEvent.status == 2 ) {$('#editEvent .pencilled').button("toggle");}else{$('#editEvent .confirmed').button("toggle");}
+
     
     
     });
@@ -254,10 +262,16 @@ function loadEventDetails() {
 			body +='<h2 class="text-danger">Appointment was cancelled</h2></div>';
 			
 			
-			body += '<div class="btn-group appStatusActions" data-toggle="buttons">';
-			body +=	'<label id="1" class="set_status arrived btn btn-sm" status="1" checked><input type="radio"> Arrived</label>';
+			body += '<div class="btn-group col-md-4 appStatusActions" data-toggle="buttons">';
+			body +=	'<label id="1" class="set_status arrived btn btn-sm" status="1"><input type="radio"> Arrived</label>';
 			body +=	'<label id="2" class="set_status dns btn btn-sm" status="8"><input type="radio"> Did not show</label>';
-			body += '</div>';
+      body += '</div>';
+      
+      body += '<div class="btn-group col-md-4 appPencilledIn" data-toggle="buttons">';
+			body +=	'<label id="1" class="set_status confirmed btn btn-sm" status="0"><input type="radio"> Confirmed</label>';
+			body +=	'<label id="2" class="set_status pencilled btn btn-sm" status="2"><input type="radio"> Pencilled</label>';
+      body += '</div>';
+      body += '<div class="row"></div>';
       
       body += '<p><div class="btn-group">';
 
@@ -274,8 +288,9 @@ function loadEventDetails() {
       $('#eventDetails').appendTo("body").modal('show');
       
 			//set the status toggle
-			
-			if (objEvent.status == 1) {$(".set_status.arrived").button("toggle");}
+      if (objEvent.status == 0) {$(".set_status.confirmed").button("toggle");}
+      if (objEvent.status == 1) {$(".set_status.arrived").button("toggle");}
+      if (objEvent.status == 2) {$(".set_status.pencilled").button("toggle");}
 			if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
 			if (objEvent.status == 6) {
         $(".appCancelledBox").show();

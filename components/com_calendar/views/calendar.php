@@ -200,6 +200,12 @@
 							</div>
 						</div>	
 					</div>
+					<div class="row">
+					<div class="col-md-6" data-toggle="buttons">
+						<label class="status confirmed btn btn-sm" status="0"><input type="radio" value="0"> Confirmed</label>
+						<label class="status pencilled btn btn-sm" status="2"><input type="radio" value="2"> Pencilled</label>
+					</div>
+					</div>
 
 					<div class="row">&nbsp;</div>
 					<div class="row">
