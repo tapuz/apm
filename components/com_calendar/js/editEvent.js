@@ -5,7 +5,7 @@ var customAppModalMode;//newCustomAppointment or editCustomAppointment
 $(document).ready(function() {
   //init some stuff
 var patientLinkedClinic = null;
-var eventStatus = null;
+var eventStatus = 0;
 
 
   $('.selected').hide();
