@@ -176,21 +176,10 @@
 
 .appointmentCancelled{
   text-decoration: line-through;
+  text-decoration-color: rgb(255, 0, 0);
+  text-decoration-thickness: 2px;
 }
 
-.appToBeMoved{
-  /*border-color: black !important;*/
-  color: white;
-  background: repeating-linear-gradient(
-    45deg,
-    #000529,
-    #000529 10px,
-    #465298 10px,
-    #465298 20px
-  );
-  opacity: 1;
-
-}
 /*Add appointment modal*/
 
 #editEvent .modal-header {

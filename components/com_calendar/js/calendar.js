@@ -10,6 +10,7 @@ var eventIDtoHighlight;
 var datepicker;
 var selectedUser = "";
 
+
 //$('[data-time]:not(.fc-minor)');
 
 $(document).ready(function() {
@@ -936,8 +937,11 @@ $(document).ready(function() {
             }
 
             if (event.status == 2) {
-              log('HIER!!! -> ' + element);
-              $(element).addClass('appToBeMoved');
+              
+              //$(element).addClass('appToBeMoved');
+              rgba1 = hexToRGBA(event.backgroundColor,1);
+              rgba2 = hexToRGBA(event.backgroundColor,0.5);
+              $(element).css({"background": "repeating-linear-gradient(45deg,"+ rgba1 +","+ rgba1  +" 10px,"+rgba2+" 10px,"+rgba2+" 20px)","opacity":"1"});
             }
 
             
