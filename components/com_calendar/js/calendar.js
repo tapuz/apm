@@ -942,6 +942,7 @@ $(document).ready(function() {
               rgba1 = hexToRGBA(event.backgroundColor,1);
               rgba2 = hexToRGBA(event.backgroundColor,0.5);
               $(element).css({"background": "repeating-linear-gradient(45deg,"+ rgba1 +","+ rgba1  +" 10px,"+rgba2+" 10px,"+rgba2+" 20px)","opacity":"1"});
+              $(element).find('.fc-bg').css({"opacity":"0.6"});
             }
 
             
