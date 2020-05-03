@@ -39,7 +39,8 @@ class Email {
         //$mail->Body.= 'Nieuwe afsrpaaak bij blablabla';
         //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
         if(!$mail->send()) {
-			error_log($mail->ErrorInfo);
+            error_log($mail->ErrorInfo);
+            return false;
 		} else {
 			return true;
 		}

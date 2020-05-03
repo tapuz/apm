@@ -33,12 +33,8 @@ class Calendar {
 		
 		
 	} 
-
+ 
 	
-
-
-	
-
 	public static function getFutureAppointments($patientID){
 		global $wpdb;
 		$query = $wpdb->prepare("SELECT *,DATE_FORMAT(start, '%%a, %%e %%M %%Y - %%H:%%i') as strStart FROM view_appointments WHERE (patientID = %d AND start > CURRENT_DATE)",$patientID);
