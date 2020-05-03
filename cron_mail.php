@@ -66,11 +66,11 @@ foreach ($appointments as $appointment) {
 			echo '<br> Sending mail to ' . $appointment->patientName . ' --> ' .$appointment->email;
 			
 
-			//if($email->send($error)){
-			//	echo ' [DONE]' ;
-			//}else{
-			//	echo ' [ERROR]- ' . $error;
-			//}
+			if($email->send($error)){
+				echo ' [DONE]' ;
+			}else{
+				echo ' [ERROR]- ' . $error;
+			}
 
 
 
