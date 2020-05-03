@@ -62,13 +62,13 @@ foreach ($appointments as $appointment) {
 			$email->message = $message;
 			$email->ics = ICS::render($appointment);
 
-			echo '<br>Mail sending to' . $appointment->patient_firstname .' --> ' .$appointment->email;
+			echo '<br> Sending mail to' . $appointment->patient_firstname .' --> ' .$appointment->email;
 			
-			//if($email->send()){
-			//	echo '<br>Mail sent to ' . $appointment->patient_firstname .' --> ' .$appointment->email;
-			//}else{
-			//	echo '<br>Mail error!!!';
-			//}
+			if($email->send($error)){
+				echo ' [DONE]' ;
+			}else{
+				echo ' [ERROR]- ' . $error;
+			}
 
 
 
