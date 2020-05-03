@@ -48,12 +48,12 @@ foreach ($appointments as $appointment) {
 			$email->to = $appointment->email;
 			$email->from_email = $clinic->clinic_email;
 			$email->from_name = $clinic->email_name;
-			$email->subject = $clinic->email_appointment_confirmation_subject;
+			$email->subject = 'Een herinnering van je afspraak op ' . $appointment->time;
 			
 			
 			$message = file_get_contents('assets/email_templates/appointmentReminder.html');
 			$message = str_replace('%clinic%', $appointment->clinic_name, $message);
-			$message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
+			$message = str_replace('%title%', 'Herinnering van je afspraak');
 			$message = str_replace('%text%', $clinic->email_appointment_confirmation_text, $message);
 			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
 			$message = str_replace('%time%', $appointment->time, $message);
