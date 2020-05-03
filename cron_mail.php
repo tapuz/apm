@@ -36,7 +36,7 @@ foreach ($appointments as $appointment) {
 			//add clinic name to $appointment object
 			$appointment->{"clinic_name"} = $clinic->clinic_name;
 			$appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
-			$appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
+			$appointment->{"time"} = strftime('%e/%m/%Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
 			
 			$email = new Email();
 			
