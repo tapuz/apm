@@ -26,8 +26,8 @@ echo "GETTING READY<BR>";
 //get all the appts
 
 global $wpdb;
-//$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
-$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE())";
+$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
+//$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE())";
 $appointments = $wpdb->get_results($query);
 
 foreach ($appointments as $appointment) {
@@ -63,14 +63,14 @@ foreach ($appointments as $appointment) {
 			$email->message = $message;
 			$email->ics = ICS::render($appointment);
 
-			echo '<br> Sending mail to' . $appointment->patient_firstname .' --> ' .$appointment->email;
+			echo '<br> Sending mail to ' . $appointment->patient_lastname .' ' . $appointment->patient_firstname .' --> ' .$appointment->email;
 			
 
-			if($email->send($error)){
-				echo ' [DONE]' ;
-			}else{
-				echo ' [ERROR]- ' . $error;
-			}
+			//if($email->send($error)){
+			//	echo ' [DONE]' ;
+			//}else{
+			//	echo ' [ERROR]- ' . $error;
+			//}
 
 
 
