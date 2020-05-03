@@ -52,6 +52,7 @@ foreach ($appointments as $appointment) {
 			
 			
 			$message = file_get_contents('assets/email_templates/appointmentReminder.html');
+			$message = str_replace('%clinic%', $appointment->clinic_name, $message);
 			$message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
 			$message = str_replace('%text%', $clinic->email_appointment_confirmation_text, $message);
 			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
@@ -64,6 +65,7 @@ foreach ($appointments as $appointment) {
 
 			echo '<br> Sending mail to' . $appointment->patient_firstname .' --> ' .$appointment->email;
 			
+
 			if($email->send($error)){
 				echo ' [DONE]' ;
 			}else{
