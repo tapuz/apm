@@ -23,7 +23,7 @@ loadLib('ics');
 error_log('CRON JOB STARTED');
 
 echo "GETTING READY<BR>";
-//get all the appts
+//get all the appointments
 
 global $wpdb;
 $query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
