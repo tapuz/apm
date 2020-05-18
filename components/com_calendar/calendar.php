@@ -90,7 +90,8 @@ switch (getVar('task')){
 		//send confirmation email only if not a custom appoitment
 		
 		error_log(json_encode($appointment));
-		//if ($terry){
+		if ($appointment->status == 0 ){
+			error_log('sending the mail...');
 			$clinic = Clinic::getClinic($appointment->clinic);
 			
 			//add clinic name to $appointment object
@@ -123,7 +124,7 @@ switch (getVar('task')){
 			$email->ics = ICS::render($appointment);
 			
 			$email->send();
-		//}	
+		}	
 		
 		
 		
@@ -141,7 +142,7 @@ switch (getVar('task')){
 		
 		error_log('flag : '. getVar('sendEmail'));
 		
-		if (getVar('sendEmail') == 'yes') {
+		if (getVar('sendEmail') === 1) {
 			
 			//lets send a mail to notify patient of updated appointment
 			loadLib('email');

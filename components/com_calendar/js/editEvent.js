@@ -172,7 +172,7 @@ var eventStatus = 0;
                             calendar.fullCalendar('removeEvents' , objEvent.id );
                             calendar.fullCalendar('renderEvent', appointment);
                             closeEditAppModal();
-          },'no');
+          },0);
         }
       break;
     }
