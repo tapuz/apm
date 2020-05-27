@@ -114,7 +114,8 @@ switch (getVar('task')){
 			
 			$message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
 			$message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
-			$message = str_replace('%text%', $clinic->email_appointment_confirmation_text, $message);
+			$message = str_replace('%text1%', $clinic->email_appointment_confirmation_text1, $message);
+			$message = str_replace('%text2%', $clinic->email_appointment_confirmation_text2, $message);
 			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
 			$message = str_replace('%time%', $appointment->time, $message);
 			$message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);

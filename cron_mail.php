@@ -26,7 +26,8 @@ echo "GETTING READY<BR>";
 //get all the appointments
 
 global $wpdb;
-$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
+//$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
+$query = "SELECT * from view_appointments WHERE (patient_id = '12722' AND customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
 //$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE())";
 $appointments = $wpdb->get_results($query);
 
@@ -48,13 +49,15 @@ foreach ($appointments as $appointment) {
 			$email->to = $appointment->email;
 			$email->from_email = $clinic->clinic_email;
 			$email->from_name = $clinic->email_name;
-			$email->subject = 'Een herinnering van je afspraak op ' . $appointment->time;
+			//$email->subject = 'Een herinnering van je afspraak op ' . $appointment->time; 
+			$email->subject =  $clinic->email_appointment_reminder_subject . ' ' .  $appointment->time; 
 			
 			
 			$message = file_get_contents('assets/email_templates/appointmentReminder.html');
 			$message = str_replace('%clinic%', $appointment->clinic_name, $message);
 			$message = str_replace('%title%', 'Herinnering van je afspraak',$message);
-			$message = str_replace('%text%', $clinic->email_appointment_confirmation_text, $message);
+			$message = str_replace('%text1%', $clinic->email_appointment_reminder_text1, $message);
+			$message = str_replace('%text2%', $clinic->email_appointment_reminder_text2, $message);
 			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
 			$message = str_replace('%time%', $appointment->time, $message);
 			$message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
