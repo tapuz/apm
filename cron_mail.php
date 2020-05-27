@@ -26,8 +26,8 @@ echo "GETTING READY<BR>";
 //get all the appointments
 
 global $wpdb;
-//$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
-$query = "SELECT * from view_appointments WHERE (patientID = 12722 AND customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
+$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
+//$query = "SELECT * from view_appointments WHERE (patientID = 12722 AND customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
 //$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE())";
 $appointments = $wpdb->get_results($query);
 
