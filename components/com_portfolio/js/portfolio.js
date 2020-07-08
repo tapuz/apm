@@ -1,5 +1,5 @@
 $(function() {
-    var maxWidth = $( window ).width()-60;
+    var maxWidth = $( window ).width()-50;
     if (maxWidth > 1300){maxWidth=1300;};
     var canvasWidth = 0;
 	  var canvasHeight = 0;
@@ -8,8 +8,6 @@ $(function() {
 	
     var topBar = 0;
     var bottomBar;
-    var topBarC;
-    var bottomBarC;
 	  var topbarY = 0;
 	  var bottombarY = 0;
     var heightBarsPresent = false;
@@ -442,8 +440,8 @@ $(function() {
 	 
 	function makePatientHeightBars() {
 		
-      topBar =  new fabric.Line([0,30,canvasWidth,30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
-         topBarC = new fabric.Circle({
+         topBar =  new fabric.Line([0,30,canvasWidth,30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
+         var topBarC = new fabric.Circle({
             left: 20,
             top: 30,
             strokeWidth: 5,
@@ -468,7 +466,7 @@ $(function() {
 		});
 		 
 		 bottomBar =  new fabric.Line([0,canvasHeight-30,canvasWidth,canvasHeight-30], {fill: 'blue',stroke: 'blue',strokeWidth: 3,selectable: true,hasControls : false});
-         bottomBarC = new fabric.Circle({
+         var bottomBarC = new fabric.Circle({
             left: 20,
             top: canvasHeight-30,
             strokeWidth: 5,
@@ -497,9 +495,6 @@ $(function() {
         canvas.add(bottomBar);
         canvas.add(bottomBarC);
         canvas.renderAll();
-
-        
-
         heightBarsPresent = true;
         
 	}
@@ -615,13 +610,12 @@ $(function() {
 
 //button actions
     //top toolbar
-    
     $('#btnAnalyse').click(function() {
        $(this).toggleClass('active'); 
        $('.toolbar.analyse').toggle();
        if(!heightBarsPresent){makePatientHeightBars();};
-       if ($(this).hasClass('active')){bottomBar.setVisible(true);topBar.setVisible(true);topBarC.setVisible(true);bottomBarC.setVisible(true);log('visible')}
-       else{bottomBar.setVisible(false);topBar.setVisible(false);topBarC.setVisible(false);bottomBarC.setVisible(false)}
+       if ($(this).hasClass('active')){bottomBar.setVisible(true);topBar.setVisible(true);log('visible')}
+       else{bottomBar.setVisible(false);topBar.setVisible(false);}
 
        if($(this).hasClass('active') && $('#btnDraw').hasClass('active')){$('#btnDraw').click();}
        
@@ -788,13 +782,15 @@ $(function() {
     
     $('#btnPrint').click(function() {	
 
-      if($('#btnAnalyse').hasClass('active')){$('#btnAnalyse').click();}
+        //hide the height bars
+        bottomBar.setVisible(false);topBar.setVisible(false);
+        
        var tempImage = new Image();
            tempImage.id = "tempImage";
-           tempImage.height=800;
+           tempImage.height=500;
            //tempImage.width =1100;
            tempImage.src = canvas.toDataURL();
-       
+        bottomBar.setVisible(true);topBar.setVisible(true)
         $('#board').append(tempImage);
         //print
         var header = $('#clinicHeader').val() + "<H3>Clinician: " + clinician+ "</H3>" + "<H3>Patient: " +patientName+" ("+patientDOB+")</H3>";

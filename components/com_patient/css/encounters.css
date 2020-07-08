@@ -136,8 +136,8 @@
 
 .list-encounters .timeslot .encounter {
     position: absolute;
-    width: 42%;
-    padding-right: 18px;
+    width: 51%;
+    padding-right: 10px;
     display: block;
     height: auto;
     border: 0;
@@ -296,7 +296,7 @@
 
 .list-encounters .timeslot.alt .encounter {
     left: auto;
-    right: 13%;
+    right: 0%;
     padding-left: 18px;
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
@@ -316,7 +316,7 @@
     top: 1px;
     left: auto;
     right: 60%;
-    padding: 5px 40px 5px 10px
+    padding: 5px 10px 5px 10px
 }
 
 @media only screen and (min-width:992px) and (max-width:1199px) {
