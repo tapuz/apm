@@ -25,12 +25,12 @@
 						<div class="box-header">
 							<h2><i class="icon-user"></i><strong><?= $patient->patient_surname.' '.$patient->patient_firstname?></strong></h2>
 							<ul class="nav tab-menu nav-tabs" id="myTab">
-								<li class="active"><a href="#demographics"><i class="fas fa-id-card-alt"></i> Demographics</a></li>
-								<li><a href="#vitals"><i class="fas fa-heartbeat"></i> Vitals</a></li>
+								<li class="active"><a href="#demographics"><i class="fas fa-id-card-alt"></i></a></li>
+								<li><a href="#vitals"><i class="fas fa-heartbeat"></i> </a></li>
 								<li><a href="#History"><i class="fas fa-file-medical-alt"></i> History</a></li>
 								<li><a href="#complaints"><i class="fas fa-notes-medical"></i> Complaints</a></li>
-								<li><a href="#notes_tab"><i class="far fa-sticky-note"></i> Notes</a></li>
-								<li><a href="#docs_tab"><i class="far fa-file"></i> Docs</span><span class="docCount">(0)</span></a></li>
+								<li><a href="#notes_tab"><i class="far fa-sticky-note"></i> Notes </a></li>
+								<li><a href="#docs_tab"><i class="far fa-file"></i> Docs<span class="docCount">(0)</span></a></li>
 							</ul>
 							
 						</div>
