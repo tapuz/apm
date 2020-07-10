@@ -87,49 +87,13 @@ switch (getVar('task')){
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		
 		echo json_encode($appointment);
-		//send confirmation email only if not a custom appoitment
 		
 		error_log(json_encode($appointment));
-		if ($appointment->status == 0 ){
-			error_log('sending the mail...');
-			$clinic = Clinic::getClinic($appointment->clinic);
-			
-			//add clinic name to $appointment object
-			$appointment->{"clinic_name"} = $clinic->clinic_name;
-			$appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
-			$appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
-			
-			$email = new Email();
-			
-			$email->smtp_server = $clinic->smtp_server;
-			$email->smtp_port = $clinic->smtp_port; //
-			$email->smtp_username = $clinic->smtp_username;
-			$email->smtp_password = $clinic->smtp_password;
-			
-			$email->to = $appointment->email;
-			$email->from_email = $clinic->clinic_email;
-			$email->from_name = $clinic->email_name;
-			$email->subject = $clinic->email_appointment_confirmation_subject;
-			
-			
-			$message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
-			$message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
-			$message = str_replace('%text1%', $clinic->email_appointment_confirmation_text1, $message);
-			$message = str_replace('%text2%', $clinic->email_appointment_confirmation_text2, $message);
-			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
-			$message = str_replace('%time%', $appointment->time, $message);
-			$message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
-			$message = str_replace('%practitioner%', $appointment->resourceName, $message);
-			
-			$email->message = $message;
-			$email->ics = ICS::render($appointment);
-			
-			$email->send();
+		//send confirmation email only if not a custom appointment or pencilled in
+		if ($appointment->status == 0 ){ 
+			sendAppointmentEmail($appointment,'confirmation');
 		}	
-		
-		
-		
-		
+	
 	break;
 
 	case 'updateCustomAppointment':
@@ -137,7 +101,7 @@ switch (getVar('task')){
 	break;
 
 	case 'updateAppointment':
-		//Calendar::updateAppointment(getVar('id'),getVar('start'),getVar('end'),getVar('user'),getVar('patientID'),getVar('status'),getVar('service'));
+		
 		$appointment =  Calendar::updateAppointment(stripslashes(getVar('appointment')));
 		echo json_encode($appointment);
 		
@@ -145,39 +109,7 @@ switch (getVar('task')){
 		
 		if (getVar('sendEmail') === 1) {
 			
-			//lets send a mail to notify patient of updated appointment
-			loadLib('email');
-			loadLib('ics');
-			
-			$clinic = Clinic::getClinic($appointment->clinic);
-		
-			//add clinic name to $appointment object
-			$appointment->{"clinic_name"} = $clinic->clinic_name;
-			$appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
-			$appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
-			
-			$email = new Email();
-			$email->smtp_server = $clinic->smtp_server;
-			$email->smtp_username = $clinic->smtp_username;
-			$email->smtp_password = $clinic->smtp_password;
-			
-			$email->to = $appointment->email;
-			$email->from_email = $clinic->clinic_email;
-			$email->from_name = $clinic->email_name;
-			$email->subject = $clinic->email_appointment_amended_subject;
-			
-			
-			$message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
-			$message = str_replace('%title%', $clinic->email_appointment_amended_subject, $message);
-			$message = str_replace('%text%', $clinic->email_appointment_amended_text, $message);
-			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
-			$message = str_replace('%time%', $appointment->time, $message);
-			$message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
-			$message = str_replace('%practitioner%', $appointment->resourceName, $message);
-		
-			$email->message = $message;
-			$email->ics = ICS::render($appointment);
-			//$email->send(); 
+			//sendAppointmentEmail($appointment,'amendemend');
 				
 		}
 		 //add a log that an email was sent
