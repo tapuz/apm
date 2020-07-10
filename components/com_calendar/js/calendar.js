@@ -429,9 +429,9 @@ $(document).ready(function() {
       nowIndicator: 'true',
       displayEventTime: false,
 			lazyFetching: true,
-      eventLongPressDelay:2000,
-      selectLongPressDelay:2000,
-      longPressDelay:2000,
+      eventLongPressDelay:500,
+      selectLongPressDelay:500,
+      longPressDelay:500,
       contentHeight:"auto",
       allDaySlot: false,
 	  

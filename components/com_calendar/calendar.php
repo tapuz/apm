@@ -203,6 +203,12 @@ switch (getVar('task')){
 
 	case 'setStatus':
 		Calendar::setStatus(getVar('appointmentID'),getVar('status'));
+		// send the confirmation email
+		// get the appointment details
+		$appointment = Calendar::getAppointment(getVar('appointmentID'));
+		sendAppointmentEmail($appointment,'confirmation');
+
+
 	break;
 	
 	case 'addNewPatient':
@@ -385,5 +391,52 @@ switch (getView())
 	
 }
 
+function sendAppointmentEmail($appointment,$mode){
+	loadLib('email');
+	loadLib('ics');//generate ICS file
+		
+			$clinic = Clinic::getClinic($appointment->clinic);
+			
+			//add clinic name to $appointment object
+			$appointment->{"clinic_name"} = $clinic->clinic_name;
+			$appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
+			$appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
+			
+			$email = new Email();
+			
+			$email->smtp_server = $clinic->smtp_server;
+			$email->smtp_port = $clinic->smtp_port; //
+			$email->smtp_username = $clinic->smtp_username;
+			$email->smtp_password = $clinic->smtp_password;
+			
+			$email->to = $appointment->email;
+			$email->from_email = $clinic->clinic_email;
+			$email->from_name = $clinic->email_name;
+			
+			$message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
+			
+			$message = str_replace('%patient%', $appointment->patient_firstname, $message);
+			$message = str_replace('%time%', $appointment->time, $message);
+			$message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
+			$message = str_replace('%practitioner%', $appointment->resourceName, $message);
 
+			switch ($mode){
+				case "confirmation":
+					$email->subject = $clinic->email_appointment_confirmation_subject;
+					$message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
+					$message = str_replace('%text1%', $clinic->email_appointment_confirmation_text1, $message);
+					$message = str_replace('%text2%', $clinic->email_appointment_confirmation_text2, $message);
+				break;
+				case "amended":
+					$email->subject = $clinic->email_appointment_amended_subject;
+					$message = str_replace('%text1%', $clinic->email_appointment_amended_text, $message);
+				break;
+			
+			}
+			
+			$email->message = $message;
+			$email->ics = ICS::render($appointment);
+			
+			$email->send();
+}
 ?>
