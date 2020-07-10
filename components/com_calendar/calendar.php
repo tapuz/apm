@@ -91,7 +91,9 @@ switch (getVar('task')){
 		error_log(json_encode($appointment));
 		//send confirmation email only if not a custom appointment or pencilled in
 		if ($appointment->status == 0 ){ 
-			sendAppointmentEmail($appointment,'confirmation');
+			$email = new Email();
+			$email->sendAppointmentEmail($appointment,'confirmation');
+			//sendAppointmentEmail($appointment,'confirmation');
 		}	
 	
 	break;
