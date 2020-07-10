@@ -367,7 +367,7 @@ function sendAppointmentEmail($appointment,$mode){
 			}
 			
 			$email->message = $message;
-			$email->ics = ICS::render($appointment);
+			$email->ics = ICS::render($appointment,$clinic);
 			
 			$email->send();
 }

@@ -2,7 +2,7 @@
 class ICS {
     
     
-    public function render($appointment){
+    public function render($appointment,$clinic){
         
         $created = self::formatDate(new DateTime());
         $start = self::formatDate(new DateTime($appointment->start));
@@ -16,8 +16,8 @@ class ICS {
         $ics .=  "BEGIN:VEVENT\n";
         $ics .=  "CLASS:PUBLIC\n";
         $ics .=  "CREATED:" . $created . "\n";
-        $ics .=  "DESCRIPTION;LANGUAGE=nl-NL:Tijdstip: " . $appointment->time . " tel: 003292212766\n";
-        $ics .=  "CONFERENCE:tel://003292212766\n";
+        $ics .=  "DESCRIPTION;LANGUAGE=nl-NL:Tijdstip: " . $appointment->time . " tel: ".$clinic->clinic_tel."\n";
+        $ics .=  "CONFERENCE:tel://".$clinic->clinic_tel."\n";
         $ics .=  "DTSTAMP;TZID=Europe/Amsterdam:". $created ."\n";
         $ics .=  "DTSTART;TZID=Europe/Amsterdam:". $start. "\n";
         $ics .=  "DTEND;TZID=Europe/Amsterdam:". $end ."\n";
