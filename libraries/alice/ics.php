@@ -16,7 +16,8 @@ class ICS {
         $ics .=  "BEGIN:VEVENT\n";
         $ics .=  "CLASS:PUBLIC\n";
         $ics .=  "CREATED:" . $created . "\n";
-        $ics .=  "DESCRIPTION;LANGUAGE=nl-NL:Tijdstip: " . $appointment->time ."\nTot dan!\n\nP.S.: Gebruik je GMAIL? Controleer of uw tijdzone goed staat ingesteld in GMAIL. De hierboven genoemde tijd is de juiste.\n";
+        $ics .=  "DESCRIPTION;LANGUAGE=nl-NL:Tijdstip: " . $appointment->time ."\nTot dan!\n\nP.S.: Gebruik je GMAIL? Controleer of uw tijdzone goed staat ingesteld in GMAIL. De hierboven genoemde tijd is de juiste. 003292212766\n";
+        $ice .=  "CONFERENCE:tel://003292212766\n"
         $ics .=  "DTSTAMP;TZID=Europe/Amsterdam:". $created ."\n";
         $ics .=  "DTSTART;TZID=Europe/Amsterdam:". $start. "\n";
         $ics .=  "DTEND;TZID=Europe/Amsterdam:". $end ."\n";
@@ -58,6 +59,7 @@ class ICS {
         $ics .=  "END:STANDARD\n";
         $ics .=  "END:VTIMEZONE\n";
         $ics .=  "END:VCALENDAR\n";
+
         
         
         
