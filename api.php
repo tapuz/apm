@@ -213,6 +213,7 @@ switch (getVar('task')){
 	break;
 	
 	case 'getAvailableTimes':
+		error_log('GETTING AVAIL TIMES');
 		loadLib('calendar');
 		loadLib('service');
 		$user = getVar('user'); //1;
