@@ -100,8 +100,8 @@ switch (getVar('task')){
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		echo json_encode($appointment);
 		//send confirmation email
-		//$email = new Email();
-		//$email->sendAppointmentEmail($appointment,'confirmation');
+		$email = new Email();
+		$email->sendAppointmentEmail($appointment,'confirmation');
 		
 		
 		//add the email
