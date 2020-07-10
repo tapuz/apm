@@ -50,7 +50,7 @@ class Email {
     function sendAppointmentEmail($appointment,$mode){
         
         loadLib('ics');//generate ICS file
-            
+        loadLib('clinic');    
                 $clinic = Clinic::getClinic($appointment->clinic);
                 
                 //add clinic name to $appointment object
