@@ -95,8 +95,13 @@ switch (getVar('task')){
 	
 	case 'addAppointment':
 		loadLib('calendar');
+		loadLib('email');
 		$appointment =  json_decode(stripslashes(getVar('appointment')));
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
+
+		//send confirmation email
+		$email = new Email();
+		$email->sendAppointmentEmail($appointment,'confirmation');
 		echo json_encode($appointment);
 		
 		//add the email
