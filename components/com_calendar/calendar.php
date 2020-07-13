@@ -136,11 +136,17 @@ switch (getVar('task')){
 	break;
 
 	case 'setStatus':
+		loadLib('email');
 		Calendar::setStatus(getVar('appointmentID'),getVar('status'));
 		// send the confirmation email
 		// get the appointment details
 		$appointment = Calendar::getAppointment(getVar('appointmentID'));
-		sendAppointmentEmail($appointment,'confirmation');
+		if ($appointment->status == 0 ){ 
+			$email = new Email();
+			$email->sendAppointmentEmail($appointment,'confirmation');
+			error_log('sending mail');
+		}	
+		
 
 
 	break;
