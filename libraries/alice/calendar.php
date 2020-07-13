@@ -102,7 +102,7 @@ class Calendar {
 
 	public static function getCustomAppointment($id){
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT appointment_id as id, start,end, customAppointment, note as title, note, '#9fa1a3' AS 'color' from table_appointments WHERE appointment_id=%d",$id);
+		$query = $wpdb->prepare("SELECT appointment_id as id,user as resourceId ,start,end, customAppointment, note as title, note, '#9fa1a3' AS 'color' from table_appointments WHERE appointment_id=%d",$id);
 		$customAppointment = $wpdb->get_row($query);
 		return $customAppointment;
   	}

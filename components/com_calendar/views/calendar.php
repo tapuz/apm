@@ -245,7 +245,7 @@
   						<select class="form-control duration">
     						<option value=10>10min</option>
     						<option value=15>15min</option>
-    						<option value=30>30min</option>
+    						<option value=30 selected>30min</option>
     						<option value=45>45min</option>
 							<option value=60>1h</option>
 							<option value=90>1h30min</option>

@@ -774,7 +774,6 @@ $(document).ready(function() {
         objEvent = event;
         //if we have a customAppointment-> no need for confirmation and we need a different appointment update
         if(event.customAppointment == 1){
-        
            Appointment.updateCustom({
 									id: event.id,
                   start: event.start.format(),
