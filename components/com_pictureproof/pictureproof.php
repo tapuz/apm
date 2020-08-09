@@ -20,6 +20,11 @@ switch (getVar('task')){
     case 'getPortfolioPictures':
         $portfolioPictures = Image::getImages(getVar('patientID'),'pictureproof');
         echo json_encode($portfolioPictures);
+	break;
+	
+	case 'getPortfolioImages':
+        $portfolioImages = Image::getImages(getVar('patientID'),'pictureproof');
+        echo json_encode($portfolioImages);
     break;
     
 	case 'saveToPatientPortfolio':

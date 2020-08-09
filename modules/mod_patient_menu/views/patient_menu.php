@@ -3,7 +3,7 @@
 						<li><a href="index.php?com=patient&view=patient&patient_id=<?=$patient_id?>"><i class="icon-user"></i><span class="hidden-sm text"> Details</span></a></li>
 						<li><a href="index.php?com=educate&view=educate&layout=component&patient_id=<?=$patient_id?>"><i class="fa fa-graduation-cap"></i><span class="hidden-sm text"> Educate</span></a></li>
 						<li><a href="index.php?com=pictureproof&layout=component&view=pictureproof&patient_id=<?=$patient_id?>"><i class="fa fa-camera"></i><span class="hidden-sm text"> PictureProof</span></a></li>
-						<li><a href="index.php?com=pictureproof&layout=component&view=portfolio&patient_id=<?=$patient_id?>"><i class="far fa-folder-open"></i><span class="hidden-sm text"> Portfolio</span></a></li>
+						<li><a href="index.php?com=portfolio&layout=component&view=portfolio&patient_id=<?=$patient_id?>"><i class="far fa-folder-open"></i><span class="hidden-sm text"> Portfolio</span></a></li>
 						<li><a href="index.php?com=letter&view=list&patient_id=<?=$patient_id?>"><i class="icon-file-alt"></i><span class="hidden-sm text"> Letters </span><span class="badge"></span></a></li>	
 						<li><a href="index.php?com=invoice&view=list&patient_id=<?=$patient_id?>"><i class="icon-money"></i><span class="hidden-sm text"> Invoices</span></a></li>
 					

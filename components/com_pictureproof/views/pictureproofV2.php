@@ -92,9 +92,9 @@
                         <div class="spacer5"></div>
                         <div class='row with-margin-left toolbar analyse'>
                             <div class="form-inline">
-                                <button class="btn btn-warning" id="btnAnalyseX"><i class="fas fa-arrows-alt-v"></i></button>
-                                <button class="btn btn-warning" id="btnAnalyseY"><i class="fas fa-arrows-alt-h"></i></button>
-                                <button class="btn btn-warning" id="btnAnalyseSpine"><i class="fas fa-ellipsis-v"></i></button>
+                                <button class="btn-lg btn-warning" id="btnAnalyseX"><i class="fas fa-arrows-alt-v"></i></button>
+                                <button class="btn-lg btn-warning" id="btnAnalyseY"><i class="fas fa-arrows-alt-h"></i></button>
+                                <button class="btn-lg btn-warning" id="btnAnalyseSpine"><i class="fas fa-ellipsis-v"></i></button>
                                 
 
                                 <div class="form-group">

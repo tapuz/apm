@@ -42,6 +42,22 @@ class Image {
 
 
 	}
+
+	public static function deletePortfolioImages($images) {
+		global $wpdb;
+		//$ids = implode("','", $images);
+		error_log(print_r($images,TRUE));
+		
+		foreach ($images as $image) {
+			$filename =  $wpdb->get_var( "SELECT filename from table_images where image_id =".$image );
+			$wpdb->delete('table_images',array('image_id' => $image));
+			unlink(ROOT . "/userdata/portfolio_images/" . $filename ) or die ("Could not delete file");
+
+			
+		}
+
+
+	}
 	
 
 }

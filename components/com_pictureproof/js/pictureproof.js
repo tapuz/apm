@@ -19,6 +19,7 @@ $(function() {
 	  var patientHeight;
 	  var cpp;  //centimeters Per Pixel
 	  var deltaLimit = 0.4; //absolute value difference greater than this will become red
+    var analyseToolColor = 'rgb(255,0,255)';//pink
 
     var zoomImg;
 
@@ -93,11 +94,10 @@ $(function() {
     
 
     //START ANALYSE AP-PA//
-     function calcCPP() {
+    function calcCPP() {
         patientHeight = $('#patientHeight').val();
-		cpp = patientHeight/(bottomBar.get('top')-topBar.get('top'));
-		log('cpp = ' + cpp);
-	 }
+		    cpp = patientHeight/(bottomBar.get('top')-topBar.get('top'));
+	  }
 	 
 	 
 	 
@@ -107,9 +107,9 @@ $(function() {
         left: left,
         top: top,
         strokeWidth: 5,
-        radius: 12,
+        radius: 30,
         fill: 'rgba(0,0,0,0)',
-        stroke: 'white'
+        stroke: 'rgb(255,0,255)'
         });
         
         c.hasControls = c.hasBorders = false;
@@ -117,8 +117,8 @@ $(function() {
         c.line2 = line2;
         c.line3 = line3;
         c.line4 = line4;
-		c.deltaText = deltaText;
-		c.hasDeltaText = hasDeltaText;
+		    c.deltaText = deltaText;
+		    c.hasDeltaText = hasDeltaText;
 		
         c.on('mousedown', function () {
             var pointer = canvas.getPointer(event.e);
@@ -127,7 +127,7 @@ $(function() {
             
             });
         
-		c.on('moving', function() {
+		    c.on('moving', function() {
 
                 
 	
@@ -140,7 +140,7 @@ $(function() {
 	
 				
 					if (c.hasDeltaText === true) {
-						c.deltaText.set({ 'left': c.left + 45, 'top': c.top });
+						c.deltaText.set({ 'left': c.left + 55, 'top': c.top });
 						delta = c.line1.get('y1') - c.line1.get('y2');
 					} else {
 						delta = c.line2.get('y1') - c.line2.get('y2');	
@@ -173,9 +173,9 @@ $(function() {
         left: left,
         top: top,
         strokeWidth: 5,
-        radius: 12,
+        radius: 25,
         fill: 'rgba(0,0,0,0)',
-        stroke: 'white'
+        stroke: analyseToolColor
         });
         
         c.hasControls = c.hasBorders = false;
@@ -183,8 +183,8 @@ $(function() {
         c.line2 = line2;
         c.line3 = line3;
         c.line4 = line4;
-		c.deltaText = deltaText;
-		c.hasDeltaText = hasDeltaText;
+		    c.deltaText = deltaText;
+		    c.hasDeltaText = hasDeltaText;
 		
         c.on('mousedown', function () {
             var pointer = canvas.getPointer(event.e);
@@ -206,7 +206,7 @@ $(function() {
 	
 				
 					if (c.hasDeltaText === true) {
-						c.deltaText.set({ 'left': c.left + 45, 'top': c.top });
+						c.deltaText.set({ 'left': c.left + 55, 'top': c.top });
 						delta = c.line1.get('x1') - c.line1.get('x2');
 					} else {
 						delta = c.line2.get('x1') - c.line2.get('x2');	
@@ -250,7 +250,7 @@ $(function() {
 	 function makeYMeasureBar(left,top,length) {
 		
 		
-		var lijn = makeLine([ left, top, left+length, top ],'white',2,false);
+		var lijn = makeLine([ left, top, left+length, top ],analyseToolColor,2,false);
 		
 		var text = new fabric.Text((0).toString(),
 								{selectable: false,
@@ -258,7 +258,7 @@ $(function() {
 								 top: lijn.get('y2'),
 								 fontSize: 20,
 								 backgroundColor : 'green',
-								 fill: 'white',
+								 fill: 'white'
                                  
 								 });
         text.setVisible(true);
@@ -322,10 +322,10 @@ $(function() {
      function makeLatAnalyse(left,top,length) {
 		
 		
-        var lijn1 = makeLine([ left, top, left, top+length ],'white',2,false);
-        var lijn2 = makeLine([ left, top+length, left, top+(length*2) ],'white',2,false);
-        var lijn3 = makeLine([ left, top+(length*2), left, top+(length*3) ],'white',2,false);
-        var lijn4 = makeLine([ left, top+(length*3), left, top+(length*4) ],'white',2,false);
+        var lijn1 = makeLine([ left, top, left, top+length ],analyseToolColor,2,false);
+        var lijn2 = makeLine([ left, top+length, left, top+(length*2) ],analyseToolColor,2,false);
+        var lijn3 = makeLine([ left, top+(length*2), left, top+(length*3) ],analyseToolColor,2,false);
+        var lijn4 = makeLine([ left, top+(length*3), left, top+(length*4) ],analyseToolColor,2,false);
 		
 		 var text = new fabric.Text((0).toString(),
 								{selectable: false,
@@ -355,7 +355,7 @@ $(function() {
         canvas.add(lijn2);
         canvas.add(lijn3);
         canvas.add(lijn4);
-		canvas.add(circle1);
+		    canvas.add(circle1);
         canvas.add(circle2);
         canvas.add(circle3);
         canvas.add(circle4);
@@ -369,7 +369,7 @@ $(function() {
 
 
     function makeSpineQuadratic(left,top){
-        var line = new fabric.Path('M 0 0 Q 0, 1, 0, 0', { fill: '', stroke: 'white', objectCaching: false });
+        var line = new fabric.Path('M 0 0 Q 0, 1, 0, 0', { fill: '', stroke: analyseToolColor, objectCaching: false });
         log("left: " + left);
         log("top: " + top);
         line.path[0][1] = left;
@@ -405,8 +405,8 @@ $(function() {
           top: top,
           strokeWidth: 5,
           radius: 12,
-          fill: '#fff',
-          stroke: 'white'
+          fill: analyseToolColor,
+          stroke: analyseToolColor
         });
     
         c.hasBorders = c.hasControls = false;
@@ -424,8 +424,8 @@ $(function() {
           top: top,
           strokeWidth: 12,
           radius: 14,
-          fill: '#fff',
-          stroke: 'white'
+          fill: analyseToolColor,
+          stroke: analyseToolColor
         });
     
         c.hasBorders = c.hasControls = false;
@@ -678,7 +678,7 @@ $(function() {
 
     //analyse toolbar
     $('#btnAnalyseY').click(function() {
-		makeYMeasureBar((canvasWidth/2)-150,200,400);
+		makeYMeasureBar((canvasWidth/2)-150,canvasHeight/2,400);
     });
 
     $('#btnAnalyseX').click(function() {
@@ -686,7 +686,7 @@ $(function() {
     });
 
     $('#btnAnalyseSpine').click(function() {
-        makeSpineQuadratic((canvasWidth/2),300);
+        makeSpineQuadratic((canvasWidth/2),canvasHeight/2);
     });
 
     
@@ -703,6 +703,7 @@ $(function() {
     $('#select-image').click(function() {
         $( "#canvas-box" ).toggle();
         $( "#thumbnails" ).toggle();
+
         
         canvas.clear();
         //clearImage();

@@ -1,5 +1,5 @@
 <?php 
-//Component Pictureproof
+//Component Portfolio
 loadLib('patient');
 loadLib('clinic');
 loadLib('image');
@@ -11,16 +11,15 @@ loadCSS('portfolio.css','portfolio');
 
 
 switch (getVar('task')){
-
-    case 'getPortfolioPictures':
-        $portfolioPictures = Image::getImages(getVar('patientID'),'pictureproof');
-        echo json_encode($portfolioPictures);
-    break;
-    
-	
-	case 'deleteImages':
+		
+	case 'deletePortfolioImages':
 		error_log(getVar('images'));
-		Image::deleteImages(json_decode(stripslashes(getVar('images'))));
+		Image::deletePortfolioImages(json_decode(stripslashes(getVar('images'))));
+	break;
+
+	case 'generatePDF':
+		//lets make a pdf!!
+		
 	break;
 
 	
@@ -33,8 +32,9 @@ switch (getVar('task')){
 switch (getView())
 {
 	
-	case 'pictureproof':
-		loadJS('fabric.min.js');
+	
+	case 'portfolio':
+		echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>';
 		loadJS('portfolio.js','portfolio');
 		
 		global $current_user;
@@ -45,16 +45,17 @@ switch (getView())
 		$patient = Patient::getPatient($patientID);
 		$patientName = $patient->patient_surname.' '.$patient->patient_firstname;
 		$patientDOB = $patient->dob;
-		$clinic = Clinic::getClinic($patient->clinic);
-		$clinicHeader = $clinic->clinic_educate_heading;
-		//get patient height
-		$height = Patient::getHeight($patientID);
+		$clinic = json_encode(Clinic::getClinic($patient->clinic));
+		
 
-		//set active patient
-		Patient::setActivePatient($patientID);
+		
 		
 		//set the backLink
 		$backLink = "index.php?com=patient&view=patient&layout=component&patient_id=" . $patient->patient_id;
+
+		//get the images to include in portfolio
+		$pictureproofPictures = Image::getImages(getVar('patientID'),'pictureproof');
+		$educatePictures = Image::getImages(getVar('patientID'),'educate');
 		
 		include('views/portfolio.php');
 	break;

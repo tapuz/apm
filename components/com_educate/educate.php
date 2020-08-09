@@ -53,6 +53,10 @@ switch (getVar('task')){
         echo json_encode($portfolioPictures);
     break;
 	
+	case 'getPortfolioImages':
+        $portfolioImages = Image::getImages(getVar('patientID'),'educate');
+        echo json_encode($portfolioImages);
+    break;
 
 	
 }
