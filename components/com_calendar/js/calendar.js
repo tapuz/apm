@@ -339,7 +339,8 @@ $(document).ready(function() {
                   end: this.end,
                   dow: [dayplan.dow], 
                   rendering: 'background',
-                  type:'bgEvent'
+                  type:'bgEvent',
+                  clinc:clinic
                 },true); 
               });   
             });
@@ -715,7 +716,7 @@ $(document).ready(function() {
           $('#clinicSelectEditApp').val(selectedClinic);
 					renderServicesLookup(selectedClinic);
 					$('#selectService').val(iDefaultService);
-				} else if (clinicID != '') {
+				} else if (clinicID != void(0)) {
           //get the clinic id from the background event if it exists
           log('the clinic id from BG is : ' + clinicID);
           $('#clinicSelectEditApp').val(clinicID);
@@ -1089,8 +1090,9 @@ $(document).ready(function() {
 
 
 function renderServicesLookup(clinic_id){
-		selectService = "<select id='selectService' name='selectService' class='form-control'>";
-		oClinic = clinics.find(x => x.clinic_id === clinic_id.toString());
+    selectService = "<select id='selectService' name='selectService' class='form-control'>";
+    
+		try{oClinic = clinics.find(x => x.clinic_id === clinic_id.toString());}catch(error){}
 		log('here comes the c!!');
 		log(oClinic);
 		  $.each(oClinic.services, function() {
@@ -1102,6 +1104,7 @@ function renderServicesLookup(clinic_id){
     selectService += "</select>";
 
     $('.selectService').html(selectService);
+    
 	}	
 
 
