@@ -716,16 +716,19 @@ $(document).ready(function() {
           $('#clinicSelectEditApp').val(selectedClinic);
 					renderServicesLookup(selectedClinic);
 					$('#selectService').val(iDefaultService);
-				} else if (clinicID != void(0)) {
+				} else if (selectedClinic == 'all') {
           //get the clinic id from the background event if it exists
+          if (clinicID != '' || void(0)){
           log('the clinic id from BG is : ' + clinicID);
           $('#clinicSelectEditApp').val(clinicID);
           renderServicesLookup(clinicID);
 					$('#selectService').val(iDefaultService);
           clinicID ='';
+
 				} else {
          
           $('.selectService').html('Select a clinic first');
+        }
         }
 				$('.warningSelectClinic').hide();
         eventStart = start;
@@ -1090,11 +1093,13 @@ $(document).ready(function() {
 
 
 function renderServicesLookup(clinic_id){
-    selectService = "<select id='selectService' name='selectService' class='form-control'>";
+  try{  
+  selectService = "<select id='selectService' name='selectService' class='form-control'>";
     
-		try{oClinic = clinics.find(x => x.clinic_id === clinic_id.toString());}catch(error){}
+		oClinic = clinics.find(x => x.clinic_id === clinic_id.toString());
 		log('here comes the c!!');
-		log(oClinic);
+    log(oClinic);
+   
 		  $.each(oClinic.services, function() {
 		    if (this.default == 1) {
 		      iDefaultService = this.id;
@@ -1104,7 +1109,7 @@ function renderServicesLookup(clinic_id){
     selectService += "</select>";
 
     $('.selectService').html(selectService);
-    
+  }catch(error){}
 	}	
 
 
