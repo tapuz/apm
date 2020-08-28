@@ -22,6 +22,24 @@ switch (getVar('task')){
 		
 	break;
 
+	case 'emailPortfolio':
+		loadLib('email');
+		loadLib('clinic');
+		$clinic = getVar('clinic');
+		$pdfString = getVar('pdf');
+
+		$mail = new Email();
+		$mail->getServerSettings(1);
+		$mail->to='thierry.duhameeuw@gmail.com';
+		$mail->subject='PDF TEST';
+		$mail->message='Hier is je PDF';
+
+		$mail->attachment['file']= $pdfString;
+		$mail->attachment['filename']='portfolio.pdf';
+		$mail->clinic = 1;
+		$mail->send();
+	break;
+
 	
 }
 

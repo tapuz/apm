@@ -19,7 +19,7 @@
     <div class="col-lg-12">
     <button class="btn btn-primary btnSelectImages">Select</button>
     <button class="btn btn-danger btnDeleteImages" disabled><i class="fas fa-trash-alt"></i></button>
-    <button class="btn btn-primary btnGeneratePDF"><i class="fas fa-print"></i></button>
+    <button class="btn btn-primary btnGeneratePDF" disabled><i class="fas fa-print"></i></button>
         <div id="images" class="box">
             
 				<div class="box-header">

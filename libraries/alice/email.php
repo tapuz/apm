@@ -12,8 +12,9 @@ class Email {
     $headers,
     $subject,
     $message,
-    $attachments,
-    $ics;
+    $attachment,
+    $ics,
+    $clinic;
     function __construct()
    {
          
@@ -21,7 +22,6 @@ class Email {
     
     public function send(){
           
-        
         $mail = new PHPMailer;
         $mail->isSMTP();                                      // Set mailer to use SMTP
         $mail->Host = $this->smtp_server;  // Specify main and backup SMTP servers
@@ -35,7 +35,7 @@ class Email {
         $mail->addAddress($this->to);
         $mail->Subject = $this->subject;
         $mail->Body = $this->message;
-        $mail->addStringAttachment($this->ics, 'mijnafspraak.ics');
+        $mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
         if(!$mail->send()) {
             error_log($mail->ErrorInfo);
             return $mail->ErrorInfo;
@@ -47,28 +47,34 @@ class Email {
         
     }
 
+    public function getServerSettings($clinic){
+        loadLib('clinic'); 
+        $clinic = Clinic::getClinic($clinic);
+        $this->smtp_server = $clinic->smtp_server;
+        $this->smtp_port = $clinic->smtp_port; //
+        $this->smtp_username = $clinic->smtp_username;
+        $this->smtp_password = $clinic->smtp_password;
+        
+        $this->from_email = $clinic->clinic_email;
+        $this->from_name = $clinic->email_name;
+
+    }
+
     function sendAppointmentEmail($appointment,$mode){
         
         loadLib('ics');//generate ICS file
         loadLib('clinic');    
+                
                 $clinic = Clinic::getClinic($appointment->clinic);
+                $this->getServerSettings($appointment->clinic);
                 
                 //add clinic name to $appointment object
                 $appointment->{"clinic_name"} = $clinic->clinic_name;
                 $appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
                 $appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
                 
-               
-                
-                $this->smtp_server = $clinic->smtp_server;
-                $this->smtp_port = $clinic->smtp_port; //
-                $this->smtp_username = $clinic->smtp_username;
-                $this->smtp_password = $clinic->smtp_password;
-                
                 $this->to = $appointment->email;
-                $this->from_email = $clinic->clinic_email;
-                $this->from_name = $clinic->email_name;
-                
+            
                 $message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
                 
                 $message = str_replace('%patient%', $appointment->patient_firstname, $message);
@@ -91,7 +97,8 @@ class Email {
                 }
                 
                 $this->message = $message;
-                $this->ics = ICS::render($appointment,$clinic);
+                $this->attachment['file'] = ICS::render($appointment,$clinic);
+                $this->attachment['filename']='mijnafspraak.ics';
                 
                 $this->send();
     }
