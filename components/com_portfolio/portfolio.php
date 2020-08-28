@@ -28,8 +28,8 @@ switch (getVar('task')){
 		$clinic = getVar('clinic');
 		$pdfdoc			= getVar('pdf');
 		$b64file = $pdfdoc;
-		//$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
-		//$b64file		= str_replace( ' ', '+', $b64file );
+		$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
+		$b64file		= str_replace( ' ', '+', $b64file );
 		$decoded_pdf	= base64_decode( $b64file );
 
 		//error_log($decoded_pdf);

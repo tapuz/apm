@@ -194,7 +194,7 @@ $(function() {
 
        
        //var pdfBase64 = doc.output('datauristring');
-       var pdfBase64 = doc.output('bloburl');
+       /* var pdfBase64 = doc.output('blob');
        $.ajax({
         url: "ajax.php",
         type: 'post',
@@ -208,11 +208,11 @@ $(function() {
          
           
         }
-       });
+       }); */
        
       //doc.autoPrint();
       //doc.save('portfolio.pdf');
-      //window.open(doc.output('bloburl'), '_blank')
+      window.open(doc.output('bloburl'), '_blank')
      
       
 
