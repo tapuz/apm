@@ -123,9 +123,9 @@ $(function() {
 
        doc.setFont("helvetica");
        doc.setFontType("bold");
-       var img = new Image()
-       img.src = clinic.clinic_logo;
-       doc.addImage(img, 'png', 10, 78, 12, 15)
+       //var img = new Image()
+       //img.src = clinic.clinic_logo;
+       //doc.addImage(img, 'png', 10, 78, 12, 15)
        doc.setFontSize(18);
        doc.text(15, 15, clinic.clinic_name);
        doc.setFontType("normal");

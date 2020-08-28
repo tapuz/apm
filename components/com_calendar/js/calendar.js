@@ -420,7 +420,7 @@ $(document).ready(function() {
       slotLabelInterval: '00:10:00',
       slotEventOverlap: 'false',
       weekNumbers: true,
-      minTime: '08:00:00',
+      minTime: '07:30:00',
       maxTime: '22:30:00',
       slotLabelFormat: 'HH:mm',
       columnFormat: 'ddd D/M',
