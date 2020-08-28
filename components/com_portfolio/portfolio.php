@@ -27,11 +27,12 @@ switch (getVar('task')){
 		loadLib('clinic');
 		$clinic = getVar('clinic');
 		$pdfdoc			= getVar('pdf');
-		$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
-		$b64file		= str_replace( ' ', '+', $b64file );
-		$decoded_pdf	= base64_decode( $b64file );
+		$b64file = $pdfdoc;
+		//$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
+		//$b64file		= str_replace( ' ', '+', $b64file );
+		//$decoded_pdf	= base64_decode( $b64file );
 
-
+		//error_log($decoded_pdf);
 		$mail = new Email;
 		$mail->getServerSettings(1);
 		$mail->to='thierry.duhameeuw@gmail.com';
@@ -39,7 +40,7 @@ switch (getVar('task')){
 		$mail->message='Hier is je PDF';
 
 
-		$mail->attachment['file']= $decoded_pdf;
+		$mail->attachment['file']= $pdfdoc;
 		$mail->attachment['filename']='portfolio.pdf';
 		$mail->clinic = 1;
 		$mail->send();

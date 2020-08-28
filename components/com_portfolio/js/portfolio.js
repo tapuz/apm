@@ -193,7 +193,8 @@ $(function() {
 
 
        
-       var pdfBase64 = doc.output('datauristring');
+       //var pdfBase64 = doc.output('datauristring');
+       var pdfBase64 = doc.output('bloburl');
        $.ajax({
         url: "ajax.php",
         type: 'post',

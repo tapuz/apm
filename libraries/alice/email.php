@@ -35,7 +35,9 @@ class Email {
         $mail->addAddress($this->to);
         $mail->Subject = $this->subject;
         $mail->Body = $this->message;
-        $mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
+        //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
+        
+        $mail->addStringAttachment($this->attachment['file'], $this->attachment['filename'],'base64','application/pdf');
         if(!$mail->send()) {
             error_log($mail->ErrorInfo);
             return $mail->ErrorInfo;
