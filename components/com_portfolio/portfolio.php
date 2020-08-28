@@ -26,15 +26,20 @@ switch (getVar('task')){
 		loadLib('email');
 		loadLib('clinic');
 		$clinic = getVar('clinic');
-		$pdfString = getVar('pdf');
+		$pdfdoc			= getVar('pdf');
+		$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
+		$b64file		= str_replace( ' ', '+', $b64file );
+		$decoded_pdf	= base64_decode( $b64file );
 
-		$mail = new Email();
+
+		$mail = new Email;
 		$mail->getServerSettings(1);
 		$mail->to='thierry.duhameeuw@gmail.com';
 		$mail->subject='PDF TEST';
 		$mail->message='Hier is je PDF';
 
-		$mail->attachment['file']= $pdfString;
+
+		$mail->attachment['file']= $decoded_pdf;
 		$mail->attachment['filename']='portfolio.pdf';
 		$mail->clinic = 1;
 		$mail->send();

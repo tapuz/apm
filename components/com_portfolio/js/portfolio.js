@@ -200,7 +200,8 @@ $(function() {
         data: {
           com: 'portfolio',
           task: 'emailPortfolio',
-          pdf: pdfBase64
+          pdf: pdfBase64,
+          clinic:clinic.clinic_id
         },
         success: function(data) {
          
