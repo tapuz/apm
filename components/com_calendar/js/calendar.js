@@ -95,7 +95,7 @@ $(document).ready(function() {
     
 	  
     // check selectedUserID: if !=null then we have a practitioner who is logged in.. we want to show him his own calendar by default..
-    // otherwize show first calendar in list
+    // otherwise show first calendar in list
 
     userID = $('#selectedUserID').val();
   
@@ -125,7 +125,7 @@ $(document).ready(function() {
       if ($('#userSelect').val() == 'all_practitioners') {
         //get all the resources
         getResources();
-        //change to dayview
+        //change to day view
         calendar.fullCalendar('changeView', 'agendaDay');
         //set mode to 0
         mode = 0;
@@ -677,6 +677,7 @@ $(document).ready(function() {
               patientID: objEvent.patientID,
               service: objEvent.serviceId,
               status: objEvent.status,
+              note:objEvent.note,
               clinic: clinic
             }, function() {
               renderRightPanelPatientAppointments();
@@ -782,6 +783,7 @@ $(document).ready(function() {
 									id: event.id,
                   start: event.start.format(),
                   end: event.end.format(),
+                  note:event.note,
                   user: event.resourceId
                  
               }, function() {
@@ -832,6 +834,7 @@ $(document).ready(function() {
                         user: objEvent.resourceId,
                         service: objEvent.serviceId,
                         status: objEvent.status,
+                        note:objEvent.note,
                         clinic: clinic
                 
                         }, function() {
