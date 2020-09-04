@@ -1,6 +1,11 @@
 <?
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 include_once(ABSPATH . WPINC . '/PHPMailer/PHPMailer.php');
 include_once(ABSPATH . WPINC . '/PHPMailer/SMTP.php');
+include_once(ABSPATH . WPINC . '/PHPMailer/Exception.php');
 
 class Email {
     var
