@@ -1,5 +1,7 @@
 <?
-include_once(ABSPATH . WPINC . '/PHPMailer/PHPMailer.php'); 
+include_once(ABSPATH . WPINC . '/PHPMailer/PHPMailer.php');
+include_once(ABSPATH . WPINC . '/PHPMailer/SMTP.php');
+
 class Email {
     var
     $smtp_server,
