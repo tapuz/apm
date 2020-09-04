@@ -7,8 +7,6 @@ define('ROOT',						dirname(__FILE__));
 
 
 
-//check debug mode
-
 if ($config['debug_mode'] === true)
 	{
 		error_reporting(E_ALL);
