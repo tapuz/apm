@@ -1,5 +1,5 @@
 <?
-include_once(ABSPATH . WPINC . '/class-phpmailer.php'); 
+include_once(ABSPATH . WPINC . '/PHPMailer/PHPMailer.php'); 
 class Email {
     var
     $smtp_server,
@@ -21,7 +21,7 @@ class Email {
    }
     
     public function send(){
-          
+        
         $mail = new PHPMailer;
         $mail->isSMTP();                                      // Set mailer to use SMTP
         $mail->Host = $this->smtp_server;  // Specify main and backup SMTP servers
