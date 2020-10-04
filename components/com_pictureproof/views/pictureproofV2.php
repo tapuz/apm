@@ -28,7 +28,7 @@
 					<div class="box-icon">
                         
                         
-						<button class="btn btn-primary toggleImagesPortfolio">Portfolio</button>
+						<!-- <button class="btn btn-primary toggleImagesPortfolio">Portfolio</button> -->
 					</div>
 				</div>
 			
@@ -71,9 +71,9 @@
                         <div class='row with-margin-left'>
                             <div class="btn-toolbar">
                                 <button class="btn btn-success" id="select-image">Select new image</button>
-                                <button class="btn btn-success" id="btn_portfolio">Portfolio</button>
+                                <!--<button class="btn btn-success" id="btn_portfolio">Portfolio</button>
                                 <button class="btn btn-danger"  id="clear_drawing">Clear drawing</button>
-                                <button class="btn btn-danger"  id="clear_board">Clear board</button>
+                                <button class="btn btn-danger"  id="clear_board">Clear board</button> -->
                                 <button class="btn btn-warning" id="btnHideEyes"><i class="fas fa-eye-slash"></i></button>
                                 <button class="btn btn-warning" id="btnAnalyse"><i class="fas fa-draw-polygon"></i></button>
                                 <button class="btn btn-warning" id="btnDraw"><i class="fas fa-paint-brush"></i></button>

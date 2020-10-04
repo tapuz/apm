@@ -107,7 +107,7 @@ $(function() {
         left: left,
         top: top,
         strokeWidth: 5,
-        radius: 30,
+        radius: 20,
         fill: 'rgba(0,0,0,0)',
         stroke: 'rgb(255,0,255)'
         });
@@ -173,7 +173,7 @@ $(function() {
         left: left,
         top: top,
         strokeWidth: 5,
-        radius: 25,
+        radius: 20,
         fill: 'rgba(0,0,0,0)',
         stroke: analyseToolColor
         });
@@ -703,8 +703,10 @@ $(function() {
     $('#select-image').click(function() {
         $( "#canvas-box" ).toggle();
         $( "#thumbnails" ).toggle();
-
         
+        //$('.toolbar.analyse').toggle();
+        if ($("#btnAnalyse").hasClass('active')){$('#btnAnalyse').click();}
+        heightBarsPresent = false;
         canvas.clear();
         //clearImage();
         //clearTempLayer();
@@ -764,9 +766,16 @@ $(function() {
 
     
     $('#btnSaveToPatientPortfolio').click(function(){ 
-       bottomBar.setVisible(false);topBar.setVisible(false);
+      try {
+        bottomBar.setVisible(false);topBar.setVisible(false);
+      } catch (error) {
+        //console.error(error);
+        // expected output: ReferenceError: nonExistentFunction is not defined
+        // Note - error messages will vary depending on browser
+      }
+      
        var dataURL = $('#c').get(0).toDataURL('image/jpeg');//have to get the canvas element from the jquery object
-       bottomBar.setVisible(true);topBar.setVisible(true);
+      
        log(dataURL);
 
         console.log(patientName);
@@ -783,7 +792,15 @@ $(function() {
                     //add the image to the portfolio 
                 	getPortfolioPictures();
                     console.log('image_added');
-					var n = noty({text: 'Saved to Patient Portfolio',type: 'success',layout:'topRight'});  				
+                    Message = new Noty({
+                      text: '<span class="text-center">Image saved to portfolio!</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
+                      //closeWith:'click',
+                      layout:'top',
+                      theme:'sunset',
+                      type:'success',
+                      timeout: 1500 
+                      
+                      }).show();	;  				
 			});
     });
     

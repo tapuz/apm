@@ -18,7 +18,7 @@
 					<div class="box-icon">
 								
 								
-								<button class="btn btn-primary toggleImagesPortfolio">Portfolio</button>
+								<!-- <button class="btn btn-primary toggleImagesPortfolio">Portfolio</button> -->
 					</div>
 				</div>
 			

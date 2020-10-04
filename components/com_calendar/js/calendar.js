@@ -489,6 +489,14 @@ $(document).ready(function() {
             });
           }
         },
+        plus2w: {
+          text: '+2w',
+          click: function() {
+            calendar.fullCalendar('incrementDate', {
+              weeks: 2
+            });
+          }
+        },
         refreshCalendar: {
           icon:'fa fa-refresh',
           
@@ -520,7 +528,7 @@ $(document).ready(function() {
 				*/
 
       header: {
-        left: 'prev,next today plus3w,plus6w plus1m,plus2m,plus3m refreshCalendar',
+        left: 'prev,next today plus2w,plus3w,plus6w plus1m,plus2m,plus3m refreshCalendar',
         center: 'title',
         right: 'agendaDay,agendaWeek,month toggleSidebarRight'
           //        left: 'add,sell,locationSelect,staffSelect',
