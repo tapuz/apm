@@ -4,7 +4,7 @@ class Encounter
       return $.ajax({
       url: "ajax.php",
       dataType: "json",
-      type: 'post',
+      type: 'get',
       data: {
         com: 'patient',
         task: 'getEncounters',

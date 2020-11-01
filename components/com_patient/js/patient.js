@@ -22,7 +22,7 @@ class Patient {
     return $.ajax({
       url: "ajax.php",
       //dataType: "json",
-      type: 'post',
+      type: 'get',
       dataType: "json",
       data: {
         com: 'patient',
@@ -41,7 +41,7 @@ class Patient {
     return $.ajax({
       url: "ajax.php",
       //dataType: "json",
-      type: 'post',
+      type: 'get',
       dataType: "json",
       data: {
         com: 'patient',

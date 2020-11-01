@@ -4,7 +4,7 @@ class Diagnosis
     return $.ajax({
       url: "ajax.php",
       dataType: "json",
-      type: 'post',
+      type: 'get',
       data: {
         com: 'patient',
         task: 'getDiagnoses',
@@ -38,7 +38,7 @@ class Diagnosis
     $.ajax({
       url: "ajax.php",
       dataType: "json",
-      type: 'post',
+      type: 'get',
       data: {
         com: 'patient',
         task: 'searchDiagnoses',
