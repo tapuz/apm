@@ -33,7 +33,10 @@ switch(getView()){
 		loadJS('bootstrap-list-filter.min.js');
 		loadJS('bootstrap-tagsinput.min.js');
 		loadJS('fabric.min.js');
+		loadExtJs('https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js');
+		loadJS('graphs.js','patient');
 		loadCSS('bootstrap-tagsinput.css');
+
 		
 		//loadView();
 		//get patient details according to patient_id in url query

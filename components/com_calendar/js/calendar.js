@@ -61,21 +61,22 @@ $(document).ready(function() {
   initCal();
 
   $('#calendar').prepend('<div style="height:1px;" id="calendarPB">&nbsp;</div>');
-  
+  log('blsfbslfbsl');
 
   $.ajax({
-    type: "post",
+    type: "get",
     url: "ajax.php",
     dataType: "json",
+
     data: {
       com: 'calendar',
       task: 'getUsers'
     }
   }).done(function(data) {
-
+    log("DATAZ -- + "+ data);  
 		//store users 
     users = data;
-		log (users);
+		log ('USERS--> ' + users);
     // make the practitioner selector 
     selectUser = "<select id='userSelect' name='userSelect' class='form-control' style='width:174px'>";
 		if (Object.keys(data).length > 1){//there is > 1 user.. show all practitioners option
@@ -158,6 +159,10 @@ $(document).ready(function() {
 
     });
 
+  })
+  .fail(function( jqxhr, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    console.log( "Request Failed: " + err );
   });
 	
 	function addSelectClinic() {
@@ -268,7 +273,7 @@ $(document).ready(function() {
     
     var events = {
       url: 'ajax.php',
-      type: 'POST',
+      type: 'get',
       data: {
         com: 'calendar',
         task: 'get_data',

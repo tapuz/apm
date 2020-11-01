@@ -54,10 +54,11 @@ switch (getVar('task')){
 	   
 	case 'getUsers':
 		
-		error_log(json_encode($users));
-		
+	
+	
 		$users = Users::getAllPractitioners();
 		echo json_encode($users);
+		//error_log(json_encode($users));
 
 		
 		

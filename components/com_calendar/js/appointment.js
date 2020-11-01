@@ -5,7 +5,7 @@ class Appointment {
      $.ajax({
       url: "ajax.php",
       dataType: "json",
-      type: 'post',
+      type: 'get',
       data: {
         com: 'calendar',
         task: 'getAppointment',
@@ -22,7 +22,7 @@ class Appointment {
      return $.ajax({
       url: "ajax.php",
       dataType: "json",
-      type: 'post',
+      type: 'get',
       data: {
         com: 'calendar',
         task: 'getFutureAppointments',
@@ -39,7 +39,7 @@ class Appointment {
     return $.ajax({
      url: "ajax.php",
      dataType: "json",
-     type: 'post',
+     type: 'get',
      data: {
        com: 'calendar',
        task: 'getLastAppointment',
@@ -149,7 +149,7 @@ class Appointment {
     $.ajax({
       url: "ajax.php",
       dataType: "json",
-      type: 'post',
+      type: 'get',
       data: {
         com: 'calendar',
         task: 'getLog',

@@ -61,7 +61,7 @@ $(document).ready(function() {
           ajaxReq = $.ajax({
           url: "ajax.php",
           dataType: "json",
-          type: 'post',
+          type: 'get',
           data: {
             com: 'calendar',
             task: 'searchPatients',

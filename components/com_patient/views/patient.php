@@ -29,6 +29,7 @@
 								<li><a href="#vitals"><i class="fas fa-heartbeat"></i> </a></li>
 								<li><a href="#History"><i class="fas fa-file-medical-alt"></i> History</a></li>
 								<li><a href="#complaints"><i class="fas fa-notes-medical"></i> Complaints</a></li>
+								<li><a href="#pictureProof_tab"><i class="fas fa-camera-retro"></i></i> PictureProof<span class="pictureProofCount">(0)</span></a></li>
 								<li><a href="#notes_tab"><i class="far fa-sticky-note"></i> Notes </a></li>
 								<li><a href="#docs_tab"><i class="far fa-file"></i> Docs<span class="docCount">(0)</span></a></li>
 							</ul>
@@ -64,15 +65,23 @@
 						</div>	
 					</div>
 					</div>
-								<div class="tab-pane" id="complaints">
-									<div id="complaints-panel" class="panel panel-success">
+					<div class="tab-pane" id="complaints">
+						<div id="complaints-panel" class="panel panel-success">
             				<div class="panel-heading"><i class="fas fa-notes-medical"></i> Complaints</div>
             				<div class='panel-body'>
 											Create a new encounter first to add a complaint.
 							</div>
-          			</div>
-          			<!-- /panel -->
-								</div>
+          				</div>
+					</div>
+
+					<div class="tab-pane" id="pictureProof_tab">
+						<div id="pictureproof-panel" class="panel panel-info">
+            				<div class="panel-heading"><i class="fas fa-camera-retro"></i> PictureProof saves</div>
+            				<div class='panel-body'>
+											Pictureproof
+							</div>
+          				</div>
+					</div>
 								<div class="tab-pane" id="docs_tab">
 								
 

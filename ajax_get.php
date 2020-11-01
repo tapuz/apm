@@ -2,16 +2,10 @@
 header('Access-Control-Allow-Origin: *');  
 include('configuration.php');
 require_once ($config['path_wp-config']);
-error_log('STARTING');
-define('ROOT',						dirname(__FILE__));
 
-//check if we are in post or get mode
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    define('AJAXmode','POST');
-}
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    define('AJAXmode','GET');
-}
+define('ROOT',						dirname(__FILE__));
+define('Ajax_mode',true);
+
 
 //check debug mode
 
@@ -46,10 +40,9 @@ if ( is_user_logged_in() || $api ) {
     login();
 }
 if (getVar('com')<>'debug'){
-    error_log('the mode is ' . AJAXmode);
     error_log('AJAX called -> component [' . getVar('com') . '] and task [' . getVar('task') .']' );
- 
-error_log('APIkey--> ' . getVar('APIKey'));
+    error_log('AJAX_GET called!!');
+
 }
 include('includes/component_selector.php');
 

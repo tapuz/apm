@@ -97,6 +97,7 @@ $(document).ready(function(){
 			renderComplaints(true);
 			renderFlagnotifications();
 			renderDocsPanel();
+			renderPictureProofPanel();
 			renderPatientAppointments();
 			
 			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
@@ -696,7 +697,7 @@ $(document).ready(function(){
 		$.each(vitals, function( ) {
   			this.timestamp = moment(this.timestamp).format('lll');
 		});
-		log(JSON.stringify(vitals));
+		//log(JSON.stringify(vitals));
 
 
 		Mustache.parse(template_vitals_panel);
@@ -732,8 +733,9 @@ $(document).ready(function(){
 		$('.vitals_bmi').prop('disabled',false); //if disabled the BMI is no accessible
 		
 		
-		form = ($(this).serializeArray());
-		//log('form--> ' + JSON.stringify(vitals));
+		//form = ($(this).serializeArray());
+		form = $('#form-vitals').serializeArray();
+		log('form-->blabl ' + JSON.stringify(form));
 		$('.btn_add_vitals').text('saving...');
 		$('.btn_add_vitals').prop('disabled',true);
 		$('.vitals_bmi').prop('disabled',true);
@@ -869,6 +871,28 @@ $(document).ready(function(){
                       console.log(this.filename);
                       var div = $('<div>',{class:'col-sm-3 col-xs-6 thumbnail-container'}).html('<img class="img-thumbnail" id="'+ this.image_id +'" src="userdata/camera_pictures/'+ this.filename +'">');
                       $('#docsPanel').append(div);
+                      
+	            });
+                
+		
+	        });
+	}
+
+	function renderPictureProofPanel(){
+		//$('.btnDeleteDocs').hide();
+		//$('#canvasPanel').hide();
+		//$('#docsPanel').html('Loading documents...');
+		$.ajax({type: "post", url: "ajax.php", dataType: "json",
+          data: { com: 'pictureproof',task: 'getPictureProofSavedPictures', patientID : patientID}
+            }).success(function( pictures ) {
+               $('#pictureproof-panel .panel-body').empty();
+				console.log(pictures);
+				$('.pictureProofCount').html('(' + pictures.length + ')');
+				//if(pictures.length>0){$('.btnSelectDocs').show()}else{$('.btnSelectDocs').hide()}
+                $.each(pictures, function(){
+                      console.log(this.filename);
+                      var div = $('<div>',{class:'col-sm-4 col-xs-6 thumbnail-container'}).html('<img class="img-thumbnail" id="'+ this.image_id +'" src="userdata/portfolio_images/'+ this.filename +'">');
+                      $('#pictureproof-panel .panel-body').append(div);
                       
 	            });
                 
@@ -1279,7 +1303,7 @@ $(document).ready(function(){
 	  }
 
 	$(document).on('click','.btn_print_encounter',function(){
-		log(vitals);
+		//log(vitals);
 		var template_encounter_print = $('#tmpl_encounter_print').html();
 		Mustache.parse(template_encounter_print);
 

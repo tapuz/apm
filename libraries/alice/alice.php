@@ -72,8 +72,14 @@ function getVar($var)
 {
 	
 	if (curPageName() == 'ajax.php')
-	{
-		if(isset($_POST[$var])) return $_POST[$var];	
+	{	
+		if (AJAXmode == 'POST'){
+			if(isset($_POST[$var])) return $_POST[$var];	
+		}
+		if (AJAXmode == 'GET'){
+			if(isset($_GET[$var])) {return $_GET[$var];}	
+		}
+		
 		
 	} else {
 		if(isset($_GET[$var])) {return $_GET[$var];}else{return false;}	

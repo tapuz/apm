@@ -17,9 +17,9 @@ switch (getVar('task')){
         echo json_encode($cameraPictures);
     break;
 
-    case 'getPortfolioPictures':
-        $portfolioPictures = Image::getImages(getVar('patientID'),'pictureproof');
-        echo json_encode($portfolioPictures);
+    case 'getPictureProofSavedPictures':
+        $pictureProofPictures = Image::getImages(getVar('patientID'),'pictureproof');
+        echo json_encode($pictureProofPictures);
 	break;
 	
 	case 'getPortfolioImages':

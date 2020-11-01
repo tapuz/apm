@@ -3,7 +3,7 @@ class Clinic {
         $.ajax({
             url: "ajax.php",
             dataType: "json",
-            type: 'post',
+            type: 'get',
             data: {
                 com: 'calendar',
                 task: 'getClinics'
