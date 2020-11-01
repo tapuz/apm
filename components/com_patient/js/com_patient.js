@@ -243,57 +243,33 @@ $(document).ready(function(){
 
 	});
 	
+	$(document).on('change','#editSOAP .soap_input',async function(){
+		var soap_id = $('#SOAP_ID').val();
+		var value = $(this).val();
+		var field = $(this).attr("name");
+		//fSOAPSaved = false;
+		//let val = await SOAP.save(soap_id,field,value);
+		//fSOAPSaved = true;
+
+		//log(val + ' is the RESPONSE');
+		//log('SOAP INPUT: ' + soap_id + value + field);
+		});
+
+
 	$(document).on('change','#editSOAP .form-control',function() {
 		log('changed!!');
-		saveSOAP();
+		//saveSOAP();
 		fAllSaved = 0;
 	});
 	
 	
-		//reset the encounter so there is no old data from another encounter
+	//reset the encounter so there is no old data from another encounter
 	function resetEncounter(){
 	
 		$('#editSOAP').trigger("reset");
 	}
 	
-	function saveSOAP() {
-		      
-			$('#label_encounter_saving_error').hide();
-			$('#label_encounter_saved').hide();
-			$('#label_encounter_saving').show();
-            SOAPform ="";
-			SOAPform = $('#editSOAP').serializeArray();
-			log(SOAPform);
-			SOAP.update(SOAPform,function(data){
-				fSaveSuccess = data.success;
-				fSOAPSaved = data.success;
-				setSaveStatus();
-				if (data.success === 0){fAllSaved = 0;}
-				log('saving soap');
-			});
-			
-			
-			
-	} 
-	
-	function saveComplaint(form){
-			$('#label_encounter_saving_error').hide();
-			$('#label_encounter_saved').hide();
-			$('#label_encounter_saving').show();
-            
-			ComplaintForm = form.serializeArray();
-			log('serialized');
-			log(ComplaintForm);
-			Complaint.update(ComplaintForm,function(data){
-				fSaveSuccess = data.success;
-				//fSOAPSaved = data.success;
-				setSaveStatus();
-				if (data.success === 0){fAllSaved = 0;}
-				log('saving complaint');
-			});
-		
-	}
-	
+
 	function saveDiagnosis(form){
 			$('#label_encounter_saving_error').hide();
 			$('#label_encounter_saved').hide();
@@ -330,29 +306,30 @@ $(document).ready(function(){
 	}
 	
 	
-	 $(document).on('click','.btn_close_encounter',function(){
-		 log('disabling the form!!');
+	 $(document).on('click','.btn_close_encounter', function(){
+		SOAPform = $('#editSOAP').serializeArray();
 		disableform('editSOAP',true);
-		editingSOAP = false;
-		
-		Noty.closeAll();
-			    
-		$('#btn_new_encounter').show();
-		
-		renderMain();
+		log(SOAPform);
+		    SOAP.update(SOAPform,async function(data){
+				fSaveSuccess = data.success;
+				fSOAPSaved = data.success;
+				setSaveStatus();
+				if (data.success === 0){fAllSaved = 0;}
+				
+				encounters ='';
+				diagnoses = '';
+				encounters = await Encounter.getAll(patientID);
+				diagnoses = await Diagnosis.getDiagnosesPatient(patientID);
+				renderEncounters();
+				Noty.closeAll();
+				$('#btn_new_encounter').show();
+				editingSOAP = false;
+
+			}); 
 				
 	});
 	 
-	$(document).on('click','.btn_close_encounter_and_close_file',function(){
-		
-	   disableform('editSOAP',true);
-	   editingSOAP = false;
-	   
-	   Noty.closeAll();
-			   
-	   window.close();
-			   
-   });
+	
 	 
 	 $("#complaints_tabs .nav-tabs").on("click", function (e) {
         e.preventDefault();

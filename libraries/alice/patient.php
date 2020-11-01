@@ -413,6 +413,22 @@ class Patient
 		
 		
 	}
+
+	public function saveSOAP($soap_id,$field,$value){
+		error_log($soap_id . ' ' . $field . ' '.$value);
+		global $wpdb;
+		$wpdb->update( 
+				'table_soap', 
+				array( 
+					$field => $value
+					
+					),
+				array( 'id' => $soap_id)
+	 			);
+		error_log('done!');
+		
+		
+	}
 	
 	public function addComplaint($complaint){
 		global $wpdb;

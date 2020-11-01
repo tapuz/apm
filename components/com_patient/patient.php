@@ -123,6 +123,10 @@ switch(getTask()){
 		
 	break;
 
+	case 'saveSOAP':
+		Patient::saveSOAP(getVar('soap_id'),getVar('field'),stripslashes(getVar('value')));
+	break;
+
 	case 'updateComplaint':
 		$complaint = json_decode(stripslashes(getVar('complaint')),true);
 		$result = Patient::updateComplaint($complaint);
