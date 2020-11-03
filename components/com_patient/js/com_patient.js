@@ -24,7 +24,8 @@ $(document).ready(function(){
 	var canvasHeight=0;
 	var maxWidth=1000;
 	var bgImage;
-    var bgImageCurAngle = 0;
+	var bgImageCurAngle = 0;
+	var saveNoty;
 	
 	
 	//set the page title = patientName
@@ -292,35 +293,40 @@ $(document).ready(function(){
 		
 	}
 	
-	function setSaveStatus() {
-		if (fSaveSuccess === 0) {// the encounter could not be saved....
-			
-			$('#label_encounter_saving_error').show();
-			$('#label_encounter_saved').hide();
-			$('#label_encounter_saving').hide();
-		} else { // the encounter was saved correctely
-			$('#label_encounter_saved').show();
-			$('#label_encounter_saving').hide();
-			
+	function setSaveStatus(status) {
+		switch (status){
+			case true:
+				saveNoty = new Noty({
+					text: '<span class="text-center">Saving...</span>',
+					layout:'bottomRight',
+					theme:'sunset',
+					type:'success',
+					speed: 0,
+					callbacks: {afterClose: function() {}}
+					}).show();
+			break;
+			case false:
+				saveNoty.close();
+			break;
 		}
+		
+		
+		
 	}
 	
 	
 	 $(document).on('click','.btn_close_encounter', function(){
+		 setSaveStatus(true);
 		SOAPform = $('#editSOAP').serializeArray();
 		disableform('editSOAP',true);
 		log(SOAPform);
 		    SOAP.update(SOAPform,async function(data){
 				fSaveSuccess = data.success;
 				fSOAPSaved = data.success;
-				setSaveStatus();
-				if (data.success === 0){fAllSaved = 0;}
-				
-				encounters ='';
-				diagnoses = '';
 				encounters = await Encounter.getAll(patientID);
 				diagnoses = await Diagnosis.getDiagnosesPatient(patientID);
 				renderEncounters();
+				setSaveStatus(false);
 				Noty.closeAll();
 				$('#btn_new_encounter').show();
 				editingSOAP = false;
