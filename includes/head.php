@@ -31,15 +31,7 @@
 	<link href="https://rawgit.com/pchiwan/nprogress/master/nprogress.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.css">
 	
-	
 
-
-
-
-	
-
-
-	
 	
 	<!-- end: CSS -->
 	
@@ -63,9 +55,9 @@
 
 	<!-- start: JavaScript-->
 	<!--[if !IE]>-->
+	<script src="assets/js/jquery-3.2.1.min.js"></script>
 	
-	<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
-    <script src="https://code.jquery.com/jquery-migrate-3.1.0.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.1.0.js" async></script>
   
 			<!--<script src="assets/js/jquery-2.0.3.min.js"></script>-->
 
@@ -104,38 +96,38 @@
 
 	<!--<script src="assets/js/jquery-migrate-1.2.1.min.js"></script>-->
 	<!-- page scripts -->
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js' async></script>
 
 	<script src="assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 	<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script src="assets/js/jquery.sparkline.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>-->
-	<script src="assets/js/bootstrap.min.js"></script>
-	<script src="assets/js/offline.min.js"></script>
+	<script src="assets/js/bootstrap.min.js" defer></script>
+	<script src="assets/js/offline.min.js" async></script>
 	<script src="https://rawgit.com/pchiwan/nprogress/master/nprogress.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.js">
+	<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.js" async>
 
 
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="assets/js/excanvas.min.js"></script><![endif]-->
-	<!--<script src="assets/js/jquery.flot.min.js"></script>
-	<script src="assets/js/jquery.flot.pie.min.js"></script>
-	<script src="assets/js/jquery.flot.stack.min.js"></script>
-	<script src="assets/js/jquery.flot.resize.min.js"></script>
-	<script src="assets/js/jquery.flot.time.min.js"></script>-->
-	<script src="assets/js/jquery.autosize.min.js"></script>
-	<script src="assets/js/jquery.placeholder.min.js"></script>
+	<!--<script src="assets/js/jquery.flot.min.js" async></script>
+	<script src="assets/js/jquery.flot.pie.min.js" async></script>
+	<script src="assets/js/jquery.flot.stack.min.js" async></script>
+	<script src="assets/js/jquery.flot.resize.min.js" async></script>
+	<script src="assets/js/jquery.flot.time.min.js" async></script>-->
+	<script src="assets/js/jquery.autosize.min.js" async></script>
+	<script src="assets/js/jquery.placeholder.min.js" async></script>
 	<script src="assets/js/moment-with-locales.min.js"></script>
-	<script src="assets/js/bootstrap-datepicker.min.js"></script>
-	<script src="assets/js/daterangepicker.min.js"></script>
-	<script src="assets/js/jquery.easy-pie-chart.min.js"></script>
+	<script src="assets/js/bootstrap-datepicker.min.js" async></script>
+	<script src="assets/js/daterangepicker.min.js" async></script>
+	<script src="assets/js/jquery.easy-pie-chart.min.js" async></script>
 	
-	<script src="assets/js/dataTables.bootstrap.min.js"></script>
-	<script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+	<!--<script src="assets/js/dataTables.bootstrap.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>-->
 	<script src="assets/js/superLink.js"></script>
 	<!--<script src="assets/js/jquery.noty.min.js"></script>-->
-	<script src="assets/js/noty.min.js"></script>
-	<script src="assets/js/jquery.hotkeys.min.js"></script>
+	<script src="assets/js/noty.min.js" async></script>
+	<script src="assets/js/jquery.hotkeys.min.js" async></script>
 	<script src="assets/js/bootstrap-wysiwyg.min.js"></script>
 	<script src="assets/js/bootbox.min.js"></script>
 	
@@ -159,8 +151,8 @@
 	
 	
 	<script src="assets/js/alice.js"></script>
-	<script src="assets/js/printThis.js"></script>
-	<script src="assets/js/jstorage.js"></script>
+	<script src="assets/js/printThis.js" async></script>
+	<script src="assets/js/jstorage.js" async></script>
 	<!--<script type="text/javascript" src="assets/js/live.js"></script>-->
 
 
