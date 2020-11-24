@@ -1,4 +1,8 @@
 	$(document).ready(function() {
+
+		tmpl_patient_search_results  = $('#tmpl_patient_search_results').html();
+		Mustache.parse(tmpl_patient_search_results);
+
 		$('tr')
                 .mouseover(function(){
                     $(this).addClass('active');
@@ -9,37 +13,52 @@
                 .superLink();
         $('#search-patient').focus();
 		$('#search-patient').keyup(function() {
-				var search_val = $('#search-patient').val();
+				var q = $('#search-patient').val();
 				var results_div = $('#results');
-				if ( search_val.length > 2 ) {
-				
+				console.log('hello');
+				ajaxReq = $.ajax({
+					url: "ajax.php",
+					dataType: "json",
+					type: 'get',
+					data: {
+					  com: 'calendar',
+					  task: 'searchPatients',
+					  name: q
+			
+					},
+					beforeSend : function() {
+					   //rightPanelPB.start(); 
+					},
+					success: function(patients) {
+					  if(patients.length == 0) {
+						$('#results').html("<strong>No matches for this search</strong><br>Sorry we haven't been able to find any patients matching this search.<br><br><br><br><br><br><br><br><br>");
+						//rightPanelPB.done();
+						return
+					  }
+					  
+					  //rightPanelPB.done();
+					  
+					 
+							  
+						var rendered = Mustache.render(tmpl_patient_search_results,
+						  {patients : patients
+						 });
+			
+						$('#results').html(rendered);
+			
 					
-					$.ajax({
-						url: "ajax.php",
-						dataType: "html",
-						type: "post",
-						crossDomain: true,
-						data: {
-							name: search_val,
-							com :"patient",
-							task :"search",
-							ajax:true
-							
-						}
-					})
-					.then( function ( response ) {
-						//$.each( response, function ( i, val ) {
-						//	html += "<li>" + val + "</li>";
-						// });
+						var pattern=new RegExp("("+q+")", "gi");
+						var new_text= $('#rightPanel .search_results').html().replace(pattern, "<b>"+q+"</b>");
 						
-						
-						$('#results').html(response);
-						$('#results').trigger('updatelayout');
-						
-						//$ul.listview( "refresh" );
-						//$ul.trigger( "updatelayout");
-					});
+						$('#results').html(new_text);
+					
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+				  if(thrownError == 'abort' || thrownError == 'undefined') return;
+				  alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 				}
+			
+				  });
 			});
 		});
 
