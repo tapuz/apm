@@ -33,6 +33,15 @@ class Calendar {
 		
 		
 	} 
+
+	public static function getAppointmentsNextWeek($userID){
+		global $wpdb;
+		$query = $wpdb->prepare("SELECT * FROM `view_appointments` WHERE YEARWEEK(start)=YEARWEEK(NOW()+1) AND resourceId='%d'",$userID);
+		$appointments = $wpdb->get_results($query);
+		return  $appointments;
+		
+		
+	} 
  
 	
 	public static function getFutureAppointments($patientID){

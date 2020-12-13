@@ -12,8 +12,10 @@ loadJS('dashboard.js','dashboard');
 
 $patientsForToday=Calendar::getAppointmentsForToday(get_current_user_id());
 $patientsForThisWeek = Calendar::getAppointmentsThisWeek(get_current_user_id());
+$patientsForNextWeek = Calendar::getAppointmentsNextWeek(get_current_user_id());
 $numberOfPatientsToday = $patientsForToday;//count($patientsForToday);
 $numberOfPatientsThisWeek = count($patientsForThisWeek);
+$numberOfPatientsNextWeek = count($patientsForNextWeek);
 
 
 

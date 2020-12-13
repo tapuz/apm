@@ -191,6 +191,29 @@
 
 	<div class="col-lg-12">
 		<div class="smallstat box">
+			<div class="boxchart-overlay green">
+				<div class="linechart">
+					120,140,150,100,30,120
+				</div>
+			</div>
+			<span class="title">
+				Patients next week
+			</span>
+			<span class="value">
+				<?=$numberOfPatientsNextWeek?>
+			</span>
+			<a href="" class="more">
+				<span>
+					View More
+				</span>
+				<i class="icon-chevron-right">
+				</i>
+			</a>
+		</div>
+	</div>
+
+	<div class="col-lg-12">
+		<div class="smallstat box">
 			<div class="boxchart-overlay red">
 				<div class="boxchart">
 					5,6,7,2,0,4,2,4,8,2,3,3,2
