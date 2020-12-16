@@ -7,12 +7,8 @@
 			</label>
 			<div class="controls">
 				<div class="input-group">
-					<input id="search-patient" class="form-control" size="6" type="text" placeholder="Search patient...">
-					<span class="input-group-btn">
-						<button class="btn" type="button">
-							Search
-						</button>
-					</span>
+					<input id="search-patient" class="form-control" size="40" type="text" placeholder="Search patient...">
+					
 				</div>
 			</div>
 		</div>
@@ -31,13 +27,14 @@
 
 <!--/Search Patient-->
 <script id='tmpl_patient_search_results' type="x-tmpl-mustache">
-   <div class="patients_search_results"> 
+   <div class="list-group patients_search_results"> 
     <ul>
         {{#patients}}
-			<li class="patient" patient_id="{{patient_id}}"><a href="#"><i class="fa fa-user">&nbsp;&nbsp;</i><span> {{patient_surname}} {{patient_firstname}}</span></i> <a target="{{patient_id}}" href="index.php?com=patient&view=patient&patient_id={{patient_id}}"><span class="open_file pull-right"><i class="fa fa-file-text-o" aria-hidden="true"></i> Open file</span></a></li>
+			<li class="patient list-group-item" patient_id="{{patient_id}}"><a href="index.php?com=patient&view=patient&patient_id={{patient_id}}"><i class="fa fa-user">&nbsp;&nbsp;</i><span> {{patient_surname}} {{patient_firstname}}</span></i> </li>
         {{/patients}}
     <ul>
     </div>
+
 
 
 

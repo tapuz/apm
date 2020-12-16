@@ -14,3 +14,14 @@ text-decoration: none;
 display: block;
 position: relative;
 }
+
+
+#results li a{
+    color: #0098cb;
+    text-decoration: none;
+  
+}
+
+#results ul {
+    list-style-type:none
+}

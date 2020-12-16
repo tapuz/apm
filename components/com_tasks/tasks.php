@@ -11,7 +11,7 @@ switch (getVar('task')){
 	case 'add_task':
 		$new_task = Task::addTask(getVar('creator_id'),getVar('assigned_to_id'),getVar('taskname'),getVar('note'));		
 		//setResponse('Task added...');
-		//return the task ass JSON
+		//return the task as JSON
 		
 		echo json_encode($new_task);
 		
@@ -65,7 +65,7 @@ switch (getVar('task')){
 	case 'get_tasks':
 		$user_id = get_current_user_id();
 		$tasks = Task::getTasksForUser($user_id,1);
-		echo json_encode($tasks);
+		//echo json_encode($tasks);
 }
 
 

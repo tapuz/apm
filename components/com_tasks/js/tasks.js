@@ -1,3 +1,4 @@
+var users;
 $( document ).ready(function() {
         
     	//$('.datatable').dataTable({ 
@@ -14,6 +15,7 @@ $( document ).ready(function() {
     
      
       $('.tasks').on("click", ".edit_task", function() {   
+          
         var task_id = $(this).attr('task_id');
         url = 'index.php?com=tasks&view=edit_task&task_id=' + task_id;
         
@@ -25,11 +27,14 @@ $( document ).ready(function() {
      $('.tasks').on("click", ".complete_task", function() {   
         var task_id = $(this).attr('task_id');
         
+        
+        log('clco');
         $.ajax({type: "post", url: "ajax.php",
           data: { com: 'tasks',task: 'toggle_status',task_id : task_id}
-            }).success(function() {
+            }).done(function() {
         		 $('#' + task_id + ' .task').toggleClass('task_completed');
                  getTaskDropdown();
+                 log('this gebeurt');
        
         	});
         
@@ -49,7 +54,7 @@ $( document ).ready(function() {
   			type: "post",
 		    url: "ajax.php",
   			data: { com: 'tasks',task: 'archive_task',task_id : task_id}
-			}).success(function( response ) {
+			}).done(function( response ) {
                     var n = new Noty({text: 'Task archived',theme:'sunset',type: 'success',layout:'topCenter',timeout:2000});
                     n.show();
 					$('#' + task_id).remove();
@@ -75,22 +80,22 @@ $( document ).ready(function() {
   }); //end document ready function
 
 
-$.jStorage.deleteKey("users");
+//$.jStorage.deleteKey("users");
 var selectUsers;
 // get all the users
  $.ajax({type: "post", url: "ajax.php", dataType: "json",
           data: { com: 'tasks',task: 'get_users'}
-            }).success(function( data ) {
+            }).done(function( data ) {
                
-		        $.jStorage.set("users",data);
+		        //$.jStorage.set("users",data);
 		        
-		        var users = $.jStorage.get("users");
-                
+		        //var users = $.jStorage.get("users");
+                users = data;
                 
                 default_user_id = $('#user_id').val();
                 // make the practitioner selector and select the active practitioner as defaultvalue
     
-                 selectUsers = "<select id='users' name='users' class='form-control'>"
+                 selectUsers = "<select name='users' class='users_select form-control'>"
                 $.each(users, function(){
                 if (this.data["ID"] == default_user_id){ //set this value as selected 
                         selectUsers += "<option value=" + this.data["ID"]  + " selected>" + this.data["display_name"] + "</option>";
@@ -142,7 +147,8 @@ function addTask()
                         callback: function () {
                             var task = $('#task').val();
                             var note = $('#note').val();
-                            var assigned_to_id = $("#users").val();
+                            var assigned_to_id = $(".users_select").val();
+                            log(assigned_to_id + ' IS THE DI');
 							var creator_id = $('#user_id').val();
                             
                             //make the ajax call 
@@ -158,7 +164,7 @@ function addTask()
   					                    taskname: task,  //do not change taskname into task, see 2 lines above!!!
   					                    note: note}
   					                    
-			                    }).success(function( data ) {
+			                    }).done(function( data ) {
                                   console.log (data);
                                   console.log (data.task_id);
 				                    

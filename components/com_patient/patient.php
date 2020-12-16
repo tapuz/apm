@@ -14,6 +14,7 @@ $patient_id = getVar('patient_id');
 switch(getView()){
 	case 'search_patients':
 		//loadView();
+		loadJS('mustache.min.js');
 		loadJS('search-patient.js','patient');
 		//get expected patients for practitioner to select from
         $patients_for_today = 	Patient::getPatientsForToday(); 

@@ -3,16 +3,16 @@
 		tmpl_patient_search_results  = $('#tmpl_patient_search_results').html();
 		Mustache.parse(tmpl_patient_search_results);
 
-		$('tr')
-                .mouseover(function(){
-                    $(this).addClass('active');
-                })
-                .mouseout(function(){
-                    $(this).removeClass('active');
-                })
-                .superLink();
-        $('#search-patient').focus();
+		$('#search-patient').focus();
+		$('#search-patient').val('');
 		$('#search-patient').keyup(function() {
+			if ($(this).val().length < 1){
+				$( '#results').html('')
+				
+				
+				return;
+			  } //input string is empty
+			if ($('#search-patient').val().length > 2){
 				var q = $('#search-patient').val();
 				var results_div = $('#results');
 				console.log('hello');
@@ -48,7 +48,7 @@
 			
 					
 						var pattern=new RegExp("("+q+")", "gi");
-						var new_text= $('#rightPanel .search_results').html().replace(pattern, "<b>"+q+"</b>");
+						var new_text= $('.patients_search_results').html().replace(pattern, "<b>"+q+"</b>");
 						
 						$('#results').html(new_text);
 					
@@ -59,6 +59,7 @@
 				}
 			
 				  });
+			}
 			});
 		});
 
