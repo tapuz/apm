@@ -49,7 +49,7 @@
 <div class="row">&nbsp;</div>
 
 <div class="row">
-	<div class="col-md-10">
+	<div class="col-md-9">
 	       	
    		<div class="box">
 			<div class="box-header">
@@ -110,7 +110,7 @@
 </div><!--/row -->
 
 <div class="row">
-	<div class="col-md-10">
+	<div class="col-md-9">
 	       	
    		<div class="box">
 			<div class="box-header">
