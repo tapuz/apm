@@ -15,7 +15,7 @@ $( document ).ready(function() {
     
      
       $('.tasks').on("click", ".edit_task", function() {   
-          
+        return;  
         var task_id = $(this).attr('task_id');
         url = 'index.php?com=tasks&view=edit_task&task_id=' + task_id;
         

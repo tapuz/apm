@@ -154,23 +154,10 @@
 </div><!--/col /left content -->
 
 <div class="col-md-3 visible-md visible-lg" id="feed"><!-- Start Right content -->
-	<h2>Latest comments</h2>
+	<h2></h2>
 		<ul id="timeline">
 		<?
-			foreach($latestActivity as $latest)
-			{
-			 ?>
-			 
-			 <li class="comment">
-				<i class="icon-comments blue"></i>
-				<div class="title"><a class='goto_task' task_id="<?=$latest->task_id?>"><?=$latest->task?></a></div>
-				<div class="desc"><?=$latest->comment?></div>
-				<span class="date"><?=$latest->timestamp?></span>
-				<span class="separator">•</span>
-				<span class="name"><?=$latest->display_name?></span>
-			 </li>
-			 <?
-			}
+			
 		?>
 		</ul>
 	

@@ -86,6 +86,7 @@
 		           	 
 		             <td style="white-space: nowrap">
 						<a class="btn btn-success complete_task glyphicon glyphicon-ok" task_id="<?=$task->task_id?>"></a>
+						<a class="btn btn-primary edit_task glyphicon glyphicon-edit" task_id="<?=$task->task_id?>"></a>
 						<a class="btn btn-danger archive_task glyphicon glyphicon-folder-open" task_id="<?=$task->task_id?>"></a>
 						
 		             </td>
@@ -150,6 +151,7 @@
 		           	 
 		             <td style="white-space: nowrap">
 						<a class="btn btn-success complete_task glyphicon glyphicon-ok" task_id="<?=$task->task_id?>"></a>
+						<a class="btn btn-primary edit_task glyphicon glyphicon-edit" task_id="<?=$task->task_id?>"></a>
 		             	<a class="btn btn-danger archive_task glyphicon glyphicon-folder-open" task_id="<?=$task->task_id?>"></a>
 						
 		             </td>
