@@ -62,7 +62,7 @@ foreach ($appointments as $appointment) {
 			$message = str_replace('%practitioner%', $appointment->resourceName, $message);
 			
 			$email->message = $message;
-			$email->ics = ICS::render($appointment);
+			//$email->ics = ICS::render($appointment);
 
 			echo '<br> Sending mail to ' . $appointment->patientName . ' --> ' .$appointment->email;
 			
