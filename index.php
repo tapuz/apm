@@ -9,8 +9,6 @@ require_once ($config['path_wp-config']);
 
 
 
-
-
 //check debug mode
 
 if ($config['debug_mode'] === true)

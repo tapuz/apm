@@ -10,7 +10,7 @@ define('ROOT',						dirname(__FILE__));
 if ($config['debug_mode'] === true)
 	{
 		error_reporting(E_ALL);
-        ini_set('display_errors', 'off');
+        ini_set('display_errors', 'on');
         ini_set('log_errors', 'on');
         ini_set('error_log', 'error.log');
 	}
@@ -24,13 +24,14 @@ echo "GETTING READY<BR>";
 //get all the appointments
 
 global $wpdb;
-$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND status=0 AND DATE_FORMAT(start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
+$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND status=0 AND DATE_FORMAT(start , '%Y-%m-%d' ) = CURDATE( ) + interval -17 day)";
 //$query = "SELECT * from view_appointments WHERE (patientID = 12722 AND customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE( ) + interval 1 day)";
 //$query = "SELECT * from view_appointments WHERE (customAppointment = 0 AND DATE_FORMAT (start , '%Y-%m-%d' ) = CURDATE())";
 $appointments = $wpdb->get_results($query);
 
 foreach ($appointments as $appointment) {
     $clinic = Clinic::getClinic($appointment->clinic);
+    
 			
 			//add clinic name to $appointment object
 			$appointment->{"clinic_name"} = $clinic->clinic_name;
@@ -62,16 +63,16 @@ foreach ($appointments as $appointment) {
 			$message = str_replace('%practitioner%', $appointment->resourceName, $message);
 			
 			$email->message = $message;
-			$email->ics = ICS::render($appointment);
+			//$email->ics = ICS::render($appointment);
 
 			echo '<br> Sending mail to ' . $appointment->patientName . ' --> ' .$appointment->email;
 			
-			$response = $email->send();
-			if($response === true){
-				echo ' [DONE]' ;
-			}else{
-				echo ' [ERROR]- ' . $response;
-			}
+			//$response = $email->send();
+			//if($response === true){
+			//	echo ' [DONE]' ;
+			//}else{
+			//	echo ' [ERROR]- ' . $response;
+			//}
 
 
 
