@@ -1,9 +1,9 @@
 <?php
+define('ROOT',						dirname(__FILE__));
 include('configuration.php');
-
 require_once ($config['path_wp-config']);
 
-define('ROOT',						dirname(__FILE__));
+
 
 
 
@@ -14,10 +14,10 @@ if ($config['debug_mode'] === true)
         ini_set('log_errors', 'on');
         ini_set('error_log', 'error.log');
 	}
-include('libraries/alice/alice.php');
-loadLib('email');
-loadLib('clinic');
-loadLib('ics');
+include ('libraries/alice/alice.php');
+include ('libraries/alice/email.php');
+include ('libraries/alice/clinic.php');
+include ('libraries/alice/ics.php');
 error_log('CRON JOB STARTED');
 
 echo "GETTING READY<BR>";
@@ -51,7 +51,7 @@ foreach ($appointments as $appointment) {
 			$email->subject =  $clinic->email_appointment_reminder_subject . ' ' .  $appointment->time; 
 			
 			
-			$message = file_get_contents('assets/email_templates/appointmentReminder.html');
+			$message = file_get_contents(ABSPATH . '/app/assets/email_templates/appointmentReminder.html');
 			$message = str_replace('%clinic%', $appointment->clinic_name, $message);
 			$message = str_replace('%title%', 'Herinnering van je afspraak',$message);
 			$message = str_replace('%text1%', $clinic->email_appointment_reminder_text1, $message);
@@ -62,9 +62,12 @@ foreach ($appointments as $appointment) {
 			$message = str_replace('%practitioner%', $appointment->resourceName, $message);
 			
 			$email->message = $message;
+			//$email->message = 'THIS IS THE MSG';
 			//$email->ics = ICS::render($appointment);
 
 			echo '<br> Sending mail to ' . $appointment->patientName . ' --> ' .$appointment->email;
+
+			echo $message;
 			
 			$response = $email->send();
 			if($response === true){
@@ -76,6 +79,10 @@ foreach ($appointments as $appointment) {
 
 
 }
+
+
+
+
 		
 
 

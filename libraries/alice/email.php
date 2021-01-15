@@ -1,4 +1,4 @@
-<?
+<?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -6,6 +6,12 @@ use PHPMailer\PHPMailer\Exception;
 include_once(ABSPATH . WPINC . '/PHPMailer/PHPMailer.php');
 include_once(ABSPATH . WPINC . '/PHPMailer/SMTP.php');
 include_once(ABSPATH . WPINC . '/PHPMailer/Exception.php');
+
+//include_once('/var/www/timegenics_dev/public_html/wp-includes/PHPMailer/PHPMailer.php');
+//include_once('/var/www/timegenics_dev/public_html/wp-includes/PHPMailer/SMTP.php');
+//include_once('/var/www/timegenics_dev/public_html/wp-includes/PHPMailer/Exception.php');
+
+
 
 class Email {
     var
@@ -42,14 +48,16 @@ class Email {
         $mail->addAddress($this->to);
         $mail->Subject = $this->subject;
         $mail->Body = $this->message;
-        $mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
+        //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
+        
+        $mail->AddAttachment($this->attachment['file']);
         
         //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename'],'base64','application/pdf');
         if(!$mail->send()) {
             error_log($mail->ErrorInfo);
             return $mail->ErrorInfo;
 		} else {
-			return true;
+            return true;
 		}
         
         
