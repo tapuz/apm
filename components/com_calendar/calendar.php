@@ -20,6 +20,7 @@ loadCSS('scheduler.min.css');
 loadCSS('calendar.css','calendar');
 
 loadJS('fullcalendar.min.js');
+loadJS('gcal.js');
 loadJS('scheduler.min.js');
 loadJS('typeahead.min.js');
 loadJS('appointment.js','calendar');

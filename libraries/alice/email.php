@@ -50,7 +50,7 @@ class Email {
         $mail->Body = $this->message;
         //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
         
-        $mail->AddAttachment($this->attachment['file']);
+        $mail->AddAttachment($this->attachment['file'],$this->attachment['filename']);
         
         //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename'],'base64','application/pdf');
         if(!$mail->send()) {

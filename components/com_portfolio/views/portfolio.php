@@ -1,7 +1,8 @@
 <script>
 	var patientID = <?=$patientID?>;
 	var patientName = '<?=$patientName?>';
-	var patientDOB = '<?=$patientDOB?>';
+    var patientDOB = '<?=$patientDOB?>';
+    var patientEmail = '<?=$patientEmail?>';
     var clinician = '<?=$username?>';
     var clinic = <?=$clinic?>;
   
@@ -19,9 +20,9 @@
     <div class="col-lg-12">
     <button class="btn btn-primary btnSelectImages">Select</button>
     <button class="btn btn-danger btnDeleteImages" disabled><i class="fas fa-trash-alt"></i></button>
-    <button class="btn btn-primary btnGeneratePDF" disabled><i class="fas fa-print"></i></button>
-        <div id="images" class="box">
-            
+    <button class="btn btn-primary btnPrintPortfolio actionButton" disabled><i class="fas fa-print"></i></button>
+    <button class="btn btn-primary btnEmailPortfolio actionButton" disabled><i class="fas fa-envelope-open-text"></i></button>
+     <div id="pictureproof" class="box">       
 				<div class="box-header">
 					<h2>
                     <span><i class="icon-picture"></i><span class="break"></span>PictureProof</span>

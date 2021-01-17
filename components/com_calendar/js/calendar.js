@@ -236,10 +236,7 @@ $(document).ready(function() {
 
   function getResources() {
     //add each user as a Resource
-    //log('getting the resources!!!');
-
     $.each(users, function() {
-      //log('the color is : ' + this.calendar_color);
       calendar.fullCalendar('addResource', {
         id: this.data.ID,
         title: this.data.display_name,
@@ -439,11 +436,18 @@ $(document).ready(function() {
       selectLongPressDelay:500,
       longPressDelay:500,
       contentHeight:"auto",
-      allDaySlot: false,
+      //allDaySlot: false,
 	  
       //theme:'false',
       //allDayDefault: false,
       //contentHeight: 5000,
+      googleCalendarApiKey: 'AIzaSyC83LJSULjyInMb17Der0h7FS0zd2KQ7lg',
+      eventSources: [
+        {
+          googleCalendarId: 'nl.be#holiday@group.v.calendar.google.com'
+        }
+        
+      ],
 	  
       businessHours: {
         start: '07:00', // a start time (10am in this example)

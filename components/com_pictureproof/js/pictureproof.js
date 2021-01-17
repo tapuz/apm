@@ -867,7 +867,7 @@ $(function() {
        
         $.ajax({type: "post", url: "ajax.php", dataType: "json",
           data: { com: 'pictureproof',task: 'getCameraPictures', patientID : patientID}
-            }).success(function( cameraPictures ) {
+            }).done(function( cameraPictures ) {
                $('#cameraPictures').empty();
 		        console.log(cameraPictures);
                 $.each(cameraPictures, function(){
@@ -886,7 +886,7 @@ $(function() {
         console.log(patientID);
         $.ajax({type: "post", url: "ajax.php", dataType: "json",
           data: { com: 'pictureproof',task: 'getPortfolioPictures', patientID : patientID}
-            }).success(function( portfolioPictures ) {
+            }).done(function( portfolioPictures ) {
                $('#portfolioPictures').empty();
 		        console.log(portfolioPictures);
                 $.each(portfolioPictures, function(){

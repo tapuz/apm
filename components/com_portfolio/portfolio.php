@@ -24,25 +24,33 @@ switch (getVar('task')){
 
 	case 'emailPortfolio':
 		loadLib('email');
-		loadLib('clinic');
-		$clinic = getVar('clinic');
-		$pdfdoc			= getVar('pdf');
-		$b64file = $pdfdoc;
-		$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
-		$b64file		= str_replace( ' ', '+', $b64file );
-		$decoded_pdf	= base64_decode( $b64file );
+		$clinic = Clinic::getClinic(getVar('clinic'));
+		$email = getVar('patientEmail');
+		$patientName = getVar('patientName');
+		$pdfdoc			= base64_decode(getVar('pdf'));
+
+
+
+		//$b64file = $pdfdoc;
+		//$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
+		//$b64file		= str_replace( ' ', '+', $b64file );
+		//$decoded_pdf	= base64_decode( $b64file );
 
 		//error_log($decoded_pdf);
+
+		$filepath = '/var/www/timegenics_dev/temp/portfolio.pdf';
+		file_put_contents($filepath,$pdfdoc);
+
 		$mail = new Email;
-		$mail->getServerSettings(1);
-		$mail->to='thierry.duhameeuw@gmail.com';
-		$mail->subject='PDF TEST';
-		$mail->message='Hier is je PDF';
+		$mail->getServerSettings($clinic->clinic_id);
+		$mail->to=$email;
+		$mail->subject=$clinic->email_portfolio_subject;
+		$mail->message=$clinic->email_portfolio_message;
 
 
-		$mail->attachment['file']= $decoded_pdf;
-		$mail->attachment['filename']='portfolio.pdf';
-		$mail->clinic = 1;
+		$mail->attachment['file']= $filepath;
+		$mail->attachment['filename']='Portfolio_'.$patientName.'.pdf';
+		$mail->clinic = $clinic->clinic_id;
 		$mail->send();
 	break;
 
@@ -69,6 +77,7 @@ switch (getView())
 		$patient = Patient::getPatient($patientID);
 		$patientName = $patient->patient_surname.' '.$patient->patient_firstname;
 		$patientDOB = $patient->dob;
+		$patientEmail = $patient->email;
 		$clinic = json_encode(Clinic::getClinic($patient->clinic));
 		
 
