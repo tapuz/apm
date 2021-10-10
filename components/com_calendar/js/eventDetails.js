@@ -66,7 +66,7 @@ $(document).ready(function() {
     
   $(document).on('click','.editapp',function(){    
   
-    
+    log(objEvent);
     $('#editEvent .modal-title').html('Edit appointment');
     appModalMode = 'editAppointment';
     fNewPatient = false;
@@ -207,8 +207,11 @@ $(document).ready(function() {
                  //fee : oService.fee,
                  fee : $('#paymentModal .fee').val(),
                  date :  moment(objEvent.start)
-                });
-    var new_window = window.open('index.php?com=invoice&layout=component&view=edit_invoice&task=create_new_invoice&patient_id=' + objEvent.patientID,objEvent.patientID) ;
+                },function() {var new_window = window.open('index.php?com=invoice&layout=component&view=edit_invoice&task=create_new_invoice&patient_id=' + objEvent.patientID,objEvent.patientID);
+
+                             }
+                );
+    
   });
   
 });
@@ -242,6 +245,7 @@ function loadEventDetails() {
 			body += '<p><i class="fa fa-user summary"></i>&nbsp;' + objEvent.resourceName + '</p>';
 
 			body += '<p><i class="fa fa-clock-o summary"></i>&nbsp;' + moment(objEvent.start).locale(locale).format('LLLL') + ' &mdash; ' + moment(objEvent.end).format('HH:mm') + '</p>';
+			body += '<p><i class="fa fa-user summary"></i>&nbsp;' + objEvent.clinic + '</p>';
       if (objEvent.note != ''){
         body += '<p><i class="far fa-sticky-note"></i><strong> ' + objEvent.note + ' </strong><a href="#" class="editapp">edit</a></p>';
       };

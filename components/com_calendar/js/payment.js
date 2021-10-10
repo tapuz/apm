@@ -1,6 +1,6 @@
 class Payment {
   
-  static add(oPayment){
+  static add(oPayment,callback){
      $.ajax({
       url: "ajax.php",
       //dataType: "json",
@@ -20,6 +20,7 @@ class Payment {
           type:'success',
           timeout : '2000'
           }).show();
+        callback();
       },
       error: function(req, status, error) {
       
