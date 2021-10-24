@@ -233,6 +233,20 @@ $(document).ready(function() {
     //$('.fc-toolbar .fc-left').prepend(selectUser);
     $('#calSelectToolbar form').append(selectUser);
   }
+ addPaymentMethods();
+  function addPaymentMethods(){
+    Payment.getMethods(function(methods){
+    var selectPaymentMethod;
+    $.each(methods, function() {
+      selectPaymentMethod +=	"<option value='"+ this.id + "'>"+ this.method +"</option>";
+    });
+    
+    $("#paymentMethod").html(selectPaymentMethod);
+
+      
+      log(methods);
+    });
+  }
 
   function getResources() {
     //add each user as a Resource
@@ -1110,7 +1124,10 @@ $(document).ready(function() {
 
 //outside document ready
 
-
+function getClinicName(clinic_id){
+  oClinic = clinics.find(x => x.clinic_id === clinic_id.toString());
+  return oClinic.clinic_name;
+}
 
 function renderServicesLookup(clinic_id){
   try{  

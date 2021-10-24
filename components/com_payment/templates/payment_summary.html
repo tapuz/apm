@@ -1,0 +1,27 @@
+<script id='tmpl_payment_summary' type="x-tmpl-mustache">
+    <div><label>{{}}</label> 
+        <ul class="list-group">
+         
+            {{#methods}}
+                <li class="list-group-item">
+                    <span class="badge badge-">€{{totalamount}}</span>
+                    <div><label>Method : {{method}}</label</div>
+                    <div>Patients : {{patients}}</div>
+                </li>
+            {{/methods}}
+
+            {{#total}}
+            <li class="list-group-item active">
+                <span class="badge badge-success">{{totalamount}}</span>
+                <div>Total</div>
+                <div>Patients : {{patients}}</div>
+            </li>
+            {{/total}}
+
+
+
+         </ul>
+    </div>
+       
+
+</script>

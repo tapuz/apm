@@ -193,6 +193,7 @@ $(document).ready(function() {
                  description: $('#paymentModal .description').val(),
                  //fee : oService.fee,
                  fee : $('#paymentModal .fee').val(),
+                 method : $('#paymentMethod').val(),
                  date :  moment(objEvent.start)
                  });
   });
@@ -242,10 +243,10 @@ function loadEventDetails() {
 			body += '<span class="pull-right"><a class="btn btn-info btn-sm history"><i class="fa fa-list-alt fa-fw"></i>&nbsp;History</a></span>';
 			body += '<div class="appHistoryBox" style="display:none">Loading...</div>';
 			body += '<div class="appBox">';
-			body += '<p><i class="fa fa-user summary"></i>&nbsp;' + objEvent.resourceName + '</p>';
+			body += '<p><i class="fas fa-user-md summary"></i>&nbsp;' + objEvent.resourceName + '</p>';
 
 			body += '<p><i class="fa fa-clock-o summary"></i>&nbsp;' + moment(objEvent.start).locale(locale).format('LLLL') + ' &mdash; ' + moment(objEvent.end).format('HH:mm') + '</p>';
-			body += '<p><i class="fa fa-user summary"></i>&nbsp;' + objEvent.clinic + '</p>';
+			body += '<p><i class="fa fa-hospital-o summary"></i>&nbsp;' + getClinicName(objEvent.clinic) + '</p>';
       if (objEvent.note != ''){
         body += '<p><i class="far fa-sticky-note"></i><strong> ' + objEvent.note + ' </strong><a href="#" class="editapp">edit</a></p>';
       };

@@ -494,7 +494,7 @@
 		<h3 class="modal-title">Add Payment</h3>      
       </div>
       <div class="modal-body">
-		<form class="form-horizontal">
+		<form id="payment" class="form-horizontal">
 			<div class="form-group">
 				<label class="col-md-4 control-label" for="date">Date</label>
 				<div class="col-md-4">
@@ -523,16 +523,17 @@
 				<label class="col-md-4 control-label" for="fee">Fee</label>
 				<div class="col-md-4">
 					<div class="input-group">
-						
-						
 						 <span class="input-group-addon"><i class="fa fa-euro"></i></span>					
 						<input type="text" name="fee" class="form-control input-md fee">
 					</div>
-				
-				
-				
-				
-				
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="paymentMethod">Method</label>
+				<div class="col-md-4">
+					<select id="paymentMethod" name="paymentMethod" class="form-control">
+						
+					</select>
 				</div>
 			</div>
 		</form>	

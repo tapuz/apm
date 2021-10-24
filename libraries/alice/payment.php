@@ -4,12 +4,38 @@ class Payment {
 public function getAllPayments() {
     global $wpdb;
 	$query='
-	SELECT * FROM table_payments
+	SELECT * FROM table_payments where payment_date = 
 	ORDER BY payment_id DESC';
 	$payments=$wpdb->get_results($query);
 	return  $payments;
     
     
+}
+
+public static function getPaymentSummary($practitioner,$clinic){
+	global $wpdb;
+	$query=sprintf('
+	SELECT
+		table_payment_methods.id,
+		table_payment_methods.method,
+		SUM(amount) as totalamount,count(*) as patients
+		from table_payments INNER JOIN table_payment_methods
+		ON table_payments.method = table_payment_methods.id
+		where `payment_date` = CURRENT_DATE() AND table_payments.practitioner_id= %s AND table_payments.clinic_id=%s group by method with ROLLUP
+	',$practitioner,$clinic);
+
+	error_log($query);
+
+	return $summary = $wpdb->get_results($query); 
+	
+}
+
+public static function getMethods() {
+	global $wpdb;
+	$query='
+	SELECT * FROM table_payment_methods';
+	$methods=$wpdb->get_results($query);
+	return  $methods;
 }
 
 public function getPayments($patient_id,$status) {
@@ -44,6 +70,7 @@ public function addPayment($payment){
 					'practitioner_id' => $payment->user,
 					'description' => $payment->description,
 					'amount' => $payment->fee,
+					'method' => $payment->method,
 					'payment_date' => $payment->date
 					) 
 	 			);

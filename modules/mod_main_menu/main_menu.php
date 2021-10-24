@@ -6,7 +6,7 @@
 						<li><a href="index.php?com=calendar&view=calendar"><i class="fa fa-calendar"></i><span class="hidden-sm text"> Calendar</span></a></li>
 						<li><a href="index.php?com=patient&view=search_patients"><i class="fa fa-users"></i><span class="hidden-sm text"> Patients</span></a></li>
 						<li><a href="index.php?com=tasks&view=list"><i class="fa fa-tasks"></i><span class="hidden-sm text"> Tasks</span></a></li>
-						<li><a href="index.php?com=payment&view=list"><i class="fa fa-money"></i><span class="hidden-sm text"> Payments</span></a></li>
+						<li><a href="index.php?com=payment&view=summary"><i class="fa fa-money"></i><span class="hidden-sm text"> Payments</span></a></li>
 						<li><a href="index.php?com=settings&view=general"><i class="fa fa-cog"></i><span class="hidden-sm text"> Settings</span></a></li>
 						
 								
