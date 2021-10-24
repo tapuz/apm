@@ -8,6 +8,7 @@ $(document).ready(function(){
 	
 	
     $('.btn_load_summary').click(function(){
+       
        clinic = $("#clinic").val();
        practitioner =$("#practitioner").val();
 
@@ -22,6 +23,11 @@ $(document).ready(function(){
         clinic:clinic
         },
         success: function(data) {
+        	if (Object.keys(data).length==0){ 
+        		var summary='<div class="alert alert-danger" role="alert">No payments for this date...</div>';
+        		
+        	}else {
+        		
             total=data.pop();
             methods=data;
             //inject into to template
@@ -29,7 +35,9 @@ $(document).ready(function(){
 				methods:methods,
                 total:total};
 			var summary = Mustache.render(tmpl_payment_summary,data);
+			}
 			$('.payment_summary').html(summary);
+			
         },
         error: function(req, status, error) {
         

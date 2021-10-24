@@ -46,7 +46,7 @@
 			<div>
 				<button type="button" class="btn btn-primary btn_load_summary">Load summary</button>
 			</div>
-
+            <div class="row">&nbsp;</div>        
 			<div class="payment_summary">
 				
 			</div>
