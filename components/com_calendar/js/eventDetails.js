@@ -195,6 +195,14 @@ $(document).ready(function() {
                  fee : $('#paymentModal .fee').val(),
                  method : $('#paymentMethod').val(),
                  date :  moment(objEvent.start)
+                 },function(){
+                 	objEvent.status = 7;
+                    Appointment.setStatus(objEvent.id, 7, function() {
+                     calendar.fullCalendar('updateEvent', objEvent);
+    	            
+                  });
+
+
                  });
   });
 
@@ -296,13 +304,14 @@ function loadEventDetails() {
       if (objEvent.status == 0) {$(".set_status.confirmed").button("toggle");}
       if (objEvent.status == 1) {$(".set_status.arrived").button("toggle");}
       if (objEvent.status == 2) {$(".set_status.pencilled").button("toggle");}
-			if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
-			if (objEvent.status == 6) {
+	  if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
+	  if (objEvent.status == 6) {
         $(".appCancelledBox").show();
         $(".appActions .editapp").hide();
         $(".appActions .reschedule").hide();
         $(".appActions .toggleCancelBox").hide();
-				//$(".appActions").hide();
-				$(".appStatusActions").hide();
-				}
+		//$(".appActions").hide();
+		$(".appStatusActions").hide();
+	  }
+	  if (objEvent.status == 7) {$(".addPayment").hide();}
 }

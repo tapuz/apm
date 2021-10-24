@@ -269,6 +269,12 @@ p.selected-patient-details{
   color: #24a916 !important;
 }
 
+.icon-payed{
+  float: right;
+  color: black !important;
+}
+
+
 .fc-head {
   background-color:white;
 }

@@ -921,7 +921,7 @@ $(document).ready(function() {
             revertFunc();
             });
 				
-      }
+      }a
       },
 
 
@@ -945,6 +945,7 @@ $(document).ready(function() {
             
             icons = '<i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
             icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
+			icons += '<i class="far fa-credit-card icon-payed"></i>';            
             patid = '<span class="note">' + event.patientID + ' </span>';
             //log(showPatientID);
             $(".fc-title", element).append(insurance);
@@ -971,6 +972,12 @@ $(document).ready(function() {
 
             if (event.status == 6) {
               $(element).find('.fc-title').addClass('appointmentCancelled');
+            }
+
+            if (event.status == 7) {
+              $(element).find('.icon-payed').show();
+            } else {
+              $(element).find('.icon-payed').hide();
             }
 
             if (event.status == 2) {
