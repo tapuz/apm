@@ -943,9 +943,9 @@ $(document).ready(function() {
             }
            
             
-            icons = '<i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
+            icons = '<div class="fc-event-icons"><i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
             icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
-			icons += '<i class="far fa-credit-card icon-payed"></i>';            
+			      icons += '<i class="far fa-credit-card icon-payed"></i></div>';            
             patid = '<span class="note">' + event.patientID + ' </span>';
             //log(showPatientID);
             $(".fc-title", element).append(insurance);

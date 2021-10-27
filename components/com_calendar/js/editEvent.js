@@ -159,7 +159,7 @@ var eventStatus = 0;
                            start: objEvent.start.format(),
                            end : objEvent.end.format(),
                            patientID : objEvent.patientID,
-                           status : eventStatus,
+                           status : objEvent.status,//eventStatus,
                            user : objEvent.resourceId,
                            service : objEvent.serviceId,
                            note: objEvent.note,

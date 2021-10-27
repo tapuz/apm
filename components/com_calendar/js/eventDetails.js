@@ -313,5 +313,10 @@ function loadEventDetails() {
 		//$(".appActions").hide();
 		$(".appStatusActions").hide();
 	  }
-	  if (objEvent.status == 7) {$(".addPayment").hide();}
+	  if (objEvent.status == 7) {
+      $(".addPayment").hide();
+      $(".appStatusActions").hide();
+      $(".appPencilledIn").hide();
+      $(".toggleCancelBox").hide();
+    }
 }

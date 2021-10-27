@@ -213,15 +213,31 @@ p.selected-patient-details{
 
 
 /*Event styles*/
+.fc-content {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  grid-template-rows: 1fr 1fr;
+
+}
 
 .fc-title {
     font-size: 1.1em !important;
     margin-left: 5px;
     color: black;
     font-weight: 600;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
     
 }
 
+.fc-event-icons{
+  grid-column-start:2;
+  grid-column-end:2;
+  
+  grid-row-start: 1;
+  text-align: right;
+}
 
 .fc-event {
   
@@ -243,6 +259,10 @@ p.selected-patient-details{
   margin-left: 6px;
   color: black;
   font-weight: 900;
+  grid-row-start:2;
+  
+  
+
 }
 
 .fc-event .fc-bg {
