@@ -3,7 +3,9 @@ $(document).ready(function(){
     var tmpl_payment_summary = $('#tmpl_payment_summary').html();
 	Mustache.parse(tmpl_payment_summary);	
 	
+	$('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
 	
+    $('#date').val(moment().format('l'));
 	//Parse it 
 	
 	
@@ -11,6 +13,7 @@ $(document).ready(function(){
        
        clinic = $("#clinic").val();
        practitioner =$("#practitioner").val();
+       date= $('#date').val();
 
        $.ajax({
         url: "ajax.php",
@@ -20,7 +23,9 @@ $(document).ready(function(){
         com: 'payment',
         task: 'getpaymentsummary',
         practitioner:practitioner,
-        clinic:clinic
+        clinic:clinic,
+        date:date
+        //date:
         },
         success: function(data) {
         	if (Object.keys(data).length==0){ 

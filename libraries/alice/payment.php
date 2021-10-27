@@ -12,17 +12,17 @@ public function getAllPayments() {
     
 }
 
-public static function getPaymentSummary($practitioner,$clinic){
+public static function getPaymentSummary($practitioner,$clinic,$date){
 	global $wpdb;
-	$query=sprintf('
+	$query=sprintf("
 	SELECT
 		table_payment_methods.id,
 		table_payment_methods.method,
 		SUM(amount) as totalamount,count(*) as patients
 		from table_payments INNER JOIN table_payment_methods
 		ON table_payments.method = table_payment_methods.id
-		where `payment_date` = CURRENT_DATE() AND table_payments.practitioner_id= %s AND table_payments.clinic_id=%s group by method with ROLLUP
-	',$practitioner,$clinic);
+		where `payment_date` = '%s' AND table_payments.practitioner_id= %s AND table_payments.clinic_id=%s group by method with ROLLUP
+	",$date,$practitioner,$clinic);
 
 	error_log($query);
 

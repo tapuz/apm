@@ -43,6 +43,12 @@
                 </select>
             </div>
             
+            <div class="form-group">
+            	<label for="date">Datum:</label>	
+	 			<input type="text" class="form-control date-picker" id="date" data-date-format="dd/mm/yyyy"/>
+	 		</div>	
+	 			
+            
 			<div>
 				<button type="button" class="btn btn-primary btn_load_summary">Load summary</button>
 			</div>

@@ -20,7 +20,7 @@ switch (getVar('task')){
 	break;
 
 	case 'getpaymentsummary':
-		$summary = Payment::getPaymentSummary(getVar('practitioner'),getVar('clinic'));
+		$summary = Payment::getPaymentSummary(getVar('practitioner'),getVar('clinic'),convertDateBE2ISO(getVar('date')));
 		echo json_encode($summary);
 		
 	break;
