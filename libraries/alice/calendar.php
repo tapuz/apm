@@ -258,22 +258,41 @@ class Calendar {
 	
 	
 	
-	public function getLog($appointment_id){
+	public function getLog($appointment_id,$tag){
 		global $wpdb;
-		$query = sprintf(
-						 "SELECT table_appointments_log.appointment_id,
-								 table_appointments_log.datetime,
-								 table_appointments_log.labelclass,
-								 table_appointments_log.log,
-								 table_appointments_log.tag,
-						 
-								 wp_users.display_name as username
-						 
-						 FROM table_appointments_log
-						 INNER JOIN wp_users
-						 ON table_appointments_log.user = wp_users.ID
-						 
-						 WHERE table_appointments_log.appointment_id = '%s' ORDER BY table_appointments_log.id DESC",$appointment_id);
+
+		if ($tag=='all'){
+
+			$query = sprintf(
+							"SELECT table_appointments_log.appointment_id,
+									table_appointments_log.datetime,
+									table_appointments_log.labelclass,
+									table_appointments_log.log,
+									table_appointments_log.tag,
+							
+									wp_users.display_name as username
+							
+							FROM table_appointments_log
+							INNER JOIN wp_users
+							ON table_appointments_log.user = wp_users.ID
+							
+							WHERE table_appointments_log.appointment_id = '%s' ORDER BY table_appointments_log.id DESC",$appointment_id);
+		} else {
+			$query = sprintf(
+				"SELECT table_appointments_log.appointment_id,
+						table_appointments_log.datetime,
+						table_appointments_log.labelclass,
+						table_appointments_log.log,
+						table_appointments_log.tag,
+				
+						wp_users.display_name as username
+				
+				FROM table_appointments_log
+				INNER JOIN wp_users
+				ON table_appointments_log.user = wp_users.ID
+				
+				WHERE table_appointments_log.appointment_id = '%s' AND tag='%s' ORDER BY table_appointments_log.id DESC",$appointment_id,$tag);
+		}
 		return $wpdb->get_results($query);
 	}
 	

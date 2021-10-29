@@ -928,7 +928,17 @@ $(document).ready(function() {
       eventRender: function(event, element) {
 				
         //calendarPB.start();
+        icons = '<div class="fc-event-icons"><i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
+        icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
+        icons += '<i class="fas fa-comment icon-note title="note"></i>';
+        icons += '<i class="far fa-credit-card icon-payed" title="payed"></i></div>';       
         
+        
+        patid = '<span class="note">' + event.patientID + ' </span>';
+        $(".fc-content", element).append(icons);
+        if((users[selectedUser].data.showpatIDinCalendar)==1){
+          $(".fc-content", element).append(patid);
+        }
 				
             if (event.insurance === null || event.insurance === undefined){
               insurance = '';
@@ -936,28 +946,26 @@ $(document).ready(function() {
               insurance = '<span class="event_insurance">[' + event.insurance + ']<span>';
             }
             
-            if (event.note === null || event.note === undefined || event.customAppointment == 1){
-              note = '';
+            log(event.note);
+
+            if (event.note === null || event.note === undefined || event.customAppointment == 1 || event.note ==''){
+              $(element).find('.icon-note').hide();
+            
             }else{
-              note = '<span class="note">'+ event.note+'</span>';
+              
+              $(element).find('.icon-note').show();
+              
             }
            
             
-            icons = '<div class="fc-event-icons"><i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
-            icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
-			      icons += '<i class="far fa-credit-card icon-payed"></i></div>';            
-            patid = '<span class="note">' + event.patientID + ' </span>';
+            
             //log(showPatientID);
             $(".fc-title", element).append(insurance);
             //if (showPatientID){$(".fc-content", element).append(patid);}
             
-            $(".fc-content", element).append(note);
-            $(".fc-content", element).append(icons);
-            if((users[selectedUser].data.showpatIDinCalendar)==1){
-              $(".fc-content", element).append(patid);
-            }
+            //$(".fc-content", element).append(note);
             
-
+          
             if (event.status == 1) {
               $(element).find('.icon-thumbs-up').show();
             } else {

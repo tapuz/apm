@@ -145,7 +145,7 @@ class Appointment {
   }
   
 
-  static getLog(appointment_id,callback) {
+  static getLog(appointment_id,tag,callback) {
     $.ajax({
       url: "ajax.php",
       dataType: "json",
@@ -153,7 +153,8 @@ class Appointment {
       data: {
         com: 'calendar',
         task: 'getLog',
-        appointment_id: appointment_id
+        appointment_id: appointment_id,
+        tag:tag
       },
       success: function(data) {
         if (callback) {

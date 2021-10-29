@@ -126,7 +126,7 @@ $(document).ready(function() {
   $(document).on('click','.history',function(){
 
 		
-		Appointment.getLog(eventID,function(log){
+		Appointment.getLog(eventID,'all',function(log){
 				console.log(log);
 				theLogs = log;
 				var logs = '<br>';
@@ -271,9 +271,8 @@ function loadEventDetails() {
 			body += '<input type="text" placeholder="Reason for cancellation" class="form-control reasonForCancel"><span class="input-group-btn"><button type="button" class="btn btn-danger cancelAppointment"><i class="fas fa-slash"></i>&nbsp;Cancel</button></span>';
 			body += '</div>';
 			
-			body += '<div class="appCancelledBox" style="display:none">';
-			body +='<h2 class="text-danger">Appointment was cancelled</h2></div>';
-			
+			body += '<div class="appCancelledBox" style="display:none"></div>';
+						
 			
 			body += '<div class="btn-group col-md-4 appStatusActions" data-toggle="buttons">';
 			body +=	'<label id="1" class="set_status arrived btn btn-sm" status="1"><input type="radio"> Arrived</label>';
@@ -304,19 +303,34 @@ function loadEventDetails() {
       if (objEvent.status == 0) {$(".set_status.confirmed").button("toggle");}
       if (objEvent.status == 1) {$(".set_status.arrived").button("toggle");}
       if (objEvent.status == 2) {$(".set_status.pencilled").button("toggle");}
-	  if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
-	  if (objEvent.status == 6) {
-        $(".appCancelledBox").show();
-        $(".appActions .editapp").hide();
-        $(".appActions .reschedule").hide();
-        $(".appActions .toggleCancelBox").hide();
-		//$(".appActions").hide();
-		$(".appStatusActions").hide();
-	  }
-	  if (objEvent.status == 7) {
-      $(".addPayment").hide();
+      if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
+      if (objEvent.status == 6) {
+          //get the cancelled log
+          Appointment.getLog(eventID,'Cancelled',function(log){
+            theLogs = log;
+            var logs = '<br>';
+            
+            $.each(log, function(){
+              logs += '<div class="log"><span class="label ' + this.labelclass + ' ">' + this.tag + ' &nbsp;</span><span class="logDateTime">'+ moment(this.datetime).format('LLLL') +'</span><span style="color:gray;"> - by ' + this.username + '</span>';
+              logs += '<div><strong>Reason: '+ this.log +'</strong></div></div>';
+      
+            });
+            
+          $('.appCancelledBox').append(logs);
+        });
+          $(".appCancelledBox").show();
+          $(".appActions .editapp").hide();
+          $(".appActions .reschedule").hide();
+          $(".appActions .toggleCancelBox").hide();
+          $(".addPayment").hide();
+          $(".appPencilledIn").hide();
+      //$(".appActions").hide();
       $(".appStatusActions").hide();
-      $(".appPencilledIn").hide();
-      $(".toggleCancelBox").hide();
-    }
+      }
+      if (objEvent.status == 7) {
+        $(".addPayment").hide();
+        $(".appStatusActions").hide();
+        $(".appPencilledIn").hide();
+        $(".toggleCancelBox").hide();
+      }
 }

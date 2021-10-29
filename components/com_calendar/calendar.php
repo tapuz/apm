@@ -13,7 +13,6 @@ loadLib('clinic');
 loadLib('service');
 loadLib('users');
 
-
 loadCSS('fullcalendar.min.css');
 loadCSS('scheduler.min.css');
 //loadCSS('fullcalendar.print.css');
@@ -167,6 +166,7 @@ switch (getVar('task')){
 		echo json_encode($services);
 	break;
 
+	
 	case 'addAppointmentLog':
 		Calendar::addAppointmentLog(getVar('appointment_id'),getVar('datetime'),getVar('tag'),getVar('log'),getVar('labelclass'));
 	break;
@@ -174,7 +174,7 @@ switch (getVar('task')){
 	
 
 	case 'getLog':
-		$log = Calendar::getLog(getVar('appointment_id'));
+		$log = Calendar::getLog(getVar('appointment_id'),getVar('tag'));
 		echo json_encode($log);
 	break;
 

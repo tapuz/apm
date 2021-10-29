@@ -293,6 +293,10 @@ p.selected-patient-details{
   float: right;
   color: #3a87ad !important;
 }
+.icon-note{
+  padding-right: 2px;
+  color: #3a87ad !important;
+}
 
 
 .fc-head {
