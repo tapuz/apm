@@ -14,6 +14,7 @@ function flipDate($date) {
 	$month = substr($date, 5,2);
 	$year = substr($date,0,4);
 	
+	
 	return $convertedDate=$day . '-' . $month . '-' . $year; 
 		
 }
@@ -21,11 +22,7 @@ function flipDate($date) {
 function convertDateBE2ISO($my_date)
 	
 	{
-		$day = substr($my_date, 0,2); 
-		$month = substr($my_date, 3,2);
-		$year = substr($my_date,6,4);
-	
-		return $convertedDate=$year . '-' . $month . '-' . $day; 
+		return date("Y-m-d",strtotime(str_replace("/", ".", $my_date)));
 	}
 	
 function getDateFromTimestamp($timestamp){
@@ -158,8 +155,14 @@ function loadJS($file,$com=null) //in wiki
 }
 
 function loadExtJS($url){
-	$xml = sprintf("<script src='%s'></script>",$url);
-	echo $xml;
+	if (curPageName() == 'ajax.php') //the JS pages do not need to be loaded on AJAX calls
+	{
+		return;
+	}else{
+		$xml = sprintf("<script src='%s'></script>",$url);
+		echo $xml;	
+    }
+	
 	
 }
 
@@ -221,59 +224,39 @@ function letterCount($patient_id)
 function editorToolbar()
 {
 ?>
-<div id="alerts"></div>
-    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
-      <!--<div class="btn-group">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="icon-font"></i><b class="caret"></b></a>
-          <ul class="dropdown-menu">
-          </ul>
-        </div>-->
-      <div class="btn-group">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-          <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
-          <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
-          <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
-          </ul>
-      </div>
-      <div class="btn-group">
-        <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
-        <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
-        <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="icon-strikethrough"></i></a>
-        <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
-      </div>
-      <div class="btn-group">
-        <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="icon-list-ul"></i></a>
-        <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="icon-list-ol"></i></a>
-        <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
-        <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="icon-indent-right"></i></a>
-      </div>
-      <div class="btn-group">
-        <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
-        <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
-        <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
-        <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
-      </div>
-      <div class="btn-group">
-		  <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="icon-link"></i></a>
-		    <div class="dropdown-menu input-append">
-			    <input class="span2" placeholder="URL" type="text" data-edit="createLink"/>
-			    <button class="btn" type="button">Add</button>
-        </div>
-        <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="icon-cut"></i></a>
+<span class="ql-formats">
+      <select class="ql-font"></select>
+      <select class="ql-size"></select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-bold"></button>
+      <button class="ql-italic"></button>
+      <button class="ql-underline"></button>
+      <button class="ql-strike"></button>
+    </span>
+    <span class="ql-formats">
+      <select class="ql-color"></select>
+      <select class="ql-background"></select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-script" value="sub"></button>
+      <button class="ql-script" value="super"></button>
+    </span>
 
-      </div>
-      
-      <!--<div class="btn-group">
-        <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="icon-picture"></i></a>
-        <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
-      </div>-->
-      <div class="btn-group">
-        <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
-        <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
-      </div>
-      <!--<input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech=""> -->
-    </div>
+    <span class="ql-formats">
+      <button class="ql-list" value="ordered"></button>
+      <button class="ql-list" value="bullet"></button>
+      <button class="ql-indent" value="-1"></button>
+      <button class="ql-indent" value="+1"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-direction" value="rtl"></button>
+      <select class="ql-align"></select>
+    </span>
+    
+    <span class="ql-formats">
+      <button class="ql-clean"></button>
+    </span>
 
 
 

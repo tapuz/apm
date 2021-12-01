@@ -15,6 +15,7 @@ $(document).ready(function(){
        practitioner =$("#practitioner").val();
        date= $('#date').val();
 
+
        $.ajax({
         url: "ajax.php",
         dataType: "json",
