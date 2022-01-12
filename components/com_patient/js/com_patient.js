@@ -293,30 +293,11 @@ $(document).ready(function(){
 		
 	}
 	
-	function setSaveStatus(status) {
-		switch (status){
-			case true:
-				saveNoty = new Noty({
-					text: '<span class="text-center">Saving...</span>',
-					layout:'bottomRight',
-					theme:'sunset',
-					type:'success',
-					speed: 0,
-					callbacks: {afterClose: function() {}}
-					}).show();
-			break;
-			case false:
-				saveNoty.close();
-			break;
-		}
-		
-		
-		
-	}
+
 	
 	
 	 $(document).on('click','.btn_close_encounter', function(){
-		 setSaveStatus(true);
+		 setSaveStatus('saving');
 		SOAPform = $('#editSOAP').serializeArray();
 		disableform('editSOAP',true);
 		log(SOAPform);
@@ -326,8 +307,8 @@ $(document).ready(function(){
 				encounters = await Encounter.getAll(patientID);
 				diagnoses = await Diagnosis.getDiagnosesPatient(patientID);
 				renderEncounters();
-				setSaveStatus(false);
-				Noty.closeAll();
+				setSaveStatus('saved');
+				
 				$('#btn_new_encounter').show();
 				editingSOAP = false;
 

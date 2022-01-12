@@ -223,6 +223,9 @@ switch (getVar('task')){
 		$start = getVar('start'); 
 		$duration = getVar('duration');
 
+		$timezone = "Europe/Brussels";
+		date_default_timezone_set($timezone);
+
 
 		$days=get_user_meta( $user, 'online_booking_days_in_future',true);
 		$timeslots_to_retain_per_day = get_user_meta( $user, 'online_booking_timeslots_per_day',true);
@@ -233,16 +236,16 @@ switch (getVar('task')){
 		$date = new DateTime($start);
 		for ($i = 0; $i < $days; $i++) {
 			
-			$date->modify('+' . 1 . ' days');
+			
 			$selected_date = $date->format('Y-m-d');
 			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$duration,$timing);
 			
 			if ($availableTimeslots!=FALSE){
 				
 				//error_log(print_r($availableTimeslots,1));
-				usort($timeslots_to_present, function($a, $b) {
-					return $a['priority'] - $b['priority'];
-				});
+				//usort($timeslots_to_present, function($a, $b) {
+				//	return $a['priority'] - $b['priority'];
+				//});
 				$timeslots_to_retain = array_slice($availableTimeslots,0,$timeslots_to_retain_per_day);
 				$timeslots_to_present = array_merge($timeslots_to_present,$timeslots_to_retain);
 				//error_log(print_r($timeslots_to_retain,1));
@@ -258,9 +261,9 @@ switch (getVar('task')){
 			
 			//error_log(count($timeslots_to_present));
 			//error_log($selected_date);
-			error_log('this is I = ' . $i);
-			error_log('days: ' .$days);
+
 			if ($i>20){break;}
+			$date->modify('+' . 1 . ' days');
 		}
 		
 		

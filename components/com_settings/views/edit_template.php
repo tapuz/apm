@@ -1,3 +1,9 @@
+<script>
+	var template = <?= $templateJSON?>;
+</script>
+
+
+
 <?$view_title='Settings - Edit Template'?>
 
 <div class="col-sm-12 col-md-9"><!-- Start Left content -->
@@ -19,18 +25,17 @@
 		
 	</div>
 	<div class="row">
-		<?editorToolbar();?>
+	<div id="editor-container">
+  		<div id="toolbar">
+    		<?editorToolbar();?>
+  		</div>
+  		<div id="editor"></div>
 	</div>
-	<div class="row">&nbsp;</div>
-	<div class="row">
-		<div id='editor'>
-			<?=$template->template?>
-		</div>	
 	
 	</div><!--/row-->
 	<div class="row">&nbsp;</div>
 	
-<input type="hidden" id="template_id" value="<?=$template->id?>">
+
 </div><!--/col /left content -->
 
 <div class="col-md-3 visible-md visible-lg" id="feed"><!-- Start Right content -->

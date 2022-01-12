@@ -1,3 +1,10 @@
+<script>
+	var letter = <?= $letterJSON?>;
+	var clinicsJSON = <?= $clinicsJSON?>;
+	var patientName = "<?= $patientName?>";
+	//var patientEmail = 'thierry@tapuz.be';
+	//var patientName = "thierry";
+</script>
 <div class="col-sm-12 col-md-9"><!-- Start Left content -->
 	
 	<!-- start: patient_name -->
@@ -6,7 +13,7 @@
 	<!-- /patient_name-->
 	<div class="row">
 		
-		<label class="control-label" for="name">Name</label>
+		<label class="control-label" for="name">Letter name</label>
     	<input type="text" class="form-control" name="name" id="name" placeholder="Enter letter name" value="<?=$letter->name?>"  />
     	<label class="control-label" for="note">Note</label>
     	<input type="text" class="form-control" name="note" id="note" placeholder="Internal note" value="<?=$letter->note?>" />
@@ -25,23 +32,23 @@
 	</div>
 	<div class="row">&nbsp;</div>
 	<div class="row">
+		<label class="control-label" for="email_email_address">Email address</label>
+    	<input type="text" class="form-control" name="email_address" id="email_address" placeholder="Email address" value="<?=$patientEmail?>"  />
+		</div>
+	<div class="row">
 		<div class="pull-right">
-		<button onclick="saveLetter();" type="button" class="btn btn-primary saveLetter">Save</button>
-		<button onclick="printLetter();" type="button" class="btn btn-primary">Print</button>
+		<button type="button" class="btn btn-primary saveLetter">Save</button>
+		<button type="button" class="btn btn-primary print">Print</button>
+		<button type="button" class="btn btn-primary email">Email</button>
 		</div>	
 	</div>
 	<div class="row">
-		
-		<?editorToolbar();?>
-		
+	<div id="editor-container">
+  		<div id="toolbar">
+    		<?editorToolbar();?>
+  		</div>
+  		<div id="editor"></div>
 	</div>
-	<div class="row">&nbsp;</div>
-	<div class="row" id="letter">
-		<div id='editor'>
-		<?=$letter_body?>	
-		
-		
-		</div>
 		
 		
 	
@@ -83,6 +90,6 @@
 <input type="hidden" id="clinic_logo" value="<?=$clinic->clinic_logo?>">
 <input type="hidden" id="clinic_letter_heading" value="<?=$clinic->clinic_letter_heading?>">
 <script>
-$('#editor').wysiwyg();
+//$('#editor').wysiwyg();
 </script>
 

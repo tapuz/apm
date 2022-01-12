@@ -57,7 +57,7 @@ class Email {
             error_log($mail->ErrorInfo);
             return $mail->ErrorInfo;
 		} else {
-            return true;
+            return 'Mail sent!';
 		}
         
         

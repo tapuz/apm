@@ -19,9 +19,9 @@ switch (getTask())
 			'name'     => getVar('template_name')
 			), 
 		array( 'id' => getVar('template_id')) 
-		 
 		);
 		
+		error_log(getVar('template_id'));
 	break;
 	
 	case 'delete_template':
@@ -163,6 +163,7 @@ switch (getView()) {
 	break;
 	
 	case 'edit_template':
+		loadJS('letter_templates.js','settings');
 		
 		if (getVar('template_id') != NULL) //a call was made from the list view
 		{
@@ -174,6 +175,8 @@ switch (getView()) {
 		
 		$query = sprintf('SELECT * from table_letter_templates WHERE id = %s',$template_id); 
 		$template = $wpdb->get_row($query);
+		$templateJSON = stripslashes(json_encode($template));
+		
 		
 		//get category_id to make back button
 		$category_id = getVar('category_id');

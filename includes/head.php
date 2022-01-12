@@ -97,6 +97,7 @@
 	<!--<script src="assets/js/jquery-migrate-1.2.1.min.js"></script>-->
 	<!-- page scripts -->
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js' async></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 	<script src="assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 	<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
@@ -126,10 +127,18 @@
 	<script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>-->
 	<script src="assets/js/superLink.js"></script>
 	<!--<script src="assets/js/jquery.noty.min.js"></script>-->
-	<script src="assets/js/noty.min.js" async></script>
+	<script src="assets/js/noty.min.js"></script>
 	<script src="assets/js/jquery.hotkeys.min.js" async></script>
-	<script src="assets/js/bootstrap-wysiwyg.min.js"></script>
 	<script src="assets/js/bootbox.min.js"></script>
+
+
+	<!-- Main Quill library -->
+	<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+	<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+	<!-- Theme included stylesheets -->
+	<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+	<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
 	
 	
 	

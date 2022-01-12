@@ -299,7 +299,7 @@ class Calendar {
 	public static function getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing){
 		$day = strtolower(date('l', strtotime($selected_date))); //ex 'monday'
 		//clinic_id is not needed in the query.. if included, custom appts are excluded.. they do not have a clinic_id
-		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' ORDER BY start ASC",$user,$selected_date);
+		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' AND status < 6 AND clinic='%s' ORDER BY start ASC",$user,$selected_date,$clinic);
 		global $wpdb;
 		
 		$appointments=$wpdb->get_results($q);
@@ -353,13 +353,13 @@ class Calendar {
 		$working_plan = $working_plan[0];
 		if (!array_key_exists($day, $working_plan)) {
 			// there is no working plan for this day, return FALSE
-			error_log('this is the day ' .$day . ' and does not exists');
 			return FALSE;
 		}
 		//error_log($day . 'does exits');
 		$selected_date_working_plan = $working_plan[$day];
 	   
 		$available_periods_with_breaks = array();
+		
 	    if (isset($selected_date_working_plan['breaks'])) {
 	        $start = new DateTime($selected_date_working_plan['start']);
 	        $end = new DateTime($selected_date_working_plan['end']);
@@ -367,6 +367,8 @@ class Calendar {
 	            'start' => $selected_date_working_plan['start'],
 	            'end' => $selected_date_working_plan['end']
 	        );
+			error_log('DAY ' . $selected_date);
+			
 	        // Split the working plan to available time periods that do not contain the breaks in them.
 	        foreach ($selected_date_working_plan['breaks'] as $index => $break) {
 	            $break_start = new DateTime($break['start']);
@@ -409,6 +411,7 @@ class Calendar {
 	                }
 	            }
 	        }
+			
 	    }
 		
 
@@ -460,9 +463,11 @@ class Calendar {
 				
 				
 	        }
+			
 	    }
 	    asort($available_periods_with_appointments);
-		//echo PHP_EOL . 'FREE TIMESLOTS SORTED --> ' . print_r(array_values($available_periods_with_appointments),1);
+		error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
+		//error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
 		// unset all timeslots that do not fit the required time
 		// 
 		$timeslots_to_propose = array();
@@ -471,11 +476,18 @@ class Calendar {
 			//echo 'delta is : ' . $since_start->i . PHP_EOL;
 			
 			$start = strtotime($slot['start']);
+
+			//error_log('THIS IS THE START '  . date('d-m-Y H:i:s',$start));
+			//error_log('THIS IS THE TIME NOW ' . date('d-m-Y H:i:s'));
+		
+
+
 			$end = strtotime($slot['end']);
 			$delta = ($end - $start)/60;
 			
 			if(isset($prev_timeslot_end) AND ($start < ($prev_timeslot_end + (180*60)) )){
-				continue;
+				//if previous proposed timeslot is to close to next slot.. skip
+				//continue;
 			}
 			
 			$prev_timeslot_end = NULL;
@@ -490,7 +502,7 @@ class Calendar {
 				//unset ($available_periods_with_appointments[$key]);
 			} else if ($delta == $service_duration){
 				//$timeslots_to_propose[] = $period;
-				//we can use this timeslot as it is and give it priority because this will fill up a gap
+				//we can use this timeslot as it is and give it priority 1 because this will fill up a gap
 				
 				$timeslots_to_propose[] = array(
 					        'priority' => 1,
@@ -505,12 +517,13 @@ class Calendar {
 				for( $i = $start; $i <= $end; $i += (60*$service_duration)) 
 				{
 					
+					//if ($i<time()){continue;}
 					$s = $start;
 					$e = $i + (60*$service_duration);
 					if($e <= $end){
 						
 						if(isset($prev_timeslot_end) AND ($i < ($prev_timeslot_end + (180*60)) )){
-							continue;
+							//continue;
 						}
 						
 					
@@ -522,6 +535,9 @@ class Calendar {
 							$priority = 3;
 						}
 						
+						if (time() > strtotime($selected_date . ' ' . date('H:i', $i))){
+							continue;
+						}
 						$timeslots_to_propose[] = array(
 							'priority' => $priority,
 							'user' => $user,

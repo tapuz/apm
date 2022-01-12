@@ -6,6 +6,12 @@ $component_root = $config['root'] . 'components/com_letter/';
 loadCSS('letter.css','letter');
 loadCSS('print_letter.css','letter');
 loadJS('letter.js','letter');
+loadExtJS('https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.7/purify.min.js');
+loadExtJS('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js');
+//loadExtJS('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.4/jspdf.plugin.autotable.min.js');
+loadJS('QuillDeltaToHtmlConverter.bundle.js');
+
+
 loadLib('clinic');
 
 //patient_info
@@ -27,7 +33,7 @@ switch (getVar('task')){
 					'patient_id' => getVar('patient_id'), 
 					'user_id' => getVar('user_id'),
 					'category_id' => getVar('category_id'),
-					'name' => 'new letter',
+					'name' => '',
 					'clinic_id' => $patient->clinic
 					) 
 	 			);
@@ -115,7 +121,7 @@ switch (getVar('task')){
 		}
 		
 		
-		echo sprintf('<div id="template">%s</div>',$template->template);
+		echo stripslashes($template->template);
 		
 	break;
 
@@ -126,6 +132,42 @@ switch (getVar('task')){
 		error_log("hehee " + getVar('clinic_id'));
 
 	break;
+	
+	case 'emailLetter':
+		loadLib('email');
+		$clinic = Clinic::getClinic(getVar('clinic'));
+		$email = getVar('patientEmail');
+		$patientName = getVar('patientName');
+		$pdfdoc			= base64_decode(getVar('pdf'));
+        $subject = getVar('subject');
+
+
+		//$b64file = $pdfdoc;
+		//$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
+		//$b64file		= str_replace( ' ', '+', $b64file );
+		//$decoded_pdf	= base64_decode( $b64file );
+
+		//error_log($decoded_pdf);
+		$filename = $subject. '_' . $patientName.'.pdf';
+		$filepath = '/var/www/timegenics_dev/temp/$filename';
+		file_put_contents($filepath,$pdfdoc);
+
+		$mail = new Email;
+		$mail->getServerSettings($clinic->clinic_id);
+		$mail->to=$email;
+		$mail->subject=$subject;
+		$mail->message=$clinic->email_name;
+
+
+		$mail->attachment['file']= $filepath;
+		$mail->attachment['filename']=$filename;
+		$mail->clinic = $clinic->clinic_id;
+		
+		echo $result = $mail->send();	
+
+		
+	break;
+
 	
 }
 
@@ -156,7 +198,7 @@ switch (getVar('view')) {
 	break;
 	
 	case 'edit_letter':
-		
+		loadLib('patient');
 		
 		if (getVar('letter_id') != NULL) //a call was made from the list view
 		{
@@ -165,6 +207,7 @@ switch (getVar('view')) {
 		} // if letter_id == NULL -> a call was made from the select_category view so we have a new letter 
 		
 		$letter = $wpdb->get_row("SELECT * FROM table_letters WHERE letter_id =" . $letter_id);
+		$letterJSON = stripslashes(json_encode($letter));
 		
 		//decode the letter
 		$letter_body = stripslashes($letter->letter);
@@ -174,8 +217,17 @@ switch (getVar('view')) {
 		$query = sprintf('SELECT * from table_letter_templates WHERE category_id = %s',$letter->category_id); 
 		$templates = $wpdb->get_results($query);
 		$clinics = Clinic::getClinics(get_current_user_id());
-		error_log(json_encode($clinics));
-		//$clinic = getClinic($patient->clinic);
+		$clinicsJSON = json_encode(Clinic::getClinics(get_current_user_id()));
+		
+		
+		$patientID = getVar('patient_id');
+		$patient = Patient::getPatient($patientID);
+		$patientName = $patient->patient_surname.' '.$patient->patient_firstname;
+		$patientDOB = $patient->dob;
+		$patientEmail = $patient->email;
+		$clinic = json_encode(Clinic::getClinic($patient->clinic));
+		
+		
 		
 		$backLink = "index.php?com=letter&view=list&patient_id=" . $patient_id; 
 		include('views/edit_letter.php');

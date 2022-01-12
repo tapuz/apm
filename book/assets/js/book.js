@@ -33,6 +33,7 @@ var group;
 
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 
+var apiURL = "https://www.tapuz.be/timegenics_dev/app/api.php";
 
 $(document).ready(function() {
  

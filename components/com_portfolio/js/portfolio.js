@@ -1,3 +1,4 @@
+window.jsPDF = window.jspdf.jsPDF;
 $(function() {
   var selectImageMode = false;
   var selectedImages = [];
@@ -182,15 +183,15 @@ $(function() {
      var newY = 0;
      const pageHeight = doc.internal.pageSize.height;
      const pageWidth = doc.internal.pageSize.width;
-     doc.setFont("helvetica");
-     doc.setFontType("bold");
+     doc.setFont("helvetica","", "bold");
+     
      //var img = new Image()
      //img.src = clinic.clinic_logo;
      //doc.addImage(img, 'png', 10, 78, 12, 15)
      function printHeader(){
       doc.setFontSize(18);
       doc.text(15, 15, clinic.clinic_name);
-      doc.setFontType("normal");
+      doc.setFont("helvetica","", "normal");
       doc.setFontSize(12);
       doc.text(15, 20, clinic.clinic_street + ' - ' + clinic.clinic_postcode + ' ' + clinic.clinic_city);
       doc.text(15, 25, clinic.clinic_tel);

@@ -1,4 +1,14 @@
 var locale = 'nl-be';
+var saveNoty = new Noty({
+    text: '<span class="text-center">Saving...</span>',
+    layout:'bottomRight',
+    theme:'sunset',
+    type:'success',
+    speed: 0,
+    callbacks: {afterClose: function() {}}
+    });
+
+
 $(function() {
 	//set the Moment.js locale
 	moment.locale(locale);
@@ -13,7 +23,7 @@ $(function() {
 	
 	
 	//
-	var $online = $('.online'),
+/* 	var $online = $('.online'),
         $offline = $('.offline');
 
         Offline.on('confirmed-down', function () {
@@ -25,8 +35,38 @@ $(function() {
         });
 		
 		Offline.options = { game: true };
-	
+	 */
 });
+
+function log(log) {
+	console.log(log);
+}
+
+
+function setSaveStatus(status) {
+    
+    switch (status){
+        case 'saving':
+            saveNoty.show();
+        break;
+        case 'saved':
+            saveNoty.close();
+            savedNoty = new Noty({
+                text: '<span class="text-center">Saved!</span>',
+                layout:'bottomRight',
+                theme:'sunset',
+                type:'success',
+                speed: 0,
+                timeout: 1000,
+                callbacks: {afterClose: function() {}}
+                }).show();
+        break;
+    }
+    
+    
+    
+}
+
 
 function hexToRGBA(hex, opacity) {
     return 'rgba(' + (hex = hex.replace('#', '')).match(new RegExp('(.{' + hex.length/3 + '})', 'g')).map(function(l) { return parseInt(hex.length%2 ? l+l : l, 16) }).concat(opacity||1).join(',') + ')';
@@ -56,6 +96,8 @@ function insertAtCursor(elementID,text){
     } else if (document.selection && document.selection.createRange) {
         document.selection.createRange().text = text;
     }
+    sel.removeAllRanges();
+    
 }
 
 
@@ -116,9 +158,6 @@ var PreviousUrl = document.URL;
 
 //console.log(PreviousUrl);
 
-function log(log) {
-	console.log(log);
-}
 
 
 function glowItem(item)

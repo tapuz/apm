@@ -1,5 +1,5 @@
 $(function() {
-    $('#editor').wysiwyg();
+  
     
     $( ".insert_text" ).click(function() {
 		console.log('clicked');
@@ -9,24 +9,7 @@ $(function() {
 
 	});
     
-    $( "#btn_save_template" ).click(function() {
-    	var template = $("#editor").html();
-    	var template_id = $("#template_id").val();
-    	var template_name = $("#template_name").val();
-    	
-  		$.ajax({
-  			type: "post",
-		    url: "ajax.php",
-  			data: { com:'settings',
-  					task:'save_template',
-  					template_id: template_id, 
-  					template_name: template_name, 
-  					template: template }
-			}).done(function( msg ) {
-  				var n = noty({text: 'Template saved...',type: 'success',layout:'topCenter'});
-			});
-  
-	});
+   
 	
 	
 	$( ".delete_template" ).click(function() {
@@ -47,7 +30,7 @@ $(function() {
 			}).done(function( response ) {
 				console.log(response);
 					
-					var n = noty({text: 'Template deleted...',type: 'success',layout:'topCenter'});
+					var n = new Noty({text: 'Template deleted...',type: 'success',layout:'topCenter',timeout:1000}).show();
 					$('#'+template_id).remove();
 				
 			
