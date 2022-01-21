@@ -25,20 +25,81 @@ var objPatient={};
 var mode; //newPatient or recurrentPatient
 var match = false;
 var clinic; 
-var practitioner= new Object;
+var clinics;
+var practitioner;
+var practitioner_to_propose;
 var practitioners;
 var selected_timeslot;
 var timing;
 var group;
+var calendar;
 
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 
-var apiURL = "https://www.tapuz.be/timegenics_dev/app/api.php";
+var apiURL = "https://www.timegenics/app/api.php";
 
 $(document).ready(function() {
+   
+$("#loading").hide();
+$("#timing").hide();
+
+
+  //init cal
+    calendar = new Calendar({
+      id: "#calendar",
+      calendarSize: "small",
+      headerBackgroundColor: '#7a9e9f',
+      headerColor: '#7a9e9f',
+      calendarSize: "large",
+      theme: 'basic',
+      //primaryColor:'#7a9e9f',
+      monthChanged:() => {},
+
+      dateChanged: (currentDate, propositions) => {
+        let doWeHavePropositions = false;
+        $('#timeslot_select .propositions').html('');
+        //const events_display = document.querySelector('.events-display');
+        let events_html = '';
+       
+        propositions.forEach(proposition => {
+          doWeHavePropositions = true;
+          value = {user:proposition.user,clinic:proposition.clinic,start:proposition.start,end:proposition.end};
+          value = JSON.stringify(value);
+          newhtml = html_proposition.replace('%timeslot%',value);
+          newhtml = newhtml.replace('%timeslot_text%',moment(proposition.start).locale('nl-be').format('LT'));
+          $('#timeslot_select .propositions').append(newhtml);
+        
+        });
+        if(doWeHavePropositions) {
+          $('#message_propositions').html('');
+         
+        } else {
+          $('#message_propositions').show();
+          $('#message_propositions').html('Geen mogelijkheden voor deze dag...');
+        
+        }
+        
+      },
+      selectedDateClicked:(currentDate) =>{
+        
+      }
+
+    
+
+                      
+      
+      
+    });
+
+    $('#calendar').click(function(){
+
+     let theDate = calendar.getSelectedDate();
+     calendar.setDate(theDate);
+     
+    });
  
-   var html = '<div class="col-sm-4"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="clinic" value="%clinicID%" clinicName="%clinicName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-home"></i><p>%clinicName%</p></div></div></div>';
-   console.log('helloooo');
+   var html = '<div class="col-md-6 col-sm-12 col-xs-12"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="clinic" value="%clinicID%" clinicName="%clinicName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-home"></i><p>%clinicName%</p></div></div></div>';
+   var html_proposition="<div class='col-md-4 col-sm-12 col-xs-12'><div class='choice' data-toggle='wizard-radio'><input type='radio' name='proposition' value='%timeslot%'><div class='card card-checkboxes card-hover-effect'><i class='ti-calendar'></i><p>%timeslot_text%</p></div></div></div>";
    
   // get the clinics from group
    $.ajax({
@@ -47,22 +108,21 @@ $(document).ready(function() {
   		data: { 
   			task: 'getClinicsFromGroup', 
   			group : getGroup}
-		}).done(function( clinics ) {
-                  $.each(clinics, function() {
-                    console.log(clinics);
-                    console.log('helloooo');
-                        newhtml = html.replace('%clinicID%',this.clinic_id);
-                        newhtml = newhtml.replace('%clinicName%',this.clinic_name);
-                        newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
-                        $('#location .clinics').append(newhtml);
-                        $('.group-description').html(this.description);
-                        
-                        //set the group ID
-                        group = {ID:this.group_id, name:this.groupname};
-                  });
+		}).done(function( data ) {
+      clinics = data;
+      $.each(clinics, function() {
+        newhtml = html.replace('%clinicID%',this.clinic_id);
+        newhtml = newhtml.replace('%clinicName%',this.clinic_name);
+        newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
+        $('#location .clinics').append(newhtml);
+        //set the group 
+        group = {ID:this.group_id, name:this.groupname, logo:this.logo, description:this.description};
+      });
+      let logo = '<img src = '+group.logo+'>';
+      $('.group-description').html(logo + group.description);
    
   		
-            });  
+    });  
   
    
   
@@ -81,7 +141,6 @@ $(document).ready(function() {
             proposition:'Selecteer een tijdstip'
       },
       errorPlacement: function(error, element) {
-            console.log(error);
             $('#timeslot_select #message').html(error);
             
       }
@@ -99,7 +158,6 @@ $(document).ready(function() {
             practitioner:'Selecteer een chiropractor'
       },
       errorPlacement: function(error, element) {
-            console.log(error);
             $('#practitioner #message').html(error);
             
       }
@@ -117,7 +175,6 @@ $(document).ready(function() {
             clinic:'Selecteer een locatie'
       },
       errorPlacement: function(error, element) {
-            console.log(error);
             $('#location #message').html(error);
             
       }
@@ -189,12 +246,8 @@ $(document).ready(function() {
   });
 
   $('#recurrentPatient form input').on('keyup', function() {
-    console.log('key');
-    //var valid = $('#recurrentPatient form').valid();
-    //if ($('#recurrentPatient form').valid())
-    //{
-    //    console.log('form is valid now');
-    //}
+   
+    
   });
 
 
@@ -218,7 +271,7 @@ $(document).ready(function() {
 
       switch (index) {
         case 1: //next was clicked on first slide of wizard
-          console.log('nxt was clicked');
+          
           switch (mode) {
             case 'recurrentPatient':
               var $valid = $('#recurrentPatient form').valid();
@@ -229,7 +282,12 @@ $(document).ready(function() {
                   if(match === false){
                         checkMatch();
                         return false;
+                  } else {
+                    //suggest clinic
+                    
+                    //$('.clinics :input[value='+ objPatient.clinic +']').click();
                   }
+
 
             
 
@@ -253,7 +311,7 @@ $(document).ready(function() {
                   objPatient.dob = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
                   objPatient.email = form[3].value;
                   objPatient.phone = form[4].value;
-                  console.log(objPatient);
+                  
 
               }
             break;
@@ -269,7 +327,15 @@ $(document).ready(function() {
               } else {
                var clinic_id = $("input:radio[name ='clinic']:checked").val();
                var clinic_name = $("input:radio[name ='clinic']:checked").attr('clinicName');
+               //set clinic name on the wizard
+
                clinic = {ID:clinic_id,name:clinic_name};
+               
+               let logo = '<img src = '+group.logo+'>';
+               $('.group-description').html(logo + clinic.name);
+               //propose the practitioner
+               $('#practitioner #message').html('Selectie gemaakt op basis van uw laatste bezoek.');
+               $('.practitioners :input[value='+ practitioner_to_propose +']').click();
               }
               
           break;
@@ -283,28 +349,25 @@ $(document).ready(function() {
                practitioner = new Object();
                practitioner.ID =  $("input:radio[name ='practitioner']:checked").val();
                practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
-               console.log('blabal--> ' + practitioner.id);
                
+               //$(".group-description").html(clinic.name + " / " + practitioner.name);
+               $('.wizard-title').html($('.wizard-title').html() + ' bij ' + practitioner.name);
+               getAvailableTimes(timing);
               }
           break;
          
-          case 4: //next was clicked on the timing wizard
+          case 10: //next was clicked on the timing wizard
                timing = $("input:checkbox[name='timing']:checked").map(function() {
                   //start = 
                   //this.value};
                   return JSON.parse(this.value);
                //return this.value;
                }).get();
-               
-              
-               
-               console.log(timing);
-               
                getAvailableTimes(timing);
                
           break;
          
-          case 5: // next was clicked on the select timeslot tab
+          case 4: // next was clicked on the select timeslot tab
           
                var $valid = $('#timeslot_select form').valid();
                   if (!$valid) {
@@ -315,9 +378,10 @@ $(document).ready(function() {
                      //alert(selected_timeslot);
                      
                      $('#resume .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
-                     $('#resume .practitioner').html(practitioner.data.display_name);
+                     $('#resume .practitioner').html(practitioner.display_name);
                      $('#resume .location').html(clinic.name);
                      $('#resume .timeslot').html(moment(selected_timeslot.start).locale('nl-be').format('LLLL'));
+                     
                   }
                
           break;
@@ -355,7 +419,7 @@ $(document).ready(function() {
       var $total = navigation.find('li').length;
       var $current = index + 1;
 
-      console.log('current = ' + $current);
+      
 
       var $wizard = navigation.closest('.wizard-card');
 
@@ -393,7 +457,7 @@ $(document).ready(function() {
    switch (mode)
    {
      case 'recurrentPatient':
-       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.data.default_service.service,status:0}
+       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service.service,status:0}
        appointment = JSON.stringify(appointment);
        addAppointment(appointment);
 
@@ -422,11 +486,11 @@ $(document).ready(function() {
         }).done(function(data) {
           objPatient.patient_id = data;
 
-          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.data.default_service_np.service,status:0}
+          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service_np.service,status:0}
           appointment = JSON.stringify(appointment);
 
 
-          console.log('data--> ' + data);
+         
           addAppointment(appointment);
            
         }).fail(function(){
@@ -449,6 +513,8 @@ $(document).ready(function() {
 
   
   function addAppointment(appointment){
+    $('#resume .loading').html(loadingImg).show();
+    $('#resume_details').hide();
     $.ajax({
          
       url: apiURL,
@@ -461,6 +527,7 @@ $(document).ready(function() {
       },
       
       }).done(function() {
+         $('#resume .loading').hide();
          $('.btn-finish-saving').hide();
          $('.btn-previous').hide();
          $('#resume_details').hide();
@@ -470,6 +537,8 @@ $(document).ready(function() {
          //show the confirmation page
          
       }).fail(function(){
+         $('#resume .loading').hide();
+         $('#resume_details').show();
          $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
          $('.btn-finish-saving').hide();
          $('.btn-finish').show();
@@ -507,6 +576,19 @@ $(document).ready(function() {
     $(this).find('[type="radio"]').attr('checked', 'true');    
     
   });
+
+  $('.btn-restart').click(function(){
+    location.reload();
+  });
+
+  $('.btn-done').click(function(){
+    $.each(clinics, function() {
+      if (this.clinic_id == clinic.ID){
+        location.href = this.clinic_url;
+       }
+     });
+  });
+  
   
   $('.propositions').on('click','[data-toggle="wizard-radio"]',function() {
       
@@ -554,24 +636,25 @@ $(document).ready(function() {
 
 function getAvailableTimes(timing){
    //clear the propositions if there would be any...
-   $('#timeslot_select .propositions').html(loadingImg);
-   var html="<div class='col-sm-3'><div class='choice' data-toggle='wizard-radio'><input type='radio' name='proposition' value='%timeslot%'><div class='card card-checkboxes card-hover-effect'><i class='ti-calendar'></i><p>%timeslot_text%</p></div></div></div>";
+   $('#loading').html(loadingImg).show();
+   $('#calendar').hide();
+   $('#message_propositions').hide();
+   $('#timeslot_select .propositions').html('');
 
-   
-   practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
-
-
-
+   //practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
+   $.each(practitioners, function() {
+     if (this.ID == practitioner.ID){
+       practitioner=this;
+      }
+    });
    switch(mode){
      case 'recurrentPatient':
-       duration = practitioner.data.default_service.duration;
+       duration = practitioner.default_service.duration;
      break;
      case 'newPatient':
-      duration = practitioner.data.default_service_np.duration;
+      duration = practitioner.default_service_np.duration;
      break;
     }
-    console.log("duration--> " + duration);
-
    $.ajax({
                   dataType: "json",
                   url: apiURL,
@@ -583,33 +666,11 @@ function getAvailableTimes(timing){
                     timing : JSON.stringify(timing)
                   }
                 }).done(function(propositions) {
-                  console.log(propositions);
-                  $('#timeslot_select .propositions').html('');
-                   $.each(propositions, function() {
-                      value = {user:this.user,clinic:this.clinic,start:this.start,end:this.end};
-                      value = JSON.stringify(value);
-                      //alert(value);
-                      newhtml = html.replace('%timeslot%',value);
-                      newhtml = newhtml.replace('%timeslot_text%',moment(this.start).locale('nl-be').format('llll'));
-                      
-                      $('#timeslot_select .propositions').append(newhtml);
-                      
-                     //console.log(moment(this.day).locale('nl-be').format('LL'));
-                      //$.each(this.available_times, function() {
-                        //console.log(this.start);
-                           //console.log(this.start);
-                      //});
-                   //       newhtml = html.replace('%practitionerID%',this.data.ID);
-                   //       newhtml = newhtml.replace('%practitionerName%',this.data.display_name);
-                   //       newhtml = newhtml.replace('%practitionerName2%',this.data.display_name);
-                   //      
-                   //       
-                   //     $('#practitioner .practitioners').append(newhtml);
-                   //     
-                   //      
-                  });
-                  
-                  
+              
+                $('#timeslot_select .propositions').html('');
+                $('#loading').hide();
+                $('#calendar').show();
+                calendar.setEventsData(propositions);   
                }).fail(function( jqXHR, textStatus ) {
                   alert( "Request failed: " + textStatus );
                });
@@ -617,11 +678,8 @@ function getAvailableTimes(timing){
 
 
 function checkMatch() {
-      console.log('form is valid now');
                 form = $('#recurrentPatient form').serializeArray();
                 //save the data to the server
-                console.log(form[1].value);
-                
                 var firstname = form[0].value;
                 var surname = form[1].value;
                 var dob = form[2].value = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
@@ -632,7 +690,6 @@ function checkMatch() {
                   dob: dob,
                   email: email
                 };
-                //console.log(patient);
                 $.ajax({
                   dataType: "json",
                   url: apiURL,
@@ -642,13 +699,25 @@ function checkMatch() {
                   }
                 }).done(function(patient) {
                   if (patient.match === true) {
-                    console.log('match');
                     objPatient = patient;
                     //move to select location
                     match = true;
+                    //suggest practitioner to patient 
+                    if(patient.last_encounter == 0){
+                      //propose patient.practitioner
+                      practitioner_to_propose = patient.practitioner;
+                    } else{
+                      if (patient.last_encounter != patient.practitioner) {
+                        //propose patient.last_encounter
+                        practitioner_to_propose = patient.last_encounter;
+                      } else {
+                        //propose patient.practitioner
+                        practitioner_to_propose= patient.practitioner;
+                      }
+                    }
+                    
                     wizard.bootstrapWizard('next');
                   } else {
-                    console.log('no match');
                     $('#message').html('helaas hebben we geen gegevens van u !');
                     
                     
@@ -659,7 +728,7 @@ function checkMatch() {
       function createNewPatient(){
             form = $('#newPatient form').serializeArray();
                 //save the data to the server
-                console.log(form[1].value);
+        
                 
                 var surname = form[3].value;
                 var firstname = form[0].value;
@@ -678,7 +747,6 @@ function checkMatch() {
                 };
                 
                 objPatient = patient;
-                console.log(patient);
                //make the patient id DB
               
                $.ajax({
@@ -693,7 +761,7 @@ function checkMatch() {
                 success: function(data) {
                   
                       //callback(patientID);
-                      console.log('PAT ID = ' + data);
+              
                 }
               });
 
@@ -704,7 +772,7 @@ function checkMatch() {
       
       function getPractitionersFromClinic(clinic){
             $('#practitioner .practitioners').html(loadingImg);
-            var html='<div class="col-sm-3"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="practitioner" value="%practitionerID%" practitionerName="%practitionerName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-user"></i><p>%practitionerName%</p></div></div></div>';
+            var html='<div class="col-sm-12 col-xs-12 col-md-4"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="practitioner" value="%practitionerID%" practitionerName="%practitionerName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-user"></i><p>%practitionerName%</p></div></div></div>';
             $.ajax({
                   dataType: "json",
                   url: apiURL,
@@ -713,13 +781,13 @@ function checkMatch() {
                     clinic: clinic
                   }
                 }).done(function(data) {
-                  console.log(data);
+        
                   practitioners = data;
                   $('#practitioner .practitioners').html('');
                    $.each(practitioners, function() {
-                          newhtml = html.replace('%practitionerID%',this.data.ID);
-                          newhtml = newhtml.replace('%practitionerName%',this.data.display_name);
-                          newhtml = newhtml.replace('%practitionerName2%',this.data.display_name);
+                          newhtml = html.replace('%practitionerID%',this.ID);
+                          newhtml = newhtml.replace('%practitionerName%',this.display_name);
+                          newhtml = newhtml.replace('%practitionerName2%',this.display_name);
                          
                           
                         $('#practitioner .practitioners').append(newhtml);

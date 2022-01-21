@@ -508,8 +508,8 @@ class Calendar {
 					        'priority' => 1,
 							'user' => $user,
 							'clinic' => $clinic,
-						    'start' => $selected_date . ' ' . date('H:i', $start),
-						    'end' => $selected_date . ' ' . date('H:i', $end));
+						    'start' => $selected_date . 'T' . date('H:i', $start),
+						    'end' => $selected_date . 'T' . date('H:i', $end));
 			} else if ($delta > $service_duration){
 				//we can use this timeslot... lets split it into smaller ones
 				//give the first one one priority as this will be closer to an existing appointment or break
@@ -542,8 +542,8 @@ class Calendar {
 							'priority' => $priority,
 							'user' => $user,
 							'clinic' => $clinic,
-						    'start' => $selected_date . ' ' . date('H:i', $i),
-						    'end' => $selected_date . ' ' . date('H:i', $i + (60*$service_duration))
+						    'start' => $selected_date . 'T' . date('H:i', $i),
+						    'end' => $selected_date . 'T' . date('H:i', $i + (60*$service_duration))
 						);
 						
 						$prev_timeslot_end = $e;

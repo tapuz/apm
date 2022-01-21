@@ -73,10 +73,12 @@ public static function getClinicsFromGroup($groupName){
 		
 		table_clinics.clinic_name,
 		table_clinics.clinic_id,
+		table_clinics.clinic_url,
 
 		table_group.name as groupname,
 		table_group.description,
-		table_group.group_id
+		table_group.group_id,
+		table_group.logo
 
 		FROM `table_clinics`
 		INNER JOIN table_group
@@ -102,12 +104,13 @@ public static function getPractitionersFromClinic($clinic) {
 		error_log(print_r($arrayUserIDS,true));
 	//get all user details
 
+
 	$args = array(
 		    'role__in'       => array('practitioner','clinic_admin'),
 			'include'        => $arrayUserIDS,
 			'order'          => 'ASC',
 			'orderby'        => 'display_name',
-			//'fields'         => 'all_with_meta',
+			'fields'         => array("ID", "user_nicename", "display_name"),
 		);
 	
 	

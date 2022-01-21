@@ -147,6 +147,16 @@ class Patient
 			$result = new StdClass;
 			$result->match = false;
 		}else{
+			//we have a match.. include practitioner ID that the patient last had an encoubter with
+			$query = $wpdb->prepare('
+				SELECT user from table_encounters
+				WHERE table_encounters.patient_id = %s ORDER BY id DESC LIMIT 1' ,
+				$result->patient_id);
+			$practitioner = $wpdb->get_var($query);
+			if ($practitioner === NULL){ //there is no encounter, set val to 0 so 
+				$practitioner = 0;
+			}
+			$result->{"last_encounter"} = $practitioner;
 			//check if we have an email, if not or different update
 			if($result->email != $patient->email) {
 				$wpdb->update( 

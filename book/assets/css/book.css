@@ -1,0 +1,38 @@
+.color-calendar.basic .calendar__days .calendar__day-bullet {
+    background-color: rgb(21, 221, 21) !important;
+  }
+
+.color-calendar.basic .calendar__day-no-event .calendar__day-bullet {
+    background-color: rgb(255, 47, 47) !important;
+    position: absolute !important;;
+  top: 80% !important;;
+  border-radius: 50% !important;;
+  width: 4px !important;;
+  height: 4px !important;;
+  left: 50% !important;;
+  transform: translateX(-50%) !important;;
+  overflow: hidden !important;;
+  cursor: pointer !important;;
+}
+
+#message_propositions{
+ color:rgb(255, 47, 47);
+}
+
+.resume-text{
+    font-weight: bold !important;
+}
+
+.col-centered{
+  float: none;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.group-description{
+  font-family: Montserrat;
+  font-size: 30px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  text-decoration-style: Solid !important;
+}
