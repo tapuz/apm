@@ -36,7 +36,7 @@ var calendar;
 
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 
-var apiURL = "https://www.timegenics/app/api.php";
+var apiURL = "https://www.timegenics.com/app/api.php";
 
 $(document).ready(function() {
    
