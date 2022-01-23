@@ -13,6 +13,7 @@ loadLib('clinic');
 loadLib('service');
 loadLib('users');
 
+
 loadCSS('fullcalendar.min.css');
 loadCSS('scheduler.min.css');
 //loadCSS('fullcalendar.print.css');
@@ -27,6 +28,7 @@ loadJS('patient.js','patient');
 loadJS('calendar.js','calendar');
 loadJS('editEvent.js','calendar');
 loadJS('eventDetails.js','calendar');
+loadJS('cast.js','calendar');
 loadJS('clinic.js','calendar');
 loadJS('editPatient.js','calendar');
 loadJS('email.js','calendar');
@@ -34,6 +36,7 @@ loadJS('payment.js','calendar');
 loadJS('rightPanel.js','calendar');
 loadJS('mustache.min.js');
 loadJS('validator.js');
+loadJS('socket.io.min.js');
 
 //loadJS('jquery.balloon.min.js');
 
@@ -208,6 +211,7 @@ switch (getView())
 		} else {
 			$selectedUserID = 'none';
 		}
+		$currentUserID =  get_current_user_id();
 		include('views/calendar.php');
 
 	break;

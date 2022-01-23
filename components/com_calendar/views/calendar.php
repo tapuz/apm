@@ -1,6 +1,6 @@
 <script>
 	//some vars injected from PHP in to JS
-	
+	var currentUserID = <?=$currentUserID?>;
 	
 </script>
 

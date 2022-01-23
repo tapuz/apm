@@ -181,7 +181,8 @@ $(document).ready(function() {
      $('#paymentModal .description').val(oService.description);
      $('#paymentModal .fee').val(oService.fee);
      $('#paymentModal').modal('show');
-     log(objEvent);
+     log('CASTING');
+     cast.payment(oService.fee);
   });
 
   $('#paymentModal .add_payment').click(function(){

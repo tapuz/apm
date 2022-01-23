@@ -19,7 +19,6 @@ if ($config['debug_mode'] === true)
 include('libraries/alice/alice.php');
 
 
-
 //API methods
 
 error_log('API Called !!');
@@ -230,13 +229,13 @@ switch (getVar('task')){
 		$days=get_user_meta( $user, 'online_booking_days_in_future',true);
 		$timeslots_to_retain_per_day = get_user_meta( $user, 'online_booking_timeslots_per_day',true);
 		$max_timeslots_search_for = get_user_meta( $user, 'online_booking_timeslots_to_propose',true);
-
+		error_log('CHECKING FOR DAYS : ' . $days);
 		$try_block_book = FALSE;
 		$timeslots_to_present = array();
 		$date = new DateTime($start);
 		for ($i = 0; $i < $days; $i++) {
 			
-			
+			//error_log('DAY ' . $i);
 			$selected_date = $date->format('Y-m-d');
 			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$duration,$timing);
 			
@@ -259,10 +258,6 @@ switch (getVar('task')){
 				error_log('we should break stop searching!!');
 				break;}
 			
-			//error_log(count($timeslots_to_present));
-			//error_log($selected_date);
-
-			if ($i>20){break;}
 			$date->modify('+' . 1 . ' days');
 		}
 		
@@ -279,7 +274,7 @@ switch (getVar('task')){
 				$sort['priority'][$k] = $v['priority'];
 				//$sort['start'][$k] = $v['start'];
 			}
-			# sort by event_type desc and then title asc
+			//# sort by event_type desc and then title asc
 			array_multisort($sort['start'], SORT_DESC, $sort['priority'], SORT_ASC,$timeslots_to_present);
 			
 			
@@ -298,13 +293,24 @@ switch (getVar('task')){
 			return strtotime($a['start']) - strtotime($b['start']);
 		});
 		//error_log(print_r($timeslots_to_present,1));
+		error_log('NUMBER OF TIMESLOTS :' . count($timeslots_to_present));
+		// only keep 
+		$priority = 3;
+		//if (($key = array_search($priority, $timeslots_to_present)) !== false) {
+ 		//   unset($timeslots_to_present[$key]);
+	//	}
 		
+		foreach ($timeslots_to_present as $k=>$v){
+			if (intval($v['priority']) == 3) {
+				unset($timeslots_to_present[$k]);
+				
+			}
+			
+		}
+		//reset the array keys to 0,1,2,... as some keys were deleted.. otherwize the JS calendar will not accept the array
+		$timeslots_to_present = array_values($timeslots_to_present);
+		//error_log(print_r($timeslots_to_present,1));
 		echo json_encode($timeslots_to_present);
-		
-		
-		
-		
-		
 		
 		
 	break;

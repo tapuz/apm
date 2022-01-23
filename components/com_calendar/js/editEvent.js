@@ -32,6 +32,7 @@ var eventStatus = 0;
             calendar.fullCalendar('renderEvent', appointment);
             calendar.fullCalendar('unselect');
             closeEditAppModal();        
+            
            
             });
   });
@@ -85,6 +86,7 @@ var eventStatus = 0;
                             bFlagBookNext = false;
                             Appointment.addLog(appointment.id, 'New', 'New appointment created from Calendar','label-success');
                             Appointment.addLog(appointment.id, 'Email', 'Appointment confirmation sent','label-primary');
+                           
             });
                         
                       });
@@ -101,6 +103,7 @@ var eventStatus = 0;
             closeEditAppModal();        
             Appointment.addLog(appointment.id, 'New', 'New appointment created from Calendar','label-success');
             Appointment.addLog(appointment.id, 'Email', 'Appointment confirmation sent','label-primary');
+            
             
             });
           fNewPatient = true;
@@ -150,6 +153,7 @@ var eventStatus = 0;
                             calendar.fullCalendar('removeEvents' , objEvent.id );
                             calendar.fullCalendar('renderEvent', appointment);
                             closeEditAppModal();
+                            
           });
                         
                       });
@@ -172,6 +176,7 @@ var eventStatus = 0;
                             calendar.fullCalendar('removeEvents' , objEvent.id );
                             calendar.fullCalendar('renderEvent', appointment);
                             closeEditAppModal();
+                            
           },0);
         }
       break;
@@ -319,6 +324,7 @@ var eventStatus = 0;
     Appointment.delete(objEvent.id,function(){
       calendar.fullCalendar('removeEvents' , objEvent.id );
       $('#customEventDetails').modal('hide');
+      
     },function(){
       log('fail!!');
     });

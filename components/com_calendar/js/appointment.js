@@ -80,7 +80,9 @@ class Appointment {
       },
       success: function(data) {
         if(callback){callback(data);}
-      }
+        cast.calendarChanged();
+        }
+        
      });
   }
 
@@ -96,6 +98,7 @@ class Appointment {
       },
       success: function(data) {
         if(callback){callback(data);}
+        cast.calendarChanged();
       }
      });
   }
@@ -115,6 +118,7 @@ class Appointment {
         if (callback) {
           callback();
         }
+        cast.calendarChanged();
       }
     });
 
@@ -177,6 +181,7 @@ class Appointment {
         if (callback) {
           callback(data);
         }
+        cast.calendarChanged();
       },
       fail: function(){
         log('tis failing');
@@ -185,9 +190,9 @@ class Appointment {
   }
 
   static updateCustom(oAppointment,callback,fail){
+    
     $.ajax({
       url: "ajax.php",
-      dataType: "json",
       type: 'post',
       data: {
         com: 'calendar',
@@ -200,6 +205,7 @@ class Appointment {
         if (callback) {
           callback(data);
         }
+        cast.calendarChanged();
       },
       fail: function(){
         log('tis failing');
@@ -223,6 +229,7 @@ class Appointment {
         if (callback) {
           callback(data);
         }
+        cast.calendarChanged();
       },
       fail: function(){
         log('tis failing');

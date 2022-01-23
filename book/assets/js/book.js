@@ -33,6 +33,8 @@ var selected_timeslot;
 var timing;
 var group;
 var calendar;
+var socket = io('https://desk.timegenics.com');
+
 
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 
@@ -48,6 +50,32 @@ $("#timing").hide();
     calendar = new Calendar({
       id: "#calendar",
       calendarSize: "small",
+      startWeekday:1,
+      weekdayDisplayType: 'short',
+      customWeekdayValues:[
+        "Zo",
+        "Ma",
+        "Di",
+        "Woe",
+        "Dond",
+        "Vrij",
+        "Zat"
+      ] ,
+      customMonthValues:[
+        "Januari",
+        "Februari",
+        "Maart",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Augustus",
+        "September",
+        "Oktober",
+        "November",
+        "December"
+      ] ,
+      
       headerBackgroundColor: '#7a9e9f',
       headerColor: '#7a9e9f',
       calendarSize: "large",
@@ -66,7 +94,7 @@ $("#timing").hide();
           value = {user:proposition.user,clinic:proposition.clinic,start:proposition.start,end:proposition.end};
           value = JSON.stringify(value);
           newhtml = html_proposition.replace('%timeslot%',value);
-          newhtml = newhtml.replace('%timeslot_text%',moment(proposition.start).locale('nl-be').format('LT'));
+          newhtml = newhtml.replace('%timeslot_text%',proposition.priority + ' - ' + moment(proposition.start).locale('nl-be').format('LT'));
           $('#timeslot_select .propositions').append(newhtml);
         
         });
@@ -118,8 +146,8 @@ $("#timing").hide();
         //set the group 
         group = {ID:this.group_id, name:this.groupname, logo:this.logo, description:this.description};
       });
-      let logo = '<img src = '+group.logo+'>';
-      $('.group-description').html(logo + group.description);
+      group.logo = '<img src = '+group.logo+'>';
+      $('.group-description').html(group.logo + group.description);
    
   		
     });  
@@ -331,8 +359,8 @@ $("#timing").hide();
 
                clinic = {ID:clinic_id,name:clinic_name};
                
-               let logo = '<img src = '+group.logo+'>';
-               $('.group-description').html(logo + clinic.name);
+               
+               $('.group-description').html(group.logo + clinic.name);
                //propose the practitioner
                $('#practitioner #message').html('Selectie gemaakt op basis van uw laatste bezoek.');
                $('.practitioners :input[value='+ practitioner_to_propose +']').click();
@@ -351,7 +379,7 @@ $("#timing").hide();
                practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
                
                //$(".group-description").html(clinic.name + " / " + practitioner.name);
-               $('.wizard-title').html($('.wizard-title').html() + ' bij ' + practitioner.name);
+               $('.wizard-title').html('Afspraak maken bij ' + practitioner.name);
                getAvailableTimes(timing);
               }
           break;
@@ -535,6 +563,7 @@ $("#timing").hide();
          $('.btn-restart').show();
          //$('.btn-finish').show();
          //show the confirmation page
+         socket.emit('calendar_changed');
          
       }).fail(function(){
          $('#resume .loading').hide();
@@ -666,7 +695,7 @@ function getAvailableTimes(timing){
                     timing : JSON.stringify(timing)
                   }
                 }).done(function(propositions) {
-              
+               console.log(propositions);
                 $('#timeslot_select .propositions').html('');
                 $('#loading').hide();
                 $('#calendar').show();

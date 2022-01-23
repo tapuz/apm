@@ -10,10 +10,16 @@ var eventIDtoHighlight;
 var datepicker;
 var selectedUser = "";
 
+var cast;
+
 
 //$('[data-time]:not(.fc-minor)');
 
 $(document).ready(function() {
+  
+  //init the desk cast 
+  cast = new Cast('https://desk.timegenics.com',currentUserID);
+  //cast.castPayment();
   
 	
   document.title = 'Calendar';
@@ -722,6 +728,7 @@ $(document).ready(function() {
                 Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
               }
               Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
+              
             },'yes'); //true = send email
 
           }
@@ -818,6 +825,7 @@ $(document).ready(function() {
                   user: event.resourceId
                  
               }, function() {
+                
                //do stuff?
               } ,function() { //true = send email 
 					revertFunc();
@@ -879,6 +887,7 @@ $(document).ready(function() {
                             Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
                           }
                           Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
+                          
                         }, 'no' ,function() { //true = send email 
                                     revertFunc();
                                     });
@@ -900,6 +909,7 @@ $(document).ready(function() {
                  user: event.resourceId
                 
              }, function() {
+                
                   log ('app updated');
                 },function () {
             revertFunc();
@@ -916,12 +926,13 @@ $(document).ready(function() {
                 status:event.status,
                 clinic: event.clinic
                 }, function() {
+                  
                   log ('app updated');
                 }, 'no' ,function () {
             revertFunc();
             });
 				
-      }a
+      }
       },
 
 

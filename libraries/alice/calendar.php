@@ -299,7 +299,7 @@ class Calendar {
 	public static function getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing){
 		$day = strtolower(date('l', strtotime($selected_date))); //ex 'monday'
 		//clinic_id is not needed in the query.. if included, custom appts are excluded.. they do not have a clinic_id
-		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' AND status < 6 AND clinic='%s' ORDER BY start ASC",$user,$selected_date,$clinic);
+		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' AND status < 6 AND (clinic='%s' OR clinic='0') ORDER BY start ASC",$user,$selected_date,$clinic);
 		global $wpdb;
 		
 		$appointments=$wpdb->get_results($q);
@@ -323,14 +323,7 @@ class Calendar {
 			}
 			
 		}
-		
-		//error_log($timing_entries_for_day);
-		//error_log('PATIENT TIMING->>'. print_r($timing,1));
-		///error_log('PATIENT TIMING->>'. print_r($appointments,1));
-		
-		
-		
-		//echo PHP_EOL . print_r($appointments,1);
+	
 		
 		$working_plan_all = json_decode(get_user_meta( $user, 'working_plan',1),TRUE);
 		//error_log('working plan for user-->' . print_r($working_plan_all,1));
@@ -466,12 +459,12 @@ class Calendar {
 			
 	    }
 	    asort($available_periods_with_appointments);
-		error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
+		//error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
 		//error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
 		// unset all timeslots that do not fit the required time
 		// 
 		$timeslots_to_propose = array();
-		//$prev_timeslot_end = 
+		$prev_timeslot_end = NULL;
 		foreach($available_periods_with_appointments as $slot){
 			//echo 'delta is : ' . $since_start->i . PHP_EOL;
 			
@@ -485,12 +478,15 @@ class Calendar {
 			$end = strtotime($slot['end']);
 			$delta = ($end - $start)/60;
 			
-			if(isset($prev_timeslot_end) AND ($start < ($prev_timeslot_end + (180*60)) )){
+			if(isset($prev_timeslot_end) AND ($start < ($prev_timeslot_end + (30*60)) )){
+				error_log('THIS IS THE START '  . date('H:i:s',$start));
+				error_log('PREV SLOT END '  . date('H:i:s',$prev_timeslot_end));
 				//if previous proposed timeslot is to close to next slot.. skip
+
 				//continue;
 			}
-			
-			$prev_timeslot_end = NULL;
+			//$prev_timeslot_end = $end;
+			//$prev_timeslot_end = NULL;
 			
 			//echo 'start : ' . $start . ' - ' . $slot['start'] . PHP_EOL;
 			//echo 'end : ' . $end . ' - ' . $slot['end'] .PHP_EOL;
@@ -498,8 +494,12 @@ class Calendar {
 			//echo '----------------------------------------' . PHP_EOL;
 			
 			if ($delta < $service_duration ){
+				//error_log('THIS IS THE START '  . date('H:i:s',$start));
+				//error_log('NOT ENOUGH TIME');
+				//error_log('delta is : ' . $delta);
 				//cant use this timeslot because there is not enough time
 				//unset ($available_periods_with_appointments[$key]);
+				$prev_timeslot_end = $end;
 			} else if ($delta == $service_duration){
 				//$timeslots_to_propose[] = $period;
 				//we can use this timeslot as it is and give it priority 1 because this will fill up a gap
@@ -510,10 +510,11 @@ class Calendar {
 							'clinic' => $clinic,
 						    'start' => $selected_date . 'T' . date('H:i', $start),
 						    'end' => $selected_date . 'T' . date('H:i', $end));
+				$prev_timeslot_end = $end;
 			} else if ($delta > $service_duration){
 				//we can use this timeslot... lets split it into smaller ones
 				//give the first one one priority as this will be closer to an existing appointment or break
-					
+				$prev_timeslot_end_ = NULL;	
 				for( $i = $start; $i <= $end; $i += (60*$service_duration)) 
 				{
 					
@@ -522,18 +523,27 @@ class Calendar {
 					$e = $i + (60*$service_duration);
 					if($e <= $end){
 						
-						if(isset($prev_timeslot_end) AND ($i < ($prev_timeslot_end + (180*60)) )){
-							//continue;
-						}
 						
-					
-						if ($i == $start){
-							$priority = 2;
-						} else if ($e == $end) {
-							$priority = 2;
-						} else {
-							$priority = 3;
-						}
+						
+						do {					
+							if ($i == $start){//timeslot is at the beginning of a period
+								$priority = 1;
+								break;
+							} elseif ($e == $end) {//timeslot is at the end of a period
+								$priority = 1;
+								break;
+							} elseif (isset($prev_timeslot_end_) AND ($i < ($prev_timeslot_end_ + (60*60)) )){
+								//error_log('THIS IS THE START '  . date('d-m-Y H:i:s',$start));
+							    
+								$priority = 3;
+								break;
+								
+							
+							} else {
+								$priority = 2; //timeslot is somewhere in the middle of a period
+							}
+						
+						}while (0); 
 						
 						if (time() > strtotime($selected_date . ' ' . date('H:i', $i))){
 							continue;
@@ -545,12 +555,18 @@ class Calendar {
 						    'start' => $selected_date . 'T' . date('H:i', $i),
 						    'end' => $selected_date . 'T' . date('H:i', $i + (60*$service_duration))
 						);
+						if ($priority==3){
+							$prev_timeslot_end = NULL;
+						}else{
+							$prev_timeslot_end_ = $e;
+						}
+					    
+
 						
-						$prev_timeslot_end = $e;
-					
-					
+						
 					}
-				} 
+				}
+				
 				
 			}
 			
