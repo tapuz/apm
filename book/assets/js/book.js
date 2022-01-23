@@ -237,7 +237,7 @@ $("#timing").hide();
       surName:"vul je achternaam in",
       email: "ongeldig email formaat: vb. tom@domain.com",
       DOB: "ongeldig formaat: vb. 21/03/1995",
-      phone: "gelieve uw telefoonnummer in te geven"
+      phone: "gelieve je telefoonnummer in te geven"
 
     }
       
@@ -362,7 +362,7 @@ $("#timing").hide();
                
                $('.group-description').html(group.logo + clinic.name);
                //propose the practitioner
-               $('#practitioner #message').html('Selectie gemaakt op basis van uw laatste bezoek.');
+               $('#practitioner #message').html('Selectie gemaakt op basis van je laatste bezoek.');
                $('.practitioners :input[value='+ practitioner_to_propose +']').click();
               }
               
@@ -744,7 +744,7 @@ function checkMatch() {
                         practitioner_to_propose= patient.practitioner;
                       }
                     }
-                    
+                    $('#location .info-text').html('Waar wens je een afspraak ' + patient.patient_firstname + '?');
                     wizard.bootstrapWizard('next');
                   } else {
                     $('#message').html('helaas hebben we geen gegevens van u !');
