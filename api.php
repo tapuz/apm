@@ -21,7 +21,7 @@ include('libraries/alice/alice.php');
 
 //API methods
 
-error_log('API Called !!');
+error_log('API: '.getVar('task'));
 
 loadLib('patient');
 //loadLib('clinic');
@@ -33,6 +33,16 @@ loadLib('image');
 
 //switch ($_POST('task')){
 switch (getVar('task')){
+	case 'error_match':
+		//send email to group admin because patient has difficulty booking appointment via online booking system
+		loadLib('email');
+		$email = new Email();
+		$email->getServerSettings(getVar('clinic'));
+		$email->to = getVar('email');
+		$email->subject='A patient has problems booking online';
+		$email->message = getVar('patient');
+		$email->send();
+	break;
 	case 'getActivePatient':
 		loadLib('patient');
 		//get the user ID, we get the Email provided
@@ -68,18 +78,17 @@ switch (getVar('task')){
 		
 
 		foreach($practitioners as $practitioner){
-
-			
 			$practitioner->{"default_service"} = Service::getRecurrentService($clinic,$practitioner->ID);
 			$practitioner->{"default_service_np"} = Service::getNPService($clinic,$practitioner->ID);
-			
-			
-		 	
 		}
 
-		error_log('PRACS --> ' . print_r($practitioners,1));
+		
 		echo json_encode($practitioners);
 		//error_log(json_encode(Clinic::getPractitionersFromClinic(getVar('clinic'))));
+	break;
+
+	case 'update_patient_field':
+		Patient::updatePatientField(getVar('patient_id'),getVar('field'),getVar('value'));
 	break;
 
 	case 'findPatientMatch':
@@ -98,6 +107,7 @@ switch (getVar('task')){
 		$appointment =  json_decode(stripslashes(getVar('appointment')));
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		echo json_encode($appointment);
+		
 		//send confirmation email
 		$email = new Email();
 		$email->sendAppointmentEmail($appointment,'confirmation');

@@ -76,6 +76,7 @@ public static function getClinicsFromGroup($groupName){
 		table_clinics.clinic_url,
 
 		table_group.name as groupname,
+		table_group.admin_email,
 		table_group.description,
 		table_group.group_id,
 		table_group.logo

@@ -157,15 +157,26 @@ class Patient
 				$practitioner = 0;
 			}
 			$result->{"last_encounter"} = $practitioner;
-			//check if we have an email, if not or different update
-			if($result->email != $patient->email) {
+			//check if we have an email in DB and if the one we have is valid email in DB - if not update
+
+			if (filter_var($result->email, FILTER_VALIDATE_EMAIL)) {
+				//email in DB is a valid email address"
+				//Now what to do if email in DB is different than the one patient entered in booking form
+				if($result->email != $patient->email) { 
+					$result->{"new_email"} = $patient->email;
+				}
+				
+			  } else {
+				//email in DB is not a valid email address .. update 
 				$wpdb->update( 
-				'table_patients',
-					array( 'email' => $patient->email), 
-					array( 'patient_id' => $result->patient_id)
-				); 
-				$result->email = $patient->email;
-			}
+					'table_patients',
+						array( 'email' => $patient->email), 
+						array( 'patient_id' => $result->patient_id)
+					); 
+					$result->email = $patient->email;
+
+			  }
+			
 			$result->{"match"} = true;
 			error_log('match found');
 		}
@@ -192,6 +203,16 @@ class Patient
 	return  $patient;
 	}
 	
+	public static function updatePatientField($patient_id,$field,$value){
+		global $wpdb;
+		$wpdb->update( 
+			'table_patients',
+				array( $field => $value), 
+				array( 'patient_id' => $patient_id)
+			); 
+	}
+
+
 	public static function updatePatient($patient_id,$patient){
 		$patient = json_decode(stripslashes($patient),true);
 		global $wpdb;

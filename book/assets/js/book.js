@@ -29,16 +29,17 @@ var clinics;
 var practitioner;
 var practitioner_to_propose;
 var practitioners;
+var patient;
 var selected_timeslot;
 var timing;
 var group;
 var calendar;
 var socket = io('https://desk.timegenics.com');
-
+var no_match_counter=0;
 
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 
-var apiURL = "https://www.timegenics.com/app/api.php";
+
 
 $(window).on('load',function() {
   // Animate loader off screen
@@ -150,7 +151,7 @@ $("#timing").hide();
         newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
         $('#location .clinics').append(newhtml);
         //set the group 
-        group = {ID:this.group_id, name:this.groupname, logo:this.logo, description:this.description};
+        group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description};
       });
       group.logo = '<img src = '+group.logo+'>';
       $('.group-description').html(group.logo + group.description);
@@ -494,7 +495,7 @@ $("#timing").hide();
        var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service.service,status:0}
        appointment = JSON.stringify(appointment);
        addAppointment(appointment);
-
+       console.log(appointment);
        
 
 
@@ -532,9 +533,6 @@ $("#timing").hide();
            $('.btn-finish-saving').hide();
            $('.btn-finish').show();
         });
-      
-
-
      break;
    }
    
@@ -667,7 +665,59 @@ $("#timing").hide();
     $('#selectRecurrentNewPatient').hide();
     $('.btn-next').show();
   });
+  $(document).on("click", ".btn_error_match" , function() {
+    console.log('starting');
+    $('#message').html('Bezig...');
+    $.ajax({
+      
+      url: apiURL,
+      data: {
+        task: 'error_match',
+        email: group.email,
+        clinic:clinics[0].clinic_id, 
+        patient : JSON.stringify(patient)
+      }
+    }).done(function() {
+      console.log('error reported...');
+      $('#message').html('Het secretariaat heeft een melding gekregen. Je kan ondertussen altijd per telefoon of whatsapp contacteren.');
+      
 
+   
+   }).fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
+   });
+  });
+  
+$(document).on("click", ".keep_old_email" , function() {
+  //ok nothing needs to be updated and move to next slide
+  console.log('no_updating');
+  $('#confirmEmail').modal('hide');
+  wizard.bootstrapWizard('next');
+
+});
+
+$(document).on("click", ".update_email" , function() {
+  //update 
+  
+  $.ajax({
+    url: apiURL,
+    data: {
+      task: 'update_patient_field',
+      patient_id: objPatient.patient_id,
+      field: 'email',
+      value: objPatient.new_email
+    }
+  }).done(function() {
+    
+    $('#email').val(objPatient.new_email);
+    $('#confirmEmail').modal('hide');
+    wizard.bootstrapWizard('next');
+   
+ }).fail(function( jqXHR, textStatus ) {
+    alert( "Request failed: " + textStatus );
+ });
+  
+});
 
 function getAvailableTimes(timing){
    //clear the propositions if there would be any...
@@ -701,7 +751,7 @@ function getAvailableTimes(timing){
                     timing : JSON.stringify(timing)
                   }
                 }).done(function(propositions) {
-               console.log(propositions);
+               
                 $('#timeslot_select .propositions').html('');
                 $('#loading').hide();
                 $('#calendar').show();
@@ -713,13 +763,14 @@ function getAvailableTimes(timing){
 
 
 function checkMatch() {
+  
                 form = $('#recurrentPatient form').serializeArray();
                 //save the data to the server
                 var firstname = form[0].value;
                 var surname = form[1].value;
                 var dob = form[2].value = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
                 var email = form[3].value;
-                var patient = {
+                patient = {
                   surname: surname,
                   firstname: firstname,
                   dob: dob,
@@ -751,9 +802,22 @@ function checkMatch() {
                       }
                     }
                     $('#location .info-text').html('Waar wens je een afspraak ' + patient.patient_firstname + '?');
+                    //email given in form might be different than the one we have in DB .. so ask which one is the correct one...
+                    if(objPatient.hasOwnProperty('new_email')== true){
+                      //show confirm email modal
+                      $('#confirmEmail .keep_old_email').html(objPatient.email);
+                      $('#confirmEmail .update_email').html(objPatient.new_email);
+                      $('#confirmEmail').modal('show');
+                    } else {
                     wizard.bootstrapWizard('next');
+                    }
                   } else {
-                    $('#message').html('helaas hebben we geen gegevens van u !');
+					
+					if (++no_match_counter<2){                  	
+                    	$('#message').html('We vinden geen gegevens van u...probeer gerust opnieuw.');
+                    } else {
+                    	$('#message').html('We vinden geen gegevens. Misschien is er een fout in de gegevens die we van jou hebben. Klik op de knop hieronder zodat we de fout kunnen bekijken. Je hoort dan snel van ons.<p><button class="btn_error_match">Verstuur</button></p>');
+                    }
                     
                     
                   }
