@@ -111,6 +111,14 @@ switch (getVar('task')){
 		//send confirmation email
 		$email = new Email();
 		$email->sendAppointmentEmail($appointment,'confirmation');
+
+		//send
+		$mail = new Email();
+		$mail->getServerSettings(2);
+		$mail->to = 'thierry.duhameeuw@gmail.com';
+		$mail->subject='NEW ONLINE BOOKING';
+		$mail->message = json_encode($appointment);
+		$mail->send();
 		
 		
 		//add the email
