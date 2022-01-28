@@ -109,7 +109,7 @@ public static function getPractitionersFromClinic($clinic) {
 	$args = array(
 		    'role__in'       => array('practitioner','clinic_admin'),
 			'include'        => $arrayUserIDS,
-			'order'          => 'ASC',
+			'order'          => 'DSC',
 			'orderby'        => 'display_name',
 			'fields'         => array("ID", "user_nicename", "display_name"),
 		);
