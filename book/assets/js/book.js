@@ -101,7 +101,7 @@ $("#timing").hide();
           value = {user:proposition.user,clinic:proposition.clinic,start:proposition.start,end:proposition.end};
           value = JSON.stringify(value);
           newhtml = html_proposition.replace('%timeslot%',value);
-          newhtml = newhtml.replace('%timeslot_text%',proposition.priority + ' - ' + moment(proposition.start).locale('nl-be').format('LT'));
+          newhtml = newhtml.replace('%timeslot_text%', moment(proposition.start).locale('nl-be').format('LT'));
           $('#timeslot_select .propositions').append(newhtml);
         
         });
@@ -492,7 +492,7 @@ $("#timing").hide();
    switch (mode)
    {
      case 'recurrentPatient':
-       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service.service,status:0}
+       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service.service,status:0}
        appointment = JSON.stringify(appointment);
        addAppointment(appointment);
        console.log(appointment);
@@ -521,7 +521,7 @@ $("#timing").hide();
         }).done(function(data) {
           objPatient.patient_id = data;
 
-          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service_np.service,status:0}
+          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service_np.service,status:0}
           appointment = JSON.stringify(appointment);
 
 
