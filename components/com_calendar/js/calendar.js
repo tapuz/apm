@@ -969,7 +969,7 @@ $(document).ready(function() {
               $(element).find('.icon-note').show();
               
             }
-            
+            log(event.madeOnline);
             if (event.madeOnline == 1) {
               $(element).find('.icon-cloud').show();
             } else {
