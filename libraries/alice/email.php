@@ -28,6 +28,7 @@ class Email {
     $attachment,
     $ics,
     $clinic;
+    
     function __construct()
    {
          
@@ -48,6 +49,12 @@ class Email {
         $mail->addAddress($this->to);
         $mail->Subject = $this->subject;
         $mail->Body = $this->message;
+
+        //get domain to set message ID
+        $parts = explode("@",$this->from_email); 
+        $domain = $parts[1]; 
+        
+        $mail->MessageID = "<" . md5('HELLO'.(idate("U")-1000000000).uniqid()).'@'.$domain.'>';
         //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
         
         $mail->AddAttachment($this->attachment['file'],$this->attachment['filename']);
