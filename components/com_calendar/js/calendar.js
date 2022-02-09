@@ -969,10 +969,6 @@ $(document).ready(function() {
               $(element).find('.icon-note').show();
               
             }
-            
-            if (event.patientID == 12722){
-              log('ONLINE: ' + event.madeOnline);
-            }
 
             if (event.madeOnline == 1) {
               $(element).find('.icon-cloud').show();
