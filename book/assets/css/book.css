@@ -52,3 +52,8 @@
 .error{
   color: red;
 }
+
+#practitioner #message {
+  font-weight: 600 !important;
+  color: red;
+}
