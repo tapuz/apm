@@ -16,6 +16,13 @@
           
           </div><!--/form-group-->
           <div class="form-group">
+            <label for="online_booking_delta_to_first_timeslot">How many seconds from actual time to propose first timeslot</label>  
+          
+            <input id="online_booking_delta_to_first_timeslot" name="online_booking_delta_to_first_timeslot" type="text" placeholder="" class="form-control input-md" required="" value="{{settings.online_booking_delta_to_first_timeslot}}">
+              
+          
+          </div><!--/form-group-->
+          <div class="form-group">
             <label for="online_booking_timelots">How many timeslots should the system propose per day</label>  
             
             <input id="online_booking_timeslots_per_day" name="online_booking_timeslots_per_day" type="text" placeholder="" class="form-control input-md" required="" value="{{settings.online_booking_timeslots_per_day}}">

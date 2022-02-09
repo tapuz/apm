@@ -79,6 +79,7 @@ class Calendar {
 			table_appointments.clinic,
 			table_appointments.note,
 			table_appointments.customAppointment,
+            table_appointments.madeOnline,
             
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as title,
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as patientName,
@@ -130,7 +131,8 @@ class Calendar {
 					'service' => $app->service,
 					'clinic' => $app->clinic,
 					'customAppointment' => 0,
-					'note' => $app->note
+					'note' => $app->note,
+					'madeOnline' => $app->madeOnline
 					) 
 	 			);
 	 			
@@ -296,7 +298,7 @@ class Calendar {
 		return $wpdb->get_results($query);
 	}
 	
-	public static function getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing){
+	public static function getUserAvailableTimeslots($user,$clinic,$selected_date,$service_duration,$timing,$min_delta_to_first_timeslot){
 		$day = strtolower(date('l', strtotime($selected_date))); //ex 'monday'
 		//clinic_id is not needed in the query.. if included, custom appts are excluded.. they do not have a clinic_id
 		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' AND status < 6 AND (clinic='%s' OR clinic='0') ORDER BY start ASC",$user,$selected_date,$clinic);
@@ -545,7 +547,7 @@ class Calendar {
 						
 						}while (0); 
 						
-						if (time() > strtotime($selected_date . ' ' . date('H:i', $i))){
+						if (time() + ($min_delta_to_first_timeslot*60) > strtotime($selected_date . ' ' . date('H:i', $i))){
 							continue;
 						}
 						$timeslots_to_propose[] = array(

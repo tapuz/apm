@@ -247,6 +247,7 @@ switch (getVar('task')){
 		$days=get_user_meta( $user, 'online_booking_days_in_future',true);
 		$timeslots_to_retain_per_day = get_user_meta( $user, 'online_booking_timeslots_per_day',true);
 		$max_timeslots_search_for = get_user_meta( $user, 'online_booking_timeslots_to_propose',true);
+		$min_delta_to_first_timeslot = get_user_meta( $user, 'online_booking_delta_to_first_timeslot',true); //min time to first timeslot... ex.. its 11:00 , so propose 11:00 + 60seconds
 		error_log('CHECKING FOR DAYS : ' . $days);
 		$try_block_book = FALSE;
 		$timeslots_to_present = array();
@@ -255,7 +256,7 @@ switch (getVar('task')){
 			
 			//error_log('DAY ' . $i);
 			$selected_date = $date->format('Y-m-d');
-			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$duration,$timing);
+			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$duration,$timing,$min_delta_to_first_timeslot);
 			
 			if ($availableTimeslots!=FALSE){
 				

@@ -67,7 +67,7 @@ $(document).ready(function() {
   initCal();
 
   $('#calendar').prepend('<div style="height:1px;" id="calendarPB">&nbsp;</div>');
-  log('blsfbslfbsl');
+
 
   $.ajax({
     type: "get",
@@ -115,7 +115,7 @@ $(document).ready(function() {
 
     selectedUser = $('#userSelect').val();
     calendar.fullCalendar('option', 'slotDuration',users[selectedUser].data.calSlotDuration);
-    getEvents(selectedUser);
+    getEvents(selectedUser,function () {$('.loadingscreen').fadeOut('slow')});
     getResource(selectedUser);
     //log (users[selectedUser].data.workingPlan);
 
@@ -284,7 +284,7 @@ $(document).ready(function() {
   }
 
 
-  function getEvents(userID) {
+  function getEvents(userID,callback) {
     
    
     
@@ -304,7 +304,7 @@ $(document).ready(function() {
     };
 
     calendar.fullCalendar('addEventSource', events);
-    
+    if (callback){callback();}
 
   }
 
@@ -942,7 +942,9 @@ $(document).ready(function() {
         icons = '<div class="fc-event-icons"><i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
         icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
         icons += '<i class="fas fa-comment icon-note title="note"></i>';
-        icons += '<i class="far fa-credit-card icon-payed" title="payed"></i></div>';       
+        icons += '<i class="far fa-credit-card icon-payed" title="payed"></i>';       
+        icons += '<i class="fas fa-cloud icon-cloud" title="cloud"></i></div>';       
+        
         
         
         patid = '<span class="note">' + event.patientID + ' </span>';
@@ -966,6 +968,12 @@ $(document).ready(function() {
               
               $(element).find('.icon-note').show();
               
+            }
+            
+            if (event.madeOnline == 1) {
+              $(element).find('.icon-cloud').show();
+            } else {
+              $(element).find('.icon-cloud').hide();
             }
            
             

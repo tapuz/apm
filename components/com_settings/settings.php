@@ -97,6 +97,7 @@ switch (getView()) {
 		$settings->online_booking_days_in_future= get_user_meta( $user, 'online_booking_days_in_future');
 		$settings->online_booking_timeslots_per_day= get_user_meta( $user, 'online_booking_timeslots_per_day');
 		$settings->online_booking_timeslots_to_propose= get_user_meta( $user, 'online_booking_timeslots_to_propose');
+		$settings->online_booking_delta_to_first_timeslot= get_user_meta( $user, 'online_booking_delta_to_first_timeslot');
 
 
 		$settings = json_encode($settings);

@@ -2,7 +2,7 @@
    <div class="patients_search_results"> 
     <ul>
         {{#patients}}
-			<li class="patient" patient_id="{{patient_id}}"><a href="#"><i class="fa fa-user">&nbsp;&nbsp;</i><span> {{patient_surname}} {{patient_firstname}}</span></i> <a target="{{patient_id}}" href="index.php?com=patient&view=patient&patient_id={{patient_id}}"><span class="open_file pull-right"><i class="fa fa-file-text-o" aria-hidden="true"></i> Open file</span></a></li>
+			<li class="patient" patient_id="{{patient_id}}"><a href="#"><i class="fa fa-user">&nbsp;&nbsp;</i><span> {{patient_surname}} {{patient_firstname}} ({{dob}})</span></i> <a target="{{patient_id}}" href="index.php?com=patient&view=patient&patient_id={{patient_id}}"><span class="open_file pull-right"><i class="fa fa-file-text-o" aria-hidden="true"></i> Open file</span></a></li>
         {{/patients}}
     <ul>
     </div>

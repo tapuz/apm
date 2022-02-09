@@ -91,10 +91,10 @@ class Patient
 		global $wpdb;
 		
 		
-		$query = $wpdb->prepare('CREATE TEMPORARY TABLE IF NOT EXISTS temp_table_patients AS
+		$query = $wpdb->prepare("CREATE TEMPORARY TABLE IF NOT EXISTS temp_table_patients AS
 				(SELECT 
 				 table_patients.patient_id,
-				 table_patients.dob,
+				 DATE_FORMAT(table_patients.dob,'%m/%Y') as dob,
 				 table_patients.patient_surname,
 				 table_patients.patient_firstname,
 				 table_patients.phone,
@@ -108,7 +108,7 @@ class Patient
 				 FROM table_patients
 				 INNER JOIN table_group_user
 				 on table_group_user.group = table_patients.group
-				 WHERE table_group_user.user = %d)',$user);
+				 WHERE table_group_user.user = %d)",$user);
 		
 		$wpdb->query($query);
 		$table_name = 'temp_table_patients';

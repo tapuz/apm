@@ -213,7 +213,7 @@ var eventStatus = 0;
           response($.map(data, function(item) {
             return {
               label: item.patient_surname + ' ' + item.patient_firstname + ' ' + item.dob,
-              value: item.patient_surname + ' ' + item.patient_firstname,
+              value: item.patient_surname + ' ' + item.patient_firstname + ' ' + item.dob,
               id: item.patient_id,
               email: item.email,
               dob: item.dob,

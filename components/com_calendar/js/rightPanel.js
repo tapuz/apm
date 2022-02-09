@@ -79,13 +79,11 @@ $(document).ready(function() {
             }
             
             rightPanelPB.done();
-            
-             $('#rightPanel .search_results').html(results);
-                    
+                  
               var rendered = Mustache.render(tmpl_patient_search_results,
                 {patients : patients
                });
-  
+  		     
               $('#rightPanel .search_results').html(rendered);
   
           
