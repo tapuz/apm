@@ -140,7 +140,9 @@ switch (getVar('task')){
 		$patientName = getVar('patientName');
 		$pdfdoc			= base64_decode(getVar('pdf'));
         $subject = getVar('subject');
+		$message = getVar('message');
 
+		if ($message == ''){$message = $clinic->email_name;}
 
 		//$b64file = $pdfdoc;
 		//$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
@@ -156,7 +158,7 @@ switch (getVar('task')){
 		$mail->getServerSettings($clinic->clinic_id);
 		$mail->to=$email;
 		$mail->subject=$subject;
-		$mail->message=$clinic->email_name;
+		$mail->message=$message;
 
 
 		$mail->attachment['file']= $filepath;

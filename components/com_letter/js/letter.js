@@ -84,7 +84,7 @@ $(function() {
     var html = editor.root.innerHTML;
     var clinic_id = $("#clinic option:selected").attr('clinic_id');
 	var subject = $("#name").val();
-	
+	var email_message =  $("#email_message").val();
     
     var message = new Noty({
         text: '<span class="text-center">Sending letter by email...</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
@@ -107,7 +107,8 @@ $(function() {
          clinic:clinic_id,
          patientEmail:patientEmail,
          patientName:patientName,
-		 subject:subject
+		 subject:subject,
+		 message:email_message
 
        },
        success: function(data) {

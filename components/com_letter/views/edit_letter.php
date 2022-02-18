@@ -35,7 +35,12 @@
 		<label class="control-label" for="email_email_address">Email address</label>
     	<input type="text" class="form-control" name="email_address" id="email_address" placeholder="Email address" value="<?=$patientEmail?>"  />
 		</div>
+	
 	<div class="row">
+		<label class="control-label" for="email_email_message">Email message</label>
+    	<textarea class="form-control" rows="3" name="email_message" id="email_message" placeholder="Email message"></textarea>
+		</div>
+	<div class="row">	
 		<div class="pull-right">
 		<button type="button" class="btn btn-primary saveLetter">Save</button>
 		<button type="button" class="btn btn-primary print">Print</button>
