@@ -209,8 +209,9 @@ switch (getVar('view')) {
 		} // if letter_id == NULL -> a call was made from the select_category view so we have a new letter 
 		
 		$letter = $wpdb->get_row("SELECT * FROM table_letters WHERE letter_id =" . $letter_id);
-		$letterJSON = stripslashes(json_encode($letter));
-		
+		error_log($letterJSON);
+		$letterJSON = stripslashes(json_encode($letter,JSON_UNESCAPED_UNICODE));
+		error_log($letterJSON);
 		//decode the letter
 		$letter_body = stripslashes($letter->letter);
 		
