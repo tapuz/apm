@@ -1,7 +1,7 @@
 <?php
 class Clinic {
 
-	public static function updateClinic($clinic){
+public static function updateClinic($clinic){
 		global $wpdb;
 		$array = array();
 		foreach ($clinic as $value) {
@@ -16,7 +16,13 @@ class Clinic {
 		//return self::getPatient($patient_id);
 		
 		
-	}
+}
+
+private static function getClinicParam($clinic,$param) {
+	global $wpdb;
+	$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM table_clinics WHERE clinic_id = %s",$clinic));
+	return $result->$param;
+}
 
 public static function getClinics($user) {
 	//get all the clinics a user is affiliated to and the services... 
@@ -93,6 +99,10 @@ public static function getClinicsFromGroup($groupName){
 public static function getPractitionersFromClinic($clinic) {
 	global $wpdb;
 	//get all user id's active in clinic
+	//how should the practitioners be ordered
+	$order = self::getClinicParam($clinic,'online_booking_practitioner_order');
+
+
  	$query = $wpdb->prepare('SELECT user_id FROM table_clinic_user WHERE clinic_id=%d AND active=1', $clinic);
 	$users = $wpdb->get_results($query);
 	
@@ -114,11 +124,17 @@ public static function getPractitionersFromClinic($clinic) {
 			'fields'         => array("ID", "user_nicename", "display_name"),
 		);
 	
-	
+
 	// The User Query
-	error_log(print_r($args,1));
+	//error_log(print_r($args,1));
 	$user_query = new WP_User_Query( $args );
-	return $user_query->results;
+	$results = $user_query->results;
+	if ($order == 'random') {
+		shuffle($results);
+	}
+	return $results;
+
+
 
 	}
 

@@ -8,6 +8,7 @@ loadJS('settings.js','settings');
 loadLib('invoice');
 
 
+
 switch (getTask()) 
 {
 	case 'save_template':

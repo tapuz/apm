@@ -107,11 +107,14 @@ switch (getVar('task')){
 		$appointment =  json_decode(stripslashes(getVar('appointment')));
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		echo json_encode($appointment);
+	
+		$datetime = date("Y-m-d H:i:s");
+		Calendar::addAppointmentLog($appointment->id,$datetime,'New','New appointment with online booking','label-success');
 		
 		//send confirmation email
 		$email = new Email();
 		$email->sendAppointmentEmail($appointment,'confirmation');
-
+		
 		//send
 		$mail = new Email();
 		$mail->getServerSettings(2);
