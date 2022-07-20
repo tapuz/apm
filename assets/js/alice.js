@@ -8,6 +8,10 @@ var saveNoty = new Noty({
     callbacks: {afterClose: function() {}}
     });
 
+//$(window).on('load',function() {
+  // Animate loader off screen
+//  $(".preloader").fadeOut("slow");;
+//});
 
 $(function() {
 	//set the Moment.js locale
@@ -40,6 +44,13 @@ $(function() {
 
 function log(log) {
 	console.log(log);
+}
+
+function showLoadingScreen(){
+    $('.loadingscreen').show();
+}
+function hideLoadingScreen(){
+    $('.loadingscreen').fadeOut('slow');
 }
 
 

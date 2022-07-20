@@ -38,6 +38,7 @@ if ( !is_user_logged_in() )
 
     </head> 
 <body>
+	<div class="loadingscreen"></div>
 
 	<!-- start: Header -->
 		<?php if (!componentOnly()){loadModule('header');}?>

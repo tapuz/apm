@@ -115,7 +115,11 @@ class Email {
                     break;
                     case "amended":
                         $this->subject = $clinic->email_appointment_amended_subject;
+                        $message = str_replace('%title%', $clinic->email_appointment_amended_subject, $message);
                         $message = str_replace('%text1%', $clinic->email_appointment_amended_text, $message);
+                        $message = str_replace('%text2%', '', $message);
+                   
+
                     break;
                 
                 }

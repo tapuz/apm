@@ -1,6 +1,8 @@
 var canvas;
 
 $(function() {
+    showLoadingScreen();
+    hideLoadingScreen();
     var maxWidth = $( window ).width()-50;
     if (maxWidth > 1300){maxWidth=1300;};
     var canvasWidth = 0;

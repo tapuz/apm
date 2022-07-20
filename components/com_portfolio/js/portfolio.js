@@ -1,3 +1,4 @@
+showLoadingScreen();
 window.jsPDF = window.jspdf.jsPDF;
 $(function() {
   var selectImageMode = false;
@@ -15,7 +16,7 @@ $(function() {
       data: { com: 'pictureproof',task: 'getPortfolioImages', patientID : patientID}
         }).done(function(pictureproofImages) {
            $('#pictureproofImages').empty();
-          log (pictureproofImages);
+          hideLoadingScreen();
           
             $.each(pictureproofImages, function(){
                   

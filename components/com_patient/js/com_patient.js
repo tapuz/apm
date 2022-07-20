@@ -27,7 +27,7 @@ $(document).ready(function(){
 	var bgImageCurAngle = 0;
 	var saveNoty;
 	
-	$('.loadingscreen').show();
+	showLoadingScreen();
 	//set the page title = patientName
 	
 	document.title = patientName;
@@ -105,7 +105,7 @@ $(document).ready(function(){
 			oPrevEncounter = encounters[1];
 			patientPB.done();
 			disableform('editSOAP',false);
-			$('.loadingscreen').fadeOut('slow');
+			hideLoadingScreen();
 			
 		});
 	}

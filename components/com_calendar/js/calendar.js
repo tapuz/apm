@@ -13,6 +13,8 @@ var selectedUser = "";
 var cast;
 
 
+showLoadingScreen();
+
 //$('[data-time]:not(.fc-minor)');
 
 $(document).ready(function() {
@@ -729,7 +731,7 @@ $(document).ready(function() {
               }
               Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
               
-            },'yes'); //true = send email
+            },1); //true = send email
 
           }
 
@@ -864,33 +866,39 @@ $(document).ready(function() {
           }
 
           function updateAppointment(){
+            var sendEmail=false;
             calendar.fullCalendar('updateEvent', objEvent); 
-           Appointment.update({
-                        id: objEvent.id,
-                        patientID: objEvent.patientID,
-                        start: objEvent.start.format(),
-                        end: objEvent.end.format(),
-                        user: objEvent.resourceId,
-                        service: objEvent.serviceId,
-                        status: objEvent.status,
-                        note:objEvent.note,
-                        clinic: clinic
-                
-                        }, function() {
-                          renderRightPanelPatientAppointments(); 
-                          event.resourceName = users[event.resourceId].data.display_name;
-                          var newEventUsername = event.resourceName;
-                          
-                          if (oldEventUsername != newEventUsername) {
-                            Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + oldEventUsername + ' - ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + newEventUsername + ' - ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
-                          } else {
-                            Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
-                          }
-                          Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
-                          
-                        }, 'no' ,function() { //true = send email 
-                                    revertFunc();
-                                    });
+            showConfirm('Send amendment email to patient? ').then(function(result){
+              if(result){var sendEmail=true};
+              Appointment.update({
+                id: objEvent.id,
+                patientID: objEvent.patientID,
+                start: objEvent.start.format(),
+                end: objEvent.end.format(),
+                user: objEvent.resourceId,
+                service: objEvent.serviceId,
+                status: objEvent.status,
+                note:objEvent.note,
+                clinic: clinic
+        
+                }, function() {
+                  renderRightPanelPatientAppointments(); 
+                  event.resourceName = users[event.resourceId].data.display_name;
+                  var newEventUsername = event.resourceName;
+                  
+                  if (oldEventUsername != newEventUsername) {
+                    Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + oldEventUsername + ' - ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + newEventUsername + ' - ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
+                  } else {
+                    Appointment.addLog(objEvent.id, 'Rescheduled', 'appointment changed from ' + moment(oldEventStart).locale(locale).format('LLL') + ' to ' + moment(objEvent.start).locale(locale).format('LLL'), 'label-warning');
+                  }
+                  Appointment.addLog(objEvent.id, 'Email', 'Appointment amendment sent','label-primary');
+                  
+                }, sendEmail ,function() { //true = send email 
+                            revertFunc();
+      });
+              
+            });
+           
 				    
 
           }

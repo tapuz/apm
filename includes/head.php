@@ -28,7 +28,7 @@
 	<link href="assets/css/offline-theme-default.css" rel="stylesheet">
 	<link href="assets/css/offline-language-english.css" rel="stylesheet">
 	<link href="assets/css/noty.css" rel="stylesheet">
-	<link href="https://rawgit.com/pchiwan/nprogress/master/nprogress.css" rel="stylesheet">
+	<link href="assets/css/nprogress.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.css">
 	
 
@@ -106,7 +106,7 @@
 	<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>-->
 	<script src="assets/js/bootstrap.min.js" defer></script>
 	<script src="assets/js/offline.min.js" async></script>
-	<script src="https://rawgit.com/pchiwan/nprogress/master/nprogress.js"></script>
+	<script src="assets/js/nprogress.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.js" async>
 
 

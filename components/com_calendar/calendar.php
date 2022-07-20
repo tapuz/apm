@@ -37,6 +37,7 @@ loadJS('rightPanel.js','calendar');
 loadJS('mustache.min.js');
 loadJS('validator.js');
 loadJS('socket.io.min.js');
+loadExtJS('https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js');
 
 //loadJS('jquery.balloon.min.js');
 
@@ -107,15 +108,14 @@ switch (getVar('task')){
 	break;
 
 	case 'updateAppointment':
-		
+		loadLib('email');
 		$appointment =  Calendar::updateAppointment(stripslashes(getVar('appointment')));
 		echo json_encode($appointment);
 		
-		error_log('flag : '. getVar('sendEmail'));
 		
-		if (getVar('sendEmail') === 1) {
-			//$email = new Email();
-			//$email->sendAppointmentEmail($appointment,'amendemend');
+		if (boolval(getVar('sendEmail')) == true) {
+			$email = new Email();
+			$email->sendAppointmentEmail($appointment,'amended');
 				
 		}
 		 //add a log that an email was sent
