@@ -46,6 +46,30 @@ function log(log) {
 	console.log(log);
 }
 
+function showConfirm(msg){
+    var deferred = $.Deferred();
+    bootbox.confirm({
+      message: msg,
+      buttons: {
+        cancel: {
+          label: 'No',
+          className: 'btn-primary'
+        },
+        confirm: {
+          label: 'Yes',
+          className: 'btn-primary'
+        }
+
+      },
+      callback: function(result) {
+        deferred.resolve(result);
+        
+      }
+    });
+
+    return deferred.promise();
+ }
+
 function showLoadingScreen(){
     $('.loadingscreen').show();
 }

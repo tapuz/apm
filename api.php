@@ -80,6 +80,7 @@ switch (getVar('task')){
 		foreach($practitioners as $practitioner){
 			$practitioner->{"default_service"} = Service::getRecurrentService($clinic,$practitioner->ID);
 			$practitioner->{"default_service_np"} = Service::getNPService($clinic,$practitioner->ID);
+			$practitioner->{"services"} = Service::getAllServices($clinic);
 		}
 
 		

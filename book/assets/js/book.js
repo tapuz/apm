@@ -34,9 +34,12 @@ var selected_timeslot;
 var timing;
 var group;
 var calendar;
-var socket = io('https://desk.timegenics.com');
+//var socket = io('https://desk.timegenics.com');
 var no_match_counter=0;
-
+var service = new Object();
+var monthsInAdvance = 12;
+var practitionerNotAvailable;
+var urlService;
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 
 
@@ -47,7 +50,28 @@ $(window).on('load',function() {
 });
 
 $(document).ready(function() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  
+
+  if (urlParams.has('service')){ // patient is requesting a screening..limit months to book to 2
+    monthsInAdvance = 2;
+    practitionerNotAvailable = 3;
+    urlService = urlParams.get('service');
+
+  }
  
+
+  
+  function monthDiff(d1, d2) {
+    var months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth();
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months;
+}
+
+var today = new Date(); 
   
 $("#loading").hide();
 $("#timing").hide();
@@ -83,13 +107,30 @@ $("#timing").hide();
         "December"
       ] ,
       
+      
+      
       headerBackgroundColor: '#7a9e9f',
       headerColor: '#7a9e9f',
       calendarSize: "large",
       theme: 'basic',
       //primaryColor:'#7a9e9f',
-      monthChanged:() => {},
-
+       monthChanged: (selectedDate, events) => {
+              if(monthDiff(today, selectedDate) == 0){
+                leftArrow = document.getElementsByClassName('calendar__arrow-prev')[0];        
+                leftArrow.style.display = "none";
+              } else {
+                leftArrow = document.getElementsByClassName('calendar__arrow-prev')[0];        
+                leftArrow.style.display = "block";                
+              }
+              if(monthDiff(today, selectedDate) == monthsInAdvance){
+                rightArrow = document.getElementsByClassName('calendar__arrow-next')[0];        
+                rightArrow.style.display = "none";
+              } else {
+                rightArrow = document.getElementsByClassName('calendar__arrow-next')[0];        
+                rightArrow.style.display = "block";                
+              }
+          }, 
+      
       dateChanged: (currentDate, propositions) => {
         let doWeHavePropositions = false;
         $('#timeslot_select .propositions').html('');
@@ -233,7 +274,7 @@ $("#timing").hide();
       },
       email: {
         required: true,
-        email: true,
+        email: true
       },
       phone:{
          required:true,
@@ -368,6 +409,9 @@ $("#timing").hide();
                
                
                $('.group-description').html(group.logo + clinic.name);
+               //set the service title
+               
+               
                //propose the practitioner
                $('#practitioner #message').html('Selectie gemaakt op basis van je laatste bezoek.');
                $('.practitioners :input[value='+ practitioner_to_propose +']').click();
@@ -384,10 +428,48 @@ $("#timing").hide();
                practitioner = new Object();
                practitioner.ID =  $("input:radio[name ='practitioner']:checked").val();
                practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
+
+               $.each(practitioners, function() {
+                if (this.ID == practitioner.ID){
+                practitioner=this;
+                }
+              });
                
                //$(".group-description").html(clinic.name + " / " + practitioner.name);
-               $('.wizard-title').html('Afspraak maken bij ' + practitioner.name);
-               getAvailableTimes(timing);
+               $('.wizard-title').html('Afspraak maken bij ' + practitioner.display_name);
+               //check the service we need 
+
+
+               if (urlParams.has('service')==true){
+                  if (mode == 'recurrentPatient'){
+                    if(urlService == 'rugscreening_30'){
+                      urlService = 'rugscreening_15'
+                    }
+                  }
+                  service = practitioner.services.find(x => x.name === urlService);
+                  console.log(service.id + ' : Service_id');
+			      $('.service-title').html(service.description);
+               } else {
+                 switch (mode)
+                  {              
+                    case 'recurrentPatient':
+                      service.id = practitioner.default_service.service;
+                      service.duration = practitioner.default_service.duration;
+                      service.description = practitioner.default_service.description
+
+                    break;
+                    case 'newPatient':
+                      service.id = practitioner.default_service_np.service;
+                      service.duration = practitioner.default_service_np.duration;
+                      service.description = practitioner.default_service_np.description
+                    break;
+                  }
+				$('.service-title').html(service.description);
+               }    
+               
+               
+               
+               getAvailableTimes(service.duration,timing);
               }
           break;
          
@@ -414,6 +496,7 @@ $("#timing").hide();
                      
                      $('#resume .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
                      $('#resume .practitioner').html(practitioner.display_name);
+                     $('#resume .service').html(service.description);
                      $('#resume .location').html(clinic.name);
                      $('#resume .timeslot').html(moment(selected_timeslot.start).locale('nl-be').format('LLLL'));
                      
@@ -492,7 +575,8 @@ $("#timing").hide();
    switch (mode)
    {
      case 'recurrentPatient':
-       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service.service,status:0}
+
+       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0};
        appointment = JSON.stringify(appointment);
        addAppointment(appointment);
        console.log(appointment);
@@ -521,7 +605,7 @@ $("#timing").hide();
         }).done(function(data) {
           objPatient.patient_id = data;
 
-          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:practitioner.default_service_np.service,status:0}
+          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0}
           appointment = JSON.stringify(appointment);
 
 
@@ -719,7 +803,7 @@ $(document).on("click", ".update_email" , function() {
   
 });
 
-function getAvailableTimes(timing){
+function getAvailableTimes(duration,timing){
    //clear the propositions if there would be any...
    $('#loading').html(loadingImg).show();
    $('#calendar').hide();
@@ -727,19 +811,8 @@ function getAvailableTimes(timing){
    $('#timeslot_select .propositions').html('');
 
    //practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
-   $.each(practitioners, function() {
-     if (this.ID == practitioner.ID){
-       practitioner=this;
-      }
-    });
-   switch(mode){
-     case 'recurrentPatient':
-       duration = practitioner.default_service.duration;
-     break;
-     case 'newPatient':
-      duration = practitioner.default_service_np.duration;
-     break;
-    }
+   
+  
    $.ajax({
                   dataType: "json",
                   url: apiURL,
@@ -882,8 +955,14 @@ function checkMatch() {
                 }).done(function(data) {
         
                   practitioners = data;
+                  
+                  
                   $('#practitioner .practitioners').html('');
                    $.each(practitioners, function() {
+                        
+                          if (this.ID == practitionerNotAvailable){
+                            return true;
+                          }
                           newhtml = html.replace('%practitionerID%',this.ID);
                           newhtml = newhtml.replace('%practitionerName%',this.display_name);
                           newhtml = newhtml.replace('%practitionerName2%',this.display_name);
@@ -893,6 +972,9 @@ function checkMatch() {
                         
                          
                    });
+                  
+                  
+                  
                   
                   
             });
@@ -912,6 +994,22 @@ function getGroup() {
     }
     //error.log('this is the group=' + params.group);
     return params.group;
+  }
+
+  function getService() {
+    var params = {};
+
+    if (location.search) {
+      var parts = location.search.substring(1).split('&');
+
+      for (var i = 0; i < parts.length; i++) {
+        var nv = parts[i].split('=');
+        if (!nv[0]) continue;
+        params[nv[0]] = nv[1] || true;
+      }
+    }
+    //error.log('this is the group=' + params.group);
+    return params.service;
   }
 
 

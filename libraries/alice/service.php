@@ -8,6 +8,14 @@ class Service {
         
     }
 
+    public static function getAllServices($clinic){
+        global $wpdb;
+        $query = $wpdb->prepare('
+        SELECT * from table_services where clinic = %d',$clinic);
+        return $wpdb->get_results($query);
+
+    }
+
     public static function getRecurrentService($clinic,$user){
         global $wpdb;
         
@@ -17,7 +25,8 @@ class Service {
             table_clinic_user.default_service AS service,
             
 
-            table_services.duration
+            table_services.duration,
+            table_services.description
             
 
             from table_clinic_user
@@ -40,7 +49,8 @@ class Service {
             table_clinic_user.default_service_np as service,
             
 
-            table_services.duration
+            table_services.duration,
+            table_services.description
             
 
             from table_clinic_user
