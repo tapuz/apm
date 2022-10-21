@@ -245,6 +245,11 @@ class Patient
 		return self::getEncounter($id);
 		
 	}
+
+	public static function deleteEncounter($encounter_id){
+		global $wpdb;
+		$wpdb->delete( 'table_encounters', array( 'id' => $encounter_id ));	
+	}
 	
 	public function getEncounter($id){
 		global $wpdb;
@@ -483,6 +488,11 @@ class Patient
 		$query = sprintf("SELECT * from table_complaints WHERE id = '%s'",$id);
 		$complaint = $wpdb->get_row($query);
         return  $complaint;
+	}
+
+	public static function deleteComplaint($complaint_id){
+		global $wpdb;
+		$wpdb->delete( 'table_complaints', array( 'id' => $complaint_id ));	
 	}
 	
 	

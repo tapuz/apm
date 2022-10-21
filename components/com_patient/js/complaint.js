@@ -52,6 +52,23 @@ class Complaint
      });
     }
     
+
+    static delete(complaint_id,callback){
+    
+      $.ajax({
+       url: "ajax.php",
+       //dataType: "json",
+       type: 'post',
+       data: {
+         com: 'patient',
+         task: 'deleteComplaint',
+         complaint_id: complaint_id
+       },
+       success: function(data) {
+         if(callback){callback(data);}
+       }
+      });
+     }
     
     
     

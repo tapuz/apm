@@ -102,6 +102,9 @@ switch(getTask()){
 		echo json_encode($encounter);
 	break;
 
+	case 'deleteEncounter':
+		patient::deleteEncounter(getVar('encounter_id'));
+
 	case 'getEncounters' :
 		$encounters = Patient::getEncounters(getVar('patient_id'));
 		echo json_encode($encounters);
@@ -142,6 +145,10 @@ switch(getTask()){
 		$complaint = Patient::addComplaint(json_decode(stripslashes(getVar('complaint'))));
 		echo json_encode($complaint);
 	break;
+
+	case 'deleteComplaint':
+		Patient::deleteComplaint(getVar('complaint_id'));
+		
 
 	case 'getDiagnoses':
 		$diagnoses = Patient::getDiagnoses(getVar('patient_id'));

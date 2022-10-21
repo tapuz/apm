@@ -199,7 +199,7 @@ $(document).ready(function(){
 		
 	});
 	
-	
+
 	$(document).on('click','#btn_new_encounter', function () {
 		//toggle new encounter tab and create new encounter
 		resetEncounter();
@@ -298,20 +298,30 @@ $(document).ready(function(){
 	
 	
 	 $(document).on('click','.btn_close_encounter', function(){
-		 setSaveStatus('saving');
+		setSaveStatus('saving');
 		SOAPform = $('#editSOAP').serializeArray();
 		disableform('editSOAP',true);
+		
 		log(SOAPform);
 		    SOAP.update(SOAPform,async function(data){
 				fSaveSuccess = data.success;
 				fSOAPSaved = data.success;
 				encounters = await Encounter.getAll(patientID);
 				diagnoses = await Diagnosis.getDiagnosesPatient(patientID);
+				vitals = await Patient.getVitals(patientID),
 				renderEncounters();
+				renderVitalsPanel(true);
+				renderInitComplaintTabs(false);
+				renderComplaints();
+				renderVitalsPanel(true);
 				setSaveStatus('saved');
+
 				
 				$('#btn_new_encounter').show();
 				editingSOAP = false;
+				//disable the add vitals button
+
+
 
 			}); 
 				
@@ -660,7 +670,8 @@ $(document).ready(function(){
 		//convert the ISO datetime from db into local datetime
 		
 		$.each(vitals, function( ) {
-  			this.timestamp = moment(this.timestamp).format('lll');
+  			this.timestamp_modified = moment(this.timestamp).format('lll');
+		    
 		});
 		//log(JSON.stringify(vitals));
 
@@ -694,6 +705,7 @@ $(document).ready(function(){
 		//set some extra values
 		//$('.vitals_timestamp').val( moment().format("YYYY-MM-DD HH:mm:ss").toString());
 		$('.vitals_timestamp').val( moment().format("YYYY-MM-DD HH:mm:ss"));
+		$('.vitals_encounter_id').val( oEncounter.id);
 		
 		$('.vitals_bmi').prop('disabled',false); //if disabled the BMI is no accessible
 		
@@ -1129,6 +1141,38 @@ $(document).ready(function(){
 		
 	}
 	
+
+	$(document).on('click','.complaint .btn_delete_complaint',function(){
+		var complaint_id = $(this).attr("complaint_id");
+		showConfirm('Are you sure you want to delete the complaint').then(function(result){
+			if(result){
+				Complaint.delete(complaint_id,async function(){
+					diagnoses = await Diagnosis.getDiagnosesPatient(patientID);
+					//renderComplaints(true);
+					//renderMain();
+					$tab_id = '#tab_complaint_' + complaint_id;
+					$pane_id = '#complaint_' + complaint_id;
+					$($tab_id).remove();
+					$($pane_id).remove();
+					
+		
+					log($('#complaints_tabs ul li').length);
+					if ( $('#complaints_tabs .complaint_tab').length>0 ) {
+						$("#complaints_tabs .complaint_tab a").first().click()
+					}
+					renderEncounters();
+		
+				});
+
+			}
+			
+		  }); 
+		
+		
+
+
+	});
+
 	$(document).on('change','.complaint .complaint_input',function(){
 		var complaint_id = $(this).attr("complaint_id");
 		var value = $(this).val();
@@ -1266,6 +1310,20 @@ $(document).ready(function(){
 		
 	  
 	  }
+
+	 
+
+	$(document).on('click','.btn_delete_encounter',function(){ 
+		showConfirm('Are you sure you want to delete the encounter and all data associated wiht this encounter?').then(function(result){
+			if(result){
+				Encounter.delete(oEncounter.id,async function(){
+					$('.btn_close_encounter').click();
+				});
+
+			}
+			
+		  }); 
+	 });
 
 	$(document).on('click','.btn_print_encounter',function(){
 		//log(vitals);

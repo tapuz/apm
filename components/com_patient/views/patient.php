@@ -245,7 +245,7 @@
 
 
 <script id='tmpl_complaint_tab' type='xml-tmpl-mustache'>
-	<li class="{{active}}"><a id="{{complaint_tab_id}}" data-toggle="tab" href="#{{pane_name}}">{{tab_title}}</a></li>
+	<li class="{{active}} complaint_tab"><a id="{{complaint_tab_id}}" data-toggle="tab" href="#{{pane_name}}">{{tab_title}}</a></li>
 </script>
 
 <script id='tmpl_complaint_init' type='xml-tmpl-mustache'>
