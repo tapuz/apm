@@ -105,10 +105,11 @@ switch (getVar('task')){
 	case 'addAppointment':
 		loadLib('calendar');
 		loadLib('email');
+		loadLib('push');
 		$appointment =  json_decode(stripslashes(getVar('appointment')));
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		echo json_encode($appointment);
-	
+		
 		$datetime = date("Y-m-d H:i:s");
 		Calendar::addAppointmentLog($appointment->id,$datetime,'New','New appointment with online booking','label-success');
 		
@@ -123,6 +124,16 @@ switch (getVar('task')){
 		$mail->subject='NEW ONLINE BOOKING';
 		$mail->message = json_encode($appointment);
 		$mail->send();
+		
+		
+		//send push
+		$push = new Push();
+		$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
+		$push->title = 'New online booking';
+		$body = $appointment->resourceName.' : ('.$appointment->patientID.') - '.$appointment->patientName.' - Service: '.$appointment->serviceId;   
+
+		$push->body = $body;
+		$push->send();
 		
 		
 		//add the email

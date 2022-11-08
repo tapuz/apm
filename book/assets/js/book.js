@@ -34,7 +34,7 @@ var selected_timeslot;
 var timing;
 var group;
 var calendar;
-//var socket = io('https://desk.timegenics.com');
+var socket = io('https://desk.timegenics.com');
 var no_match_counter=0;
 var service = new Object();
 var monthsInAdvance = 12;
@@ -653,7 +653,7 @@ $("#timing").hide();
          //show the confirmation page
          socket.emit('calendar_changed');
          
-      }).fail(function(){
+      }).fail(function(data){
          $('#resume .loading').hide();
          $('#resume_details').show();
          $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
