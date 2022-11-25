@@ -133,6 +133,24 @@
     background-color: #303b42;
     color: #fff;
 }
+/*Email modal*/
+
+#emailModal .modal-header {
+    background-color: #303b42;
+    color: #fff;
+}
+
+
+#emailModal .email{
+
+  min-height: 300px;
+  height:auto;
+   padding:10px;	
+   background-color: white;
+  
+  }
+
+
 /*Event details modal*/
 #eventDetails .modal-header {
   background-color: #303b42;

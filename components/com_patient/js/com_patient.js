@@ -1,3 +1,5 @@
+var oPatient;
+
 $(document).ready(function(){
 	var fSOAPSaved = 1;
 	var fSaveSuccess = 1;
@@ -11,7 +13,7 @@ $(document).ready(function(){
 	var vitals = null;
 	//var to store diagnosis form to input elements after diagnosis selection
 	var formDiagnosis;
-	var oPatient;
+	
 	//hide the page and set the loading
 	var notys = []; //array that contains all the notyfications
 
@@ -37,6 +39,9 @@ $(document).ready(function(){
 		randomTrickle:true
 	
 	  });
+
+	//append the modals to the body to avoid Z index probs
+	$('#emailModal').appendTo("body");
 	
 	//set the Active patient
 	window.addEventListener('focus', setActivePatient);

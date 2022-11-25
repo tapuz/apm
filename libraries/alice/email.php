@@ -64,7 +64,7 @@ class Email {
             error_log($mail->ErrorInfo);
             return $mail->ErrorInfo;
 		} else {
-            return 'Mail sent!';
+            return 200;
 		}
         
         
@@ -73,6 +73,7 @@ class Email {
 
     public function getServerSettings($clinic){
         loadLib('clinic'); 
+        error_log('this is the clinic : ' . $clinic);
         $clinic = Clinic::getClinic($clinic);
         $this->smtp_server = $clinic->smtp_server;
         $this->smtp_port = $clinic->smtp_port; //

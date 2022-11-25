@@ -23,6 +23,7 @@ $(document).ready(function() {
   cast = new Cast('https://desk.timegenics.com',currentUserID);
   //cast.castPayment();
   
+  
 	
   document.title = 'Calendar';
   window.name = 'calendar';
@@ -56,6 +57,8 @@ $(document).ready(function() {
 	$('#editEvent').appendTo("body");
   $('#paymentModal').appendTo("body");
   $('#customEventDetails').appendTo("body");
+  $('#emailModal').appendTo("body");
+  
   
   //set the progress bar
   var calendarPB = new NProgress({
@@ -206,7 +209,13 @@ $(document).ready(function() {
 			});
 			selectClinic += "</select>";
 			$('#editPatient .selectClinic').html(selectClinic);
-			
+			//render the clinic select for the sendEmail modal
+      selectClinic = "<select id='clinicSelectSendEmail' name='from' class='form-control'>";
+			$.each(clinics, function() {
+				selectClinic += "<option class='from' value='"+ this.clinic_id + "'>"+ this.clinic_email +"</option>";
+			});
+			selectClinic += "</select>";
+			$('#emailModal .selectFrom').html(selectClinic);
 			//update the validator..
 			$('#editPatientForm').validator('update');
 			$('#editAppointment').validator('update');

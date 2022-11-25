@@ -7,8 +7,8 @@ class Email {
       type: 'post',
       data: {
         com: 'calendar',
-        task: 'send_email',
-        patient:JSON.stringify(oMail)
+        task: 'sendEmail',
+        data:JSON.stringify(oMail)
 
       },
       success: function(data) {

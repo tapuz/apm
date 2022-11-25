@@ -234,6 +234,78 @@
 </div>
 <!--stop: diagnoses-modal -->
 
+<!--start:email-modal -->
+<div class="modal fade modal-wide" id="emailModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h3 class="modal-title">Send email</h3>      
+      </div>
+      <div class="modal-body">
+		<form id="sendEmailForm" class="form-horizontal">
+			<div class="col-lg-12">
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-2"><label class="control-label" for="to">To</label></div>
+						<div class="col-md-10"><input type="text" name="to" class="form-control input-md to"></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-2"><label class="control-label" for="subject">Subject</label></div>
+						<div class="col-md-10"><input type="text" name="subject" class="form-control input-md subject"></div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-2"><label class="control-label" for="email">Message</label></div>
+						<div class="col-md-10"><textarea class="form-control body" rows="6" placeholder="Message" name="body"></textarea></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-group">
+						<div class="col-md-2">
+							<label>Send from</label>
+						</div>
+						<div class="col-md-5 selectFrom">
+						<select class="form-control from" id="clinic" name="clinic">
+							<?
+							foreach($clinics as $clinic) {
+								if ($clinic->clinic_id == $patient->clinic) {
+									echo sprintf('<option clinic_id ="%s" value="%s" selected>%s</option>',$clinic->clinic_id,$clinic->clinic_id,$clinic->clinic_name);
+								} else {
+									echo sprintf('<option clinic_id ="%s" value="%s">%s</option>',$clinic->clinic_id,$clinic->clinic_id,$clinic->clinic_name);
+								}
+							}
+							?>
+						</select>
+								
+							
+						</div>	
+					</div>
+				</div>
+			</div>
+			
+			
+			
+		</form>	
+		
+      
+	  </div>
+      <div class="modal-footer">
+	  	<button type="submit" class="btn btn-success sendEmail">Send email</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--stop: email-modal -->
+
+
 
 
 

@@ -32,10 +32,10 @@ loadJS('cast.js','calendar');
 loadJS('clinic.js','calendar');
 loadJS('editPatient.js','calendar');
 loadJS('email.js','calendar');
+loadJS('emailModal.js','calendar');
 loadJS('payment.js','calendar');
 loadJS('rightPanel.js','calendar');
 loadJS('mustache.min.js');
-loadJS('validator.js');
 loadJS('socket.io.min.js');
 loadExtJS('https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js');
 
@@ -148,7 +148,7 @@ switch (getVar('task')){
 		if ($appointment->status == 0 ){ 
 			$email = new Email();
 			$email->sendAppointmentEmail($appointment,'confirmation');
-			error_log('sending mail');
+			
 		}	
 		
 
@@ -181,18 +181,17 @@ switch (getVar('task')){
 		echo json_encode($log);
 	break;
 
-	case 'send_email':
+	case 'sendEmail':
+		loadLib('email');
+		$data = json_decode(json_decode(stripslashes(getVar('data')))); 
 		
 		$email = new Email();
-		$email->to = 'patricia.mulders@gmail.com';
-		$email->from_email = 'info@rugcentrumgent.be';
-		$email->from_name = 'Marijke';
-		$email->subject = 'Afspraak 300';
+		$email->getServerSettings($data->from);
+		$email->to = $data->to;
+		$email->subject = $data->subject;
+		$email->message = $data->body;
 		
-		
-		$message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
-		$message = str_replace('%patient%', t, $message); 
-		$email->send();
+		echo $email->send();
 		
 	break;
 
@@ -212,6 +211,8 @@ switch (getView())
 			$selectedUserID = 'none';
 		}
 		$currentUserID =  get_current_user_id();
+		$currentUser = wp_get_current_user();
+		
 		include('views/calendar.php');
 
 	break;

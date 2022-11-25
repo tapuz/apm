@@ -1,7 +1,7 @@
 <?
 loadLib('appointment');
 
-loadJS('add_payment.js','payment');
+
 
 $patient_id = getVar('patient_id');
 $patient = Patient::getPatient($patient_id);

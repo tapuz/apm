@@ -6,9 +6,9 @@ loadCSS('search.css','patient');
 loadCSS('patient.css','patient');
 
 
+
 define('COMPONENT','patient');
 define('TEMPLATES', ROOT . '/components/com_' . COMPONENT . '/templates/');
-//loadJS('add_payment.js','payment');
 $patient_id = getVar('patient_id');
 
 switch(getView()){
@@ -30,20 +30,25 @@ switch(getView()){
 		loadJS('mustache.min.js');
 		loadJS('patient.js','patient');
 		loadJS('com_patient.js','patient');
+		loadJS('rightPanel.js','patient');
 		loadJS('history.js','patient');
+		loadExtJS('https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js');
+		loadJS('emailModal.js','calendar');
+		loadJS('email.js','calendar');
 		loadJS('bootstrap-list-filter.min.js');
 		loadJS('bootstrap-tagsinput.min.js');
 		loadJS('fabric.min.js');
 		loadExtJs('https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js');
 		loadJS('graphs.js','patient');
 		loadCSS('bootstrap-tagsinput.css');
+		loadLib('clinic');
 
 		
 		//loadView();
 		//get patient details according to patient_id in url query
 			
 		$patient = Patient::getPatient(getVar('patient_id'));
-		
+		$clinics = Clinic::getClinics(get_current_user_id());
 		//get user info
 		$user=get_userdata($patient->practitioner);
 		//get appointments

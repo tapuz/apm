@@ -6,13 +6,18 @@
 						<li><a href="index.php?com=portfolio&layout=component&view=portfolio&patient_id=<?=$patient_id?>"><i class="far fa-folder-open"></i><span class="hidden-sm text"> Portfolio</span></a></li>
 						<li><a href="index.php?com=letter&view=list&patient_id=<?=$patient_id?>"><i class="icon-file-alt"></i><span class="hidden-sm text"> Letters </span><span class="badge"></span></a></li>	
 						<li><a href="index.php?com=invoice&view=list&patient_id=<?=$patient_id?>"><i class="icon-money"></i><span class="hidden-sm text"> Invoices</span></a></li>
-					
+						
 						
 					
 					
 						
 						
 					</ul>
+					<br>
+					<div class="btn-group btn-group-justified" role="group">
+        				<a class="btn btn-success sendEmail" role="button">Send message</a>
+    				</div>
+					<br>
 					
 				
 					<input id="patient_name" type="hidden" value="<?= $patient->patient_surname.' '.$patient->patient_firstname?>">

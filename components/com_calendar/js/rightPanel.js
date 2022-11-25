@@ -133,8 +133,6 @@ $(document).ready(function() {
     });
 
 
-    
-
     $(document).on('click','#rightPanel .patient_details .back',function() {
       $('#rightPanel .patient_details').toggle();
       $('#rightPanel .search_results').toggle();
@@ -143,6 +141,17 @@ $(document).ready(function() {
     $(document).on('click','#rightPanel .editPatient',function() {
       editPatient(patientID);
     });
+
+	$(document).on('click','#rightPanel .sendEmail',function() {
+              $('#sendEmailForm')[0].reset();
+              $validatorSendEmail.resetForm();
+              $('#emailModal .to').val(oPatient.email);
+              $('#emailModal .modal-title').html('Send message to ' + oPatient.patient_firstname + ' ' + oPatient.patient_surname);
+              $('#emailModal').modal('show');
+    });
+
+
+
 
      $(document).on('click','#rightPanel .bookAppointment',function() {
       
