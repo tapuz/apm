@@ -22,8 +22,8 @@
 		        'badge' => $this->badge,
 		    ];
 		    $data = [
-		        'title' => 'This is notification title',
-		        'body' =>'This is notification text',
+		        'title' => $this->title,
+		        'body' =>$this->body,
 		        'priority' => 'high',
 		        'content_available' => true
 		    ];

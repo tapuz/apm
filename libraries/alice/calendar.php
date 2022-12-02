@@ -362,7 +362,7 @@ class Calendar {
 	            'start' => $selected_date_working_plan['start'],
 	            'end' => $selected_date_working_plan['end']
 	        );
-			error_log('DAY ' . $selected_date);
+			//error_log('DAY ' . $selected_date);
 			
 	        // Split the working plan to available time periods that do not contain the breaks in them.
 	        foreach ($selected_date_working_plan['breaks'] as $index => $break) {
@@ -481,8 +481,8 @@ class Calendar {
 			$delta = ($end - $start)/60;
 			
 			if(isset($prev_timeslot_end) AND ($start < ($prev_timeslot_end + (30*60)) )){
-				error_log('THIS IS THE START '  . date('H:i:s',$start));
-				error_log('PREV SLOT END '  . date('H:i:s',$prev_timeslot_end));
+				//error_log('THIS IS THE START '  . date('H:i:s',$start));
+				//error_log('PREV SLOT END '  . date('H:i:s',$prev_timeslot_end));
 				//if previous proposed timeslot is to close to next slot.. skip
 
 				//continue;

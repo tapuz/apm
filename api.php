@@ -26,6 +26,7 @@ error_log('API: '.getVar('task'));
 loadLib('patient');
 //loadLib('clinic');
 loadLib('image');
+loadLib('push');
 //loadJS('educate.js','educate');
 //loadCSS('educate.css','educate');
 
@@ -33,6 +34,28 @@ loadLib('image');
 
 //switch ($_POST('task')){
 switch (getVar('task')){
+
+	case 'emailTempNP':
+		loadLib('email');
+		$email = new Email();
+		$email->getServerSettings(1);
+		$email->to = 'thierry.duhameeuw@gmail.com';
+		$email->subject='NP is booking online';
+		$email->message = stripslashes(getVar('patient'));
+		$email->send();
+	break;
+
+	case 'push':
+		//send push
+		
+		$push = new Push();
+		$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
+		$push->title = getVar('title');
+		$push->body = getVar('body');
+		$push->send();
+		
+	break;
+
 	case 'error_match':
 		//send email to group admin because patient has difficulty booking appointment via online booking system
 		loadLib('email');
@@ -42,6 +65,14 @@ switch (getVar('task')){
 		$email->subject='A patient has problems booking online';
 		$email->message = getVar('patient');
 		$email->send();
+
+		//send push
+		$push = new Push();
+		$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
+		$push->title = 'Patient has problems booking online';
+		$push->body = getVar('patient');
+		$push->send();
+
 	break;
 	case 'getActivePatient':
 		loadLib('patient');
@@ -263,7 +294,7 @@ switch (getVar('task')){
 		$timeslots_to_retain_per_day = get_user_meta( $user, 'online_booking_timeslots_per_day',true);
 		$max_timeslots_search_for = get_user_meta( $user, 'online_booking_timeslots_to_propose',true);
 		$min_delta_to_first_timeslot = get_user_meta( $user, 'online_booking_delta_to_first_timeslot',true); //min time to first timeslot... ex.. its 11:00 , so propose 11:00 + 60seconds
-		error_log('CHECKING FOR DAYS : ' . $days);
+		//error_log('CHECKING FOR DAYS : ' . $days);
 		$try_block_book = FALSE;
 		$timeslots_to_present = array();
 		$date = new DateTime($start);
@@ -289,7 +320,7 @@ switch (getVar('task')){
 			
 				
 			if(count($timeslots_to_present) >= $max_timeslots_search_for){
-				error_log('we should break stop searching!!');
+				//error_log('we should break stop searching!!');
 				break;}
 			
 			$date->modify('+' . 1 . ' days');
@@ -327,7 +358,7 @@ switch (getVar('task')){
 			return strtotime($a['start']) - strtotime($b['start']);
 		});
 		//error_log(print_r($timeslots_to_present,1));
-		error_log('NUMBER OF TIMESLOTS :' . count($timeslots_to_present));
+		//error_log('NUMBER OF TIMESLOTS :' . count($timeslots_to_present));
 		// only keep 
 		$priority = 3;
 		//if (($key = array_search($priority, $timeslots_to_present)) !== false) {

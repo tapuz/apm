@@ -83,14 +83,6 @@
 												Chiropractor
 											</a>
 										</li>
-			                            <!-- <li>
-											<a href="#timing" data-toggle="tab">
-												<div class="icon-circle">
-													<i class="ti-timer"></i>
-												</div>
-												Timing
-											</a>
-										</li> -->
 										<li>
 											<a href="#timeslot_select" data-toggle="tab">
 												<div class="icon-circle">
@@ -99,6 +91,14 @@
 												Tijdstip
 											</a>
 										</li>
+										<li>
+											<a href="#conditions" data-toggle="tab">
+												<div class="icon-circle">
+													<i class="ti-check-box"></i>
+												</div>
+												Voorwaarden
+											</a>
+										</li> 
 			                            <li>
 											<a href="#resume" data-toggle="tab">
 												<div class="icon-circle">
@@ -227,7 +227,7 @@
 		                                <h5 class="info-text"></h5>
 										<div class='row'>
 											<div class="col-sm-6 col-centered">
-												<div id="message">&nbsp;</div>
+												<div class="error" id="message">&nbsp;</div>
 											</div>
 										</div>
 		                                <div class="row">
@@ -245,7 +245,7 @@
 		                                <h5 class="info-text">Bij welke chiropractor? </h5>
 										<div class='row'>
 											<div class="col-sm-6 col-centered">
-												<div id="message">&nbsp;</div>
+												<div class="error" id="message">&nbsp;</div>
 											</div>
 										</div>
 										<form>
@@ -257,137 +257,11 @@
 										</div>
 										</form>
 		                            </div>
-		                            <div class="tab-pane_" id="timing">
-		                                <h5 class="info-text">Duid de momenten aan die NIET lukken voor jou. </h5>
-		                                <div class="row">
-											
-											<div class="col-sm-2">
-												<p class="text-center">Maandag</p>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"monday","start":"08:00","end":"12:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Voormiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"monday","start":"12:00","end":"17:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Namiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"monday","start":"17:00","end":"21:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Avond</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<p class="text-center">Dinsdag</p>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"tuesday","start":"08:00","end":"12:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Voormiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"tuesday","start":"12:00","end":"17:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Namiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"tuesday","start":"17:00","end":"21:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Avond</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<p class="text-center">Woensdag</p>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"wednesday","start":"08:00","end":"12:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Voormiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"wednesday","start":"12:00","end":"17:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Namiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"wednesday","start":"17:00","end":"21:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Avond</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<p class="text-center">Donderdag</p>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"thursday","start":"08:00","end":"12:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Voormiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"thursday","start":"12:00","end":"17:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Namiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"thursday","start":"17:00","end":"21:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Avond</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<p class="text-center">Vrijdag</p>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"friday","start":"08:00","end":"12:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Voormiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"friday","start":"12:00","end":"17:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Namiddag</p>
-													</div>
-												</div>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"friday","start":"17:00","end":"21:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Avond</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-sm-2">
-												<p class="text-center">Zaterdag</p>
-												<div class="choice" data-toggle="wizard-checkbox">
-													<input type="checkbox" name="timing" value='{"day":"saturday","start":"08:00","end":"12:00"}'>
-													<div class="card card-checkboxes card-hover-effect">
-														<p>Voormiddag</p>
-													</div>
-												</div>
-												
-											</div>
-		                                </div>
-										<div class="row centered hidden">
-											<div class="col-sm-8">
-												<textarea class="form-control" id="comment" name="comment" placeholder="Geef hier extra opmerkingen" rows="2"></textarea>
-											</div>
-										</div>
-		                            </div>
 									<div class="tab-pane" id="timeslot_select">
 		                                <h5 class="info-text"> Kies een tijdstip</h5>
 		                                <div class='row'>
 											<div class="col-sm-6 col-centered">
-												<div id="message_propositions">&nbsp;</div>
+												<div class="error" id="message">&nbsp;</div>
 											</div>
 										</div>
 										<div class="row">
@@ -398,6 +272,7 @@
 														
 														<div id="calendar" class="row centered"></div>
 														<div class="row">&nbsp;</div>
+														<div class="row"></div>
 														<div class="row centered propositions"></div>
 														
 													</div>
@@ -405,6 +280,31 @@
 											</form>
 											
 										</div>
+		                            </div>
+									<div class="tab-pane" id="conditions">
+		                                <h5 class="info-text">Goede afspraken: </h5>
+										<div class='row'>
+											<div class="col-sm-6 col-centered">
+												<div class="error" id="message">&nbsp;</div>
+											</div>
+										</div>
+										<form>
+											<div class="row">
+												<div class="col-sm-8 col-sm-offset-2">
+													<p>Gemaakte afspraken dienen in geval van belet 48 uur op voorhand worden verplaatst of geannuleerd. Dit kan via telefoon of per mail. Indien aan deze voorwaarde niet wordt voldaan zal er een annulatiekost worden aangerekend (m.u.v. ziektebriefje).</p>
+												</div>
+												<div class="col-sm-6 col-sm-offset-3">
+													
+													<div class="choice" data-toggle="wizard-checkbox">
+														<input type="checkbox" name="condition" value='1'>
+														<div class="card card-checkboxes card-hover-effect">
+															<p>Ik ga akkoord</p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+												
 		                            </div>
 		                            <div class="tab-pane" id="resume">
 										<div class="row"><div class="col-centered loading"></div></div>
@@ -415,17 +315,19 @@
 											</div>
 											<div class='row'>
 												<div class="col-sm-6 col-sm-offset-5">
-													<div id="message">&nbsp;</div>
+													<div class="error" id="message">&nbsp;</div>
 												</div>
 											</div>
 											
 											<div class="row">
-												<div class="col-sm-6 col-sm-offset-4">
-													<div><span>Afspraak voor: </span><span class="resume-text patient"></span></div>
-													<div><span>Locatie: </span><span class="resume-text location"></span></div>
-													<div><span>Bij: </span><span class="resume-text practitioner"></span></div>
-													<div><span>Voor: </span><span class="resume-text service"></span></div>
-													<div><span>Tijdstip: </span><span class="resume-text timeslot"></span></div>
+												<div class="col-sm-6 col-sm-offset-3">
+													<div class="card card-checkboxes choice">
+														<div><span>Afspraak voor: </span><span class="resume-text patient"></span></div>
+														<div><span>Locatie: </span><span class="resume-text location"></span></div>
+														<div><span>Bij: </span><span class="resume-text practitioner"></span></div>
+														<div><span>Voor: </span><span class="resume-text service"></span></div>
+														<div><span>Tijdstip: </span><span class="resume-text timeslot"></span></div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -436,14 +338,18 @@
 		                                </div>
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3 info-text">
-												<div>Je afspraak is bevestigd en gaat door!! Tot dan! </div>
+												
+													<div>Je afspraak is bevestigd en gaat door!! Tot dan! </div>
+													<div>&nbsp;</div>
+													<div class="card card-checkboxes choice">
+														<div><span>Locatie: </span><span class="resume-text location"></span></div>
+														<div><span>Bij: </span><span class="resume-text practitioner"></span></div>
+														<div><span>Voor: </span><span class="resume-text service"></span></div>
+														<div><span>Tijdstip: </span><span class="resume-text timeslot"></span></div>
+													</div>
+												
 												<div>&nbsp;</div>
-												<div><span>Locatie: </span><span class="resume-text location"></span></div>
-													<div><span>Bij: </span><span class="resume-text practitioner"></span></div>
-													<div><span>Voor: </span><span class="resume-text service"></span></div>
-													<div><span>Tijdstip: </span><span class="resume-text timeslot"></span></div>
-												<div>&nbsp;</div>
-												<div>Je ontvangt zodadelijk nog een bevestiging per email. Ontvang je door technische problemen geen mail: je afspraak gaan hoe dan ook door. Check zeker je spambox.</div>
+												<div>Je ontvangt zodadelijk nog een bevestiging per email. Ontvang je door technische problemen geen mail: je afspraak gaat hoe dan ook door. Check zeker je spambox.</div>
 												<div>Bedankt om gebruik te maken van onze online booking.</div>
 												
 											</div>

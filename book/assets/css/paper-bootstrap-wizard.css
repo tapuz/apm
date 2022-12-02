@@ -1258,7 +1258,7 @@ input[type="button"]:focus {
 
 .wizard-card[data-color="azure"] .choice.active.red .card-checkboxes {
   color: white;
-  background-color: #ea2323;
+  background-color: #7A9E9F;
 }
 .wizard-card[data-color="green"] .picture:hover {
   border-color: #7AC29A;

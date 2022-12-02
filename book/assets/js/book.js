@@ -52,6 +52,10 @@ $(window).on('load',function() {
 $(document).ready(function() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
+  var html = '<div class="col-md-6 col-sm-12 col-xs-12"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="clinic" value="%clinicID%" clinicName="%clinicName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-home"></i><p>%clinicName%</p></div></div></div>';
+  var html_proposition="<div class='col-md-4 col-sm-12 col-xs-12'><div class='choice' data-toggle='wizard-radio'><input type='radio' name='proposition' value='%timeslot%'><div class='card card-checkboxes card-hover-effect'><i class='ti-calendar'></i><p>%timeslot_text%</p></div></div></div>";
+  var html_no_proposition="<div class='col-md-4 col-sm-12 col-xs-12'><div class='choice'><input type='radio' name='proposition'><div class='card card-checkboxes'><i class='ti-calendar'></i><p>%text%</p></div></div></div>";
+ 
   
 
   if (urlParams.has('service')){ // patient is requesting a screening..limit months to book to 2
@@ -150,8 +154,9 @@ $("#timing").hide();
           $('#message_propositions').html('');
          
         } else {
-          $('#message_propositions').show();
-          $('#message_propositions').html('Geen mogelijkheden voor deze dag...');
+          newhtml =  html_no_proposition.replace('%text%','Geen mogelijkheden voor deze dag');
+          $('#timeslot_select .propositions').append(newhtml);
+
         
         }
         
@@ -174,10 +179,9 @@ $("#timing").hide();
      
     });
  
-   var html = '<div class="col-md-6 col-sm-12 col-xs-12"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="clinic" value="%clinicID%" clinicName="%clinicName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-home"></i><p>%clinicName%</p></div></div></div>';
-   var html_proposition="<div class='col-md-4 col-sm-12 col-xs-12'><div class='choice' data-toggle='wizard-radio'><input type='radio' name='proposition' value='%timeslot%'><div class='card card-checkboxes card-hover-effect'><i class='ti-calendar'></i><p>%timeslot_text%</p></div></div></div>";
-   
-  // get the clinics from group
+ 
+  
+   // get the clinics from group
    $.ajax({
   		dataType: "json",
 		url: apiURL,
@@ -223,6 +227,22 @@ $("#timing").hide();
       
       
       });
+  var $validatorConditions = $('#conditions form').validate({
+    rules:{
+          condition:{
+                required:true
+          }
+    },
+    messages:{
+          condition:'U moet akkoord gaan met deze voorwaarde om uw afspraak te maken.'
+    },
+    errorPlacement: function(error, element) {
+          $('#conditions #message').html(error);
+          
+    }
+    
+    
+    });
   
   var $validatorPractitioner = $('#practitioner form').validate({
       rules:{
@@ -341,6 +361,15 @@ $("#timing").hide();
     'tabClass': 'nav nav-pills',
     'nextSelector': '.btn-next',
     'previousSelector': '.btn-previous',
+    onPrevious: function (tab, navigation,index){
+      
+      switch (index) {
+        case 2: // previous was clicked on select timeslot 
+          $('#' + practitioner.ID).click();
+          
+        break;
+      }
+    },
 
     onNext: function(tab, navigation, index) {
       //var $current = index + 1;
@@ -388,6 +417,8 @@ $("#timing").hide();
                   objPatient.email = form[3].value;
                   objPatient.phone = form[4].value;
                   
+                  //send NP details by mail... 
+                  $.get(apiURL,{task:'emailTempNP',patient:JSON.stringify(objPatient)});
 
               }
             break;
@@ -412,33 +443,46 @@ $("#timing").hide();
                //set the service title
                
                
-               //propose the practitioner
-               $('#practitioner #message').html('Selectie gemaakt op basis van je laatste bezoek.');
-               $('.practitioners :input[value='+ practitioner_to_propose +']').click();
+               //if recurrent patient-> propose the practitioner
+               if (mode == 'recurrentPatient'){
+                $('#practitioner #message').html('Selectie gemaakt op basis van je laatste bezoek.');
+                $('#' + practitioner_to_propose).click();
+               } 
+               
+              
               }
               
           break;
       
           case 3://next was clicked on the select practitioner wizard
+          
+          
             var $valid = $('#practitioner form').valid();
               if (!$valid) {
                 //$validator.focusInvalid();
                 return false; //do not navigate to next slide
               }else{
+
                practitioner = new Object();
                practitioner.ID =  $("input:radio[name ='practitioner']:checked").val();
                practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
+               
 
+               $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: practitioner.name } );
                $.each(practitioners, function() {
                 if (this.ID == practitioner.ID){
                 practitioner=this;
+                
                 }
+              
+                
+
               });
                
                //$(".group-description").html(clinic.name + " / " + practitioner.name);
                $('.wizard-title').html('Afspraak maken bij ' + practitioner.display_name);
                //check the service we need 
-
+               
 
                if (urlParams.has('service')==true){
                   if (mode == 'recurrentPatient'){
@@ -473,19 +517,8 @@ $("#timing").hide();
               }
           break;
          
-          case 10: //next was clicked on the timing wizard
-               timing = $("input:checkbox[name='timing']:checked").map(function() {
-                  //start = 
-                  //this.value};
-                  return JSON.parse(this.value);
-               //return this.value;
-               }).get();
-               getAvailableTimes(timing);
-               
-          break;
-         
           case 4: // next was clicked on the select timeslot tab
-          
+               $('.error').html('');
                var $valid = $('#timeslot_select form').valid();
                   if (!$valid) {
                      return false; //do not navigate to next slide
@@ -502,6 +535,17 @@ $("#timing").hide();
                      
                   }
                
+          break;
+
+          case 5: //next was clicked on conditions tab
+            $('.error').html('');
+            var $valid = $('#conditions form').valid();
+            if (!$valid) {
+              return false; //do not navigate to next slide
+            }else{
+              //navigate to nxt slide
+            }
+                
           break;
       }
 
@@ -944,7 +988,7 @@ function checkMatch() {
       
       function getPractitionersFromClinic(clinic){
             $('#practitioner .practitioners').html(loadingImg);
-            var html='<div class="col-sm-12 col-xs-12 col-md-4"><div class="choice" data-toggle="wizard-radio"><input type="radio" name="practitioner" value="%practitionerID%" practitionerName="%practitionerName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-user"></i><p>%practitionerName%</p></div></div></div>';
+            var html='<div class="col-sm-12 col-xs-12 col-md-4"><div id="%practitionerID%" class="choice" data-toggle="wizard-radio"><input type="radio" name="practitioner" value="%practitionerID%" practitionerName="%practitionerName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-user"></i><p>%practitionerName%</p></div></div></div>';
             $.ajax({
                   dataType: "json",
                   url: apiURL,
@@ -963,7 +1007,7 @@ function checkMatch() {
                           if (this.ID == practitionerNotAvailable){
                             return true;
                           }
-                          newhtml = html.replace('%practitionerID%',this.ID);
+                          newhtml = html.replaceAll('%practitionerID%',this.ID);
                           newhtml = newhtml.replace('%practitionerName%',this.display_name);
                           newhtml = newhtml.replace('%practitionerName2%',this.display_name);
                          
