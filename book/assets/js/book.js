@@ -468,7 +468,7 @@ $("#timing").hide();
                practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
                
 
-               $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: practitioner.name } );
+               $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'finding timeslot with: ' + practitioner.name } );
                $.each(practitioners, function() {
                 if (this.ID == practitioner.ID){
                 practitioner=this;
@@ -519,6 +519,7 @@ $("#timing").hide();
          
           case 4: // next was clicked on the select timeslot tab
                $('.error').html('');
+               $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'waiting to confirm appt..' } );
                var $valid = $('#timeslot_select form').valid();
                   if (!$valid) {
                      return false; //do not navigate to next slide
@@ -538,14 +539,14 @@ $("#timing").hide();
           break;
 
           case 5: //next was clicked on conditions tab
-            $('.error').html('');
+            /* $('.error').html('');
             var $valid = $('#conditions form').valid();
             if (!$valid) {
               return false; //do not navigate to next slide
             }else{
               //navigate to nxt slide
             }
-                
+                 */
           break;
       }
 
