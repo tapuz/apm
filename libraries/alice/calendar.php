@@ -161,6 +161,90 @@ class Calendar {
 		return self::getCustomAppointment($id);
 	 	
     }
+
+	public static function addToWaitinglist($demand) {
+        global $wpdb;
+		//$app = $appointment;
+		$wpdb->insert( 
+				'table_waitinglist', 
+				array( 
+					'patient_id' => $demand->patient->patient_id,
+					'patient_surname' => $demand->patient->patient_surname, 
+					'patient_firstname' => $demand->patient->patient_firstname,
+					'dob' => $demand->patient->dob,
+					'email' => $demand->patient->email,
+					'phone' => $demand->patient->phone,
+					'group' => $demand->group,
+					'clinic' => $demand->clinic,
+					'practitioner' => $demand->userID,
+					'note' => $demand->note,
+					'severity' => $demand->severity,
+					'service'=> $demand->service,
+					) 
+	 			);
+	 			
+        //return newly created appointment
+		$id=$wpdb->insert_id;
+		return self::getWaitinglistItem($id);
+	 	
+    }
+
+	public static function getWaitinglistItem($id){
+		global $wpdb;
+		$query = $wpdb->prepare("
+			SELECT
+			table_waitinglist.*,
+			wp_users.display_name as resourceName,
+			
+			table_services.id as serviceId,
+			
+			
+			table_services.id as serviceId,
+			table_services.color as backgroundColor,
+			table_services.color as borderColor,
+			table_services.duration as duration,
+			table_services.description
+			
+			FROM table_waitinglist
+		
+			INNER JOIN wp_users
+			ON table_waitinglist.practitioner = wp_users.ID
+			INNER JOIN table_services
+			ON table_waitinglist.service = table_services.id
+
+			WHERE table_waitinglist.id = %d
+			
+			
+			",$id);
+		$item = $wpdb->get_row($query);
+		return $item;
+  	}
+
+	public static function getWaitinglist($group){
+		global $wpdb;
+		$query = $wpdb->prepare("
+			SELECT
+			table_waitinglist.*,
+			wp_users.display_name as resourceName,
+			
+			table_services.id as serviceId,
+			
+			
+			table_services.id as serviceId,
+			table_services.color as backgroundColor,
+			table_services.color as borderColor,
+			table_services.duration as duration
+			
+			FROM table_waitinglist
+		
+			INNER JOIN wp_users
+			ON table_waitinglist.practitioner = wp_users.ID
+			INNER JOIN table_services
+			ON table_waitinglist.service = table_services.id
+
+			WHERE table_waitinglist.group = %d",
+			$group);
+	}
 	
 	
 	public function getAppointmentRequests($group){ //not used

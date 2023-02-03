@@ -15,12 +15,17 @@
   cursor: pointer !important;;
 }
 
+
 #message_propositions{
  color:rgb(255, 47, 47);
 }
 
 .resume-text{
     font-weight: bold !important;
+}
+
+.urgent {
+  color: red;
 }
 
 .col-centered{

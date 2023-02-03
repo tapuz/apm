@@ -10,7 +10,11 @@
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
 	
-	<script src="https://use.fontawesome.com/666e5e9f3f.js"></script>
+	<!-- <script src="https://use.fontawesome.com/666e5e9f3f.js"></script> -->
+
+	<script src="https://use.fontawesome.com/f8e4645dac.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/v4-shims.css">
 	
 	<!-- CSS Files -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -83,22 +87,22 @@
 												Chiropractor
 											</a>
 										</li>
-										<li>
+										<li id="tab4">
 											<a href="#timeslot_select" data-toggle="tab">
 												<div class="icon-circle">
 													<i class="ti-calendar"></i>
 												</div>
-												Tijdstip
+												<span class="tabTitle">Tijdstip</span>
 											</a>
 										</li>
-										<li>
+										<!-- <li>
 											<a href="#conditions" data-toggle="tab">
 												<div class="icon-circle">
 													<i class="ti-check-box"></i>
 												</div>
 												Voorwaarden
 											</a>
-										</li> 
+										</li>  -->
 			                            <li>
 											<a href="#resume" data-toggle="tab">
 												<div class="icon-circle">
@@ -130,7 +134,6 @@
 													
 													<div class="col-sm-6 col-md-offset-3">
 													<div class="choice">
-		                                                <input type="checkbox" name="jobb" value="Design">
 		                                                <div class="card card-checkboxes card-hover-effect new">
 															<p>Ik ben nog geen patient</p>
 		                                                </div>
@@ -234,7 +237,7 @@
 											<form>
 		                                    <div class="row">
 											<div class="container-fluid">
-												<div class="row centered clinics">
+												<div class="row centered clinics toggle">
 												</div>
 											</div>
 											</div>
@@ -251,35 +254,126 @@
 										<form>
 										<div class="row">
 		                                <div class="container-fluid">
-											<div class="row centered practitioners">
+											<div class="row centered practitioners toggle">
 											</div>
 										</div>
 										</div>
 										</form>
 		                            </div>
 									<div class="tab-pane" id="timeslot_select">
-		                                <h5 class="info-text"> Kies een tijdstip</h5>
-		                                <div class='row'>
-											<div class="col-sm-6 col-centered">
-												<div class="error" id="message">&nbsp;</div>
+										<div id="timeslot_propositions">
+											<h5 class="info-text"> Kies een tijdstip</h5>
+											<div class='row'>
+												<div class="col-sm-6 col-centered">
+													<div class="error" id="message">&nbsp;</div>
+												</div>
+											</div>
+											<div class='row'>
+												
+														<div class="col-sm-6 col-sm-offset-3">
+															<div class="choice">
+																<div class="card card-checkboxes card-hover-effect btn_OpenUrgentApptWarningModal">
+																	<p>Vraag dringende afspraak</p>
+																</div>
+															</div>
+														</div>
+														
+													
+												
+											</div>
+											<div class="row">
+												<div class="col-centered" id="loading"></div>
+												<form>
+													<div class="row">
+														<div class="container-fluid">
+															
+															<div id="calendar" class="row centered"></div>
+															<div class="row">&nbsp;</div>
+															<div class="row"></div>
+															<div class="row centered propositions"></div>
+															
+														</div>
+													</div>
+												</form>
+												
 											</div>
 										</div>
-										<div class="row">
-											<div class="col-centered" id="loading"></div>
+										<div id="urgent" style="display: none;">
+											<div class='row'>
+												<div class="col-sm-6 col-sm-offset-4">
+													<div class="error" id="message">&nbsp;</div>
+												</div>
+											</div>
 											<form>
-												<div class="row">
-													<div class="container-fluid">
-														
-														<div id="calendar" class="row centered"></div>
-														<div class="row">&nbsp;</div>
-														<div class="row"></div>
-														<div class="row centered propositions"></div>
-														
+											<div class="row">
+												<div class="col-sm-12">
+													<br>
+													<h4><p>Ik had graag een dringende afspraak in het <span class="urgent_clinic">RUGCENTRUM GENT</span> met:</p></h4> 
+												</div>
+												<div class="row centered urgent_practitioner_select toggle">
+													<div class="col-md-6 col-sm-12 col-xs-12">
+														<div class="choice active" data-toggle="wizard-radio">
+															<input type="radio" name="urgent_practitioner" value="1" aria-required="true" class="valid urgent_practitioner_input" checked="checked">
+															 <div class="card card-checkboxes card-hover-effect">
+																<i class="ti-user"></i>
+																<p class="urgent_practitioner">urgent_practitioner</p>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6 col-sm-12 col-xs-12">
+														<div class="choice" data-toggle="wizard-radio">
+															<input type="radio" name="urgent_practitioner" value="0" class="valid">
+															<div class="card card-checkboxes card-hover-effect">
+																<i class="ti-user"></i>
+																<p>Geen voorkeur</p>
+															</div>
+														</div>
 													</div>
 												</div>
-											</form>
+												<br>
+												<div class="col-sm-12">
+													<br>
+													<h4><p>Ik heb klachten sinds:</p></h4> 
+												</div>
+												<div class="row centered severity toggle">
+													<div class="col-md-6 col-sm-12 col-xs-12">
+														<div class="choice" data-toggle="wizard-radio">
+															<input type="radio" name="severity" value="1" aria-required="true" class="valid">
+															 <div class="card card-checkboxes card-hover-effect">
+																<i class="fa fa-plus-square"></i>
+																<p>Langer dan 7 dagen</p>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6 col-sm-12 col-xs-12">
+														<div class="choice" data-toggle="wizard-radio">
+															<input type="radio" name="severity" value="2" class="valid">
+															<div class="card card-checkboxes card-hover-effect">
+																<i class="fa fa-minus-square"></i>
+																<p>Minder dan 7 dagen</p>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-12">
+													<div class="row">
+														<h4><p>Beschrijf kort je probleem:</p></h4> 
+													</div>
+													<div class="form-group">
+
+															<textarea name="note" class="form-control urgent_note" rows="2" placeholder=""></textarea>
+														
+													</div>
+													<div class="row">
+														<h4><p class="error">Een aanvraag voor een dringende afspraak biedt geen garantie dat u op korte termijn gezien zult worden, maar we zullen ons best doen om u zo snel mogelijk te helpen.</p></h4> 
+													</div>
+												</div>
 											
+											</div>
+										</form>
+
 										</div>
+										
 		                            </div>
 									<div class="tab-pane" id="conditions">
 		                                <h5 class="info-text">Goede afspraken: </h5>
@@ -308,6 +402,31 @@
 		                            </div>
 		                            <div class="tab-pane" id="resume">
 										<div class="row"><div class="col-centered loading"></div></div>
+										<div id="urgent_confirmation" style="display: none;">
+											<div class='row'>
+												<div class="col-sm-6 col-sm-offset-5">
+													<div class="error" id="message">&nbsp;</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6 col-sm-offset-3">
+													<div>&nbsp;</div>
+													<div class="info-text">We hebben je aanvraag goed ontvangen en nemen contact met je op binnen de praktijk uren. Zorg dat je telefonisch bereikbaar bent.</div>
+													<div class="card card-checkboxes choice">
+														<div><span>Afspraak aanvraag voor: </span><span class="resume-text patient"></span></div>
+														<div><span>Locatie: </span><span class="resume-text location"></span></div>
+														<div><span>Bij: </span><span class="resume-text practitioner"></span></div>
+														<div><span>Voor: </span><span class="resume-text service"></span></div>
+														<div><span>Opmerking: </span><span class="resume-text note"></span></div>
+
+													</div>
+													<div>&nbsp;</div>
+													<div class="info-text">Je ontvangt zodadelijk nog een bevestiging per email. Ontvang je door technische problemen geen mail: we hebben je aanvraag zeker ontvangen. Check zeker je spambox.</div>
+												
+												</div>
+												
+											</div>
+										</div>
 										<div id = "resume_details">
 											<div class="row">
 												<h5 class="info-text">Controleer je afspraak nog even en bevestig onderaan... </h5>
@@ -330,6 +449,12 @@
 													</div>
 												</div>
 											</div>
+											<div class="row">&nbsp;</div>
+											<div class="row">
+												<div class="col-sm-8 col-sm-offset-2">
+													<p class="info-text">Gemaakte afspraken dienen in geval van belet 48 uur op voorhand worden verplaatst of geannuleerd. Dit kan via telefoon of per mail. Indien aan deze voorwaarde niet wordt voldaan zal er een annulatiekost worden aangerekend (m.u.v. ziektebriefje).</p>
+												</div>
+											</div>	
 										</div>
 										<div id="confirmed" style="display: none;">
 											<div class="row">
@@ -337,7 +462,7 @@
 		                                    
 		                                </div>
 										<div class="row">
-											<div class="col-sm-6 col-sm-offset-3 info-text">
+											<div class="col-sm-6 col-sm-offset-3">
 												
 													<div>Je afspraak is bevestigd en gaat door!! Tot dan! </div>
 													<div>&nbsp;</div>
@@ -349,8 +474,8 @@
 													</div>
 												
 												<div>&nbsp;</div>
-												<div>Je ontvangt zodadelijk nog een bevestiging per email. Ontvang je door technische problemen geen mail: je afspraak gaat hoe dan ook door. Check zeker je spambox.</div>
-												<div>Bedankt om gebruik te maken van onze online booking.</div>
+												<div class="info-text">Je ontvangt zodadelijk nog een bevestiging per email. Ontvang je door technische problemen geen mail: je afspraak gaat hoe dan ook door. Check zeker je spambox.</div>
+												<div class="info-text">Bedankt om gebruik te maken van onze online booking.</div>
 												
 											</div>
 										</div>
@@ -364,7 +489,7 @@
 										</div>
 		                            </div>
 		                        </div>
-		                        <div class="wizard-footer">
+		                        <div class="wizard-footer standard-footer">
 									
 	                            	<div class="pull-right">
 	                                    <input type='button' class='btn btn-next btn-fill btn-success btn-wd' name='next' value='Volgende' />
@@ -376,6 +501,18 @@
 
 	                                <div class="pull-left">
 	                                    <input type='button' class='btn btn-previous btn-default btn-wd' name='previous' value='Vorige' />
+	                                </div>
+	                                <div class="clearfix"></div>
+		                        </div>
+								<div class="wizard-footer urgent-footer">
+									
+	                            	<div class="pull-right">
+										<button class='btn btn-urgent-finish btn-fill btn-success btn-wd' name='finish'>Bevestig</button>
+										<button class='btn btn-urgent-finish-saving btn-fill btn-success btn-wd'><i class='fa fa-circle-o-notch fa-spin'></i> Bevestigen</button>
+									</div>
+
+	                                <div class="pull-left">
+	                                    <input type='button' class='btn btn-urgent-previous btn-default btn-wd'  value='Terug' />
 	                                </div>
 	                                <div class="clearfix"></div>
 		                        </div>
@@ -415,6 +552,36 @@
 	</div>
   </div>
   <!--stop: email-check-modal -->
+
+
+	<!--start: email-check-modal -->
+	<div class="modal fade" id="urgentApptWarning" data-backdrop="static">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h3 class="modal-title">Opgelet</h3>      
+			</div>
+			<div class="modal-body">
+				<div class="row"><span>Gelieve alleen een dringende afspraak aan te vragen voor acute en ernstige medische aandoeningen wanneer er geen reguliere tijdsloten beschikbaar zijn.</span></div>
+				<div class="row">&nbsp;</div>
+				<div class="row col-centered">
+					
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Terug</button>
+						<button type="submit" class="btn btn-danger btn_urgent">Doorgaan</button>
+					</div>
+				</div>
+				
+				
+			</div>
+			<div class="modal-footer">
+				
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <!--stop: email-check-modal -->
+
+
 </body>
 
 	<!--   Core JS Files   -->

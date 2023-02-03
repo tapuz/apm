@@ -41,6 +41,7 @@ var monthsInAdvance = 12;
 var practitionerNotAvailable;
 var urlService;
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
+var wizard;
 
 
 
@@ -79,6 +80,8 @@ var today = new Date();
   
 $("#loading").hide();
 $("#timing").hide();
+$('.urgent-footer').hide();
+
 
 
   //init cal
@@ -211,6 +214,33 @@ $("#timing").hide();
   $('[rel="tooltip"]').tooltip();
 
   // Code for the Validator
+
+  var $validatorUrgent = $('#urgent form').validate({
+    rules:{
+      urgent_practitioner:{
+                required:true
+          },
+      severity:{
+          required:true
+      },
+      note:{
+          required:true
+      }
+    },
+    messages:{
+      urgent_practitioner:'Kies een chiropractor of geen voorkeur',
+      severity:'Geef aan hoe lang je reeds problemen hebt',
+      note:'Geef een korte uitleg of jouw probleem.'
+
+    },
+    errorPlacement: function(error, element) {
+          $('#urgent #message').html(error);
+          
+    }
+    
+    
+    }); 
+
    var $validatorTimeslot = $('#timeslot_select form').validate({
       rules:{
             proposition:{
@@ -357,7 +387,7 @@ $("#timing").hide();
 
 
   // Wizard Initialization
-  var wizard = $('.wizard-card').bootstrapWizard({
+    wizard = $('.wizard-card').bootstrapWizard({
     'tabClass': 'nav nav-pills',
     'nextSelector': '.btn-next',
     'previousSelector': '.btn-previous',
@@ -416,6 +446,7 @@ $("#timing").hide();
                   objPatient.dob = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
                   objPatient.email = form[3].value;
                   objPatient.phone = form[4].value;
+                  objPatient.id=
                   
                   //send NP details by mail... 
                   $.get(apiURL,{task:'emailTempNP',patient:JSON.stringify(objPatient)});
@@ -610,6 +641,94 @@ $("#timing").hide();
   });
   
   
+  $('.btn-urgent-finish').click(function(){
+
+    //check if form valid
+    var $valid = $('#urgent form').valid();
+    if (!$valid) {
+      $validator.focusInvalid();
+      return false; //do nothing
+    } else {
+      $('.wizard-card').bootstrapWizard('show',4);
+      $('#resume .loading').html(loadingImg).show();
+      $('#resume_details').hide();
+      $('#urgent').hide();
+      $('.btn-urgent-finish-saving').show();
+      $('.btn-urgent-finish').hide();
+
+      //get the right service
+      switch (mode) 
+      {
+        case 'recurrentPatient':
+          service.id = practitioner.default_service_urgent.service;
+          service.duration = practitioner.default_service_urgent.duration;
+          service.description = practitioner.default_service_urgent.description
+
+        break;
+        case 'newPatient':
+          service.id = practitioner.default_service_np_urgent.service;
+          service.duration = practitioner.default_service_np_urgent.duration;
+          service.description = practitioner.default_service_np_urgent.description
+        break;
+      }
+
+      //construct the demand for urgent appointment
+
+      userID = $("input:radio[name ='urgent_practitioner']:checked").val();  //is 0 if no specific practitioner
+
+      var demand = {
+        userID: userID,
+        patient:objPatient,
+        clinic:clinic.ID,
+        group:group.ID,
+        severity:$("input:radio[name ='severity']:checked").val(), 
+        note:$('.urgent_note').val(),
+        service:service.id
+      }
+
+      $.ajax({
+          
+        url: apiURL,
+        dataType: "json",
+        data: {
+          task: 'addToWaitinglist',
+          demand:JSON.stringify(demand)
+          
+        },
+        
+        }).done(function(data) {
+          
+          $('#urgent_confirmation .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
+          if (userID=='0'){
+            $('#urgent_confirmation .practitioner').html('geen voorkeur');
+          }else{
+            $('#urgent_confirmation .practitioner').html(practitioner.display_name);
+          }
+          $('#urgent_confirmation .service').html(service.description);
+          $('#urgent_confirmation .location').html(clinic.name);
+          $('#urgent_confirmation .note').html($('.urgent_note').val());
+          
+          //$('.wizard-card').bootstrapWizard('show',4);
+         
+          $('#resume .loading').hide();
+          $('#urgent_confirmation').show();
+          $('#urgent').hide();
+          //$('.btn-urgent-finish-saving').hide();
+          $('.urgent-footer').hide();
+          
+          
+        }).fail(function(){
+          $('.wizard-card').bootstrapWizard('show',3);
+          $('#urgent #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
+          $('.btn-urgent-finish-saving').hide();
+          $('.btn-urgent-finish').show();
+          $('#resume .loading').hide();
+          $('#urgent').show();
+
+        });
+    }
+
+  });
   
   $('.btn-finish').click(function(){
    $('.btn-finish-saving').show();
@@ -717,7 +836,7 @@ $("#timing").hide();
 
   $('.clinics').on('click','[data-toggle="wizard-radio"]',function() {
       
-    wizard = $(this).closest('.wizard-card');
+    wizard = $(this).closest('.toggle');
     wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
     $(this).addClass('active');
     $(wizard).find('[type="radio"]').removeAttr('checked');
@@ -731,13 +850,28 @@ $("#timing").hide();
   
   $('.practitioners').on('click','[data-toggle="wizard-radio"]',function() {
       
-    wizard = $(this).closest('.wizard-card');
+    wizard = $(this).closest('.toggle');
     wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
     $(this).addClass('active');
     $(wizard).find('[type="radio"]').removeAttr('checked');
     $(this).find('[type="radio"]').attr('checked', 'true');    
     
   });
+
+
+  $('.urgent_practitioner_select,.severity').on('click','[data-toggle="wizard-radio"]',function() {
+      
+    wizard = $(this).closest('.toggle');
+    wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
+    $(this).addClass('active');
+    $(wizard).find('[type="radio"]').removeAttr('checked');
+    $(this).find('[type="radio"]').attr('checked', 'true');    
+    
+  });
+
+
+
+
 
   $('.btn-restart').click(function(){
     location.reload();
@@ -780,6 +914,7 @@ $("#timing").hide();
   
   $('.btn-next').hide();
   $('.btn-finish-saving').hide();
+  $('.btn-urgent-finish-saving').hide();
   $('.btn-restart').hide();
 
   $('.recurrent').click(function() {
@@ -848,10 +983,53 @@ $(document).on("click", ".update_email" , function() {
   
 });
 
+
+$(document).on("click",".btn_OpenUrgentApptWarningModal",function(){
+  $('#urgentApptWarning').modal('show');
+});
+
+
+$(document).on("click", ".btn_urgent" , function() {
+  $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'Started the urgent appointment request ' + practitioner.name } );
+  $('#urgentApptWarning').modal('hide');
+    $('#timeslot_propositions').hide();
+    $('#urgent').show();
+    $('.standard-footer').hide();
+    $('.urgent-footer').show();
+    $('.urgent_practitioner_input').val(practitioner.ID);
+    $('.urgent_practitioner').html(practitioner.display_name);
+    $('.urgent_clinic').html(clinic.name);
+    //swap the icon and text of the tab
+    $('#tab4 i').toggleClass('ti-bolt');
+    $('#tab4 i').toggleClass('ti-calendar');
+    $('#tab4 .tabTitle').html('Urgentie');
+    $('.service-title').html('Dringende consultatie').toggleClass('urgent');
+
+
+
+
+});
+
+$(document).on("click", ".btn-urgent-previous" , function() {
+  $('#timeslot_propositions').show();
+  $('#urgent').hide();
+  $('.standard-footer').show();
+  $('.urgent-footer').hide();
+   //swap the icon and text of the tab
+   $('#tab4 i').toggleClass('ti-bolt');
+   $('#tab4 i').toggleClass('ti-calendar');
+   $('#tab4 .tabTitle').html('Tijdstip');
+   $('.service-title').html(service.description).toggleClass('urgent');
+});
+
+
+
+
 function getAvailableTimes(duration,timing){
    //clear the propositions if there would be any...
    $('#loading').html(loadingImg).show();
    $('#calendar').hide();
+   $('.btn_OpenUrgentApptWarningModal').hide();
    $('#message_propositions').hide();
    $('#timeslot_select .propositions').html('');
 
@@ -872,6 +1050,7 @@ function getAvailableTimes(duration,timing){
                
                 $('#timeslot_select .propositions').html('');
                 $('#loading').hide();
+                $('.btn_OpenUrgentApptWarningModal').show();
                 $('#calendar').show();
                 calendar.setEventsData(propositions);   
                }).fail(function( jqXHR, textStatus ) {

@@ -100,25 +100,47 @@ class Email {
                 
                 $this->to = $appointment->email;
             
-                $message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
                 
-                $message = str_replace('%patient%', $appointment->patient_firstname, $message);
-                $message = str_replace('%time%', $appointment->time, $message);
-                $message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
-                $message = str_replace('%practitioner%', $appointment->resourceName, $message);
+                
+               
     
                 switch ($mode){
                     case "confirmation":
+                        $message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
+
+                        $message = str_replace('%patient%', $appointment->patient_firstname, $message);
+                        $message = str_replace('%time%', $appointment->time, $message);
+                        $message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
+                        $message = str_replace('%practitioner%', $appointment->resourceName, $message);
                         $this->subject = $clinic->email_appointment_confirmation_subject;
                         $message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
                         $message = str_replace('%text1%', $clinic->email_appointment_confirmation_text1, $message);
                         $message = str_replace('%text2%', $clinic->email_appointment_confirmation_text2, $message);
                     break;
                     case "amended":
+                        $message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
+
+                        $message = str_replace('%patient%', $appointment->patient_firstname, $message);
+                        $message = str_replace('%time%', $appointment->time, $message);
+                        $message = str_replace('%address%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
+                        $message = str_replace('%practitioner%', $appointment->resourceName, $message);
                         $this->subject = $clinic->email_appointment_amended_subject;
                         $message = str_replace('%title%', $clinic->email_appointment_amended_subject, $message);
                         $message = str_replace('%text1%', $clinic->email_appointment_amended_text, $message);
                         $message = str_replace('%text2%', '', $message);
+                   
+
+                    break;
+                    case "addedToWaitinglist":
+                        $message = file_get_contents('assets/email_templates/addedToWaitinglist.html');
+
+                        $message = str_replace('%patient%', $appointment->patient_firstname, $message);
+                        $message = str_replace('%service%', $appointment->description, $message);
+                        $message = str_replace('%clinic%', $appointment->clinic_name . " - "  . $appointment->clinic_address, $message);
+                        $message = str_replace('%practitioner%', $appointment->resourceName, $message);
+                        $this->subject = $clinic->email_waitinglist_subject. ' ' . $appointment->description ;
+                        $message = str_replace('%text1%', $clinic->email_waitinglist_text, $message);
+                        $message = str_replace('%note%', $appointment->note, $message);
                    
 
                     break;
@@ -131,6 +153,8 @@ class Email {
                 
                 $this->send();
     }
+
+    
     
     
     

@@ -110,7 +110,9 @@ switch (getVar('task')){
 
 		foreach($practitioners as $practitioner){
 			$practitioner->{"default_service"} = Service::getRecurrentService($clinic,$practitioner->ID);
+			$practitioner->{"default_service_urgent"} = Service::getRecurrentUrgentService($clinic,$practitioner->ID);
 			$practitioner->{"default_service_np"} = Service::getNPService($clinic,$practitioner->ID);
+			$practitioner->{"default_service_np_urgent"} = Service::getNPUrgentService($clinic,$practitioner->ID);
 			$practitioner->{"services"} = Service::getAllServices($clinic);
 		}
 
@@ -133,6 +135,36 @@ switch (getVar('task')){
         
     break;
 	
+	case 'addToWaitinglist':
+		loadLib('calendar');
+		loadLib('email');
+		loadLib('push');
+		
+		$demand =  Calendar::addToWaitinglist(json_decode(stripslashes(getVar('demand'))));
+		echo json_encode($demand);//$demand = stripslashes(getVar('urgent_demand'));
+
+		$email = new Email();
+		$email->sendAppointmentEmail($demand,'addedToWaitinglist');
+
+		$mail = new Email();
+		$mail->getServerSettings(2);
+		$mail->to = 'thierry.duhameeuw@gmail.com';
+		$mail->subject='New urgent request';
+		$mail->message = json_encode($demand);
+		$mail->send();
+
+		$push = new Push();
+		$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
+		$push->title = 'Urgent appointment request';
+		$body = $demand->resourceName.' : ('.$demand->patient_id . ') - '. $demand->patient_surname . ' ' . $demand->patient_firstname .' - Service: '.$demand->description;   
+
+		$push->body = $body;
+		$push->send();
+		
+		
+
+	break;
+
 	case 'addAppointment':
 		loadLib('calendar');
 		loadLib('email');
