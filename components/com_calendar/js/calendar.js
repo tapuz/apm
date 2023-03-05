@@ -84,10 +84,10 @@ $(document).ready(function() {
       task: 'getUsers'
     }
   }).done(function(data) {
-    log("DATAZ -- + "+ data);  
+    
 		//store users 
     users = data;
-		log ('USERS--> ' + users);
+		//log ('USERS--> ' + users);
     // make the practitioner selector 
     selectUser = "<select id='userSelect' name='userSelect' class='form-control' style='width:174px'>";
 		if (Object.keys(data).length > 1){//there is > 1 user.. show all practitioners option
@@ -110,12 +110,11 @@ $(document).ready(function() {
     // otherwise show first calendar in list
 
     userID = $('#selectedUserID').val();
-  
+
     if (userID != 'none') {
-      $('#userSelect option[value=' + userID + ']').attr('selected', 'selected');
-      
+      $("#userSelect").val(userID);
     } else {
-      $('#userSelect option:eq(1)').attr('selected', 'selected');
+      $("#userSelect").prop('selectedIndex',0)
     }
 
     selectedUser = $('#userSelect').val();
@@ -128,6 +127,7 @@ $(document).ready(function() {
     renderWorkingPlan(users[selectedUser].data.workingPlan);
 
     $('#userSelect').on('change', function() {
+      log('USERSELECT CHANGED!!!');
       calendar.fullCalendar('removeEvents','not_working');
       calendar.fullCalendar('removeEvents','working');
       calendar.fullCalendar('removeEvents','break');
