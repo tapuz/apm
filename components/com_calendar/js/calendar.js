@@ -114,7 +114,7 @@ $(document).ready(function() {
     if (userID != 'none') {
       $("#userSelect").val(userID);
     } else {
-      $("#userSelect").prop('selectedIndex',0)
+      $("#userSelect").prop('selectedIndex',1)
     }
 
     selectedUser = $('#userSelect').val();
@@ -127,7 +127,7 @@ $(document).ready(function() {
     renderWorkingPlan(users[selectedUser].data.workingPlan);
 
     $('#userSelect').on('change', function() {
-      log('USERSELECT CHANGED!!!');
+      
       calendar.fullCalendar('removeEvents','not_working');
       calendar.fullCalendar('removeEvents','working');
       calendar.fullCalendar('removeEvents','break');
@@ -153,7 +153,7 @@ $(document).ready(function() {
         getEvents(selectedUser);
         
         calendar.fullCalendar('option', 'slotDuration',users[selectedUser].data.calSlotDuration);
-        
+        s
         
 
 
