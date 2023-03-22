@@ -153,7 +153,7 @@ $(document).ready(function() {
         getEvents(selectedUser);
         
         calendar.fullCalendar('option', 'slotDuration',users[selectedUser].data.calSlotDuration);
-        s
+        
         
 
 
