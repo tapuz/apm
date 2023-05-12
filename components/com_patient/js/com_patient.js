@@ -770,7 +770,8 @@ $(document).ready(function(){
 
 					})
 					return filteredDiagnoses;},
-				bmi : vitals[0].bmi
+				bmi : ''
+				
 					
 			
 				
