@@ -1,0 +1,72 @@
+<script id='tmpl_summary' type="x-tmpl-mustache">   
+  <div class='row'>
+    <div class="col-md-3">
+      {{#profession}}<label>Profession:</label> {{profession}}{{/profession}}
+      {{#retired}}(Retired){{/retired}}
+    </div>
+    <div class="col-md-3">
+      {{#bmi}}<label>BMI:</label> {{bmi}}{{/bmi}}
+    </div>
+  </div>
+
+  <div class='row'>
+    {{#drinking}}
+      <div class='col-md-3'><label>Drinking:</label> {{drinking}}</div>
+    {{/drinking}}
+    {{#smoking}}
+      <div class="col-md-3"> <label>Smoker:</label> {{smoking}}</div>
+    {{/smoking}}
+    {{#sleeping}}
+      <div class="col-md-3"> <label>Sleeping:</label> {{sleeping}}</div>
+    {{/sleeping}}
+    {{#allergies}}
+      <div class="col-md-3"><label>Allergies:</label> {{allergies}}</div>
+    {{/allergies}}
+  </div>
+
+  <div class='row'>
+    {{#orthotics}}
+      <div class='col-md-3'><label>Orthotics:</label> {{orthotics}}</div>
+    {{/orthotics}}
+    {{#heel_lift}}
+      <div class="col-md-3"><label>Heel lift:</label> {{heel_lift}}</div>
+    {{/heel_lift}}  
+  </div>
+
+  <div class='row'>
+    <div class='col-md-3'>
+      <label>PMH:</label>
+    </div>
+    <div class='col-md-3'>
+      {{#pmh}}  
+       <div class='row'>
+        <div class="col-md-12">{{year}} - {{condition}} - {{#redflag}} <i style="color:red" class="fas fa-flag"></i> {{/redflag}} {{#yellowflag}} <i style="color:yellow" class="fas fa-flag"></i> {{/yellowflag}}</div> 
+       </div>
+      {{/pmh}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-md-3'>
+      
+        <label>Complaints:</label>
+      
+    </div>
+    <div class='col-md-3'>
+      {{#complaints}}
+        <div class='row'>
+          <div class="col-md-12">{{open}} - {{diagnosis}} - <strong>{{cc}}</strong> - {{ac}}</div>
+        </div>
+      {{/complaints}}
+    </div>
+  </div>
+
+
+</script>
+
+<script id='tmpl_summary_pmh' type="x-tmpl-mustache">   
+
+
+</script>
+
+

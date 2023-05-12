@@ -269,6 +269,8 @@ class Patient
 						 table_soap.objective,
 						 table_soap.assessment,
 						 table_soap.plan,
+						 table_soap.interval,
+						 table_soap.supp_measures,
 						 
 						 wp_users.display_name as username
 						 

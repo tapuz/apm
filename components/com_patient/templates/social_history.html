@@ -1,72 +1,80 @@
-<script id='tmpl_general_history' type="x-tmpl-mustache">
-  <form>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group ">
-            <label class="" for="">Past medical history</label>
+<script id='tmpl_social_history' type="x-tmpl-mustache">
+  <div class='row'>&nbsp;</div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label>Profession</label>
+        <div class="row">
+          <div class="col-sm-10">
+          <input autocomplete="off" class="form-control tagsinput" name="profession" type="text" value="{{profession}}">
+        </div>
+        </div>
+			</div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="form-group ">
+        <label class="" for="">Retired</label>
+        <input name="retired" class="retired" type="checkbox" {{#retired}}checked{{/retired}}>  
+      </div>
+    </div>
+
+
+  </div>
+
+    
+    
+    <div class='row'>
+      <div class="col-sm-6">
+        <div class="form-group">
+            <label>Sport</label>
             <div class="row">
-              <div class="col-sm-12">
-                <ul class="list-group pmh">
-               
-                </ul>
+              <div class="col-sm-10">
+                <input name="sport" class="form-control allergy tagsinput" type="text" value="{{sport}}">
               </div>
             </div>
         </div>
       </div>
     </div>
+
     <div class='row'>
       <div class="col-sm-6">
         <div class="form-group ">
-            <label class="" for="">Allergies</label>
+            <label class="" for="">Smoking</label>
             <div class="row">
-              <div class="col-sm-8">
-                <input name="allergies" class="form-control allergy tagsinput" type="text" value="{{allergies}}">
+              <div class="col-sm-10">
+                <input name="smoking" class="form-control tagsinput" type="text" value="{{smoking}}">
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group ">
+            <label class="" for="">Drinking</label>
+            <div class="row">
+              <div class="col-sm-10">
+                <input name="drinking" class="form-control tagsinput" type="text" value="{{drinking}}">
               </div>
             </div>
         </div>
       </div>
     </div>
     
-     <div class="row">
-      <div class="col-sm-10">
+    <div class='row'>
+      <div class="col-sm-6">
         <div class="form-group ">
-            <label class="" for="">Family History</label>
+            <label class="" for="">Sleeping</label>
             <div class="row">
-              <div class="col-sm-8">
-                <ul class="list-group familyhistory">
-                
-                </ul>
+              <div class="col-sm-10">
+                <input name="sleeping" class="form-control tagsinput" type="text" value="{{sleeping}}">
               </div>
             </div>
         </div>
       </div>
     </div>
       
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group ">
-            <label class="" for="">Orthotics</label>
-            <div class="row">
-              <div class="col-sm-8">
-                <input name="orthotics" class="form-control orthotics tagsinput" type="text" value="{{orthotics}}">
-              </div>
-            </div>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="form-group ">
-            <label class="" for="">Heel lift</label>
-            <div class="row">
-              <div class="col-sm-8">
-                <input name="heel_lift" class="form-control heel_lift tagsinput" type="text" value="{{heel_lift}}">
-              </div>
-            </div>
-        </div>
-      </div>
-    </div>
     
      
-  </form>
 
   
 </script>

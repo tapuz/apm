@@ -99,6 +99,7 @@ $(document).ready(function(){
 			renderVitalsPanel(true);
 			renderHistoryPanel();
 			renderEncounters();
+			renderSummary();
 			renderInitComplaintTabs(false);
 			renderComplaints(true);
 			renderFlagnotifications();
@@ -186,6 +187,9 @@ $(document).ready(function(){
 		$('#objective').val(oEncounter.objective);
 		$('#assessment').val(oEncounter.assessment);
 		$('#plan').val(oEncounter.plan);
+		$('#interval').val(oEncounter.interval);
+		$('#supp_measures').val(oEncounter.supp_measures);
+
 		
 		$('#encounter').show();
 		$('#btn_new_encounter').hide();
@@ -512,6 +516,7 @@ $(document).ready(function(){
 								 relieving:this.relieving,
 								 previous_treatments:this.previous_treatments,
 								 note:this.note,
+								 open: moment(this.open).format('L'),
 							
 								 diagnosis: this.diagnosis,
 								 diagnosis_id: this.diagnosis_id,
@@ -743,7 +748,36 @@ $(document).ready(function(){
 	//VITALS//
 
 
+	function renderSummary(){
+		filterComplaints();
+		var template_summary = $('#tmpl_summary').html();
+		Mustache.parse(template_summary);
+		var rendered = Mustache.render(template_summary,
+			{
+				sport : oHistory.sport,
+				profession : oHistory.profession,
+				retired : oHistory.retired,
+				drinking : oHistory.drinking,
+				smoking : oHistory.smoking,
+				sleeping : oHistory.sleeping,
+				orthotics : oHistory.orthotics,
+				heel_lift : oHistory.heel_lift,
+				pmh : JSON.parse(oHistory.pmh),
+				allergies : oHistory.allergies,
+				complaints : function(){
+					$.each(filteredDiagnoses,function(){
+						this.open = moment(this.open).format('L')
 
+					})
+					return filteredDiagnoses;},
+				bmi : vitals[0].bmi
+					
+			
+				
+
+			 });
+		$('#summary-panel .panel-body').html(rendered);
+	}
 	
 	function renderFlagnotifications () {
 		//render the red and yellow flag notys only when there are any
@@ -822,10 +856,11 @@ $(document).ready(function(){
 			 plan: this.plan,
 			 date: moment(this.start).format('L'),
 			 note:this.note,
+			 interval:this.interval,
 			 diagnoses:Dx,
 			 complaintID:complaintID
 			 });
-		$('#timeline').append(rendered);
+		$('#encounters_table tbody').append(rendered);
 		});
 	
 		$('#label_encounter_saving').hide();
@@ -1070,7 +1105,10 @@ $(document).ready(function(){
 		//render the general history tab
 		
 		var general_history =  Mustache.render(template_general_history,
-											   {allergies : oHistory.allergies});
+											   {allergies : oHistory.allergies,
+												orthotics : oHistory.orthotics,
+												heel_lift : oHistory.heel_lift
+												});
 		$('#general_history').html(general_history);
 		
 		//render the PMH
@@ -1101,7 +1139,17 @@ $(document).ready(function(){
 			
 		}
 		
-		
+		//social history
+		var template_social_history = $('#tmpl_social_history').html();
+		var social_history = Mustache.render(template_social_history,
+			{sport : oHistory.sport,
+			profession : oHistory.profession,
+			retired : oHistory.retired,
+			drinking : oHistory.drinking,
+			smoking : oHistory.smoking,
+			sleeping : oHistory.sleeping
+			});
+		$('#social_history').html(social_history);
 		
 		//paed history
 		var template_paediatric_history = $('#tmpl_paediatric_history').html();
@@ -1215,7 +1263,16 @@ $(document).ready(function(){
 	$(document).on('change','.history input',function(){
 		var value = $(this).val();
 		var field = $(this).attr("name");
-		History.save(patientID,field,value,function(){oHistory[field] = value;});
+		var type = $(this).attr("type");
+		if (type == "checkbox") {
+			if ($(this).is(":checked")) {
+				value = 1;
+			  } else {
+				value = 0;
+			  }
+		}
+
+		History.save(patientID,field,value,function(){oHistory[field] = value;renderSummary();});
 		});
 	
 	
@@ -1251,6 +1308,7 @@ $(document).ready(function(){
 
 		
 	});
+
 	
 	//inputs clone when full 
 	$(document).on("keypress",".cloneWhenFull",function(){

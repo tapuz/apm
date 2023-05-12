@@ -20,22 +20,24 @@
 	<div class="row">
 	
 
-	<div class="col-xs-12 top_panel">
-		<div class="box">
-						<div class="box-header">
-							<h2><i class="icon-user"></i><strong><?= $patient->patient_surname.' '.$patient->patient_firstname?></strong></h2>
-							<ul class="nav tab-menu nav-tabs" id="myTab">
-								<li class="active"><a href="#demographics"><i class="fas fa-id-card-alt"></i></a></li>
-								<li><a href="#vitals"><i class="fas fa-heartbeat"></i> </a></li>
-								<li><a href="#History"><i class="fas fa-file-medical-alt"></i> History</a></li>
-								<li><a href="#complaints"><i class="fas fa-notes-medical"></i> Complaints</a></li>
-								<li><a href="#pictureProof_tab"><i class="fas fa-camera-retro"></i></i> PictureProof<span class="pictureProofCount">(0)</span></a></li>
-								<li><a href="#notes_tab"><i class="far fa-sticky-note"></i> Notes </a></li>
-								<li><a href="#docs_tab"><i class="far fa-file"></i> Docs<span class="docCount">(0)</span></a></li>
+	<div class="top_panel">
+		<div class="panel with-nav-tabs panel-success">
+						<div class="panel-heading">
+							<ul class="nav nav-tabs">
+							<li class=""><a href=""><i class="icon-user"></i><strong> <?= $patient->patient_surname.' '.$patient->patient_firstname?></strong></a></li>
+								<li class="pull-right"><a href="#notes_tab" data-toggle="tab"><i class="far fa-sticky-note"></i> Notes </a></li>
+								<li class="pull-right"><a href="#docs_tab" data-toggle="tab"><i class="far fa-file"></i> Docs<span class="docCount">(0)</span></a></li>
+								<li class="pull-right"><a href="#pictureProof_tab" data-toggle="tab"><i class="fas fa-camera-retro"></i> PictureProof<span class="pictureProofCount">(0)</span></a></li>
+								<li class="pull-right"><a href="#complaints" data-toggle="tab"><i class="fas fa-notes-medical"></i> Complaints</a></li>
+								<li class="pull-right"><a href="#History" data-toggle="tab"><i class="fas fa-file-medical-alt"></i> History</a></li>
+								<li class="pull-right"><a href="#vitals" data-toggle="tab"><i class="fas fa-heartbeat"></i> </a></li>
+								<li class="pull-right active"><a href="#demographics" data-toggle="tab"><i class="fas fa-id-card-alt"></i></a></li>
 							</ul>
+
+							
 							
 						</div>
-						<div class="box-content">
+						<div class="panel-body">
 							
 							<div id="myTabContent" class="tab-content">
 								<div class="tab-pane active" id="demographics"></div>
@@ -132,61 +134,24 @@
 		
 	</div><!--/col-->
 	</div><!--/row-->
-
+<div class="row">
+	<div id="summary-panel" class="panel panel-success">
+            				<div class="panel-heading">
+								<i class="fas fa-notes-medical"></i> Summary
+							</div>
+            				<div class='panel-body'></div>
+    </div>
+</div>
 
 <div class='row'>
-	<div class="col-md-12 visible-md visible-lg list-encounters"><!--Start encounter flow -->
+	<div class="list-encounters">
+	<!--<div class="col-md-12 visible-md visible-lg list-encounters">Start encounter flow -->
 	 Click on de + button to add a new encounter.
 					
 	</div><!--/history flow -->
 </div><!--/row-->
-<div class="row">
-	
-  				
-	<div class="col-xs-8 col-md-8 hidden">
-	<div class="box">
-						<div class="box-header">
-							<h2><i class="icon-reorder"></i><span class="break"></span>Consultations</h2>
-							
-								
-							
-						</div>
-						<div class="box-content">
-							<table class="table">
-								  <thead>
-									  <tr>
-										  <th>Date</th>
-										  <th>S</th>
-										  <th>O</th>
-										  <th>T</th>
-										  <th>Practitioner</th>
-									  </tr>
-								  </thead>   
-								  	<tbody>
-					<?
-					foreach($appointments as $appointment){
-						?>
-						<tr>
-							<td>
-								<?
-								echo $appointment->scheduled_date?>
-							</td>
-							<td>++</td>
-							<td>SLR 95deg</td>
-							<td>T10;L5</td>
-							<td>
-								<?
-								echo $appointment->scheduled_practitioner_name?>
-							</td>
-						</tr>
-						<?
-					}
-					?>
-				</tbody>
-							</table>
-						</div><!--/box-content -->
-	</div><!--/box --->
-	</div><!--/col -->
+
+
 </div><!--/row -->
 </div><!--/col /left content -->
 
@@ -348,8 +313,10 @@
 <?include(TEMPLATES . 'complaint.html'); ?>
 <?include(TEMPLATES . 'general_history.html'); ?>
 <?include(TEMPLATES . 'paediatric_history.html'); ?>
+<?include(TEMPLATES . 'social_history.html'); ?>
 <?include(TEMPLATES . 'encounter_print.html'); ?>
 <?include(TEMPLATES . 'patient_appointments.html'); ?>
+<?include(TEMPLATES . 'summary.html'); ?>
 
 
 
