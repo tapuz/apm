@@ -1,5 +1,5 @@
 <?php
-
+global $v;
 
 
 ?>
@@ -56,6 +56,7 @@
 	<!-- start: JavaScript-->
 	<!--[if !IE]>-->
 	<script src="assets/js/jquery-3.2.1.min.js"></script>
+	<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 	
     <script src="https://code.jquery.com/jquery-migrate-3.1.0.js" async></script>
   
@@ -88,7 +89,7 @@
 
 
 
-
+ 
 
 
 
@@ -159,7 +160,7 @@
 	
 	
 	
-	<script src="assets/js/alice.js"></script>
+	<script src="assets/js/alice.js?v=<?=$v?>"></script>
 	<script src="assets/js/printThis.js" async></script>
 	<script src="assets/js/jstorage.js" async></script>
 	<!--<script type="text/javascript" src="assets/js/live.js"></script>-->

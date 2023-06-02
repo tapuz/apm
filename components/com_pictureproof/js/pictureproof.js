@@ -15,8 +15,16 @@ $(function() {
 	  var topbarY = 0;
 	  var bottombarY = 0;
     var heightBarsPresent = false;
+    var analyseGroups = [];
+    var blackBoxes = [];
     
     var groupPaths;
+    var objectsDrawn = [];
+    var color = '#e606ea';
+    var thickness = 5;
+    var isDrawing = false;
+
+
 
 	  var patientHeight;
 	  var cpp;  //centimeters Per Pixel
@@ -74,7 +82,11 @@ $(function() {
 
     canvas.on('path:created', function(e){
         var newPath = e.path;
+        if (isDrawing) {
+          objectsDrawn.push(e.path);
+        }
         //groupPaths.add(newPath);
+
     });
     
     canvas.on({
@@ -154,7 +166,8 @@ $(function() {
 				delta = cpp * delta;
 				delta = delta.toFixed(2);
 				
-				text.setText(delta.toString());
+				//text.setText(delta.toString());
+        text.set('text',delta.toString());
 				if (Math.abs(delta) > deltaLimit) {
 					text.textBackgroundColor = "red";
 				} else {
@@ -220,7 +233,8 @@ $(function() {
 				delta = cpp * delta;
 				delta = delta.toFixed(2);
 				
-				text.setText(delta.toString());
+				//text.set(delta.toString());
+        text.set('text',delta.toString());
 				if (Math.abs(delta) > deltaLimit) {
 					text.textBackgroundColor = "red";
 				} else {
@@ -263,25 +277,28 @@ $(function() {
 								 fill: 'white'
                                  
 								 });
-        text.setVisible(true);
+        
+        text.visible = true;
 		
 
 		var rect = new fabric.Rect({width: 100, height: 20, left: lijn.get('x2')+30, top: lijn.get('y2'), fill: 'red'});
 		var textGroup = new fabric.Group([text], {selectable: false, left: lijn.get('x2')+45, top: lijn.get('y2')});
 		 
       
-		canvas.add(textGroup);
+		
 		
 		var circle1 = makeCircleAP(left,top,null,lijn,null,null,textGroup,false);
 		var circle2 = makeCircleAP(left+length,top,lijn,null,null,null,textGroup,true);
-		
-		canvas.add(lijn);
-		canvas.add(circle1);
-		canvas.add(circle2);
-		
 	
-		canvas.renderAll();
-		
+
+
+    const analyseGroup = [lijn, textGroup, circle1, circle2];
+        analyseGroups.push(analyseGroup);
+        analyseGroup.forEach(function(obj) {
+          canvas.add(obj);
+        });
+     
+
 		
      }
 
@@ -299,25 +316,20 @@ $(function() {
 								 fill: 'white',
                                  
 								 });
-        text.setVisible(true);
+        text.visible=true;
 		
 
 		var rect = new fabric.Rect({width: 100, height: 20, left: lijn.get('x2')+30, top: lijn.get('y2'), fill: 'red'});
 		var textGroup = new fabric.Group([text], {selectable: false, left: lijn.get('x2')+45, top: lijn.get('y2')});
-		 
-      
-		canvas.add(textGroup);
-		
 		var circle1 = makeCircleLAT(left,top,null,lijn,null,null,textGroup,false);
 		var circle2 = makeCircleLAT(left,top+length,lijn,null,null,null,textGroup,true);
-		
-		canvas.add(lijn);
-		canvas.add(circle1);
-		canvas.add(circle2);
-		
-	
-		canvas.renderAll();
-		
+
+    const analyseGroup = [lijn, textGroup, circle1, circle2];
+        analyseGroups.push(analyseGroup);
+        analyseGroup.forEach(function(obj) {
+          canvas.add(obj);
+        });
+
 		
      }
 
@@ -338,33 +350,23 @@ $(function() {
 								 fill: 'white',
                                  
 								 });
-        text.setVisible(true);
+        text.visible=true;
 		
 
 		var rect = new fabric.Rect({width: 100, height: 20, left: lijn1.get('x2')+30, top: lijn1.get('y2'), fill: 'red'});
 		var textGroup = new fabric.Group([text], {selectable: false, left: lijn1.get('x2')+45, top: lijn1.get('y2')});
-		 
-      
-		canvas.add(textGroup); 
-		
 		var circle1 = makeCircleLAT(left,top,null,lijn1,null,null,textGroup,false);
-        var circle2 = makeCircleLAT(left,top+length,lijn1,lijn2,null,null,textGroup,true);
-        var circle3 = makeCircleLAT(left,top+(length*2),lijn2,lijn3,null,null,textGroup,true);
-        var circle4 = makeCircleLAT(left,top+(length*3),lijn3,lijn4,null,null,textGroup,true);
-        var circle5 = makeCircleLAT(left,top+(length*4),lijn4,null,null,null,textGroup,true);
+    var circle2 = makeCircleLAT(left,top+length,lijn1,lijn2,null,null,textGroup,true);
+    var circle3 = makeCircleLAT(left,top+(length*2),lijn2,lijn3,null,null,textGroup,true);
+    var circle4 = makeCircleLAT(left,top+(length*3),lijn3,lijn4,null,null,textGroup,true);
+    var circle5 = makeCircleLAT(left,top+(length*4),lijn4,null,null,null,textGroup,true);
 		
-        canvas.add(lijn1);
-        canvas.add(lijn2);
-        canvas.add(lijn3);
-        canvas.add(lijn4);
-		    canvas.add(circle1);
-        canvas.add(circle2);
-        canvas.add(circle3);
-        canvas.add(circle4);
-        canvas.add(circle5);
+    const analyseGroup = [lijn1,lijn2,lijn3,lijn4,textGroup, circle1, circle2,circle3,circle4,circle5];
+        analyseGroups.push(analyseGroup);
+        analyseGroup.forEach(function(obj) {
+          canvas.add(obj);
+        });             
 		
-	
-		canvas.renderAll();
 		
 		
      }
@@ -384,19 +386,25 @@ $(function() {
         line.path[1][4] = top+200;
 
         line.selectable = false;
-        canvas.add(line);
+        //canvas.add(line);
  
         var p1 = makeCurvePoint(left+100, top+50, null, line, null) // the one that moves the curve
         p1.name = "p1";
-        canvas.add(p1);
+        //canvas.add(p1);
 
         var p0 = makeCurveCircle(left, top, line, p1, null);
         p0.name = "p0";
-        canvas.add(p0);
+        //canvas.add(p0);
 
         var p2 = makeCurveCircle(left, top+200, null, p1, line);
         p2.name = "p2";
-        canvas.add(p2);
+        //canvas.add(p2);
+
+        const analyseGroup = [line,p1, p0, p2];
+        analyseGroups.push(analyseGroup);
+        analyseGroup.forEach(function(obj) {
+          canvas.add(obj);
+        });
         
 
     }
@@ -505,8 +513,8 @@ $(function() {
         heightBarsPresent = true;
         
 	}
-	
-    
+
+
     function onObjectSelected(e) {
         var activeObject = e.target;
     
@@ -591,6 +599,83 @@ $(function() {
     
     
     //END ANALYSE AP-PA//
+
+
+
+    //start zooming code
+    canvas.on('mouse:wheel', (options) => {
+      const zoom = canvas.getZoom();
+      const zoomRatio = 1.1;
+
+      if (options.e.deltaY < 0) {
+        // Zoom in
+        canvas.zoomToPoint(options.pointer, zoom * zoomRatio);
+      } else {
+        // Zoom out
+        if (zoom / zoomRatio >= 1) {
+          canvas.zoomToPoint(options.pointer, zoom / zoomRatio);
+        } else {
+          canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // Reset canvas transformation
+        }
+      }
+
+      // Prevent scrolling the page
+      options.e.preventDefault();
+      options.e.stopPropagation();
+    });
+
+    let touchStartDistance = 0;
+    let touchStartZoom;
+
+    canvas.on('touch:gesture', (options) => {
+      const zoom = canvas.getZoom();
+      const zoomRatio = 1.01;
+
+      if (options.e.touches && options.e.touches.length === 2) {
+        const distance = Math.sqrt(
+          (options.e.touches[0].clientX - options.e.touches[1].clientX) ** 2 +
+          (options.e.touches[0].clientY - options.e.touches[1].clientY) ** 2
+        );
+
+        if (!touchStartDistance) {
+          touchStartDistance = distance;
+          touchStartZoom = zoom;
+        }
+
+        const zoomDelta = (distance - touchStartDistance) * 0.01;
+        const newZoom = touchStartZoom + zoomDelta;
+
+        if (newZoom > zoom) {
+          // Zoom in
+          canvas.zoomToPoint(
+            new fabric.Point(options.e.touches[0].clientX, options.e.touches[0].clientY),
+            newZoom
+          );
+        } else {
+          // Zoom out
+          if (zoom / zoomRatio >= 1) {
+            canvas.zoomToPoint(
+              new fabric.Point(options.e.touches[0].clientX, options.e.touches[0].clientY),
+              newZoom
+            );
+          } else {
+            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // Reset canvas transformation
+          }
+        }
+      } else {
+        touchStartDistance = 0;
+        touchStartZoom = null;
+      }
+    });
+   
+
+
+
+    //end zooming code
+
+
+
+
     $(document).on('click','.img-thumbnail',function(e) {            
         if (!selectImageMode){
             renderBackgroundImage(this.src);
@@ -619,18 +704,35 @@ $(function() {
     //top toolbar
     
     $('#btnAnalyse').click(function() {
-       $(this).toggleClass('active'); 
+       isDrawing=false;
+       canvas.isDrawingMode = isDrawing;
+       $('.btn-toggle').removeClass('active');
+       $(this).addClass('active'); 
+       $('.toolbar').hide();
        $('.toolbar.analyse').toggle();
        if(!heightBarsPresent){makePatientHeightBars();};
-       if ($(this).hasClass('active')){bottomBar.setVisible(true);topBar.setVisible(true);topBarC.setVisible(true);bottomBarC.setVisible(true);log('visible')}
-       else{bottomBar.setVisible(false);topBar.setVisible(false);topBarC.setVisible(false);bottomBarC.setVisible(false)}
+       if ($(this).hasClass('active')){bottomBar.visible=true;;topBar.visible=true;topBarC.visible=true;bottomBarC.visible=true;}
+       else{bottomBar.visible=false;topBar.visible=false;topBarC.visible=false;bottomBarC.visible=false}
 
-       if($(this).hasClass('active') && $('#btnDraw').hasClass('active')){$('#btnDraw').click();}
+       
        
 
        canvas.renderAll();
        
     });
+
+    $('#btnTools').click(function() {
+      isDrawing=false;
+      canvas.isDrawingMode = isDrawing;
+      $('.btn-toggle').removeClass('active');
+       $(this).addClass('active'); 
+      $('.toolbar').hide();
+      $('.toolbar.tools').toggle();
+      
+      
+      
+   });
+
     $('#btnHideEyes').click(function(){
         var rect = new fabric.Rect({
             left: (canvasWidth/2)-150,
@@ -639,17 +741,32 @@ $(function() {
             width: 300,
             height: 50
           });
+
+          blackBoxes.push(rect);
               canvas.add(rect);
 
     });
 
      $('#btnDraw').click(function() {
-       $(this).toggleClass('active'); 
+      $('.btn-toggle').removeClass('active');
+      $(this).addClass('active'); 
+       $('.toolbar').hide(); 
        $('.toolbar.draw').toggle();
        //start drawing
-       if($(this).hasClass('active') && $('#btnAnalyse').hasClass('active')){$('#btnAnalyse').click();}
-       //if($(this).hasClass('active')){canvas.isDrawingMode = true;}else{canvas.isDrawingMode = false;}
-       canvas.isDrawingMode = !canvas.isDrawingMode;
+       
+       isDrawing = !isDrawing;
+       canvas.isDrawingMode = isDrawing;
+       if (isDrawing) {
+        brush = new fabric.PencilBrush(canvas);
+        brush.color = color;
+        brush.width = thickness;
+        canvas.freeDrawingBrush = brush;
+      } else {
+        canvas.freeDrawingBrush = null;
+      }
+
+    
+
 
        
 
@@ -657,15 +774,14 @@ $(function() {
     });
 
     $('#btnRotatePlus90').click(function() {
-        log (canvas.getWidth());
-        rotateObject(bgImage,bgImageCurAngle + 1.5708,bgImage.width/2,bgImage.height/2);
-        bgImageCurAngle += 1.5708;  
-        //canvas.setWidth(canvasHeight);
-        //canvas.setHeight(canvasWidth);
-        //canvasHeight = canvas.getWidth();
-        //canvasWidth = canvas.getHeight();
-        
+      const backgroundImage = canvas.backgroundImage;
+      if (backgroundImage) {
+        bgImageCurAngle += 90;
+        backgroundImage.rotate(bgImageCurAngle);
         canvas.renderAll();
+      }
+        
+       
     });
 
     $('#btnRotateMin90').click(function() {
@@ -691,15 +807,48 @@ $(function() {
         makeSpineQuadratic((canvasWidth/2),canvasHeight/2);
     });
 
-    
-    
-    
+    $('#btnUndoAnalyse').click(function() {
+      const lastGroup = analyseGroups.pop();
+      if (lastGroup) {
+        lastGroup.forEach(function(obj) {
+          canvas.remove(obj);
+        });
+        canvas.renderAll();
+      }
+  });
 
-    
+    //tools toolbar
+    $('#btnUndoHideEyes').click(function() {
+      if (blackBoxes.length > 0) {
+        log (blackBoxes);
+        const lastObject = blackBoxes.pop();
+        canvas.remove(lastObject);
+        canvas.renderAll();
+      }
+    });
 
 
 
     //draw toolbar
+    $('#color-picker').on('change', function() {
+      color = $(this).val();
+      brush.color = color;
+      log(color);
+      
+    });
+
+    $('#thickness-slider').on('change', function() {
+      thickness = parseInt($(this).val());
+      brush.width = thickness;
+    
+    });
+    $('#undo-draw').on('click', function() {
+      if (objectsDrawn.length > 0) {
+        const lastObject = objectsDrawn.pop();
+        canvas.remove(lastObject);
+        canvas.renderAll();
+      }
+    });
 
 //end button actions
     $('#select-image').click(function() {
@@ -768,6 +917,16 @@ $(function() {
 
     
     $('#btnSaveToPatientPortfolio').click(function(){ 
+      let timestamp = moment().format('HH:mm');
+      let msg_saving = new Noty({
+        text: '<span class="text-center">Saving to portfolio...</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
+        //closeWith:'click',
+        layout:'top',
+        theme:'sunset',
+        type:'success'
+        // timeout: 1500 
+        
+        }).show();	;  				
       try {
         bottomBar.setVisible(false);topBar.setVisible(false);
       } catch (error) {
@@ -778,7 +937,7 @@ $(function() {
       
        var dataURL = $('#c').get(0).toDataURL('image/jpeg');//have to get the canvas element from the jquery object
       
-       log(dataURL);
+   
 
         console.log(patientName);
         $.ajax({
@@ -793,8 +952,8 @@ $(function() {
 			}).success(function( response ) {
                     //add the image to the portfolio 
                 	getPortfolioPictures();
-                    console.log('image_added');
-                    Message = new Noty({
+                    msg_saving.close();
+                    let msg_success = new Noty({
                       text: '<span class="text-center">Image saved to portfolio!</span><span class="pull-right"><i class="fa fa-times-circle">&nbsp;</i></span>',
                       //closeWith:'click',
                       layout:'top',
@@ -802,7 +961,9 @@ $(function() {
                       type:'success',
                       timeout: 1500 
                       
-                      }).show();	;  				
+                      }).show();
+                  //add timestamp next to save button to feedback when it was saved
+                  $('.save-timestamp').html(' saved @ ' + timestamp);
 			});
     });
     

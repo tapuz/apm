@@ -135,15 +135,16 @@ function loadView() // this function is not being used...
 
 function loadJS($file,$com=null) //in wiki
 {
+	global $v;
 	if (curPageName() == 'ajax.php') //the JS pages do not need to be loaded on AJAX calls
 	{
 		return;
 	}else{
 		if ($com == null) // no component was specified.. load JS file from the assets/js folder
-		{	$path=$config['root'] . 'assets/js/' . $file;
+		{	$path=$config['root'] . 'assets/js/' . $file . '?v='.$v;
 	
 			} else { // component is specified.. load JS file from the component/js folder
-				$path=$config['root'] . 'components/com_' . $com .'/js/' . $file; 
+				$path=$config['root'] . 'components/com_' . $com .'/js/' . $file . '?v='.$v; 
 		}
 	
 	
@@ -184,15 +185,16 @@ function loadJSModule($file,$mod)
 
 function loadCSS($file,$com=null) //in wiki
 {
+	global $v;
 	if (curPageName() == 'ajax.php') //the css pages does not need to be loaded on AJAX calls
     {
 		return;
     } else {
 	if ($com == null) // no component was specified.. load CSS file from the assets/css folder
-	{	$path=$config['root'] . 'assets/css/' . $file;
+	{	$path=$config['root'] . 'assets/css/' . $file . '?v='.$v;
 	
 	} else { // component is specified.. load CSS file from the component/js folder
-		$path=$config['root'] . 'components/com_' . $com .'/css/' . $file; 
+		$path=$config['root'] . 'components/com_' . $com .'/css/' . $file . '?v='.$v; 
 	}
 	
 	

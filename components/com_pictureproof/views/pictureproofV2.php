@@ -74,18 +74,23 @@
                                 <!--<button class="btn btn-success" id="btn_portfolio">Portfolio</button>
                                 <button class="btn btn-danger"  id="clear_drawing">Clear drawing</button>
                                 <button class="btn btn-danger"  id="clear_board">Clear board</button> -->
-                                <button class="btn btn-warning" id="btnHideEyes"><i class="fas fa-eye-slash"></i></button>
-                                <button class="btn btn-warning" id="btnAnalyse"><i class="fas fa-draw-polygon"></i></button>
-                                <button class="btn btn-warning" id="btnDraw"><i class="fas fa-paint-brush"></i></button>
-                                <button class="btn btn-warning" id="btnRotatePlus90"><i class="fas fa-sync-alt"></i></button>
+                                <button class="btn btn-toggle btn-warning" id="btnTools"><i class="fas fa-wrench"></i></button>
+                                <button class="btn btn-toggle btn-warning" id="btnAnalyse"><i class="fas fa-draw-polygon"></i></button>
+                                <button class="btn btn-toggle btn-warning" id="btnDraw"><i class="fas fa-paint-brush"></i></button>
                                 <button class="btn btn-primary" id="btnPrint"><i class="fas fa-print"></i></button>
                                 <button class="btn btn-primary" id="btnSaveToPatientPortfolio"><i class="far fa-save"></i> Save to porfolio</button>
+                                <span class='save-timestamp'></span>
                             </div>
                         </div>
                         <div class="spacer5"></div>
                          <div class='row with-margin-left toolbar draw'>
                             <div class="btn-toolbar">
-                                <button class="btn btn-success" id="bnt">DrawOption</button>
+                            <label for="color-picker">Color:</label>
+                                <input type="color" id="color-picker" value="#e606ea">
+                                <label for="thickness">Thickness:</label>
+                                <input type="range" id="thickness-slider" min="1" max="30" value="15">
+                                <button class="btn btn-warning" id="undo-draw"><i class="fas fa-rotate-left"></i></button>
+                                
                                 
                             </div>
                         </div>
@@ -101,6 +106,7 @@
                                     
                                     <input type="text" class="form-control" id="patientHeight" placeholder="Patient Height" value="<?=$height?>">
                                 </div>
+                                <button class="btn-lg btn-warning" id="btnUndoAnalyse"><i class="fas fa-rotate-left"></i></button>
                                
                                 
                             </div>
@@ -109,7 +115,16 @@
                                 <input class="form-control" typ="text">
   
                             </div>-->
-                        </div>                
+                        </div>        
+                        <div class="spacer5"></div>
+                        <div class='row with-margin-left toolbar tools'>
+                            <div class="form-inline">
+                                <button class="btn-lg btn-warning" id="btnHideEyes"><i class="fas fa-eye-slash"></i></button>
+                                <button class="btn-lg btn-warning" id="btnRotatePlus90"><i class="fas fa-sync-alt"></i></button>
+                                
+                                <button class="btn-lg btn-warning" id="btnUndoHideEyes"><i class="fas fa-rotate-left"></i></button>
+                             </div>
+                        </div>                        
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>
