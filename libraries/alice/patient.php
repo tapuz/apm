@@ -549,6 +549,11 @@ class Patient
 		$sql="SELECT * FROM table_history WHERE patient_id=%d";
 		$sql = $wpdb->prepare($sql,$patient_id);
 		$history = $wpdb->get_row($sql);
+		//ensure the retired value is send as boolean
+		$retiredValue = $history->retired;
+		//Convert the value to a boolean data type
+		$history->retired = ($retiredValue == 1) ? true : false;
+		
 		if ($wpdb->num_rows === 0){ //there is no history for this patient .. insert one in DB
 			$insert_sql = "INSERT INTO table_history (patient_id) VALUES (%d)";
 			$insert_sql = $wpdb->prepare($insert_sql,$patient_id);
