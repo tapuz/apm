@@ -85,7 +85,10 @@ public static function getClinicsFromGroup($groupName){
 		table_group.admin_email,
 		table_group.description,
 		table_group.group_id,
-		table_group.logo
+		table_group.logo,
+		table_group.allow_np_online_booking,
+		table_group.allow_urgent_request,
+		table_group.practitioner_title
 
 		FROM `table_clinics`
 		INNER JOIN table_group

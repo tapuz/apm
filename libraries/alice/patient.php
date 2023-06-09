@@ -560,11 +560,11 @@ class Patient
 			$wpdb->query($insert_sql);
 			
 			$history = $wpdb->get_row($sql);
-			error_log(print_r($history,1));
+			//error_log(print_r($history,1));
 			return $history;
 			
 		} else {
-			error_log(print_r($history,1));
+			//error_log(print_r($history,1));
 			return $history;
 		}
 		

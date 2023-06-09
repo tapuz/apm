@@ -182,8 +182,8 @@ switch (getVar('task')){
 		
 		//send
 		$mail = new Email();
-		$mail->getServerSettings(2);
-		$mail->to = 'thierry.duhameeuw@gmail.com';
+		$mail->getServerSettings($appointment->clinic);
+		$mail->to = getVar('email');
 		$mail->subject='NEW ONLINE BOOKING';
 		$mail->message = json_encode($appointment);
 		$mail->send();

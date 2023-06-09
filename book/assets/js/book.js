@@ -199,12 +199,19 @@ $('.urgent-footer').hide();
         newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
         $('#location .clinics').append(newhtml);
         //set the group 
-        group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description};
+        group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description,allow_np_online_booking:parseInt(this.allow_np_online_booking), allow_urgent_request:parseInt(this.allow_urgent_request),practitioner_title:this.practitioner_title};
       });
       group.logo = '<img src = '+group.logo+'>';
       $('.group-description').html(group.logo + group.description);
-   
-  		
+      //if allow_np_online_booking = false skip the first wizard slide, patient can only book if they are already in the system
+      if(!group.allow_np_online_booking){
+        mode = 'recurrentPatient';
+        $('#selectRecurrentNewPatient').hide();
+        $('#recurrentPatient').show();
+        $('.btn-next').show();
+      }
+      $('.practitioner_title').html(group.practitioner_title);
+  	
     });  
   
    
@@ -403,6 +410,7 @@ $('.urgent-footer').hide();
 
     onNext: function(tab, navigation, index) {
       //var $current = index + 1;
+      
 
       switch (index) {
         case 1: //next was clicked on first slide of wizard
@@ -498,8 +506,9 @@ $('.urgent-footer').hide();
                practitioner.ID =  $("input:radio[name ='practitioner']:checked").val();
                practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
                
-
+              if (group.ID == '1'){
                $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'finding timeslot with: ' + practitioner.name } );
+              }
                $.each(practitioners, function() {
                 if (this.ID == practitioner.ID){
                 practitioner=this;
@@ -545,12 +554,16 @@ $('.urgent-footer').hide();
                
                
                getAvailableTimes(service.duration,timing);
+              
+                
               }
           break;
          
           case 4: // next was clicked on the select timeslot tab
                $('.error').html('');
-               $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'waiting to confirm appt..' } );
+               if (group.ID == '1'){
+                $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'waiting to confirm appt..' } );
+               }
                var $valid = $('#timeslot_select form').valid();
                   if (!$valid) {
                      return false; //do not navigate to next slide
@@ -801,7 +814,8 @@ $('.urgent-footer').hide();
       dataType: "json",
       data: {
          task: 'addAppointment',
-         appointment:appointment
+         appointment:appointment,
+         email:group.email
          
          //comment:$('#timing #comment').val()
       },
@@ -990,7 +1004,9 @@ $(document).on("click",".btn_OpenUrgentApptWarningModal",function(){
 
 
 $(document).on("click", ".btn_urgent" , function() {
-  $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'Started the urgent appointment request ' + practitioner.name } );
+  if (group.ID == '1'){
+    $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'Started the urgent appointment request ' + practitioner.name } );
+  }
   $('#urgentApptWarning').modal('hide');
     $('#timeslot_propositions').hide();
     $('#urgent').show();
@@ -1053,6 +1069,9 @@ function getAvailableTimes(duration,timing){
                 $('.btn_OpenUrgentApptWarningModal').show();
                 $('#calendar').show();
                 calendar.setEventsData(propositions);   
+                if(!group.allow_urgent_request){
+                  $('.btn_OpenUrgentApptWarningModal').hide();
+                }
                }).fail(function( jqXHR, textStatus ) {
                   alert( "Request failed: " + textStatus );
                });
