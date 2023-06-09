@@ -295,7 +295,7 @@
 
 
 <!--start: eventDetails-modal -->
-<div class="modal fade" id="eventDetails">
+<div class="modal modal-wide fade" id="eventDetails" role="dialog" tabindex="-1">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -314,7 +314,7 @@
 <!--stop: eventDetails-modal -->
 
 <!--start: customEvent-modal -->
-<div class="modal fade" id="customEventDetails">
+<div class="modal modal-wide fade" id="customEventDetails">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

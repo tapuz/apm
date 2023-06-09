@@ -1,3 +1,6 @@
+
+
+
 #calendar{
     padding-right: 0px;
     
@@ -125,6 +128,13 @@
 
 .modal.modal-medium .modal-dialog {
   width: 40%;
+}
+
+
+@media only screen and (max-width: 480px) {
+  .modal.modal-wide .modal-dialog {
+    width: 99%;
+  }
 }
 
 /*Payment modal*/

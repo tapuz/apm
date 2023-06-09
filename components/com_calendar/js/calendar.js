@@ -1148,6 +1148,30 @@ $(document).ready(function() {
     });
   }
 	 
+
+  // Swipe gesture detection
+  var touchStartX = 0;
+  var touchEndX = 0;
+  var swipeThreshold = 10; // Adjust this value to control the swipe sensitivity
+
+  $('#calendar').on('touchstart', function(event) {
+    touchStartX = event.originalEvent.touches[0].clientX;
+  });
+
+  $('#calendar').on('touchend', function(event) {
+    touchEndX = event.originalEvent.changedTouches[0].clientX;
+    handleSwipeGesture();
+  });
+
+  function handleSwipeGesture() {
+    var swipeDistance = touchEndX - touchStartX;
+
+    if (swipeDistance > swipeThreshold) {
+      $('.fc-next-button').click();
+    } else if (swipeDistance < -swipeThreshold) {
+      $('.fc-prev-button').click();
+    }
+  }
 	
 });
 
