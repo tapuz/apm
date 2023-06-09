@@ -19,6 +19,7 @@ class Email {
     $smtp_port,
 	$smtp_username,
 	$smtp_password,
+    $smtp_encryption,
 	$to,
     $from_name,
     $from_email,
@@ -42,7 +43,7 @@ class Email {
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = $this->smtp_username;           // SMTP username
         $mail->Password = $this->smtp_password;               // SMTP password
-        $mail->SMTPSecure = 'ssl';    // Enable TLS encryption, `ssl` also accepted
+        $mail->SMTPSecure = $this->smtp_encryption;    // Enable TLS encryption, `ssl` also accepted
         $mail->Port = $this->smtp_port;
         $mail->isHTML(true);    //
         $mail->setFrom($this->from_email, $this->from_name);
@@ -79,6 +80,7 @@ class Email {
         $this->smtp_port = $clinic->smtp_port; //
         $this->smtp_username = $clinic->smtp_username;
         $this->smtp_password = $clinic->smtp_password;
+        $this->smtp_encryption = $clinic->smtp_encryption;
         
         $this->from_email = $clinic->clinic_email;
         $this->from_name = $clinic->email_name;

@@ -162,6 +162,14 @@
                       <textarea class="form-control" id="email_appointment_amended_text" name="email_appointment_amended_text" rows="4">{{email_appointment_amended_text}}</textarea>
                   </div><!--/form-group-->
                   <div class="form-group">
+                    <label for="email_waitinglist_subject">Waitinglist Subject</label>  
+                    <input id="email_waitinglist_subject" name="email_waitinglist_subject" type="text" placeholder="" class="form-control input-md" required="" value="{{email_waitinglist_subject}}">
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="email_waitinglist_text">Waitinglist Text</label>                
+                      <textarea class="form-control" id="email_waitinglist_text" name="email_waitinglist_text" rows="4">{{email_waitinglist_text}}</textarea>
+                  </div><!--/form-group-->
+                  <div class="form-group">
                     <label for="clinic_web">Email Portfolio subject</label>  
                     <input id="email_portfolio_subject" name="email_portfolio_subject" type="text" placeholder="" class="form-control input-md" required="" value="{{email_portfolio_subject}}">
                   </div><!--/form-group-->
@@ -190,6 +198,10 @@
                   <div class="form-group">
                     <label for="smtp_password">SMTP password</label>  
                     <input id="smtp_password" name="smtp_password" type="text" placeholder="" class="form-control input-md" required="" value="{{smtp_password}}">
+                  </div><!--/form-group-->
+                  <div class="form-group">
+                    <label for="smtp_password">Encryption type - tls or ssl</label>  
+                    <input id="smtp_password" name="smtp_encryption" type="text" placeholder="" class="form-control input-md" required="" value="{{smtp_encryption}}">
                   </div><!--/form-group-->
                 </div><!--/col-->
               </div><!--/row-->
