@@ -753,7 +753,7 @@ $('.urgent-footer').hide();
    {
      case 'recurrentPatient':
 
-       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0};
+       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0,group:group.ID};
        appointment = JSON.stringify(appointment);
        addAppointment(appointment);
        console.log(appointment);
@@ -1090,7 +1090,8 @@ function checkMatch() {
                   surname: surname,
                   firstname: firstname,
                   dob: dob,
-                  email: email
+                  email: email,
+                  group:group.ID
                 };
                 $.ajax({
                   dataType: "json",

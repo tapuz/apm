@@ -138,8 +138,8 @@ class Patient
 		$patient = json_decode(stripslashes($patient));
 		$query = $wpdb->prepare('
 			SELECT * from table_patients 
-			WHERE table_patients.patient_surname = %s AND table_patients.patient_firstname = %s AND table_patients.dob = %s',
-			$patient->surname,$patient->firstname,$patient->dob);
+			WHERE table_patients.patient_surname = %s AND table_patients.patient_firstname = %s AND table_patients.dob = %s AND table_patients.group = %s',
+			$patient->surname,$patient->firstname,$patient->dob,$patient->group);
 		$result=$wpdb->get_row($query);
 		
 		if ($result === NULL) {//no match was found
