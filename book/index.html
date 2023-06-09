@@ -1,4 +1,7 @@
 <!doctype html>
+<script>
+	var v='1.0';
+</script>
 <html lang="nl">
 <head>
 	<meta charset="utf-8" />
@@ -84,7 +87,7 @@
 												<div class="icon-circle">
 													<i class="ti-user"></i>
 												</div>
-												Chiropractor
+												<span class="practitioner_title"></span>
 											</a>
 										</li>
 										<li id="tab4">
@@ -245,7 +248,7 @@
 		                                </div>
 		                            </div>
 		                            <div class="tab-pane" id="practitioner">
-		                                <h5 class="info-text">Bij welke chiropractor? </h5>
+		                                <h5 class="info-text">Bij welke <span class="practitioner_title"></span>? </h5>
 										<div class='row'>
 											<div class="col-sm-6 col-centered">
 												<div class="error" id="message">&nbsp;</div>
@@ -595,11 +598,15 @@
 	<script src="assets/js/jquery.bootstrap.wizard.js" type="text/javascript"></script>
 
 	<script src="assets/js/config.js" type="text/javascript"></script>
-	<script src="assets/js/book.js" type="text/javascript"></script>
+	<!-- <script src="assets/js/book.js?ver="+v type="text/javascript"></script> -->
 
 	
 	<!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
 	<script src="assets/js/jquery.validate.min.js" type="text/javascript"></script>
 	<script src="assets/js/moment.js" type="text/javascript"></script>
-
+<script>
+	var script = document.createElement('script');
+	script.src = "assets/js/book.js?v=" + v;
+	document.body.appendChild(script);
+</script>
 </html>
