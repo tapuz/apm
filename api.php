@@ -190,13 +190,15 @@ switch (getVar('task')){
 		
 		
 		//send push
-		$push = new Push();
-		$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
-		$push->title = 'New online booking';
-		$body = $appointment->resourceName.' : ('.$appointment->patientID.') - '.$appointment->patientName.' - Service: '.$appointment->serviceId;   
+		if ($appointment->group == 1){
+			$push = new Push();
+			$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
+			$push->title = 'New online booking';
+			$body = $appointment->resourceName.' : ('.$appointment->patientID.') - '.$appointment->patientName.' - Service: '.$appointment->serviceId;   
 
-		$push->body = $body;
-		$push->send();
+			$push->body = $body;
+			$push->send();
+		}
 		
 		
 		//add the email
