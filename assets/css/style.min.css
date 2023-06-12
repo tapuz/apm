@@ -6799,6 +6799,7 @@ ul.friends-list li a {
 }
 
 @media only screen and (max-width:767px) {
+    .container{ width:800px}
     body:after,
     body:before {
         display: none
@@ -6839,6 +6840,11 @@ ul.friends-list li a {
         float: left
     }
     #content {
+        overflow: hidden
+    }
+    #content .row {
+        padding-right: 30px;
+        padding-left: 15px;
         overflow: hidden
     }
     #content .breadcrumb {

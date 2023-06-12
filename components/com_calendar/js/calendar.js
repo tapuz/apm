@@ -9,6 +9,7 @@ var highlightEvent = false;
 var eventIDtoHighlight;
 var datepicker;
 var selectedUser = "";
+var calSwipeDisabled = false;
 
 var cast;
 
@@ -19,6 +20,31 @@ showLoadingScreen();
 
 $(document).ready(function() {
   
+  var screenWidth = $(window).width(); 
+  var swipeThreshold =  screenWidth / 3  ;
+  //window overflow settings for mobile device
+  var container = $('.container');
+  updateOverflow();
+
+  $(window).resize(function() {
+    screenWidth = $(window).width(); 
+    swipeThreshold =  screenWidth / 3  ;
+    updateOverflow();
+    
+    
+  });
+
+  function updateOverflow() {
+    
+
+    if (screenWidth < 800) {
+      log('squeezing');
+      //calendarRow.css('overflow-x', 'auto');
+    } else {
+      //calendarRow.css('overflow-x', 'initial');
+    }
+  }
+
   //init the desk cast 
   cast = new Cast('https://desk.timegenics.com',currentUserID);
   //cast.castPayment();
@@ -816,15 +842,18 @@ $(document).ready(function() {
 
       },
       eventDragStart: function(event, jsEvent, ui, view) {
+        calSwipeDisabled = true;
         //log('start draggin!');
         oldEventStart = event.start;
         oldEventUsername = event.resourceName;
+        
         
 
 
       },
 
       eventDrop: function(event, delta, revertFunc) {
+      	calSwipeDisabled = false;
         objEvent = event;
         //if we have a customAppointment-> no need for confirmation and we need a different appointment update
         if(event.customAppointment == 1){
@@ -1152,7 +1181,7 @@ $(document).ready(function() {
   // Swipe gesture detection
   var touchStartX = 0;
   var touchEndX = 0;
-  var swipeThreshold = 10; // Adjust this value to control the swipe sensitivity
+
 
   $('#calendar').on('touchstart', function(event) {
     touchStartX = event.originalEvent.touches[0].clientX;
@@ -1164,12 +1193,14 @@ $(document).ready(function() {
   });
 
   function handleSwipeGesture() {
+  	if(calSwipeDisabled || screenWidth<800){return;}
+    
     var swipeDistance = touchEndX - touchStartX;
 
-    if (swipeDistance > swipeThreshold) {
-      $('.fc-next-button').click();
-    } else if (swipeDistance < -swipeThreshold) {
+    if (swipeDistance > swipeThreshold ) {
       $('.fc-prev-button').click();
+    } else if (swipeDistance < -swipeThreshold) {
+      $('.fc-next-button').click();
     }
   }
 	
