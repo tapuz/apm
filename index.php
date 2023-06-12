@@ -1,5 +1,5 @@
 <?php
-$v='1.0.7';
+$v='2.0.0';
 define('VERSION','v.' . $v);
 define('ROOT', dirname(__FILE__));
 
@@ -60,7 +60,7 @@ if ( !is_user_logged_in() )
 				<div id="content" class="col-sm-12 full">
 			<?php }?>
 			
-			<div class="row"> <!-- start row that holds all content-->
+			<div class="row thierry"> <!-- start row that holds all content-->
 				
 				
 				<!-- start: Component -->
