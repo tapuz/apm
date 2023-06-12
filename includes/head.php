@@ -21,7 +21,7 @@ global $v;
 	<!-- start: CSS -->
 	<link href="assets/css/bootstrap.min.css" rel="stylesheet">
 	<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">-->
-	<link href="assets/css/style.min.css" rel="stylesheet">
+	<link href="assets/css/style.min.css?v=<?=$v?>" rel="stylesheet">
 	<link href="assets/css/retina.min.css" rel="stylesheet">
 	<link href="assets/css/print.css" rel="stylesheet" type="text/css" media="print"/>
 	<link href="assets/css/core.css" rel="stylesheet">
@@ -56,9 +56,10 @@ global $v;
 	<!-- start: JavaScript-->
 	<!--[if !IE]>-->
 	<script src="assets/js/jquery-3.2.1.min.js"></script>
-	<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 	
     <script src="https://code.jquery.com/jquery-migrate-3.1.0.js" async></script>
+	
   
 			<!--<script src="assets/js/jquery-2.0.3.min.js"></script>-->
 
