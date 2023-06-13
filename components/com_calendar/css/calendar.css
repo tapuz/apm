@@ -103,6 +103,17 @@
   font-family: FontAwesome;
 }
 
+.fixed-header {
+  position: fixed;
+  top: 0;
+  background-color: #fff;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  z-index:999;
+
+}
+
 .fc-messages {
     display: block;
     height: 30px;

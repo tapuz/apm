@@ -24,24 +24,47 @@ $(document).ready(function() {
   var swipeThreshold =  screenWidth / 3  ;
   //window overflow settings for mobile device
   var container = $('.container');
-  updateOverflow();
+  var viewName;
+  updateScreen();
 
   $(window).resize(function() {
     screenWidth = $(window).width(); 
     swipeThreshold =  screenWidth / 3  ;
-    updateOverflow();
+    updateScreen();
     
     
   });
+  
+  
+  $(window).scroll(function() {
+    
+    var tableRect = $('.fc-view-container')[0].getBoundingClientRect();
+    var header = $('.fc-head');
+    var headerRect = header[0].getBoundingClientRect();
+        //header.css('left', tableRect.left);
+        log(tableRect.top);
+        // Check if the table is scrolled out of view
+        if (tableRect.top < 0) {
+          header.width(tableRect.width); // Match the width of the table
+          header.addClass('fixed-header');
+          header.css('transform', 'translateX(' + -scrollX + 'px)');
+        } else {
+          header.removeClass('fixed-header');
+        }
+        // Adjust header position when scrolling horizontally
+        //
+        
+      });
+     
 
-  function updateOverflow() {
+  function updateScreen() {
     
 
     if (screenWidth < 800) {
-      log('squeezing');
-      //calendarRow.css('overflow-x', 'auto');
+      $('.fc-plus2w-button, .fc-plus3w-button, .fc-plus6w-button, .fc-plus1m-button,.fc-plus2m-button,.fc-plus3m-button,.navbar,.fc-toggleSidebarRight-button').hide();
     } else {
-      //calendarRow.css('overflow-x', 'initial');
+      
+      $('.fc-plus2w-button, .fc-plus3w-button, .fc-plus6w-button, .fc-plus1m-button,.fc-plus2m-button,.fc-plus3m-button,.navbar,.fc-toggleSidebarRight-button').show();
     }
   }
 
@@ -596,7 +619,7 @@ $(document).ready(function() {
       header: {
         left: 'prev,next today plus2w,plus3w,plus6w plus1m,plus2m,plus3m refreshCalendar',
         center: 'title',
-        right: 'agendaDay,agendaWeek,month toggleSidebarRight'
+        right: 'agendaDay,agendaWeek toggleSidebarRight'
           //        left: 'add,sell,locationSelect,staffSelect',
           //        center: 'prev,jumpLeft,today,title,jumpRight,next',
           //        right: 'resourceDay,agendaWeek,month'
@@ -1115,10 +1138,16 @@ $(document).ready(function() {
 			},
 
       viewRender: function(view, element) {
-        if (view.name == 'agendaWeek') {renderCalendarTimes();}
+        viewName = view.name;
+        if (viewName == 'agendaWeek') {renderCalendarTimes();}
+        if (screenWidth < 800) {$('.container').css('width','800px');}
         else{
           removeCalendarTimes();
         } 
+        if (viewName == 'agendaDay') 
+        {
+          $('.container').css('width','100%');
+        }
        
 
       },
@@ -1193,7 +1222,7 @@ $(document).ready(function() {
   });
 
   function handleSwipeGesture() {
-  	if(calSwipeDisabled || screenWidth<800){return;}
+  	if(calSwipeDisabled || viewName == 'agendaWeek'){return;}
     
     var swipeDistance = touchEndX - touchStartX;
 
