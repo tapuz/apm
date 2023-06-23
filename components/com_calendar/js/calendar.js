@@ -41,8 +41,7 @@ $(document).ready(function() {
     var tableRect = $('.fc-view-container')[0].getBoundingClientRect();
     var header = $('.fc-head');
     var headerRect = header[0].getBoundingClientRect();
-        //header.css('left', tableRect.left);
-        log(tableRect.top);
+        
         // Check if the table is scrolled out of view
         if (tableRect.top < 0) {
           header.width(tableRect.width); // Match the width of the table
@@ -50,6 +49,9 @@ $(document).ready(function() {
           header.css('transform', 'translateX(' + -scrollX + 'px)');
         } else {
           header.removeClass('fixed-header');
+          header.width(tableRect.width);
+          header.css('transform', 'translateX(' + 0 + 'px)');
+          header.css('left',);
         }
         // Adjust header position when scrolling horizontally
         //
@@ -1139,14 +1141,16 @@ $(document).ready(function() {
 
       viewRender: function(view, element) {
         viewName = view.name;
+        
         if (viewName == 'agendaWeek') {renderCalendarTimes();}
         if (screenWidth < 800) {$('.container').css('width','800px');}
         else{
-          removeCalendarTimes();
+          //removeCalendarTimes();
         } 
         if (viewName == 'agendaDay') 
         {
           $('.container').css('width','100%');
+          removeCalendarTimes();
         }
        
 

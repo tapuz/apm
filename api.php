@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: *');  
+header('Access-Control-Allow-Origin:*');  
 include('configuration.php');
 require_once ($config['path_wp-config']);
 
@@ -170,6 +170,8 @@ switch (getVar('task')){
 		loadLib('email');
 		loadLib('push');
 		$appointment =  json_decode(stripslashes(getVar('appointment')));
+		$group = $appointment->group;
+		
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		echo json_encode($appointment);
 		
@@ -190,7 +192,8 @@ switch (getVar('task')){
 		
 		
 		//send push
-		if ($appointment->group == 1){
+		error_log('this is the group ::' . $appointment->group );
+		if ($group == 1){
 			$push = new Push();
 			$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
 			$push->title = 'New online booking';
