@@ -47,7 +47,7 @@ class Email {
         $mail->Password = $this->smtp_password;               // SMTP password
         //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;    // Enable TLS encryption, `ssl` also accepted
         $mail->SMTPSecure = $this->smtp_encryption;
-        if ($this->smtp_encryption == 'tls'){$mail->SMTPAutoTLS = true;}
+       // if ($this->smtp_encryption == 'tls'){$mail->SMTPAutoTLS = true;}
         $mail->Port = $this->smtp_port;
         $mail->SMTPAuth = true;
         $mail->isHTML(true);    //
