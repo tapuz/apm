@@ -38,18 +38,13 @@ class Email {
     public function send(){
         
         $mail = new PHPMailer;
-        
-       
         $mail->isSMTP();                                      // Set mailer to use SMTP
         $mail->Host = $this->smtp_server;  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = $this->smtp_username;           // SMTP username
         $mail->Password = $this->smtp_password;               // SMTP password
-        //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;    // Enable TLS encryption, `ssl` also accepted
-        $mail->SMTPSecure = $this->smtp_encryption;
-       // if ($this->smtp_encryption == 'tls'){$mail->SMTPAutoTLS = true;}
+        $mail->SMTPSecure = $this->smtp_encryption;    // Enable TLS encryption, `ssl` also accepted
         $mail->Port = $this->smtp_port;
-        $mail->SMTPAuth = true;
         $mail->isHTML(true);    //
         $mail->setFrom($this->from_email, $this->from_name);
         $mail->addAddress($this->to);
@@ -78,7 +73,8 @@ class Email {
     }
 
     public function getServerSettings($clinic){
-        loadLib('clinic');
+        loadLib('clinic'); 
+        error_log('this is the clinic : ' . $clinic);
         $clinic = Clinic::getClinic($clinic);
         $this->smtp_server = $clinic->smtp_server;
         $this->smtp_port = $clinic->smtp_port; //
@@ -88,7 +84,6 @@ class Email {
         
         $this->from_email = $clinic->clinic_email;
         $this->from_name = $clinic->email_name;
-        echo($this->from_name);
 
     }
 
