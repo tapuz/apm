@@ -15,7 +15,8 @@ $(document).ready(function() {
   //init the progress bar
 
 
-  //load the datepicker
+
+  //load the datepicker    
   datepicker = $('#datePicker').datepicker({
     calendarWeeks: true,
     todayHighlight: true,

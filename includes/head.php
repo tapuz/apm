@@ -55,7 +55,8 @@ global $v;
 
 	<!-- start: JavaScript-->
 	<!--[if !IE]>-->
-	<script src="assets/js/jquery-3.2.1.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+	<!-- <script src="assets/js/jquery-3.2.1.min.js"></script> -->
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 	
     <script src="https://code.jquery.com/jquery-migrate-3.1.0.js" async></script>
@@ -106,7 +107,7 @@ global $v;
 	<script src="assets/js/jquery.sparkline.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>-->
-	<script src="assets/js/bootstrap.min.js" defer></script>
+	<script src="assets/js/bootstrap.js" defer></script>
 	<script src="assets/js/offline.min.js" async></script>
 	<script src="assets/js/nprogress.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.js" async>
