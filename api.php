@@ -96,7 +96,7 @@ switch (getVar('task')){
 		
 		loadLib('clinic');
 		$clinics = Clinic::getClinicsFromGroup(getVar('group'));
-		error_log('CLINICS --> ' . print_r($clinics,1));
+		//error_log('CLINICS --> ' . print_r($clinics,1));
 		echo json_encode($clinics);			
 		
 		
@@ -178,21 +178,17 @@ switch (getVar('task')){
 		$datetime = date("Y-m-d H:i:s");
 		Calendar::addAppointmentLog($appointment->id,$datetime,'New','New appointment with online booking','label-success');
 		
-		//send confirmation email
+		//send confirmation email to patient
 		$email = new Email();
 		$email->sendAppointmentEmail($appointment,'confirmation');
 		
-		//send
+		//send mail to group admin
 		$mail = new Email();
-		$mail->getServerSettings($appointment->clinic);
-		$mail->to = getVar('email');
-		$mail->subject='NEW ONLINE BOOKING';
-		$mail->message = json_encode($appointment);
-		$mail->send();
+		$mail->sendOnlineBookingReport($appointment);
 		
 		
 		//send push
-		error_log('this is the group ::' . $appointment->group );
+		//error_log('this is the group ::' . $appointment->group );
 		if ($group == 1){
 			$push = new Push();
 			$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';

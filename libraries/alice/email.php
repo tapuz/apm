@@ -46,7 +46,8 @@ class Email {
         $mail->SMTPSecure = $this->smtp_encryption;    // Enable TLS encryption, `ssl` also accepted
         $mail->Port = $this->smtp_port;
         $mail->isHTML(true);    //
-        $mail->setFrom($this->from_email, $this->from_name);
+        $mail->addReplyTo($this->from_email, $this->from_name);
+        $mail->setFrom(NOREPLY_EMAIL, $this->from_name);
         $mail->addAddress($this->to);
         $mail->Subject = $this->subject;
         $mail->Body = $this->message;
@@ -87,7 +88,7 @@ class Email {
 
     }
 
-    function sendAppointmentEmail($appointment,$mode){
+    public function sendAppointmentEmail($appointment,$mode){
         
         loadLib('ics');//generate ICS file
         loadLib('clinic');    
@@ -156,11 +157,38 @@ class Email {
                 $this->send();
     }
 
+    public function sendOnlineBookingReport($appointment){
+        loadLib('clinic');    
+        loadLib('service');
+        //get the service name
+		$this->getServerSettings($appointment->clinic);
+        $service = Service::getService($appointment->serviceId);
+        $clinic = Clinic::getClinic($appointment->clinic);
+        
+                
+                //add clinic name to $appointment object
+        $appointment->{"clinic_name"} = $clinic->clinic_name;
+        $appointment->{"clinic_address"} = $clinic->clinic_street . " - " . $clinic->clinic_postcode . " " . $clinic->clinic_city;  
+        $appointment->{"time"} = strftime('%e %B %Y om %H:%M',strtotime($appointment->start)); //set accorde to locale set in configuration.php
+                
+        $this->to = $clinic->clinic_email;
+    
+                
+        $message = file_get_contents('assets/email_templates/newOnlineBookingReport.html');
+        $message = str_replace('%patient%', $appointment->patient_firstname .' '.$appointment->patient_lastname , $message);
+        $message = str_replace('%time%', $appointment->time, $message);
+        $message = str_replace('%clinic%', $appointment->clinic_name, $message);
+        $message = str_replace('%service%', $service->description, $message);
+        $message = str_replace('%practitioner%', $appointment->resourceName, $message);
+        
+        $this->subject = 'New online booking';              
+        $this->message = $message;
+        $this->send();
+    }
     
     
     
     
 }
 ?>
-
 
