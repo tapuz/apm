@@ -198,7 +198,8 @@ $('.urgent-footer').hide();
         newhtml = newhtml.replace('%clinicName%',this.clinic_name);
         newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
         $('#location .clinics').append(newhtml);
-        //set the group 
+        console.log('here is the group' + newhtml);
+        //set the group /
         group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description,allow_np_online_booking:parseInt(this.allow_np_online_booking), allow_urgent_request:parseInt(this.allow_urgent_request),practitioner_title:this.practitioner_title};
       });
       group.logo = '<img src = '+group.logo+'>';
@@ -807,6 +808,8 @@ $('.urgent-footer').hide();
   
   function addAppointment(appointment){
     $('#resume .loading').html(loadingImg).show();
+    $('#resume .loading').prop('disabled', true);
+    $('.btn-next').prop('disabled', true);
     $('#resume_details').hide();
     $.ajax({
          
@@ -821,10 +824,12 @@ $('.urgent-footer').hide();
       },
       
       }).done(function() {
+         $('.btn-next').prop('disabled', false);
          $('#resume .loading').hide();
          $('.btn-finish-saving').hide();
          $('.btn-previous').hide();
          $('#resume_details').hide();
+         $('#resume .loading').prop('disabled', false);
          $('#confirmed').show();
          $('.btn-restart').show();
          //$('.btn-finish').show();
@@ -833,6 +838,8 @@ $('.urgent-footer').hide();
          
       }).fail(function(data){
          $('#resume .loading').hide();
+         $('.btn-next').prop('disabled', false);
+         $('#resume .loading').prop('disabled', false);
          $('#resume_details').show();
          $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
          $('.btn-finish-saving').hide();
@@ -1044,6 +1051,7 @@ $(document).on("click", ".btn-urgent-previous" , function() {
 function getAvailableTimes(duration,timing){
    //clear the propositions if there would be any...
    $('#loading').html(loadingImg).show();
+   $('.btn-next').prop('disabled', true);
    $('#calendar').hide();
    $('.btn_OpenUrgentApptWarningModal').hide();
    $('#message_propositions').hide();
@@ -1063,7 +1071,7 @@ function getAvailableTimes(duration,timing){
                     timing : JSON.stringify(timing)
                   }
                 }).done(function(propositions) {
-               
+                $('.btn-next').prop('disabled', false);  
                 $('#timeslot_select .propositions').html('');
                 $('#loading').hide();
                 $('.btn_OpenUrgentApptWarningModal').show();
