@@ -1,6 +1,14 @@
 <?
 class Service {
     
+    public static function getService($service){
+        global $wpdb;
+        $query = $wpdb->prepare('
+        SELECT * from table_services where id = %d',$service);
+        return $wpdb->get_row($query);
+        
+    }
+
     public static function getServices(){
         global $wpdb;
         $query='SELECT * FROM table_services';
