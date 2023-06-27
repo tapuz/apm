@@ -1,5 +1,6 @@
 <?php
-header('Access-Control-Allow-Origin:*');  
+header('Access-Control-Allow-Origin: *');
+
 include('configuration.php');
 require_once ($config['path_wp-config']);
 
@@ -96,7 +97,7 @@ switch (getVar('task')){
 		
 		loadLib('clinic');
 		$clinics = Clinic::getClinicsFromGroup(getVar('group'));
-		//error_log('CLINICS --> ' . print_r($clinics,1));
+		error_log('CLINICS --> ' . print_r($clinics,1));
 		echo json_encode($clinics);			
 		
 		
@@ -343,8 +344,29 @@ switch (getVar('task')){
 				//usort($timeslots_to_present, function($a, $b) {
 				//	return $a['priority'] - $b['priority'];
 				//});
-				$timeslots_to_retain = array_slice($availableTimeslots,0,$timeslots_to_retain_per_day);
-				$timeslots_to_present = array_merge($timeslots_to_present,$timeslots_to_retain);
+				error_log('COUNT: ' . $selected_date . '-- '  . count($availableTimeslots));
+				//$timeslots_to_retain = $availableTimeslots;
+				// Sort the array in descending order based on priority
+				usort($availableTimeslots, function($a, $b) {
+					return $b['priority'] <=> $a['priority'];
+				});
+
+				// Iterate through the array and delete elements with priority 3 and then priority 2
+				foreach ($availableTimeslots as $key => $timeslot) {
+					if ($timeslot['priority'] === 3 && count($availableTimeslots) > $timeslots_to_retain_per_day || ($timeslot['priority'] === 2 && count($availableTimeslots) > $timeslots_to_retain_per_day)) {
+						unset($availableTimeslots[$key]);
+					}
+					if (count($availableTimeslots) === $timeslots_to_retain_per_day) {
+						break;
+					}
+				}
+
+				// Reset array keys
+				$availableTimeslots = array_values($availableTimeslots);	
+
+
+				//$timeslots_to_retain = array_slice($availableTimeslots,0,$timeslots_to_retain_per_day);
+				$timeslots_to_present = array_merge($timeslots_to_present,$availableTimeslots);
 				//error_log(print_r($timeslots_to_retain,1));
 			} else {
 				//no available timeslots for this day , look in an extra day
@@ -354,8 +376,10 @@ switch (getVar('task')){
 				
 			if(count($timeslots_to_present) >= $max_timeslots_search_for){
 				//error_log('we should break stop searching!!');
-				break;}
+				//break;
+			}
 			
+			error_log('TOTAL ' . count($timeslots_to_present));
 			$date->modify('+' . 1 . ' days');
 		}
 		
@@ -390,21 +414,8 @@ switch (getVar('task')){
 		usort($timeslots_to_present, function($a, $b) {
 			return strtotime($a['start']) - strtotime($b['start']);
 		});
-		//error_log(print_r($timeslots_to_present,1));
-		//error_log('NUMBER OF TIMESLOTS :' . count($timeslots_to_present));
-		// only keep 
-		$priority = 3;
-		//if (($key = array_search($priority, $timeslots_to_present)) !== false) {
- 		//   unset($timeslots_to_present[$key]);
-	//	}
 		
-		foreach ($timeslots_to_present as $k=>$v){
-			if (intval($v['priority']) == 3) {
-				unset($timeslots_to_present[$k]);
-				
-			}
-			
-		}
+	
 		//reset the array keys to 0,1,2,... as some keys were deleted.. otherwize the JS calendar will not accept the array
 		$timeslots_to_present = array_values($timeslots_to_present);
 		//error_log(print_r($timeslots_to_present,1));
