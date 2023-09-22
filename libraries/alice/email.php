@@ -175,7 +175,7 @@ class Email {
     
                 
         $message = file_get_contents('assets/email_templates/newOnlineBookingReport.html');
-        $message = str_replace('%patient%', $appointment->patient_firstname .' '.$appointment->patient_lastname , $message);
+        $message = str_replace('%patient%', $appointment->patientName , $message);
         $message = str_replace('%time%', $appointment->time, $message);
         $message = str_replace('%clinic%', $appointment->clinic_name, $message);
         $message = str_replace('%service%', $service->description, $message);

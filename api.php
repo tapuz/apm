@@ -175,6 +175,7 @@ switch (getVar('task')){
 		
 		$appointment =  Calendar::addAppointment(json_decode(stripslashes(getVar('appointment'))));
 		echo json_encode($appointment);
+		error_log(json_encode($appointment));
 		
 		$datetime = date("Y-m-d H:i:s");
 		Calendar::addAppointmentLog($appointment->id,$datetime,'New','New appointment with online booking','label-success');
@@ -189,7 +190,7 @@ switch (getVar('task')){
 		
 		
 		//send push
-		//error_log('this is the group ::' . $appointment->group );
+		error_log('this is the group --> ' . $group );
 		if ($group == 1){
 			$push = new Push();
 			$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
@@ -344,7 +345,7 @@ switch (getVar('task')){
 				//usort($timeslots_to_present, function($a, $b) {
 				//	return $a['priority'] - $b['priority'];
 				//});
-				error_log('COUNT: ' . $selected_date . '-- '  . count($availableTimeslots));
+				//error_log('COUNT: ' . $selected_date . '-- '  . count($availableTimeslots));
 				//$timeslots_to_retain = $availableTimeslots;
 				// Sort the array in descending order based on priority
 				usort($availableTimeslots, function($a, $b) {
@@ -379,7 +380,7 @@ switch (getVar('task')){
 				//break;
 			}
 			
-			error_log('TOTAL ' . count($timeslots_to_present));
+			//error_log('TOTAL ' . count($timeslots_to_present));
 			$date->modify('+' . 1 . ' days');
 		}
 		
@@ -418,7 +419,7 @@ switch (getVar('task')){
 	
 		//reset the array keys to 0,1,2,... as some keys were deleted.. otherwize the JS calendar will not accept the array
 		$timeslots_to_present = array_values($timeslots_to_present);
-		//error_log(print_r($timeslots_to_present,1));
+		error_log(print_r($timeslots_to_present,1));
 		echo json_encode($timeslots_to_present);
 		
 		
