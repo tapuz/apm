@@ -22,8 +22,41 @@ var eventStatus = 0;
     var end = moment(eventEnd).format();
     var service = $('#addWorkingSlot .serviceSelector').val();
     var clinic = $('#addWorkingSlot .clinicSelectEditApp').val();
-    note = "Extre";
+    note = "Extra";
    
+    if(clinic == 1){
+      Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:8},function (timeslot){
+        eventIDtoHighlight = timeslot.id;
+        highlightEvent = true;
+        calendar.fullCalendar('renderEvent', timeslot);
+        calendar.fullCalendar('unselect');
+        
+      });
+      Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:10},function (timeslot){
+        eventIDtoHighlight = timeslot.id;
+        highlightEvent = true;
+        calendar.fullCalendar('renderEvent', timeslot);
+        calendar.fullCalendar('unselect');
+        closeEditAppModal();        
+      });
+    }
+    if(clinic ==2){
+      Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:9},function (timeslot){
+        eventIDtoHighlight = timeslot.id;
+        highlightEvent = true;
+        calendar.fullCalendar('renderEvent', timeslot);
+        calendar.fullCalendar('unselect');
+        
+      });
+      Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:11},function (timeslot){
+        eventIDtoHighlight = timeslot.id;
+        highlightEvent = true;
+        calendar.fullCalendar('renderEvent', timeslot);
+        calendar.fullCalendar('unselect');
+        closeEditAppModal();        
+      });
+
+    }
   
     
       Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:service},function (timeslot){

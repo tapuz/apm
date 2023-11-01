@@ -1210,7 +1210,7 @@ function checkMatch() {
                   $('#practitioner .practitioners').html('');
                    $.each(practitioners, function() {
                         
-                          if (this.ID == practitionerNotAvailable){
+                          if (this.ID == practitionerNotAvailable && mode != 'recurrentPatient'){
                             return true;
                           }
                           newhtml = html.replaceAll('%practitionerID%',this.ID);

@@ -87,7 +87,7 @@
     	<ul class="nav nav-pills">
 			<li class="active"><a  href="#patientAppointment" data-toggle="tab"><i class="fa fa-user"></i>&nbsp;&nbsp;Patient Appointment</a></li>
 			<li id='tab_busyTime'><a  href="#busyTime" data-toggle="tab"><i class="fas fa-ban"></i>&nbsp;&nbsp;Busy Time</a></li>
-			<li id='tab_addWorkingSlot'><a  href="#addWorkingSlot" data-toggle="tab"><i class="fas fa-ban"></i>&nbsp;&nbsp;Add working slot</a></li>
+			<li id='tab_addWorkingSlot'><a  href="#addWorkingSlot" data-toggle="tab"><i class="fas fa-poll-h"></i>&nbsp;&nbsp;Add Screening slot</a></li>
 			
 		</ul> 
 	
@@ -311,7 +311,7 @@
 							</div>
 						</div>	
 					</div>
-					<div class="row">
+					<!-- <div class="row">
 						<div class="col-sm-2">
 							<label class="patient-name">Service</label>
 						</div>
@@ -321,7 +321,7 @@
 								
 							</div>
 						</div>	
-					</div>
+					</div> -->
 
 					<div class="row">&nbsp</div>
 					
