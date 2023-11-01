@@ -39,7 +39,46 @@ $(function() {
         });
 		
 		Offline.options = { game: true };
+		
 	 */
+	 
+	 //periodically check if user is still logged in
+function checkLoginStatus() {
+  const intervalId = setInterval(() => {
+    // Check if the user is still logged in
+    $.ajax({
+        //type: "post", 
+        url: "api.php", 
+        dataType: "json",
+        data: {task: 'isUserLoggedIn',redirectUrl:window.location.href},
+        success: function( data ) {
+		        	//log('logged in status: ' + data);
+                    //data = JSON.parse(data);  
+		    		if (data.isUserLoggedIn == true) {
+				      // Store the current page URL in session storage
+				      
+				      log('ok');
+					  // Redirect the user to the login page
+				      
+				      // Stop the periodic check
+				      //clearInterval(intervalId);
+		    		} else {
+		    			window.location.href = data.loginUrl;	
+		    		}   	
+          		}  
+       });
+    
+    
+  },15000); // Check every 30 seconds
+}
+
+
+
+checkLoginStatus();
+
+	 
+	 
+	 
 });
 
 function log(log) {

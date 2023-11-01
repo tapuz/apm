@@ -1,6 +1,66 @@
 <?php
 class Clinic {
 
+public static function alocateAppointmentToRoom($appointment_id,$room_id){
+	global $wpdb;
+	$wpdb->update( 
+		'table_rooms', 
+		array( 
+			'busy' => 1, 
+			'appointment_id' => $appointment_id
+			),
+		array( 'id' => $room_id)
+		 );
+	
+	
+	
+}
+
+public static function getFreeRooms($clinic,$practitioner){
+	global $wpdb;
+	$query=$wpdb->prepare("
+		SELECT table_rooms.*,
+		table_room_practitioner.*
+		
+		FROM 
+		table_rooms
+		inner join table_room_practitioner
+		ON table_rooms.id = table_room_practitioner.room_id
+		WHERE table_room_practitioner.practitioner_id = %d 
+		AND clinic = %d
+		AND busy = 0
+	",$practitioner,$clinic
+	);
+	
+	$rooms=$wpdb->get_results($query);
+	return $rooms;
+}
+
+public static function getRoomsStatusClinic($clinic){
+	global $wpdb;
+	$query = $wpdb->prepare("
+		SELECT 
+			table_rooms.*,
+			table_room_practitioner.*,
+			view_appointments.*,
+			wp_users.display_name as practitioner
+		
+		FROM table_rooms
+		
+		LEFT JOIN table_room_practitioner
+			ON table_rooms.id = table_room_practitioner.room_id
+		LEFT JOIN view_appointments
+			ON table_rooms.appointment_id = view_appointments.id
+		LEFT JOIN wp_users
+			ON wp_users.ID = table_room_practitioner.practitioner_id
+    	WHERE table_rooms.clinic = %d
+
+		",$clinic);
+
+		$rooms=$wpdb->get_results($query);
+		return $rooms;	
+}	
+
 public static function updateClinic($clinic){
 		global $wpdb;
 		$array = array();
@@ -22,6 +82,30 @@ private static function getClinicParam($clinic,$param) {
 	global $wpdb;
 	$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM table_clinics WHERE clinic_id = %s",$clinic));
 	return $result->$param;
+}
+
+public static function getClinicPresent($user) {
+	global $wpdb;
+	$query = $wpdb->prepare('SELECT clinic_id FROM table_clinic_user WHERE user_id = %d AND present=1', $user);
+	$clinic = $wpdb->get_var($query);
+	return $clinic;
+}
+
+public static function setClinicPresent($user,$clinic){
+	global $wpdb;
+	$query = $wpdb->prepare ('
+		UPDATE table_clinic_user
+		SET present = CASE
+    	WHEN user_id = %d AND clinic_id = %d THEN 1
+    	ELSE 0
+		END
+		WHERE user_id = %d;
+	
+	',$user,$clinic,$user);
+
+
+	$wpdb->query($query);
+
 }
 
 public static function getClinics($user) {

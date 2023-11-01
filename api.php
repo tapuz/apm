@@ -22,7 +22,7 @@ include('libraries/alice/alice.php');
 
 //API methods
 
-error_log('API: '.getVar('task'));
+error_log('API: '. getVar('task'));
 
 loadLib('patient');
 //loadLib('clinic');
@@ -35,6 +35,17 @@ loadLib('push');
 
 //switch ($_POST('task')){
 switch (getVar('task')){
+	
+	case 'isUserLoggedIn':
+		$redirectUrl = getVar('redirectUrl');
+		$loginUrl = wp_login_url( $redirectUrl);
+		
+		$data = new stdClass();
+		$data->isUserLoggedIn = is_user_logged_in();
+		$data->loginUrl = $loginUrl; 		 
+		echo json_encode($data);    
+			
+	break;
 
 	case 'emailTempNP':
 		loadLib('email');
@@ -190,7 +201,7 @@ switch (getVar('task')){
 		
 		
 		//send push
-		error_log('this is the group --> ' . $group );
+		
 		if ($group == 1){
 			$push = new Push();
 			$push->id = 'e1vYyUISFEpJmPJXYraozu:APA91bFxDDBkz5JAPJQ5Ss9rBJmPySWr57tsxomJ_ZqhCUq_seJpK4kjobOQhvzuRM0BuEeHUjrSWY44CqP08G54O1-sMMwN7Y9OxG3nEXv7ukgflqnkL6AsqDtOVHynfTKURNGmxbfE';
@@ -319,8 +330,8 @@ switch (getVar('task')){
 		$timing = getVar('timing');
 		//how many working days we want to check??
 		$start = getVar('start'); 
+		$service = getVar('service');
 		$duration = getVar('duration');
-
 		$timezone = "Europe/Brussels";
 		date_default_timezone_set($timezone);
 
@@ -337,7 +348,7 @@ switch (getVar('task')){
 			
 			//error_log('DAY ' . $i);
 			$selected_date = $date->format('Y-m-d');
-			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$duration,$timing,$min_delta_to_first_timeslot);
+			$availableTimeslots = Calendar::getUserAvailableTimeslots($user,$clinic,$selected_date,$duration,$timing,$min_delta_to_first_timeslot,$service);
 			
 			if ($availableTimeslots!=FALSE){
 				
@@ -419,7 +430,7 @@ switch (getVar('task')){
 	
 		//reset the array keys to 0,1,2,... as some keys were deleted.. otherwize the JS calendar will not accept the array
 		$timeslots_to_present = array_values($timeslots_to_present);
-		error_log(print_r($timeslots_to_present,1));
+		//error_log(print_r($timeslots_to_present,1));
 		echo json_encode($timeslots_to_present);
 		
 		

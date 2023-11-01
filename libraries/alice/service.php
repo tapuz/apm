@@ -1,5 +1,11 @@
 <?
 class Service {
+
+    public static function customTimeslotOnly($service){
+        global $wpdb;
+        $query = $wpdb->prepare('SELECT custom_timeslot_only from table_services where id = %d',$service);
+        return $wpdb->get_var($query);
+    }
     
     public static function getService($service){
         global $wpdb;

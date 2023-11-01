@@ -165,6 +165,7 @@ global $v;
 	<script src="assets/js/alice.js?v=<?=$v?>"></script>
 	<script src="assets/js/printThis.js" async></script>
 	<script src="assets/js/jstorage.js" async></script>
+	
 	<!--<script type="text/javascript" src="assets/js/live.js"></script>-->
 
 

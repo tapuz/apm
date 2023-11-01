@@ -72,6 +72,8 @@ $(document).ready(function() {
 
   //init the desk cast 
   cast = new Cast('https://desk.timegenics.com',currentUserID);
+  
+  
   //cast.castPayment();
   
   
@@ -246,12 +248,14 @@ $(document).ready(function() {
       $('#calSelectToolbar form').prepend(selectClinic);
 			
 			//render clinic select for the editApp modal
-			selectClinic = "<select id='clinicSelectEditApp' name='clinicSelectEditApp' class='form-control' style='width:250px'>";
+			selectClinic = "<select id='clinicSelectEditApp' name='clinicSelectEditApp' class='clinicSelectEditApp form-control' style='width:250px'>";
 			$.each(clinics, function() {
 				selectClinic += "<option value='"+ this.clinic_id + "'>"+ this.clinic_name +"</option>";
 			});
 			selectClinic += "</select>";
 			$('#editAppointment .selectClinic').html(selectClinic);
+      $('#addWorkingSlot .selectClinic').html(selectClinic);
+      
 			
 			//render clinic select for the editPatient modal
 			selectClinic = "<select id='clinicSelectEditPatient' name='clinic' class='form-control' style='width:250px'>";
@@ -276,8 +280,8 @@ $(document).ready(function() {
 				selectedClinic = $(this).val();
 				//log (selectedClinic + ' is the clinic');
         calendar.fullCalendar('removeEvents','not_working');
-      calendar.fullCalendar('removeEvents','working');
-      calendar.fullCalendar('removeEvents','break');
+        calendar.fullCalendar('removeEvents','working');
+        calendar.fullCalendar('removeEvents','break');
         renderWorkingPlan(users[selectedUser].data.workingPlan);	
       
 			switch(selectedClinic) {
@@ -289,6 +293,7 @@ $(document).ready(function() {
 				default:
 					$('.appointment').hide();
 					$('.clinic' + selectedClinic).show();
+
 			}
 				
 
@@ -808,20 +813,21 @@ $(document).ready(function() {
 				$('.clear-selected-patient').click();
         //$("#editAppointment")[0].reset();
         $('#editEvent .datetime').html(moment(start).locale(locale).format('LLL'));
+        $('#editEvent #addWorkingSlot .datetime').html(moment(start).locale(locale).format('LLL') + ' - ' +  moment(end).locale(locale).format('LT'));
         appModalMode = 'newAppointment';
         $('#editEvent').modal('show');
         $('#editEvent :input').val('');
 				$('#editEvent .confirmed').button("toggle");
 				log('selected clinic is : ' + selectedClinic);
 				if (selectedClinic != 'all'){
-          $('#clinicSelectEditApp').val(selectedClinic);
+          $('.clinicSelectEditApp').val(selectedClinic);
 					renderServicesLookup(selectedClinic);
 					$('#selectService').val(iDefaultService);
 				} else if (selectedClinic == 'all') {
           //get the clinic id from the background event if it exists
           if (clinicID != '' || void(0)){
           log('the clinic id from BG is : ' + clinicID);
-          $('#clinicSelectEditApp').val(clinicID);
+          $('.clinicSelectEditApp').val(clinicID);
           renderServicesLookup(clinicID);
 					$('#selectService').val(iDefaultService);
           clinicID ='';
@@ -1012,6 +1018,7 @@ $(document).ready(function() {
         //calendarPB.start();
         icons = '<div class="fc-event-icons"><i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
         icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
+        icons += '<i class="fa fa-thumbs-up icon-thumbs-up-allocated tip-init" title="Allocated"></i>';
         icons += '<i class="fas fa-comment icon-note title="note"></i>';
         icons += '<i class="far fa-credit-card icon-payed" title="payed"></i>';       
         icons += '<i class="fas fa-cloud icon-cloud" title="cloud"></i></div>';       
@@ -1062,6 +1069,13 @@ $(document).ready(function() {
               $(element).find('.icon-thumbs-up').hide();
             }
 
+            if (event.status == 3) {
+              $(element).find('.icon-thumbs-up-allocated').show();
+            } else {
+              $(element).find('.icon-thumbs-up-allocated').hide();
+            }
+
+
             if (event.status == 8) {
               $(element).find('.icon-thumbs-down').show();
             } else {
@@ -1098,7 +1112,15 @@ $(document).ready(function() {
               element.addClass('customAppointment');
               element.removeClass('appointment');
 
-              };
+            };
+
+            if (event.customTimeslot == 1){
+              element.addClass('clinic' + event.clinic);
+              element.addClass('appointment');
+
+            };
+
+           
            
         
 
@@ -1248,7 +1270,7 @@ function getClinicName(clinic_id){
 
 function renderServicesLookup(clinic_id){
   try{  
-  selectService = "<select id='selectService' name='selectService' class='form-control'>";
+  selectService = "<select id='selectService' name='selectService' class='serviceSelector form-control'>";
     
 		oClinic = clinics.find(x => x.clinic_id === clinic_id.toString());
 		log('here comes the c!!');

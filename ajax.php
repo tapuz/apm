@@ -49,7 +49,7 @@ if (getVar('com')<>'debug'){
     error_log('the mode is ' . AJAXmode);
     error_log('AJAX called -> component [' . getVar('com') . '] and task [' . getVar('task') .']' );
  
-error_log('APIkey--> ' . getVar('APIKey'));
+//error_log('APIkey--> ' . getVar('APIKey'));
 }
 include('includes/component_selector.php');
 

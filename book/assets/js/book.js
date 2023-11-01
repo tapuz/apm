@@ -198,11 +198,12 @@ $('.urgent-footer').hide();
         newhtml = newhtml.replace('%clinicName%',this.clinic_name);
         newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
         $('#location .clinics').append(newhtml);
-        console.log('here is the group' + newhtml);
+        
         //set the group /
         group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description,allow_np_online_booking:parseInt(this.allow_np_online_booking), allow_urgent_request:parseInt(this.allow_urgent_request),practitioner_title:this.practitioner_title};
       });
       group.logo = '<img src = '+group.logo+'>';
+      console.log('read this.. ' + group.description);
       $('.group-description').html(group.logo + group.description);
       //if allow_np_online_booking = false skip the first wizard slide, patient can only book if they are already in the system
       if(!group.allow_np_online_booking){
@@ -549,14 +550,9 @@ $('.urgent-footer').hide();
                       service.description = practitioner.default_service_np.description
                     break;
                   }
-				$('.service-title').html(service.description);
+				        $('.service-title').html(service.description);
                }    
-               
-               
-               
-               getAvailableTimes(service.duration,timing);
-              
-                
+               getAvailableTimes(service.id,service.duration,timing);
               }
           break;
          
@@ -783,7 +779,7 @@ $('.urgent-footer').hide();
         }).done(function(data) {
           objPatient.patient_id = data;
 
-          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0}
+          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0,group:group.ID}
           appointment = JSON.stringify(appointment);
 
 
@@ -1048,7 +1044,7 @@ $(document).on("click", ".btn-urgent-previous" , function() {
 
 
 
-function getAvailableTimes(duration,timing){
+function getAvailableTimes(service,duration,timing){
    //clear the propositions if there would be any...
    $('#loading').html(loadingImg).show();
    $('.btn-next').prop('disabled', true);
@@ -1056,6 +1052,7 @@ function getAvailableTimes(duration,timing){
    $('.btn_OpenUrgentApptWarningModal').hide();
    $('#message_propositions').hide();
    $('#timeslot_select .propositions').html('');
+   console.log('SERVICE !!! ' + service);
 
    //practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
    
@@ -1068,6 +1065,7 @@ function getAvailableTimes(duration,timing){
                     clinic: clinic.ID,
                     user : practitioner.ID,
                     duration:duration,
+                    service: service,
                     timing : JSON.stringify(timing)
                   }
                 }).done(function(propositions) {
@@ -1244,7 +1242,7 @@ function getGroup() {
         params[nv[0]] = nv[1] || true;
       }
     }
-    //error.log('this is the group=' + params.group);
+    //console.log('this is the group=' + params.group);
     return params.group;
   }
 

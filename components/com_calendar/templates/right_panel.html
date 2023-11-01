@@ -137,3 +137,50 @@
 
 
 </script>
+
+
+<script id='tmpl_rooms_status' type='x-tmpl-mustache'>
+    <div><label>Rooms</label> 
+        <ul>
+            {{#data}}
+                {{#isNewPractitioner}}
+                    <div><label>{{practitioner}}</label></div>
+                {{/isNewPractitioner}}
+                {{#busy}}
+                	<li data-roomId="{{room_id}}" data-patientId={{patient_id}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_appointment" style="border-color:{{borderColor}}">
+                	<div><label>{{room_name}}</label</div>
+                    {{#check}}
+                        <div><label>Patient : {{patientName}}</label></div>
+                    {{/check}}    
+                    {{^check}}
+                    <div><label>In use by {{resourceName}}</label></div>
+                    {{/check}}
+                    
+                    <div><label>{{time}}</label></div>    
+                       
+                {{/busy}}
+                {{^busy}}
+                	<li data-roomId="{{room_id}}" data-patientId={{patient_id}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_appointment" style="border-color:green">
+                	<div><label>{{room_name}}</label</div>
+
+                {{/busy}}
+                
+                    
+                    
+                </li>
+            {{/data}}
+
+         </ul>
+    </div>
+       
+    <div class="btn-group btn-group-justified" role="group">
+        <a href="#" class="btn btn-success" role="button">Check</a>
+    </div>
+    <br>
+    
+   
+  
+
+
+
+</script>

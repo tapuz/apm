@@ -35,6 +35,22 @@ function editPatient(patientID){
     }
 
 $(document).ready(function() {
+
+    //validation
+     // Code for the Validator
+    var $validatorPatientDetails = $('#editPatientForm').validate({
+        rules:{
+            email:{
+                    required:true,
+                    email: true
+            }
+        },
+        messages:{
+            email:'supply a valid email address'
+        }
+    
+    
+    });
     
 
     
@@ -48,6 +64,10 @@ $(document).ready(function() {
     
     $('#editPatientForm').on('submit', function(e) {
         e.preventDefault();
+        if(!$('#editPatientForm').valid()) {
+            return;
+        }
+        
         form = ($(this).serializeArray());
         log('form--> ' + form);
         //save the data to the server

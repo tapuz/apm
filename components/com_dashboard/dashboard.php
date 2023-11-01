@@ -9,6 +9,7 @@ $component_root = $config['root'] . 'components/com_dashboard/';
 //loadCSS('letter.css','letter');
 //loadJS('letter.js','letter');
 loadLib('calendar');
+loadLib('clinic');
 loadJS('dashboard.js','dashboard');
 loadJS('tasks.js','tasks');
 loadCSS('tasks.css','tasks');
@@ -24,6 +25,11 @@ $numberOfPatientsNextWeek = count($patientsForNextWeek);
 //load the tasks
 $tasksForUser = Task::getTasksForUser(get_current_user_id(),2);
 $tasksByUser = Task::getTasksByUser( get_current_user_id());
+
+global $clinic,$clinicPresent;
+
+$clinics = json_encode(Clinic::getClinics($user_id));
+
 
 
 include('views/dashboard.php');

@@ -199,6 +199,7 @@ switch(getTask()){
 
 	case 'saveHistory': //save history field
 		Patient::saveHistory(getVar('patient_id'),getVar('field'),stripslashes(getVar('value')));
+		error_log(stripslashes(getVar('value')) . getVar('field'));
 	break;
 
 	case 'addVitals':

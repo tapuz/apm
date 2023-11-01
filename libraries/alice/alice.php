@@ -2,6 +2,15 @@
 // alice lib
 
 //include ('patient.php');
+function searchObjectInArrayByProperty($array, $property, $value) {
+    foreach ($array as $item) {
+        if (isset($item->$property) && $item->$property == $value) {
+            return $item; // Found a matching object
+        }
+    }
+    return null; // Object with the specified property not found
+}
+
 
 
 function setResponse($response) {

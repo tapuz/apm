@@ -219,6 +219,10 @@
   text-decoration-thickness: 2px;
 }
 
+#eventDetails .modal-content ul {
+  list-style-type: none;
+}
+
 /*Add appointment modal*/
 
 #editEvent .modal-header {
@@ -327,6 +331,13 @@ p.selected-patient-details{
   float: right;
   color: #24a916 !important;
 }
+
+.icon-thumbs-up-allocated{
+  float: right;
+  color: rgb(252, 137, 6) !important;
+}
+
+
 
 .icon-payed{
   float: right;

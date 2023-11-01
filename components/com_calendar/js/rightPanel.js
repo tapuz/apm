@@ -1,11 +1,14 @@
 var tmpl_patient_search_results;
 var tmpl_patient_demographics;
 var tmpl_patient_appointments;
+var tmpl_rooms_status;
 var rightPanelPB = new NProgress({
   container:'#rightPanelProgress',
   randomTrickle:true
 
 });
+
+var getRoomInfo;
 
 $(document).ready(function() {
   //hide the patient_details div
@@ -31,11 +34,89 @@ $(document).ready(function() {
   tmpl_patient_search_results  = $('#tmpl_patient_search_results').html();
   tmpl_patient_demographics = $('#tmpl_patient_demographics').html();
   tmpl_patient_appointments = $('#tmpl_patient_appointments').html();
+  tmpl_rooms_status = $('#tmpl_rooms_status').html();
 
   Mustache.parse(tmpl_patient_search_results);
   Mustache.parse(tmpl_patient_demographics);
   Mustache.parse(tmpl_patient_appointments);
+  Mustache.parse(tmpl_rooms_status);
+
+  // get the room statuses
+  getRoomStatuses = function(){
+    Clinic.getRoomsStatusClinic(clinicPresent,function(data){
+      // Custom function to preprocess data for Mustache
+          
+      data = preprocessData(data);
+
+          // Render the template with processed data
+              var rendered = Mustache.render(tmpl_rooms_status, { data: data });
+          $('#rooms_status').html(rendered);
+          //alert(rendered);
+      });
+          
+      function preprocessData(data) {
+          var processedData = [];
+          var currentPractitionerId = null;
+          var isNewPractitioner = null;
+          
+          data.forEach(function (item) {
+            //get time from timestamp
+            if (item.busy == 0){item.busy = false};
+            if (item.busy == 1){item.busy = true};    
+
+            switch (item.status) {
+              case '3':
+                item.borderColor = "#FC8906";
+                break;
+              
+              default:
+                //do nothing
+            }
+
+            var time = moment(item.timestamp).locale(locale).format('LT');
+              if(item.practitioner_id !== item.resourceId){// get this value out
+                item.check = false;
+              } else {
+                item.check = true;
+              }
+
+              if (item.practitioner_id !== currentPractitionerId) {
+                isNewPractitioner = true;
+                  currentPractitionerId = item.practitioner_id;
+              } else {
+                isNewPractitioner = false;
+              }
+              
+              var newData = {
+                  isNewPractitioner: isNewPractitioner,
+                  time : time,
+                  ...item  // Include all properties from the item
+                  
+                };
+              processedData.push(newData);
+
+              
+              //log ('here comes the new data');
+              //log(processedData);
+              });
+          return processedData;
+
+        }
+  }
+
+  getRoomStatuses();
   
+      
+ 
+  
+
+
+
+
+
+
+//search bar stuff
+
     var results
 
     var ajaxReq = 'ToCancelPrevReq'; // you can have it's value anything you like

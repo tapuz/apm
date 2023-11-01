@@ -1,8 +1,13 @@
+<script>
+	var user_id = <?=$user_id?>;
+	var clinics = <?=$clinics?>;
+</script>
 <input type="hidden" id="user_id" value="<?=$user_id?>">
 <div class="col-sm-12 col-md-9"><!-- Start Left content -->
 	<!-- start: Breadcrumb -->
 	<?loadModule('breadcrumbs');?>
 	<!-- /breadcrumb-->
+	
 				
 <div class="row">
 	<div class="col-sm-3">
@@ -19,11 +24,12 @@
 	</div>
 </div>
 
-
-
-
-
 <div class="row"> &nbsp;</div>
+<div class="row">Where are you working now?</div>
+<div class="row"> &nbsp;</div>
+<div class="row clinicPresentSelectors">
+	
+</div>
 <div class="row"> &nbsp;</div>
 <div class="row"> &nbsp;</div>
 <div class="row">

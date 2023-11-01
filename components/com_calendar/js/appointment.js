@@ -103,6 +103,23 @@ class Appointment {
      });
   }
 
+  static addCustomTimeslot(timeslot,callback){
+    $.ajax({
+      url: "ajax.php",
+      dataType: "json",
+      type: 'post',
+      data: {
+        com: 'calendar',
+        task: 'addCustomTimeslot',
+        timeslot: JSON.stringify(timeslot)
+      },
+      success: function(data) {
+        if(callback){callback(data);}
+        cast.calendarChanged();
+      }
+     });
+  }
+
   static setStatus(appointment_id, status, callback) {
     $.ajax({
       url: "ajax.php",

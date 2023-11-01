@@ -16,6 +16,26 @@ var eventStatus = 0;
   
   });
 
+  $('#addWorkingSlot').on('submit', function(e){
+    e.preventDefault();
+    var start = moment(eventStart).format();
+    var end = moment(eventEnd).format();
+    var service = $('#addWorkingSlot .serviceSelector').val();
+    var clinic = $('#addWorkingSlot .clinicSelectEditApp').val();
+    note = "Extre";
+   
+  
+    
+      Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:service},function (timeslot){
+              eventIDtoHighlight = timeslot.id;
+              highlightEvent = true;
+              calendar.fullCalendar('renderEvent', timeslot);
+              calendar.fullCalendar('unselect');
+              closeEditAppModal();        
+        });
+    });
+
+
   $('#editBusyTime').on('submit', function(e){
     e.preventDefault();
     var duration = $('#editBusyTime .duration option:selected').val();
@@ -299,6 +319,13 @@ var eventStatus = 0;
         $('.warningSelectClinic').show();
       }
     }
+  });
+
+  $(document).on('change','#addWorkingSlot .clinicSelectEditApp',function(){
+    renderServicesLookup($('#addWorkingSlot .clinicSelectEditApp').val());
+    //reset the clinic on add appointment... to prevent service select that does not exist in clinic
+    $('#clinicSelectEditApp').val(0);
+
   });
   
   $('.clear-selected-patient').click(function() { //clear the selected patient and set fNewPatient to true

@@ -1,0 +1,86 @@
+
+<script id="tmpl_event_details" type="x-tmpl-mustache">
+
+{{#data}}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times</span></button>
+        <h3 class="modal-title">
+			<a class="btn btn-sm loadPatientRightPanel" patient_id="{{patientID}}">{{patientName}}</a>
+			<div>
+				<a href="tel:{{phone}}"><i class="fa fa-phone">&nbsp</i>{{phone}}</a>
+				<a href="mailto:{{email}}"><i class="fa fa-envelope-o">&nbsp</i>{{email}}</a>
+			</div>
+		</h3>
+    </div>
+	<div class="modal-body">
+		
+		<span class="pull-right"><a class="btn btn-info btn-sm history"><i class="fa fa-list-alt fa-fw"></i>&nbspHistory</a></span>
+
+		<div class="appBox">
+			<p><i class="fas fa-user-md summary"></i>&nbsp {{resourceName}}</p>
+			<p><i class="fa fa-clock-o summary"></i>&nbsp{{start_modified}} - {{end_modified}}</p>
+			<p><i class="fa fa-hospital-o summary"></i>&nbsp {{clinicName}} </p>
+			<p><i class="far fa-sticky-note"></i><strong>{{note}}</strong><a href="#" class="editapp">edit</a></p>
+		
+			<div class="btn-group appActions" role="group" aria-label="btnGrpEditEvents">
+				<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbspEdit</button>
+				<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbspReschedule</button>
+				<button type="button" class="btn btn-primary booknext"><i class="fa fa-refresh"></i>&nbspBook Next</button>
+				<button type="button" class="btn btn-danger toggleCancelBox"><i class="fas fa-slash"></i>&nbspCancel</button>  
+				<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i>&nbspDelete</button>
+			</div>
+			<div class="row"></div> 
+			
+
+				
+			<div class="cancelBox input-group" style="display:none">
+				<input type="text" placeholder="Reason for cancellation" class="form-control reasonForCancel"><span class="input-group-btn"><button type="button" class="btn btn-danger cancelAppointment"><i class="fas fa-slash"></i>&nbspCancel</button></span>
+			</div>
+			<div class="appCancelledBox" style="display:none"></div>
+			
+			<div class="btn-group col-md-4 appStatusActions" data-toggle="buttons">
+				<label id="1" class="set_status arrived btn btn-sm" status="1"><input type="radio"> Arrived</label>
+				<label id="2" class="set_status dns btn btn-sm" status="8"><input type="radio"> Did not show</label>
+			</div>
+			
+			<div class="btn-group col-md-4 appPencilledIn" data-toggle="buttons">
+				<label id="1" class="set_status confirmed btn btn-sm" status="0"><input type="radio"> Confirmed</label>
+				<label id="2" class="set_status pencilled btn btn-sm" status="2"><input type="radio"> Pencilled</label>
+			</div>
+			
+			<div class="row"></div>
+			
+			<div class="btn-group">
+				<a id="btn_goto_file" type="button" target="{{patientID}}"  href = "index.php?com=patient&view=patient&layout=component&patient_id={{patientID}}" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbspOpen File</a>
+				<button type="button" class="btn btn-success addPayment"><i class="fa fa-eur" aria-hidden="true"></i>&nbspAdd Payment</button>
+				<button type="button" class="btn btn-success btn_viewInvoices"><i class="fa fa-eur" aria-hidden="true"></i>&nbspView Invoices</button>
+			</div>
+		</div> 
+		<div class="appAllocateRoom"></div>
+		<div class="appHistoryBox" style="display:none">Loading...</div>
+		
+	
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+{{/data}}
+</script>
+
+
+<script id="tmpl_allocate_room" type="x-tmpl-mustache">
+   <div><label>Allocate to room:</label> 
+        <ul>
+            {{#data}}
+                	<li data-room_name = "{{room_name}}"" data-room_id="{{room_id}}" data-practitioner_id={{practitioner_id}} class="btnAllocateRoom" style="border-color:green">
+                	<div><button class="btn btn-primary">{{room_name}}</button></div>
+    
+                                           
+                	</li>
+            {{/data}}
+
+         </ul>
+    </div>
+
+</script>
+

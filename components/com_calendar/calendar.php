@@ -1,7 +1,5 @@
 <?php 
 //APM Component Calendar
-
-
 define('COMPONENT','calendar');
 define('TEMPLATES', ROOT . '/components/com_' . COMPONENT . '/templates/');
 
@@ -43,6 +41,26 @@ loadExtJS('https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.val
 
 
 switch (getVar('task')){
+
+	case 'alocateAppointmentToRoom':
+		//error_log(getVar('appointmentId') . ' is the app');
+		Clinic::alocateAppointmentToRoom(getVar('appointment_id'),getVar('room_id'));
+	break;	
+
+	case 'getFreeRooms':
+		echo json_encode(Clinic::getFreeRooms(getVar('clinic'),getVar('practitioner')));
+	break;
+
+	case 'getRoomsStatusClinic':
+		echo json_encode(Clinic::getRoomsStatusClinic(getVar('clinic')));
+	break;
+	case 'getClinicPresent':
+		echo $clinicPresent = Clinic::getClinicPresent(getVar('user_id'));
+	break;
+
+	case 'setClinicPresent':
+		Clinic::setClinicPresent(getVar('user_id'),getVar('clinic_id'));
+	break;
 	
 	case 'searchPatients':
 		$name = getVar('name');
@@ -57,15 +75,9 @@ switch (getVar('task')){
 	break;
 	   
 	case 'getUsers':
-		
-	
-	
 		$users = Users::getAllPractitioners();
 		echo json_encode($users);
 		//error_log(json_encode($users));
-
-		
-		
 	break;
 	
 	case 'getClinics':
@@ -77,6 +89,11 @@ switch (getVar('task')){
 	case 'getWorkingPlan':
 		echo $workingPlan = get_user_meta( getVar('userID'), 'working_plan',1);
 
+	break;
+
+	case 'addCustomTimeslot':
+		$timeslot =  Calendar::addCustomTimeslot(json_decode(stripslashes(getVar('timeslot'))));
+		echo json_encode($timeslot);
 	break;
 
 	case 'addCustomAppointment':
@@ -212,6 +229,7 @@ switch (getView())
 		}
 		$currentUserID =  get_current_user_id();
 		$currentUser = wp_get_current_user();
+		$clinicPresent = Clinic::getClinicPresent($currentUserID);
 		
 		include('views/calendar.php');
 

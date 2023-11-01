@@ -1,7 +1,25 @@
 var bFlagReschedule = false;
 var bFlagBookNext = false;
 var theLogs;
+var getFreeRoomsForAppointment;
+
 $(document).ready(function() {
+  var tmpl_allocate_room = $('#tmpl_allocate_room').html();
+ 
+	Mustache.parse(tmpl_allocate_room);
+  
+
+
+  //get the rooms to allocate
+
+  getFreeRoomsForAppointment = function(){
+    Clinic.getFreeRooms(clinicPresent,objEvent.resourceId,function(data){
+      var rendered = Mustache.render(tmpl_allocate_room, { data: data });
+      $('.appAllocateRoom').html(rendered);
+      log(data);
+    });
+  }
+
 
   $(document).on('click','.set_status',function(){ 
  
@@ -30,7 +48,34 @@ $(document).ready(function() {
 
   });
 
+  
+  $(document).on('click','.btnAllocateRoom',function(){
+    var room_id = $(this).data('room_id');
+    var room_name = $(this).data('room_name');
+    
+    log(room_id + ' is the room');
+    //allocate the patient to the room
+    Clinic.alocateAppointmentToRoom(objEvent.id,room_id,function(data){
+      //set the status of the appointment to 3(allocated to a room)
+      objEvent.status = 3;
+      $('#eventDetails').modal('hide');
+      Appointment.setStatus(objEvent.id, objEvent.status, function() {
+        calendar.fullCalendar('updateEvent', objEvent);
+        getRoomStatuses();
+        
+        Appointment.addLog(objEvent.id,'Allocated','Allocated to room ' + room_name  ,'label-success');
+      });
+      
+        
+    });
+  });
+    
+    
+  
+  
 
+  
+  
   $(document).on('click','.reschedule',function(){ 
     //set the global flag to true.. the next event click on the calendar should fire a reschedule and not a new event        
     bFlagReschedule = true;
@@ -182,7 +227,11 @@ $(document).ready(function() {
      $('#paymentModal .fee').val(oService.fee);
      $('#paymentModal').modal('show');
      log('CASTING');
-     cast.payment(oService.fee);
+     Payment.createPayment(5000,function(payment){
+       log(payment._links.qrcode.href);
+       cast.payment(payment);   
+      });
+     
   });
 
   $('#paymentModal .add_payment').click(function(){
@@ -235,103 +284,59 @@ $(document).on('click','.loadPatientRightPanel',function(){
 
 
 function loadEventDetails() {
-      $('#tab_busyTime').hide();
-      var title ='<a class="btn btn-sm loadPatientRightPanel" patient_id="'+objEvent.patientID+'">' + objEvent.patientName + '&nbsp;&nbsp;- '+objEvent.insurance+'&nbsp;&nbsp;&nbsp;<i class="fa fa-pencil-square-o">&nbsp;</i></a>';
-			var body='';
-			title +='<div>';
-			if (objEvent.phone != null){
-				title += '&nbsp;&nbsp;<a href="tel:' + objEvent.phone + '"><i class="fa fa-phone">&nbsp;</i>' + objEvent.phone + '</a>&nbsp;&nbsp';
-			}
-			
-			if (objEvent.email != null){
-				title += '<a href="mailto:' + objEvent.email + '"><i class="fa fa-envelope-o">&nbsp;</i>' + objEvent.email + '</a>';
-			}
-			title += '</div>';
-			
-			
-			body += '<span class="pull-right"><a class="btn btn-info btn-sm history"><i class="fa fa-list-alt fa-fw"></i>&nbsp;History</a></span>';
-			body += '<div class="appHistoryBox" style="display:none">Loading...</div>';
-			body += '<div class="appBox">';
-			body += '<p><i class="fas fa-user-md summary"></i>&nbsp;' + objEvent.resourceName + '</p>';
+  $('#tab_busyTime').hide();
 
-			body += '<p><i class="fa fa-clock-o summary"></i>&nbsp;' + moment(objEvent.start).locale(locale).format('LLLL') + ' &mdash; ' + moment(objEvent.end).format('HH:mm') + '</p>';
-			body += '<p><i class="fa fa-hospital-o summary"></i>&nbsp;' + getClinicName(objEvent.clinic) + '</p>';
-      if (objEvent.note != ''){
-        body += '<p><i class="far fa-sticky-note"></i><strong> ' + objEvent.note + ' </strong><a href="#" class="editapp">edit</a></p>';
-      };
-			body += '<p><div class="btn-group appActions" role="group" aria-label="btnGrpEditEvents">';
-			body +='<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</button>';
-			body +='<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbsp;Reschedule</button>';
-      body +='<button type="button" class="btn btn-primary booknext"><i class="fa fa-refresh"></i>&nbsp;Book Next</button>';
-			body +='<button type="button" class="btn btn-danger toggleCancelBox"><i class="fas fa-slash"></i>&nbsp;Cancel</button>';  
-      body +='<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>';
-      body +='</div></p>';
-	
-			
-			body += '<div class="cancelBox input-group" style="display:none">';
-			body += '<input type="text" placeholder="Reason for cancellation" class="form-control reasonForCancel"><span class="input-group-btn"><button type="button" class="btn btn-danger cancelAppointment"><i class="fas fa-slash"></i>&nbsp;Cancel</button></span>';
-			body += '</div>';
-			
-			body += '<div class="appCancelledBox" style="display:none"></div>';
-						
-			
-			body += '<div class="btn-group col-md-4 appStatusActions" data-toggle="buttons">';
-			body +=	'<label id="1" class="set_status arrived btn btn-sm" status="1"><input type="radio"> Arrived</label>';
-			body +=	'<label id="2" class="set_status dns btn btn-sm" status="8"><input type="radio"> Did not show</label>';
-      body += '</div>';
-      
-      body += '<div class="btn-group col-md-4 appPencilledIn" data-toggle="buttons">';
-			body +=	'<label id="1" class="set_status confirmed btn btn-sm" status="0"><input type="radio"> Confirmed</label>';
-			body +=	'<label id="2" class="set_status pencilled btn btn-sm" status="2"><input type="radio"> Pencilled</label>';
-      body += '</div>';
-      body += '<div class="row"></div>';
-      
-      body += '<p><div class="btn-group">';
-
-			body +='<a id="btn_goto_file" type="button" target="'+ objEvent.patientID +'"  href = "index.php?com=patient&view=patient&layout=component&patient_id=' +objEvent.patientID  + '" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Open File</a>';
-      body +='<button type="button" class="btn btn-success addPayment"><i class="fa fa-eur" aria-hidden="true"></i>&nbsp;Add Payment</button>';
-      body +='<button type="button" class="btn btn-success btn_viewInvoices"><i class="fa fa-eur" aria-hidden="true"></i>&nbsp;View Invoices</button>';
-      body += '</div></p>';
-			
-			body += '</div>'; //end appBox
-			
-			$('#eventDetails .modal-title').html(title);
-			$('#eventDetails .modal-body').html(body);
-		
-      $('#eventDetails').appendTo("body").modal('show');
-      
-			//set the status toggle
-      if (objEvent.status == 0) {$(".set_status.confirmed").button("toggle");}
-      if (objEvent.status == 1) {$(".set_status.arrived").button("toggle");}
-      if (objEvent.status == 2) {$(".set_status.pencilled").button("toggle");}
-      if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
-      if (objEvent.status == 6) {
-          //get the cancelled log
-          Appointment.getLog(eventID,'Cancelled',function(log){
-            theLogs = log;
-            var logs = '<br>';
-            
-            $.each(log, function(){
-              logs += '<div class="log"><span class="label ' + this.labelclass + ' ">' + this.tag + ' &nbsp;</span><span class="logDateTime">'+ moment(this.datetime).format('LLLL') +'</span><span style="color:gray;"> - by ' + this.username + '</span>';
-              logs += '<div><strong>Reason: '+ this.log +'</strong></div></div>';
-      
-            });
-            
-          $('.appCancelledBox').append(logs);
+  //prepare the data
+  objEvent.start_modified = moment(objEvent.start).locale(locale).format('LLLL');
+  objEvent.end_modified = moment(objEvent.end).locale(locale).format('HH:mm');
+  var tmpl_event_details = $('#tmpl_event_details').html();
+  var rendered = Mustache.render(tmpl_event_details, { data: objEvent });
+  $('#eventDetails .modal-content').html(rendered);
+  
+  $('#eventDetails').appendTo("body").modal('show');
+  
+  //set the status toggle
+  if (objEvent.status == 0) {$(".set_status.confirmed").button("toggle");}
+  if (objEvent.status == 1) {$(".set_status.arrived").button("toggle");}
+  if (objEvent.status == 2) {$(".set_status.pencilled").button("toggle");}
+  if (objEvent.status == 3) {
+    $(".appStatusActions").hide();
+    $(".editapp").hide();
+    $(".appPencilledIn").hide();
+    $(".toggleCancelBox").hide();
+    $(".appAllocateRoom").hide();
+    
+    
+  }
+  if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
+  if (objEvent.status == 6) {
+      //get the cancelled log
+      Appointment.getLog(eventID,'Cancelled',function(log){
+        theLogs = log;
+        var logs = '<br>';
+        
+        $.each(log, function(){
+          logs += '<div class="log"><span class="label ' + this.labelclass + ' ">' + this.tag + ' &nbsp;</span><span class="logDateTime">'+ moment(this.datetime).format('LLLL') +'</span><span style="color:gray;"> - by ' + this.username + '</span>';
+          logs += '<div><strong>Reason: '+ this.log +'</strong></div></div>';
+  
         });
-          $(".appCancelledBox").show();
-          $(".appActions .editapp").hide();
-          $(".appActions .reschedule").hide();
-          $(".appActions .toggleCancelBox").hide();
-          $(".addPayment").hide();
-          $(".appPencilledIn").hide();
-      //$(".appActions").hide();
-      $(".appStatusActions").hide();
-      }
-      if (objEvent.status == 7) {
-        $(".addPayment").hide();
-        $(".appStatusActions").hide();
-        $(".appPencilledIn").hide();
-        $(".toggleCancelBox").hide();
-      }
+        
+      $('.appCancelledBox').append(logs);
+    });
+      $(".appCancelledBox").show();
+      $(".appActions .editapp").hide();
+      $(".appActions .reschedule").hide();
+      $(".appActions .toggleCancelBox").hide();
+      $(".addPayment").hide();
+      $(".appPencilledIn").hide();
+  //$(".appActions").hide();
+  $(".appStatusActions").hide();
+  }
+  if (objEvent.status == 7) {
+    $(".addPayment").hide();
+    $(".appStatusActions").hide();
+    $(".appPencilledIn").hide();
+    $(".toggleCancelBox").hide();
+  }
+  getFreeRoomsForAppointment();
 }

@@ -2,6 +2,7 @@
 	//some vars injected from PHP in to JS
 	var currentUserID = <?=$currentUserID?>;
 	var currentUser = <?=json_encode($current_user)?>;
+	var clinicPresent = <?=$clinicPresent?>;
 	
 </script>
 
@@ -43,6 +44,9 @@
 						<div class="row">
 							<div id="datePicker"></div>
 						</div>
+						<div class="row">
+							<div id="rooms_status"></div>
+						</div>
 					</div>
 					<div class="row">
 					<div style="height:2px;" id="rightPanelProgress">&nbsp;</div>
@@ -83,6 +87,7 @@
     	<ul class="nav nav-pills">
 			<li class="active"><a  href="#patientAppointment" data-toggle="tab"><i class="fa fa-user"></i>&nbsp;&nbsp;Patient Appointment</a></li>
 			<li id='tab_busyTime'><a  href="#busyTime" data-toggle="tab"><i class="fas fa-ban"></i>&nbsp;&nbsp;Busy Time</a></li>
+			<li id='tab_addWorkingSlot'><a  href="#addWorkingSlot" data-toggle="tab"><i class="fas fa-ban"></i>&nbsp;&nbsp;Add working slot</a></li>
 			
 		</ul> 
 	
@@ -279,6 +284,63 @@
 			</form>
 
 			</div>
+			<!-- END PANE-->
+			<div class="tab-pane" id="addWorkingSlot">
+                <div class="patient-section">
+					<form id="addWorkingSlot" role="form" data-toggle="validator">
+					
+					<div class="row">
+						<div class="col-sm-2">
+							<label class="patient-name">Date</label>
+						</div>
+						<div class="col-sm-5">
+							<div class="row">
+								<span class="datetime"></span>
+								
+							</div>
+						</div>	
+					</div>
+					<div class="row">
+						<div class="col-sm-2">
+							<label class="patient-name">Clinic</label>
+						</div>
+						<div class="col-sm-5">
+							<div class="row">
+								<span class="selectClinic"></span>
+								
+							</div>
+						</div>	
+					</div>
+					<div class="row">
+						<div class="col-sm-2">
+							<label class="patient-name">Service</label>
+						</div>
+						<div class="col-sm-5">
+							<div class="row">
+								<span class="selectService"></span>
+								
+							</div>
+						</div>	
+					</div>
+
+					<div class="row">&nbsp</div>
+					
+					
+					<div class="row">&nbsp;</div>
+					<div class="row">
+						<div class="col-sm-2">
+						 <button type="submit" class="btn btn-primary addWorkingSlotSubmit">Save</button>
+						</div>	
+						<div class="col-sm-2">
+        		 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+						<div class="col-sm-8"></div>
+					</div>
+				</form>
+      </div>
+				
+      </div>
+	  <!-- End pane-->
             
 		</div>
 		
@@ -298,16 +360,7 @@
 <div class="modal modal-wide fade" id="eventDetails" role="dialog" tabindex="-1">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h3 class="modal-title">Thierry Duhameeuw</h3>      
-      </div>
-      <div class="modal-body">
-		
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+    
     </div>
   </div>
 </div>
@@ -621,7 +674,7 @@
 <!--load the Templates-->
 
 <?include(TEMPLATES . 'right_panel.html'); ?>
-
+<?include(TEMPLATES . 'main.html'); ?>
 
 
 

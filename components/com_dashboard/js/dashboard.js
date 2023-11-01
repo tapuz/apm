@@ -11,7 +11,76 @@ var urlToGetAllClosedIssues = "https://api.github.com/repos/tapuz/apm/issues?sta
 //https://github.com/tapuz/apm/issues
 
 $(document).ready(function () {
-    $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
+showLoadingScreen();
+
+    function getClinicPresent(){
+        showLoadingScreen();
+        $.ajax({
+            url: "ajax.php",
+            //dataType: "json",
+            type: 'get',
+            data: {
+              com: 'calendar',
+              task: 'getClinicPresent',
+              user_id : user_id
+            },
+            success: function(clinicPresent) {
+              $('.clinicPresentSelectors').html('');
+              $.each(clinics,function(){
+                if (this.clinic_id == clinicPresent) {
+                    html = "<div class='col-sm-3'><a class='quick-button small active clinicPresentSelector' data-clinic = '" + this.clinic_id + "'><i class='icon-calendar'></i>";
+                    $('.breadcrumb .active').html(this.clinic_name);
+                } else {
+                    html = "<div class='col-sm-3'><a class='quick-button small clinicPresentSelector' data-clinic = '" + this.clinic_id + "'><i class='icon-calendar'></i>";
+                }
+                html += '<p>' + this.clinic_name +'</p></a></div>'
+                $('.clinicPresentSelectors').append(html);
+                
+                hideLoadingScreen();
+                
+              });
+              
+        
+              
+            
+              
+              
+		    }
+	        
+        });
+    }
+
+    getClinicPresent();
+    
+    
+
+    $(document).on('click','.clinicPresentSelector', function(){
+
+        clinic = $(this).data('clinic');
+        $.ajax({
+            url: "ajax.php",
+            //dataType: "json",
+            type: 'get',
+            data: {
+              com: 'calendar',
+              task: 'setClinicPresent',
+              user_id : user_id,
+              clinic_id : clinic
+            },
+            success: function(clinicPresent) {
+                log('success						');
+                getClinicPresent();
+		    }
+	        
+        });
+    });
+
+
+
+
+
+
+   /*  $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
         
         $.each(allIssues, function (i, issue) {
          
@@ -69,7 +138,7 @@ $(document).ready(function () {
                 
         });
     });
-
+ */
 
 
 
