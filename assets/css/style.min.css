@@ -3414,6 +3414,7 @@ ul.comments-list.no-padding li {
     background: #dbdee0
 }
 
+
 .quick-button .notification {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -3429,7 +3430,13 @@ ul.comments-list.no-padding li {
 
 .quick-button.small {
     padding: 15px 0 0 0;
-    font-size: 10px
+    font-size: 10px;
+    
+}
+
+.quick-button.small.active {
+    color: red
+ 
 }
 
 .quick-button.small i {
