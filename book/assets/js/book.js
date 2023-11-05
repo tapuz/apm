@@ -61,7 +61,7 @@ $(document).ready(function() {
 
   if (urlParams.has('service')){ // patient is requesting a screening..limit months to book to 2
     monthsInAdvance = 2;
-    practitionerNotAvailable = 3;
+    practitionerNotAvailable = 0;
     urlService = urlParams.get('service');
 
   }
@@ -203,8 +203,15 @@ $('.urgent-footer').hide();
         group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description,allow_np_online_booking:parseInt(this.allow_np_online_booking), allow_urgent_request:parseInt(this.allow_urgent_request),practitioner_title:this.practitioner_title};
       });
       group.logo = '<img src = '+group.logo+'>';
-      console.log('read this.. ' + group.description);
+      //console.log('read this.. ' + group.description);
       $('.group-description').html(group.logo + group.description);
+      
+      if(urlService == 'rugscreening_30'){
+      	$('.service-title').html("Rugscreening");
+      }
+      
+
+      
       //if allow_np_online_booking = false skip the first wizard slide, patient can only book if they are already in the system
       if(!group.allow_np_online_booking){
         mode = 'recurrentPatient';
