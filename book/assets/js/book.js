@@ -516,7 +516,7 @@ $('.urgent-footer').hide();
                practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
                
               if (group.ID == '1'){
-               $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'finding timeslot with: ' + practitioner.name } );
+               //$.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'finding timeslot with: ' + practitioner.name } );
               }
                $.each(practitioners, function() {
                 if (this.ID == practitioner.ID){
@@ -566,7 +566,7 @@ $('.urgent-footer').hide();
           case 4: // next was clicked on the select timeslot tab
                $('.error').html('');
                if (group.ID == '1'){
-                $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'waiting to confirm appt..' } );
+                //$.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'waiting to confirm appt..' } );
                }
                var $valid = $('#timeslot_select form').valid();
                   if (!$valid) {
