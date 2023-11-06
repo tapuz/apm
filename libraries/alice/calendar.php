@@ -21,10 +21,13 @@ class Calendar {
 			table_custom_timeslots.clinic,
 			'1' as 'customTimeslot',
 			table_services.color,
+			table_clinics.clinic_name as title,
 			'background' as 'rendering'
 			FROM table_custom_timeslots 
-			LEFT JOIN table_services
+			INNER JOIN table_services
 			ON table_services.id = table_custom_timeslots.service
+			INNER JOIN table_clinics
+			ON table_custom_timeslots.clinic = table_clinics.clinic_id
 			WHERE (user = '%d' AND start > DATE_ADD('%s', INTERVAL -3 DAY) AND end < DATE_ADD('%s', INTERVAL +3 DAY))",$userID,$start,$end);
 		$customTimeslots = $wpdb->get_results($query);
 
@@ -149,6 +152,8 @@ class Calendar {
 			table_custom_timeslots.service as serviceId,
 			'1' as 'customTimeslot',
             
+			table_clinics.clinic_name as title,
+
 			table_services.color as backgroundColor,
 			table_services.color as borderColor,
 			'background' as 'rendering'
@@ -156,6 +161,9 @@ class Calendar {
             FROM table_custom_timeslots            
 			INNER JOIN table_services
 			ON table_custom_timeslots.service = table_services.id
+
+			INNER JOIN table_clinics
+			ON table_custom_timeslots.clinic = table_clinics.clinic_id
 			
             WHERE (table_custom_timeslots.id = '%s')"
                 ,$id);
@@ -465,7 +473,7 @@ class Calendar {
 		global $wpdb;
 		$appointments=$wpdb->get_results($q);
 		
-		$q =$wpdb->prepare("select start,end from table_custom_timeslots where user = %d AND DATE(start) = '%s' AND clinic='%s' ORDER BY start ASC",$user,$selected_date,$clinic);
+		$q =$wpdb->prepare("select TIME(start) as start ,TIME(end) as end from table_custom_timeslots where user = %d AND DATE(start) = '%s' AND clinic='%s' AND service='%s' ORDER BY start ASC",$user,$selected_date,$clinic,$service);
 		$customWorkingPlan = $wpdb->get_results($q, ARRAY_A);
 		
 		
@@ -587,6 +595,9 @@ class Calendar {
 		//combine appointments and breaks
 		
 		 $available_periods_with_appointments = $available_periods_with_breaks;
+	    //error_log("AVAILABLE PERIODS WITHOUT APPOINTMENTS----->");
+		//error_log(print_r($available_periods_with_breaks,1));			
+
 	    foreach($appointments as $appointment) {
 	        foreach($available_periods_with_appointments as $index => &$period) {
 	            $a_start = strtotime($appointment->start);
