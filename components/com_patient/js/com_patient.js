@@ -1,5 +1,5 @@
 var oPatient;
-
+var cast;
 $(document).ready(function(){
 	var fSOAPSaved = 1;
 	var fSaveSuccess = 1;
@@ -28,6 +28,10 @@ $(document).ready(function(){
 	var bgImage;
 	var bgImageCurAngle = 0;
 	var saveNoty;
+
+	cast = new Cast('https://desk.timegenics.com');
+
+	
 	
 	showLoadingScreen();
 	//set the page title = patientName
@@ -245,10 +249,15 @@ $(document).ready(function(){
 					user:oEncounter.user,
 					created:oEncounter.start
 					},function(SOAP){
-						log('the new SOAP ID : ' + SOAP.id);
+						//log('the new SOAP ID : ' + SOAP.id);
 						$('#SOAP_ID').val(SOAP.id);
 						
 					});
+				//set the appointment status to 4 if there is an appointment linked to this encounter
+				if (appointment_id != 'null'){
+					//change status to in consultation -> status 4
+					Appointment.setStatus(appointment_id, 4);
+				}
 			
 			});
 
@@ -330,6 +339,11 @@ $(document).ready(function(){
 				editingSOAP = false;
 				//disable the add vitals button
 
+				//set the appointment status to 5 if there is an appointment linked to this encounter
+				if (appointment_id != 'null'){
+					//change status to in consultation -> status 4
+					Appointment.setStatus(appointment_id, 5);
+				}
 
 
 			}); 
@@ -749,6 +763,7 @@ $(document).ready(function(){
 
 
 	function renderSummary(){
+		bogus = oHistory;
 		filterComplaints();
 		var template_summary = $('#tmpl_summary').html();
 		Mustache.parse(template_summary);
@@ -1271,6 +1286,7 @@ $(document).ready(function(){
 			  } else {
 				value = 0;
 			  }
+			  log('value checkbox -->' + value);
 		}
 
 		History.save(patientID,field,value,function(){oHistory[field] = value;renderSummary();});

@@ -3,6 +3,7 @@
 	var userID = <?=$userID?>;
 	var patientID = <?=$patient_id?>;
 	var patientName = '<?=$patient->patient_surname.' '.$patient->patient_firstname?>';
+	var appointment_id  = <?=$appointment_id?>;
 	
 </script>
 

@@ -147,20 +147,26 @@
                     <div><label>{{practitioner}}</label></div>
                 {{/isNewPractitioner}}
                 {{#busy}}
-                	<li data-roomId="{{room_id}}" data-patientId={{patient_id}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_appointment" style="border-color:{{borderColor}}">
-                	<div><label>{{room_name}}</label</div>
+                	<li data-roomId="{{room_id}}" data-patientId={{patientID}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_roomstatus" style="border-color:{{borderColor}}">
+                	<div>
+                        <label>{{room_name}}</label>
+                        <label class="btn btn-sm btnEmptyRoom" data-appointment_id={{appointment_id}} data-room_id = {{room_id}}><i class="fa fa-trash-o"></i>&nbsp</label>
+                    </div>
                     {{#check}}
-                        <div><label>Patient : {{patientName}}</label></div>
+                    
+                        <a target="{{patientID}}" href="index.php?com=patient&amp;view=patient&amp;layout=component&amp;patient_id={{patientID}}&amp;appointment_id={{appointment_id}}"><div><label>Patient : {{patientName}}</label></div></a>
                     {{/check}}    
                     {{^check}}
                     <div><label>In use by {{resourceName}}</label></div>
                     {{/check}}
                     
-                    <div><label>{{time}}</label></div>    
+                    <div>
+                        <label>{{time}}</label>
+                    </div>   
                        
                 {{/busy}}
                 {{^busy}}
-                	<li data-roomId="{{room_id}}" data-patientId={{patient_id}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_appointment" style="border-color:green">
+                	<li data-roomId="{{room_id}}" data-patientId={{patientID}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_roomstatus" style="border-color:rgb(120, 205, 81)">
                 	<div><label>{{room_name}}</label</div>
 
                 {{/busy}}

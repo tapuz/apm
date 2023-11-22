@@ -6,19 +6,18 @@ class Cast {
         this.socket.on('calendar_changed',function(){
             console.log('calendar changed');
             calendar.fullCalendar( 'refetchEvents' );
-          });
+            getRoomStatuses();
+        });
 
     }
-    payment(amount){
-        this.socket.emit('castPayment',{castID:this.user,amount:amount});
+    payment(payment){
+        this.socket.emit('castPayment',{castID:this.user,payment:payment});
         
     }
 
-    calendarChanged(){
+    calendarChanged(message){
         this.socket.emit('calendar_changed');
     }
-  
-  
     
   }
   

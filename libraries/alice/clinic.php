@@ -1,6 +1,22 @@
 <?php
 class Clinic {
 
+
+public static function emptyRoom($room_id){
+	error_log('room ID -> ' . $room_id);
+	global $wpdb;
+	$wpdb->update( 
+		'table_rooms', 
+		array( 
+			'busy' => 0
+			),
+		array( 'id' => $room_id)
+			);
+	
+	
+	
+}
+
 public static function alocateAppointmentToRoom($appointment_id,$room_id){
 	global $wpdb;
 	$wpdb->update( 

@@ -61,14 +61,20 @@ $(document).ready(function() {
           
           data.forEach(function (item) {
             //get time from timestamp
+            //log(item);
             if (item.busy == 0){item.busy = false};
-            if (item.busy == 1){item.busy = true};    
-
+            if (item.busy == 1){item.busy = true};   
             switch (item.status) {
               case '3':
                 item.borderColor = "#FC8906";
-                break;
-              
+              break;
+              case '4':
+                item.borderColor = "#ff5454";
+              break;
+
+              case '5':
+                item.borderColor = "#F406FC";
+      
               default:
                 //do nothing
             }

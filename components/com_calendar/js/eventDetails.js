@@ -48,12 +48,27 @@ $(document).ready(function() {
 
   });
 
+ 
+  $(document).on('click','.btnEmptyRoom',function(){
+    var room_id = $(this).data('room_id');
+    var appointment_id = $(this).data('appointment_id');
+    //allocate the patient to the room
+    Clinic.emptyRoom(room_id,function(data){
+      getRoomStatuses();
+      Appointment.setStatus(appointment_id,9, function() {
+        calendar.fullCalendar( 'refetchEvents' );
+      });
+      
+        
+    });
+  });
   
+
   $(document).on('click','.btnAllocateRoom',function(){
     var room_id = $(this).data('room_id');
     var room_name = $(this).data('room_name');
     
-    log(room_id + ' is the room');
+    //log(room_id + ' is the room');
     //allocate the patient to the room
     Clinic.alocateAppointmentToRoom(objEvent.id,room_id,function(data){
       //set the status of the appointment to 3(allocated to a room)

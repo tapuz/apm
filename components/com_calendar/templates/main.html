@@ -23,11 +23,11 @@
 			<p><i class="far fa-sticky-note"></i><strong>{{note}}</strong><a href="#" class="editapp">edit</a></p>
 		
 			<div class="btn-group appActions" role="group" aria-label="btnGrpEditEvents">
-				<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbspEdit</button>
-				<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbspReschedule</button>
-				<button type="button" class="btn btn-primary booknext"><i class="fa fa-refresh"></i>&nbspBook Next</button>
-				<button type="button" class="btn btn-danger toggleCancelBox"><i class="fas fa-slash"></i>&nbspCancel</button>  
-				<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i>&nbspDelete</button>
+				<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</button>
+				<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbsp;Reschedule</button>
+				<button type="button" class="btn btn-primary booknext"><i class="fa fa-refresh"></i>&nbsp;Book Next</button>
+				<button type="button" class="btn btn-danger toggleCancelBox"><i class="fas fa-slash"></i>&nbsp;Cancel</button>  
+				<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
 			</div>
 			<div class="row"></div> 
 			
@@ -51,7 +51,7 @@
 			<div class="row"></div>
 			
 			<div class="btn-group">
-				<a id="btn_goto_file" type="button" target="{{patientID}}"  href = "index.php?com=patient&view=patient&layout=component&patient_id={{patientID}}" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbspOpen File</a>
+				<a id="btn_goto_file" type="button" target="{{patientID}}"  href = "index.php?com=patient&view=patient&layout=component&patient_id={{patientID}}&appointment_id={{id}}" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbspOpen File</a>
 				<button type="button" class="btn btn-success addPayment"><i class="fa fa-eur" aria-hidden="true"></i>&nbspAdd Payment</button>
 				<button type="button" class="btn btn-success btn_viewInvoices"><i class="fa fa-eur" aria-hidden="true"></i>&nbspView Invoices</button>
 			</div>

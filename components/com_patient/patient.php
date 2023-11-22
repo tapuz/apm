@@ -42,6 +42,9 @@ switch(getView()){
 		loadJS('graphs.js','patient');
 		loadCSS('bootstrap-tagsinput.css');
 		loadLib('clinic');
+		loadJS('socket.io.min.js');
+		loadJS('cast.js','calendar');
+
 
 		
 		//loadView();
@@ -63,7 +66,12 @@ switch(getView()){
 		Patient::setActivePatient($patientID);
 		
 		//$letterCount = letterCount();//used in de patient_menu module
-		
+		if (isset($_GET['appointment_id'])) {
+			$appointment_id = getVar('appointment_id');
+		} else {
+			$appointment_id = 'null';
+		}
+	
 		
 		include('views/patient.php');
 		

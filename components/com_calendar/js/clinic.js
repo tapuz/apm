@@ -57,6 +57,24 @@ class Clinic {
 });
 }
 
+static emptyRoom(room_id,callback){
+  $.ajax({
+      url: "ajax.php",
+      type: 'get',
+      data: {
+          com: 'calendar',
+          task: 'emptyRoom',
+          room_id : room_id
+          
+},
+success: function(data) {
+  if (callback) {
+    callback(data);
+  }
+}
+});
+}
+
   static alocateAppointmentToRoom(appointment_id,room_id,callback){
     $.ajax({
         url: "ajax.php",

@@ -469,7 +469,7 @@ class Calendar {
 		
 		$day = strtolower(date('l', strtotime($selected_date))); //ex 'monday'
 		//clinic_id is not needed in the query.. if included, custom appts are excluded.. they do not have a clinic_id
-		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' AND status < 6 AND (clinic='%s' OR clinic='0') ORDER BY start ASC",$user,$selected_date,$clinic);
+		$q = sprintf("select * from table_appointments where user = %d AND DATE(start) = '%s' AND status != 6 AND (clinic='%s' OR clinic='0') ORDER BY start ASC",$user,$selected_date,$clinic);
 		global $wpdb;
 		$appointments=$wpdb->get_results($q);
 		

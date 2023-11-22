@@ -41,6 +41,10 @@ loadExtJS('https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.val
 
 
 switch (getVar('task')){
+	case 'emptyRoom':
+		//error_log(getVar('appointmentId') . ' is the app');
+		Clinic::emptyRoom(getVar('room_id'));
+	break;	
 
 	case 'alocateAppointmentToRoom':
 		//error_log(getVar('appointmentId') . ' is the app');

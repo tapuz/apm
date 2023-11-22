@@ -1019,6 +1019,8 @@ $(document).ready(function() {
         icons = '<div class="fc-event-icons"><i class="fa fa-thumbs-down icon-thumbs-down tip-init" data-original-title="Did not show" title="Did not show"></i>';
         icons += '<i class="fa fa-thumbs-up icon-thumbs-up tip-init" title="Arrived"></i>';
         icons += '<i class="fa fa-thumbs-up icon-thumbs-up-allocated tip-init" title="Allocated"></i>';
+        icons += '<i class="fa fa-thumbs-up icon-thumbs-up-consultation tip-init" title="In Consultation"></i>';
+        icons += '<i class="fa fa-thumbs-up icon-thumbs-up-post-consultation tip-init" title="Post Consultation"></i>';
         icons += '<i class="fas fa-comment icon-note title="note"></i>';
         icons += '<i class="far fa-credit-card icon-payed" title="payed"></i>';       
         icons += '<i class="fas fa-cloud icon-cloud" title="cloud"></i></div>';       
@@ -1062,11 +1064,23 @@ $(document).ready(function() {
             
             //$(".fc-content", element).append(note);
             
-          
+            if (event.status == 0) {
+              $(element).find('.icon-thumbs-up').hide();
+            }
+
             if (event.status == 1) {
               $(element).find('.icon-thumbs-up').show();
             } else {
               $(element).find('.icon-thumbs-up').hide();
+            }
+
+            if (event.status == 2) {
+              
+              //$(element).addClass('appToBeMoved');
+              rgba1 = hexToRGBA(event.backgroundColor,1);
+              rgba2 = hexToRGBA(event.backgroundColor,0.5);
+              $(element).css({"background": "repeating-linear-gradient(45deg,"+ rgba1 +","+ rgba1  +" 10px,"+rgba2+" 10px,"+rgba2+" 20px)","opacity":"1"});
+              $(element).find('.fc-bg').css({"opacity":"0.6"});
             }
 
             if (event.status == 3) {
@@ -1075,11 +1089,10 @@ $(document).ready(function() {
               $(element).find('.icon-thumbs-up-allocated').hide();
             }
 
-
-            if (event.status == 8) {
-              $(element).find('.icon-thumbs-down').show();
+            if (event.status == 4) {
+              $(element).find('.icon-thumbs-up-consultation').show();
             } else {
-              $(element).find('.icon-thumbs-down').hide();
+              $(element).find('.icon-thumbs-up-consultation').hide();
             }
 
             if (event.status == 6) {
@@ -1092,16 +1105,18 @@ $(document).ready(function() {
               $(element).find('.icon-payed').hide();
             }
 
-            if (event.status == 2) {
-              
-              //$(element).addClass('appToBeMoved');
-              rgba1 = hexToRGBA(event.backgroundColor,1);
-              rgba2 = hexToRGBA(event.backgroundColor,0.5);
-              $(element).css({"background": "repeating-linear-gradient(45deg,"+ rgba1 +","+ rgba1  +" 10px,"+rgba2+" 10px,"+rgba2+" 20px)","opacity":"1"});
-              $(element).find('.fc-bg').css({"opacity":"0.6"});
+            if (event.status == 8) {
+              $(element).find('.icon-thumbs-down').show();
+            } else {
+              $(element).find('.icon-thumbs-down').hide();
             }
 
-            
+            if (event.status == 5 || event.status == 9) {
+              $(element).find('.icon-thumbs-up-post-consultation').show();
+            } else {
+              $(element).find('.icon-thumbs-up-post-consultation').hide();
+            }
+
 
             if (event.type != 'bgEvent'){ //bgEvent is used to display the working plan
               element.addClass('clinic' + event.clinic);
