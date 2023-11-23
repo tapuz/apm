@@ -3,6 +3,7 @@ var cast;
 $(document).ready(function(){
 	var fSOAPSaved = 1;
 	var fSaveSuccess = 1;
+	var fNewEncounter = false;
 	var fAllSaved = 1;
 	var oEncounter;
 	var encounters;
@@ -215,9 +216,8 @@ $(document).ready(function(){
 
 	$(document).on('click','#btn_new_encounter', function () {
 		//toggle new encounter tab and create new encounter
-		resetEncounter();
-	
-		
+		fNewEncounter = true;
+		resetEncounter();	
 		$('#encounter').show();
 		$(this).hide();
 		$('#Encounter_title').html('New Encounter');
@@ -340,9 +340,12 @@ $(document).ready(function(){
 				//disable the add vitals button
 
 				//set the appointment status to 5 if there is an appointment linked to this encounter
-				if (appointment_id != 'null'){
+				log('enc ' + fNewEncounter);
+
+				if (appointment_id != 'null' && fNewEncounter === true){
 					//change status to in consultation -> status 4
 					Appointment.setStatus(appointment_id, 5);
+					fNewEncounter = false;
 				}
 
 
