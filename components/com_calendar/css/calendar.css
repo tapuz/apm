@@ -296,7 +296,7 @@ p.selected-patient-details{
 
 .fc-event {
   
-  border-left-width: 0.3em;
+  border-left-width: 0.5em;
   border-radius: 0;
   
     
@@ -362,8 +362,10 @@ p.selected-patient-details{
 
 
 .icon-payed{
-  float: right;
+  float: left;
   color: #3a87ad !important;
+  padding-top: 3px;
+  padding-right: 3px;
 }
 .icon-note{
   padding-right: 2px;
@@ -374,6 +376,47 @@ p.selected-patient-details{
   padding-right: 2px;
   color: #3a87ad !important;
 }
+
+
+.pulsating-border{
+  animation-name: pulsating-border;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  animation-timing-function: ease;
+}
+
+.pulsating-background{
+  animation-name: pulsating-background;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+  animation-timing-function: ease;
+}
+
+
+@keyframes pulsating-border {
+from {
+
+}
+to {
+border-color: white;
+}
+}
+
+@keyframes pulsating-background {
+  from {
+  
+  }
+  to {
+  background-color: white;
+  }
+  }
+
+
+
+
+
 
 
 .fc-head {

@@ -175,6 +175,10 @@ switch (getVar('task')){
 
 
 	break;
+
+	case 'setPayed':
+		Calendar::setPayed(getVar('appointmentID'),getVar('payed'));
+	break;
 	
 	case 'addNewPatient':
 		

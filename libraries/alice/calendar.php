@@ -103,6 +103,7 @@ class Calendar {
 			table_appointments.note,
 			table_appointments.customAppointment,
             table_appointments.madeOnline,
+			table_appointments.payed,
             
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as title,
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as patientName,
@@ -397,6 +398,12 @@ class Calendar {
 		$query = sprintf("UPDATE table_appointments SET status = %s where appointment_id = %s",$status,$appointmentID);
 		$wpdb->query($query);
 	
+	}
+
+	public static function setPayed($appointmentID,$payment){
+		global $wpdb;
+		$query = sprintf("UPDATE table_appointments SET payed = %s where appointment_id = %s",$payment,$appointmentID);
+		$wpdb->query($query);
 	}
 	
 	public function addAppointmentLog($appointment_id,$datetime,$tag,$log,$labelclass) {

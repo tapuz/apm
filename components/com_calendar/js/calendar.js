@@ -1022,13 +1022,14 @@ $(document).ready(function() {
         icons += '<i class="fa fa-thumbs-up icon-thumbs-up-consultation tip-init" title="In Consultation"></i>';
         icons += '<i class="fa fa-thumbs-up icon-thumbs-up-post-consultation tip-init" title="Post Consultation"></i>';
         icons += '<i class="fas fa-comment icon-note title="note"></i>';
-        icons += '<i class="far fa-credit-card icon-payed" title="payed"></i>';       
+        //icons += '<i class="far fa-credit-card icon-payed" title="payed"></i>';       
         icons += '<i class="fas fa-cloud icon-cloud" title="cloud"></i></div>';       
         
-        
-        
+        icon_payed = '<i class="far fa-credit-card icon-payed" title="payed"></i>';
+        $(".fc-title", element).prepend(icon_payed);
         patid = '<span class="note">' + event.patientID + ' </span>';
         $(".fc-content", element).append(icons);
+
         if((users[selectedUser].data.showpatIDinCalendar)==1){
           $(".fc-content", element).append(patid);
         }
@@ -1070,6 +1071,7 @@ $(document).ready(function() {
 
             if (event.status == 1) {
               $(element).find('.icon-thumbs-up').show();
+              $(element).css({"border-left": "0.5em solid green","opacity":"1"});
             } else {
               $(element).find('.icon-thumbs-up').hide();
             }
@@ -1085,12 +1087,19 @@ $(document).ready(function() {
 
             if (event.status == 3) {
               $(element).find('.icon-thumbs-up-allocated').show();
+              $(element).css('border-left','0.5em solid rgb(252, 137, 6)');
+              
             } else {
               $(element).find('.icon-thumbs-up-allocated').hide();
             }
 
             if (event.status == 4) {
               $(element).find('.icon-thumbs-up-consultation').show();
+              $(element).css('border-left','0.5em solid rgb(255, 84, 84)');
+              $(element).css('background','red');
+              $(element).addClass('pulsating-border');
+              $(element).addClass('pulsating-background');
+
             } else {
               $(element).find('.icon-thumbs-up-consultation').hide();
             }
@@ -1099,11 +1108,6 @@ $(document).ready(function() {
               $(element).find('.fc-title').addClass('appointmentCancelled');
             }
 
-            if (event.status == 7) {
-              $(element).find('.icon-payed').show();
-            } else {
-              $(element).find('.icon-payed').hide();
-            }
 
             if (event.status == 8) {
               $(element).find('.icon-thumbs-down').show();
@@ -1113,6 +1117,7 @@ $(document).ready(function() {
 
             if (event.status == 5 || event.status == 9) {
               $(element).find('.icon-thumbs-up-post-consultation').show();
+              $(element).css('border-left','0.5em solid rgb(244, 6, 252)');
             } else {
               $(element).find('.icon-thumbs-up-post-consultation').hide();
             }
@@ -1134,6 +1139,13 @@ $(document).ready(function() {
               element.addClass('appointment');
 
             };
+
+
+            if (event.payed == 1) {
+              $(element).find('.icon-payed').show();
+            } else {
+              $(element).find('.icon-payed').hide();
+            }
 
            
            

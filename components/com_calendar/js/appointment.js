@@ -141,6 +141,29 @@ class Appointment {
 
   }
 
+  static setPayed(appointment_id, payed, callback) {
+    $.ajax({
+      url: "ajax.php",
+      //dataType: "json",
+      type: 'post',
+      data: {
+        com: 'calendar',
+        task: 'setPayed',
+        appointmentID: appointment_id,
+        payed: payed
+      },
+      success: function() {
+        if (callback) {
+          callback();
+        }
+        cast.calendarChanged();
+      }
+    });
+
+  }
+
+  
+
 
   static addLog(appointment_id, tag, log,labelclass, callback) {
     $.ajax({

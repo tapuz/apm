@@ -261,10 +261,9 @@ $(document).ready(function() {
                  method : $('#paymentMethod').val(),
                  date :  moment(objEvent.start)
                  },function(){
-                 	objEvent.status = 7;
-                    Appointment.setStatus(objEvent.id, 7, function() {
+                 	objEvent.payed = 1;
+                    Appointment.setPayed(objEvent.id, 1, function() {
                      calendar.fullCalendar('updateEvent', objEvent);
-    	            
                   });
 
 
@@ -347,9 +346,9 @@ function loadEventDetails() {
   //$(".appActions").hide();
   $(".appStatusActions").hide();
   }
-  if (objEvent.status == 7) {
+  if (objEvent.payed == 1) {
     $(".addPayment").hide();
-    $(".appStatusActions").hide();
+    //$(".appStatusActions").hide();
     $(".appPencilledIn").hide();
     $(".toggleCancelBox").hide();
   }
