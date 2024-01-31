@@ -44,9 +44,6 @@
 						<div class="row">
 							<div id="datePicker"></div>
 						</div>
-						<div class="row">
-							<div id="rooms_status"></div>
-						</div>
 					</div>
 					<div class="row">
 					<div style="height:2px;" id="rightPanelProgress">&nbsp;</div>
@@ -56,6 +53,9 @@
 						<div class="patient_demographics"></div>
 						<div class="patient_appointments"></div>
 					</div>
+					<div class="row">
+							<div id="rooms_status"></div>
+						</div>
 					
 				</div>
 			</div>
