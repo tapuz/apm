@@ -503,6 +503,10 @@
 					<label class="" for="Patient_LastName">City</label>
 					<input autocomplete="off" class="last form-control" id="Patient_City" name="city"  type="text">
 				</div>
+				<div class="form-group ">
+					<label class="" for="Patient_LastName">Country</label>
+					<input autocomplete="off" class="last form-control" id="Patient_Country" name="country"  type="text">
+				</div>
 			</div>
 			<div class="col-sm-6">
 				<div class="form-group ">
