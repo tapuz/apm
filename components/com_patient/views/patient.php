@@ -164,9 +164,12 @@
 	<!--/right menu -->
 	<div id="patient_appointments">
 	</div>
-	
 
-</div><!--/col /Right Content-->
+	<div class="btn-group btn-group-justified" role="group">
+       <a class="btn btn-danger deletePatient" role="button">Delete Patient</a>
+    </div>
+	</div>
+	<!--/col /Right Content-->
 
 <!--</div>/row-->
 

@@ -17,7 +17,7 @@ class Patient
 
 	}
 	
-	public function addNewPatient($oPatient,$group){
+	public static function addNewPatient($oPatient,$group){
 		
 		global $wpdb;
 		
@@ -35,6 +35,12 @@ class Patient
 					) 
 	 			);
 		return $wpdb->insert_id;
+	}
+
+	public static function deletePatient($patientID){
+		global $wpdb;
+		$wpdb->delete( 'table_patients', array( 'patient_id' => $patientID ));
+		$wpdb->delete( 'table_appointments', array( 'patient_id' => $patientID ));		
 	}
 	
 	public function searchPatients__($q,$user){

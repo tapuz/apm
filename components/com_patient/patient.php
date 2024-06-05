@@ -21,6 +21,11 @@ switch(getView()){
 		include ('views/search.php');
 	break;
 	case 'patient':
+		if( !current_user_can('open_patient_file') ) { //role or capability
+			echo "You do not have permission...";
+			exit();
+
+		}
 		loadCSS('encounters.css','patient');
 		loadJS('encounter.js','patient');
 		loadJS('appointment.js','calendar');
@@ -117,7 +122,14 @@ switch(getTask()){
 
 	case 'deleteEncounter':
 		patient::deleteEncounter(getVar('encounter_id'));
+	break;
 
+	case 'deletePatient':
+		patient::deletePatient(getVar('patientID'));
+	break;
+	
+	
+	
 	case 'getEncounters' :
 		$encounters = Patient::getEncounters(getVar('patient_id'));
 		echo json_encode($encounters);

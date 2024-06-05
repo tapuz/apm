@@ -17,6 +17,25 @@ class Patient {
       }
     });
   }
+
+  static delete(patientID, callback) {
+    
+    $.ajax({
+      url: "ajax.php",
+      //dataType: "json",
+      type: 'post',
+      data: {
+        com: 'patient',
+        task: 'deletePatient',
+        patientID : patientID
+
+      },
+      success: function(data) {
+            cast.calendarChanged();
+            callback();
+      }
+    });
+  }
   
   static get(patient_id, callback){
     return $.ajax({

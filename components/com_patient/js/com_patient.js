@@ -1332,7 +1332,6 @@ $(document).ready(function(){
 	
 	//inputs clone when full 
 	$(document).on("keypress",".cloneWhenFull",function(){
-			log('fjsdklfjsd');
 			var parentNode = $(this).closest("ul");
 			log (parentNode);
 			var nodeToClone = $(this).closest("li");

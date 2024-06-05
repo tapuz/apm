@@ -36,7 +36,7 @@ class Encounter
     static delete(encounter_id,callback){
       $.ajax({
        url: "ajax.php",
-       dataType: "json",
+       //dataType: "json",
        type: 'post',
        data: {
          com: 'patient',
