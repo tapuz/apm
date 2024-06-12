@@ -1,6 +1,9 @@
 <!doctype html>
 <script>
-	var v='1.8';
+	var v='1.9';
+
+	
+	
 </script>
 <html lang="nl">
 <head>
@@ -22,7 +25,9 @@
 	<!-- CSS Files -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="assets/css/paper-bootstrap-wizard.css" rel="stylesheet" />
-	<link href="assets/css/book.css" rel="stylesheet" />
+
+
+	
 	
 
 	<!-- Fonts and Icons --
@@ -607,5 +612,15 @@
 	var script = document.createElement('script');
 	script.src = "assets/js/book.js?v=" + v;
 	document.body.appendChild(script);
+
+	var link = document.createElement('link');
+	// Set the attributes for the link element
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = 'assets/css/book.css?v=' + v;
+
+	// Append the link element to the head
+	document.getElementsByTagName('head')[0].appendChild(link);
+
 </script>
 </html>
