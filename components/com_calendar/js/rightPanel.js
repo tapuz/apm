@@ -8,6 +8,7 @@ var rightPanelPB = new NProgress({
 
 });
 
+
 var getRoomInfo;
 
 $(document).ready(function() {
@@ -111,7 +112,18 @@ $(document).ready(function() {
   }
 
   getRoomStatuses();
+
+
+  function renderCustomTimeslotsList(){
+
+    var currentDate = moment($('#calendar').fullCalendar('getDate')).format('YYYY-MM-DD');
+    Appointment.getCustomTimeslots(selectedUser,currentDate,function(data){
+      
+    });
+    log (currentDate);
+  }
   
+  renderCustomTimeslotsList();
       
  
   
@@ -369,6 +381,7 @@ function renderRightPanelPatientAppointments(){
   
 
 }
+
 
 
 

@@ -24,7 +24,7 @@ var eventStatus = 0;
     var clinic = $('#addWorkingSlot .clinicSelectEditApp').val();
     note = "Extra";
    
-    if(clinic == 1){
+    /* if(clinic == 1){
       Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:8},function (timeslot){
         eventIDtoHighlight = timeslot.id;
         highlightEvent = true;
@@ -56,7 +56,7 @@ var eventStatus = 0;
         closeEditAppModal();        
       });
 
-    }
+    } */
   
     
       Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:service},function (timeslot){

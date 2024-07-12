@@ -173,6 +173,28 @@ class Calendar {
         return  $timeslot;
     }
 
+	public static function getCustomTimeslots($user, $currentDate){
+		global $wpdb;
+		$query = $wpdb->prepare("
+			SELECT table_custom_timeslots.id, 
+			table_custom_timeslots.start,table_custom_timeslots.end, 
+			table_custom_timeslots.user as resourceId,
+			table_custom_timeslots.clinic,
+			'1' as 'customTimeslot',
+			table_services.color,
+			table_clinics.clinic_name as title,
+			'background' as 'rendering'
+			FROM table_custom_timeslots 
+			INNER JOIN table_services
+			ON table_services.id = table_custom_timeslots.service
+			INNER JOIN table_clinics
+			ON table_custom_timeslots.clinic = table_clinics.clinic_id
+			WHERE (user = '%s' AND WEEKOFYEAR(start) = WEEKOFYEAR('%s') AND YEARWEEK(start, 1) = YEARWEEK('%s', 1))",$user,$currentDate,$currentDate);
+			
+		$customTimeslots = $wpdb->get_results($query);
+		return $customTimeslots;
+	}
+
 
 	public static function addAppointment($appointment) {
         global $wpdb;
@@ -651,7 +673,8 @@ class Calendar {
 	    //error_log('VOILA');
 	    //error_log(print_r($available_periods_with_appointments,1));
 	    
-	    $periods = array_merge($available_periods_with_appointments, $extra_booking);
+	    //$periods = array_merge($available_periods_with_appointments, $extra_booking);
+		$periods = array_merge($available_periods_with_appointments, $customWorkingPlan);
 	    
 	    $merged = [];
 		

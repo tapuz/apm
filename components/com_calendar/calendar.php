@@ -100,9 +100,18 @@ switch (getVar('task')){
 		echo json_encode($timeslot);
 	break;
 
+	case 'getCustomTimeslots':
+		$timeslots = Calendar::getCustomTimeslots(getVar('user'),getVar('currentDate'));
+		error_log('user ');
+		error_log(getVar('user'));
+		echo json_encode($timeslots);
+		error_log(json_encode($timeslots));
+	break;
+
 	case 'addCustomAppointment':
 		$customAppointment =  Calendar::addCustomAppointment(json_decode(stripslashes(getVar('appointment'))));
 		echo json_encode($customAppointment);
+		
 	break;
 	
 	case 'addAppointment':

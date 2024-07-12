@@ -120,6 +120,24 @@ class Appointment {
      });
   }
 
+  static getCustomTimeslots(user,currentDate,callback){
+    $.ajax({
+      url: "ajax.php",
+      dataType: "json",
+      type: 'post',
+      data: {
+        com: 'calendar',
+        task: 'getCustomTimeslots',
+        user:user,
+        currentDate: currentDate
+      },
+      success: function(data) {
+        if(callback){callback(data);}
+        
+      }
+     });
+  }
+
   static setStatus(appointment_id, status, callback) {
     $.ajax({
       url: "ajax.php",

@@ -819,6 +819,9 @@ $(document).ready(function() {
         $('#editEvent :input').val('');
 				$('#editEvent .confirmed').button("toggle");
 				log('selected clinic is : ' + selectedClinic);
+        //select the 30mins as defailt in busy time duration
+        $('#busyTime .duration').prop("selectedIndex", 1).val(); 
+
 				if (selectedClinic != 'all'){
           $('.clinicSelectEditApp').val(selectedClinic);
 					renderServicesLookup(selectedClinic);
@@ -1137,6 +1140,8 @@ $(document).ready(function() {
             if (event.customTimeslot == 1){
               element.addClass('clinic' + event.clinic);
               element.addClass('appointment');
+              element.addClass('customTimeslot');
+              //element.append("Custom");
 
             };
 

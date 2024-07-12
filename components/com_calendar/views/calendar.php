@@ -249,13 +249,13 @@
 					<div class="col-sm-5">
 					
   						<select class="form-control duration">
-    						<option value=10>10min</option>
-    						<option value=15>15min</option>
-    						<option value=30 selected>30min</option>
-    						<option value=45>45min</option>
-							<option value=60>1h</option>
-							<option value=90>1h30min</option>
-							<option value=120>2h</option>
+    						<option value="10">10min</option>
+    						<option value="15">15min</option>
+    						<option value="30">30min</option>
+    						<option value="45">45min</option>
+							<option value="60">1h</option>
+							<option value="90">1h30min</option>
+							<option value="120">2h</option>
  					 	 </select>
 
 					</div>
@@ -311,7 +311,7 @@
 							</div>
 						</div>	
 					</div>
-					<!-- <div class="row">
+					<div class="row">
 						<div class="col-sm-2">
 							<label class="patient-name">Service</label>
 						</div>
@@ -321,7 +321,7 @@
 								
 							</div>
 						</div>	
-					</div> -->
+					</div>
 
 					<div class="row">&nbsp</div>
 					

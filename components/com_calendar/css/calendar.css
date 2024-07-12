@@ -271,6 +271,13 @@ p.selected-patient-details{
 }
 
 
+
+/*BG event Style*/
+
+.customTimeslot{
+  opacity: 0.5 !important;
+}
+
 /*Event styles*/
 .fc-content {
   display: grid;
