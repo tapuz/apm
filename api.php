@@ -364,14 +364,14 @@ switch (getVar('task')){
 				});
 
 				// Iterate through the array and delete elements with priority 3 and then priority 2
-				foreach ($availableTimeslots as $key => $timeslot) {
+				/* foreach ($availableTimeslots as $key => $timeslot) {
 					if ($timeslot['priority'] === 3 && count($availableTimeslots) > $timeslots_to_retain_per_day || ($timeslot['priority'] === 2 && count($availableTimeslots) > $timeslots_to_retain_per_day)) {
 						unset($availableTimeslots[$key]);
 					}
 					if (count($availableTimeslots) === $timeslots_to_retain_per_day) {
 						break;
 					}
-				}
+				} */
 
 				// Reset array keys
 				$availableTimeslots = array_values($availableTimeslots);	
