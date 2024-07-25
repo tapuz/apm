@@ -616,9 +616,8 @@ class Calendar {
 
 					
 				
-					//echo PHP_EOL .  'AVAILABLE PERIODS WITHOUT APPOINTMENTS----->' .  print_r($available_periods_with_breaks,1);		
-					//error_log("AVAILABLE PERIODS WITHOUT APPOINTMENTS----->");
-					//error_log(print_r($available_periods_with_breaks,1));
+					error_log("AVAILABLE PERIODS WITHOUT APPOINTMENTS----->");
+					error_log(print_r($available_periods_with_breaks,1));
 				}	
 		
 		//combine appointments and breaks
@@ -675,17 +674,22 @@ class Calendar {
 	    
 	    //$periods = array_merge($available_periods_with_appointments, $extra_booking);
 		$periods = array_merge($available_periods_with_appointments, $customWorkingPlan);
-	    
+		//error_log('VOILA the merged');
+	    //error_log(print_r($periods,1));
+		
+
+
 	    $merged = [];
 		
 		    // Sort the periods by their start times
 		    usort($periods, function ($a, $b) {
 		        return strtotime($a['start']) - strtotime($b['start']);
 		    });
+			
 		
 		    $currentPeriod = null;
-		
-		    foreach ($periods as $period) {
+		     //took this part out because it deletes certain periods....not sure why but seems to work ok without
+		     /* foreach ($periods as $period) {
 		        if ($currentPeriod === null || strtotime($period['start']) > strtotime($currentPeriod['end'])) {
 		            // If there's no overlap, add the current period to the merged array
 		            $merged[] = $period;
@@ -694,12 +698,12 @@ class Calendar {
 		            // If there's an overlap, merge the current period with the new period
 		            $currentPeriod['end'] = max($currentPeriod['end'], $period['end']);
 		        }
-		    }
+		    }  */
 	    
 	    	
 			//print_r($available_periods_with_extra_booking);	
 			
-	    $available_periods_with_appointments = $merged;
+	    $available_periods_with_appointments = $periods;
 	    
 	    asort($available_periods_with_appointments);
 		//error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
