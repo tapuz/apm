@@ -111,6 +111,8 @@ $(document).ready(function() {
   $('#paymentModal').appendTo("body");
   $('#customEventDetails').appendTo("body");
   $('#emailModal').appendTo("body");
+  $('#customTimeslotsModal').appendTo("body");
+  
   
   
   //set the progress bar
@@ -602,6 +604,13 @@ $(document).ready(function() {
           }
       },
         
+      showCustomTimeslots: {
+        text: 'Custom Timeslots',
+        click: function() {
+          $('#customTimeslotsModal').modal('show');
+          renderCustomTimeslotsList();
+        }
+      },
 				
 		toggleSidebarRight:{
 			//text: '<i class="fa fa-chevron-left"',
@@ -624,7 +633,7 @@ $(document).ready(function() {
 				*/
 
       header: {
-        left: 'prev,next today plus2w,plus3w,plus6w plus1m,plus2m,plus3m refreshCalendar',
+        left: 'prev,next today plus2w,plus3w,plus6w plus1m,plus2m,plus3m refreshCalendar showCustomTimeslots',
         center: 'title',
         right: 'agendaDay,agendaWeek toggleSidebarRight'
           //        left: 'add,sell,locationSelect,staffSelect',

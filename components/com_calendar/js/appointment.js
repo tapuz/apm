@@ -120,6 +120,23 @@ class Appointment {
      });
   }
 
+  static deleteCustomTimeslot(id,callback){
+    $.ajax({
+      url: "ajax.php",
+      //dataType: "json",
+      type: 'post',
+      data: {
+        com: 'calendar',
+        task: 'deleteCustomTimeslot',
+        id:id 
+      },
+      success: function(data) {
+        if(callback){callback(data);}
+        cast.calendarChanged();
+      }
+     });
+  }
+
   static getCustomTimeslots(user,currentDate,callback){
     $.ajax({
       url: "ajax.php",

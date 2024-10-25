@@ -182,6 +182,7 @@ class Calendar {
 			table_custom_timeslots.clinic,
 			'1' as 'customTimeslot',
 			table_services.color,
+			table_services.name,
 			table_clinics.clinic_name as title,
 			'background' as 'rendering'
 			FROM table_custom_timeslots 
@@ -193,6 +194,11 @@ class Calendar {
 			
 		$customTimeslots = $wpdb->get_results($query);
 		return $customTimeslots;
+	}
+
+	public static function deleteCustomTimeslot($id){
+		global $wpdb;
+		$wpdb->delete( 'table_custom_timeslots', array( 'id' => $id ) );
 	}
 
 

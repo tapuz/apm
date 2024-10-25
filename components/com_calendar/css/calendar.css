@@ -170,9 +170,20 @@
     background-color: #303b42;
     color: #fff;
 }
-/*Email modal*/
+/*Custom timeslots modal*/
+#customTimeslotsModal .modal-header {
+  background-color: #303b42;
+  color: #fff;
+}
 
-#emailModal .modal-header {
+/*edit patient modal*/
+#editPatient .modal-header {
+  background-color: #303b42;
+  color: #fff;
+}
+
+/*Email modal*/
+#editPatient .modal-header {
     background-color: #303b42;
     color: #fff;
 }

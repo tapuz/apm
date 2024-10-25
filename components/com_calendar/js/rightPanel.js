@@ -11,6 +11,10 @@ var rightPanelPB = new NProgress({
 
 var getRoomInfo;
 
+
+
+
+
 $(document).ready(function() {
   //hide the patient_details div
   $('#rightPanel .patient_details').toggle();
@@ -112,28 +116,13 @@ $(document).ready(function() {
   }
 
   getRoomStatuses();
-
-
-  function renderCustomTimeslotsList(){
-
-    var currentDate = moment($('#calendar').fullCalendar('getDate')).format('YYYY-MM-DD');
-    Appointment.getCustomTimeslots(selectedUser,currentDate,function(data){
-      
-    });
-    log (currentDate);
-  }
-  
-  renderCustomTimeslotsList();
-      
- 
   
 
 
+      
 
 
-
-
-//search bar stuff
+ //search bar stuff
 
     var results
 
@@ -271,7 +260,6 @@ $(document).ready(function() {
     });
   
      $(document).on('click','#rightPanel .right_panel_appointment',function() {
-         
        let start = $(this).attr('start');
        let resourceId = $(this).attr('resourceId');
        eventIDtoHighlight = $(this).attr('appointmentID');

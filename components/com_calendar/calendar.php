@@ -33,6 +33,7 @@ loadJS('email.js','calendar');
 loadJS('emailModal.js','calendar');
 loadJS('payment.js','calendar');
 loadJS('rightPanel.js','calendar');
+loadJS('customTimeslotsModal.js','calendar');
 loadJS('mustache.min.js');
 loadJS('socket.io.min.js');
 loadExtJS('https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js');
@@ -100,12 +101,14 @@ switch (getVar('task')){
 		echo json_encode($timeslot);
 	break;
 
+	case 'deleteCustomTimeslot':
+		Calendar::deleteCustomTimeslot(getVar('id'));
+		
+	break;
+
 	case 'getCustomTimeslots':
 		$timeslots = Calendar::getCustomTimeslots(getVar('user'),getVar('currentDate'));
-		error_log('user ');
-		error_log(getVar('user'));
 		echo json_encode($timeslots);
-		error_log(json_encode($timeslots));
 	break;
 
 	case 'addCustomAppointment':

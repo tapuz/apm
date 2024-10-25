@@ -21,10 +21,12 @@
 					</form>
 				</div>
 		
-			</div>
+		</div>
 			
 			<br>
 			<!-- start: calendar -->
+		
+			
 			<div id="calendar" class="col-md-12">
 				
 			</div>
@@ -55,10 +57,16 @@
 					</div>
 					<div class="row">
 							<div id="rooms_status"></div>
-						</div>
+					</div>
+					
+					<div class="row">
+							<div id="custom_timeslots"></div>
+					</div>
 					
 				</div>
 			</div>
+	
+			
 
 
 <!--end calendar-->
@@ -87,7 +95,7 @@
     	<ul class="nav nav-pills">
 			<li class="active"><a  href="#patientAppointment" data-toggle="tab"><i class="fa fa-user"></i>&nbsp;&nbsp;Patient Appointment</a></li>
 			<li id='tab_busyTime'><a  href="#busyTime" data-toggle="tab"><i class="fas fa-ban"></i>&nbsp;&nbsp;Busy Time</a></li>
-			<li id='tab_addWorkingSlot'><a  href="#addWorkingSlot" data-toggle="tab"><i class="fas fa-poll-h"></i>&nbsp;&nbsp;Add Screening slot</a></li>
+			<li id='tab_addWorkingSlot'><a  href="#addWorkingSlot" data-toggle="tab"><i class="fas fa-poll-h"></i>&nbsp;&nbsp;Add custom timeslot</a></li>
 			
 		</ul> 
 	
@@ -668,6 +676,26 @@
   </div>
 </div>
 <!--stop: email-modal -->
+
+<!--start:custom timeslots -->
+<div class="modal fade modal-wide" id="customTimeslotsModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h3 class="modal-title">Custom Timeslots</h3>      
+      </div>
+      <div class="modal-body">
+		No custom timeslots for this week...
+	  </div>
+      <div class="modal-footer">
+	  	
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--stop: custom timeslots -->
 
 
 
