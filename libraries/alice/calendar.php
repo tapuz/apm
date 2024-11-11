@@ -679,7 +679,8 @@ class Calendar {
 	    //error_log(print_r($available_periods_with_appointments,1));
 	    
 	    //$periods = array_merge($available_periods_with_appointments, $extra_booking);
-		$periods = array_merge($available_periods_with_appointments, $customWorkingPlan);
+		//$periods = array_merge($available_periods_with_appointments, $customWorkingPlan);
+		$periods = $available_periods_with_appointments;
 		//error_log('VOILA the merged');
 	    //error_log(print_r($periods,1));
 		

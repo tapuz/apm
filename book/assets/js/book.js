@@ -541,7 +541,7 @@ $('.urgent-footer').hide();
                   }
                   service = practitioner.services.find(x => x.name === urlService);
                   console.log(service.id + ' : Service_id');
-			      $('.service-title').html(service.description);
+			            $('.service-title').html(service.description);
                } else {
                  switch (mode)
                   {              
