@@ -533,7 +533,7 @@ $(document).ready(function() {
       googleCalendarApiKey: 'AIzaSyC83LJSULjyInMb17Der0h7FS0zd2KQ7lg',
       eventSources: [
         {
-          googleCalendarId: 'nl.be#holiday@group.v.calendar.google.com'
+          //googleCalendarId: 'nl.be#holiday@group.v.calendar.google.com'
         }
         
       ],
