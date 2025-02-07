@@ -79,7 +79,7 @@
 		           <?foreach ($tasksForUser as $task) 
      				{?>
 					<tr id="<?=$task->task_id?>">
-					<?if ($task->status == 1){ // task is completed -> apply task_completed class?> 
+					<?if ($task->status == 1){?> 
 						<td class='task task_completed'><?=$task->task?></td>
 					 <?}else{?>
 						 <td class='task'><?=$task->task?></td>
@@ -144,7 +144,7 @@
 						
 						?>
 					<tr id="<?=$task->task_id?>">
-					<?if ($task->status == 1){ // task is completed -> apply task_completed class?> 
+					<?if ($task->status == 1){ ?> 
 						<td class='task task_completed'><?=$task->task?></td>
 					 <?}else{?>
 						 <td class='task'><?=$task->task?></td>
@@ -182,103 +182,62 @@
 </div><!--/row -->
 
 <div class="row">
-	&nbsp;<br>
-	<p>
-	<h2>&nbsp; Issue tracker</h2>
-	</p>
-</div>
-	<div class="col-lg-10">
+
+
+	<div class="col-lg-9">
 					<div class="box">
 						<div class="box-header">
-							<h2><i class="fas fa-bug red"></i>Work done</h2>
+							<h2><i class="fas fa-bug red"></i>Status today's Emails</h2>
 							<div class="box-icon">
 								
 							</div>
 						</div>
 						<div class="box-content">
-							<table class="table bootstrap-datatable datatable small-font">
-								<thead>
-									<tr>
-										<th>Type</th>
-										<th>Date</th>
-										<th>Issue</th>
-										<th>Description</th>
-										<th>Number</th>
-									</tr>
-								</thead>   
-								<tbody id='done'>
-								
+						<table class="table bootstrap-datatable datatable">
+							<thead>
+								<tr>
+									<th>Status</th>  
+									<th>Email</th> 
+									<th>Subject</th> 
+								</tr>
+							</thead>   
+							<tbody> 
+								<?php foreach ($emails as $email): 
+									$contactID = $email['ContactID'];
+									$emailAddress = $email['ContactAlt'];
+									$subject = !empty($email['Subject']) ? $email['Subject'] : "[No Subject]";
+									$status = strtolower($email['Status']); // Convert status to lowercase for case insensitivity
+
+									// Assign Bootstrap label class based on status
+									if ($status === "sent") {
+										$labelClass = "label label-primary";  // Bootstrap primary label for "sent"
+									} elseif ($status === "opened") {
+										$labelClass = "label label-success";  // Bootstrap success label for "opened"
+									} else {
+										$labelClass = "label label-danger";   // Bootstrap danger label for all other statuses
+									}
+								?>
+								<tr>
+									<td><span class="<?php echo $labelClass; ?>"><?php echo htmlspecialchars($email['Status']); ?></span></td>
+									<td><?php echo htmlspecialchars($emailAddress); ?></td>
+									<td><?php echo htmlspecialchars($subject); ?></td>
 									
-																			
-								</tbody>
-							</table>
-						</div>
+								</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+
+
+						
 					</div>
+		</div>
 	</div>
-	<div class="col-lg-10">
-					<div class="box">
-						<div class="box-header">
-							<h2><i class="fas fa-bug red"></i>List of known bugs</h2>
-							<div class="box-icon">
-								
-							</div>
-						</div>
-						<div class="box-content">
-							<table class="table bootstrap-datatable datatable small-font">
-								<thead>
-									<tr>
-										<th>Type</th>
-										<th>Date</th>
-										<th>Issue</th>
-										<th>Description</th>
-										<th>Number</th>
-									</tr>
-								</thead>   
-								<tbody id='issues'>
-								
-									
-																			
-								</tbody>
-							</table>
-						</div>
-					</div>
-	</div>
-
-	<div class="col-lg-10">
-					<div class="box">
-						<div class="box-header">
-							<h2><i class="far fa-star"></i>List of proposed enhancements</h2>
-							<div class="box-icon">
-							
-							</div>
-						</div>
-						<div class="box-content">
-							<table class="table bootstrap-datatable datatable small-font">
-								<thead>
-									<tr>
-										<th>Type</th>
-										<th>Date</th>
-										<th>Enhancement</th>
-										<th>Description</th>
-										<th>Number</th>
-									</tr>
-								</thead>   
-								<tbody id='enhancements'>
-								
-									
-																			
-								</tbody>
-							</table>
-						</div>
-					</div>
-	</div>
-
-
-
-
-
+	
 </div>
 <!--/col /left content -->
+
+
+
 <div class="col-md-3 visible-md visible-lg" id="feed"><!-- Start Right content -->
 <?
 //loadModule('activity_feed')?>
@@ -389,7 +348,7 @@
 				Earnings this week
 			</span>
 			<span class="value">
-				+-<?=$numberOfPatientsThisWeek*45?> euro
+				+-<?=$numberOfPatientsThisWeek*55?> euro
 			</span>
 			<a href="" class="more">
 				<span>
