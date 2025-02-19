@@ -1,6 +1,12 @@
+
 $(function() {
   showLoadingScreen();
   hideLoadingScreen();
+  if ('ontouchstart' in window){
+    log('supported');
+  }else{
+    log('not supported');
+  }
     var maxWidth = $( window ).width()-60;
     if (maxWidth > 1300){maxWidth=1300;};
     var canvasWidth = 0;
@@ -74,7 +80,7 @@ $(function() {
     // get the portfolio pictures
     getPortfolioPictures();
     
-    var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false,allowTouchScrolling: false});
+    var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false, allowTouchScrolling: true});
     canvas.setDimensions({width:canvasWidth, height:canvasHeight});
     
     groupPaths = new fabric.Group();
@@ -604,6 +610,7 @@ $(function() {
 
     //start zooming code
     canvas.on('mouse:wheel', (options) => {
+      
       const zoom = canvas.getZoom();
       const zoomRatio = 1.1;
 
@@ -624,53 +631,187 @@ $(function() {
       options.e.stopPropagation();
     });
 
-    let touchStartDistance = 0;
-    let touchStartZoom;
+    //let touchStartDistance = 0;
+    //let touchStartZoom;
 
-    canvas.on('touch:gesture', (options) => {
-      const zoom = canvas.getZoom();
-      const zoomRatio = 1.01;
+    //
+    const originalZoom = 1;
+    let lastDistance = 0;
+    let initialPosition = { left: canvas.viewportTransform[4], top: canvas.viewportTransform[5] };
 
-      if (options.e.touches && options.e.touches.length === 2) {
-        const distance = Math.sqrt(
-          (options.e.touches[0].clientX - options.e.touches[1].clientX) ** 2 +
-          (options.e.touches[0].clientY - options.e.touches[1].clientY) ** 2
-        );
+    // Panning variables
+    let isPanning = false;
+    let startX = 0;
+    let startY = 0;
 
-        if (!touchStartDistance) {
-          touchStartDistance = distance;
-          touchStartZoom = zoom;
-        }
 
-        const zoomDelta = (distance - touchStartDistance) * 0.01;
-        const newZoom = touchStartZoom + zoomDelta;
+    // Touch move for zooming
+    canvas.upperCanvasEl.addEventListener("touchmove", function (event) {
+        if (event.touches.length === 2) {
+            event.preventDefault();
+            let touch1 = event.touches[0];
+            let touch2 = event.touches[1];
 
-        if (newZoom > zoom) {
-          // Zoom in
-          canvas.zoomToPoint(
-            new fabric.Point(options.e.touches[0].clientX, options.e.touches[0].clientY),
-            newZoom
-          );
-        } else {
-          // Zoom out
-          if (zoom / zoomRatio >= 1) {
-            canvas.zoomToPoint(
-              new fabric.Point(options.e.touches[0].clientX, options.e.touches[0].clientY),
-              newZoom
+            let currentDistance = Math.sqrt(
+                Math.pow(touch2.clientX - touch1.clientX, 2) +
+                Math.pow(touch2.clientY - touch1.clientY, 2)
             );
-          } else {
-            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // Reset canvas transformation
-          }
+
+            if (lastDistance) {
+                let delta = currentDistance / lastDistance;
+                let zoom = canvas.getZoom() * delta;
+                zoom = Math.max(Math.min(zoom, 4), originalZoom); // Zoom limits
+
+                let touchCenter = {
+                    x: (touch1.clientX + touch2.clientX) / 2,
+                    y: (touch1.clientY + touch2.clientY) / 2
+                };
+
+                let canvasRect = canvas.upperCanvasEl.getBoundingClientRect();
+                let zoomPoint = {
+                    x: touchCenter.x - canvasRect.left,
+                    y: touchCenter.y - canvasRect.top
+                };
+
+                // Track position before zoom starts when zoom is at original state
+                if (canvas.getZoom() === originalZoom) {
+                    initialPosition = { left: canvas.viewportTransform[4], top: canvas.viewportTransform[5] };
+                }
+
+                // Apply zoom based on pinch center
+                canvas.zoomToPoint(zoomPoint, zoom);
+
+                // When zoom reaches the original zoom level, reset position
+                if (zoom <= originalZoom) {
+                    canvas.viewportTransform[4] = initialPosition.left;  // Revert horizontal position
+                    canvas.viewportTransform[5] = initialPosition.top;   // Revert vertical position
+                    canvas.requestRenderAll(); // Redraw canvas to apply changes
+                }
+            }
+
+            lastDistance = currentDistance;
         }
-      } else {
-        touchStartDistance = 0;
-        touchStartZoom = null;
-      }
+    }, { passive: false });
+
+    /* // Touch start for panning
+    canvas.upperCanvasEl.addEventListener("touchstart", function (event) {
+    if (event.touches.length === 1) {
+        let touch = event.touches[0];
+        let pointer = canvas.getPointer(touch);
+        let target = canvas.findTarget(pointer, false); // Find object at touch point
+
+        if (target) {
+            // User is touching an object, allow object movement instead of panning
+            isPanning = false;
+        } else if (canvas.getZoom() > originalZoom) {
+            // Start panning only if zoom is greater than original and no object is touched
+            isPanning = true;
+            startX = touch.clientX;
+            startY = touch.clientY;
+        }
+    }
+});
+
+    // Touch move for panning
+    canvas.upperCanvasEl.addEventListener("touchmove", function (event) {
+        if (isPanning && event.touches.length === 1) {
+            event.preventDefault();
+
+            let deltaX = event.touches[0].clientX - startX;
+            let deltaY = event.touches[0].clientY - startY;
+
+            // Get canvas content size (taking zoom into account)
+            const canvasWidth = canvas.getWidth();
+            const canvasHeight = canvas.getHeight();
+            const zoom = canvas.getZoom();
+
+            // Calculate maximum panning boundaries
+            const maxX = (canvasWidth * zoom) - canvasWidth;
+            const maxY = (canvasHeight * zoom) - canvasHeight;
+
+            // Calculate the new position of the canvas
+            let newLeft = canvas.viewportTransform[4] + deltaX;
+            let newTop = canvas.viewportTransform[5] + deltaY;
+
+            // Restrict panning: can't move beyond the edges
+            newLeft = Math.min(0, Math.max(-maxX, newLeft));
+            newTop = Math.min(0, Math.max(-maxY, newTop));
+
+            // Apply the new position
+            canvas.viewportTransform[4] = newLeft;
+            canvas.viewportTransform[5] = newTop;
+
+            // Update the start positions for the next move
+            startX = event.touches[0].clientX;
+            startY = event.touches[0].clientY;
+
+            canvas.requestRenderAll(); // Re-render to apply changes
+        }
+    }, { passive: false });
+
+    // Touch end for panning
+    canvas.upperCanvasEl.addEventListener("touchend", function () {
+        isPanning = false;
+        
+    }); */
+
+    // Mouse events for panning
+    canvas.upperCanvasEl.addEventListener("mousedown", function (event) {
+        if (canvas.getZoom() > originalZoom) {
+            // Start panning only if zoom is greater than the original zoom level
+            isPanning = true;
+            startX = event.clientX;
+            startY = event.clientY;
+        }
     });
+
+    canvas.upperCanvasEl.addEventListener("mousemove", function (event) {
+        if (isPanning) {
+            let deltaX = event.clientX - startX;
+            let deltaY = event.clientY - startY;
+
+            // Get canvas content size (taking zoom into account)
+            const canvasWidth = canvas.getWidth();
+            const canvasHeight = canvas.getHeight();
+            const zoom = canvas.getZoom();
+
+            // Calculate maximum panning boundaries
+            const maxX = (canvasWidth * zoom) - canvasWidth;
+            const maxY = (canvasHeight * zoom) - canvasHeight;
+
+            // Calculate the new position of the canvas
+            let newLeft = canvas.viewportTransform[4] + deltaX;
+            let newTop = canvas.viewportTransform[5] + deltaY;
+
+            // Restrict panning: can't move beyond the edges
+            newLeft = Math.min(0, Math.max(-maxX, newLeft));
+            newTop = Math.min(0, Math.max(-maxY, newTop));
+
+            // Apply the new position
+            canvas.viewportTransform[4] = newLeft;
+            canvas.viewportTransform[5] = newTop;
+
+            // Update the start positions for the next move
+            startX = event.clientX;
+            startY = event.clientY;
+
+            canvas.requestRenderAll(); // Re-render to apply changes
+        }
+    });
+
+    canvas.upperCanvasEl.addEventListener("mouseup", function () {
+        isPanning = false;
+    });
+
+    canvas.upperCanvasEl.addEventListener("mouseleave", function () {
+        isPanning = false;
+    });
+
+    canvas.upperCanvasEl.addEventListener("touchcancel", function () {
+        isPanning = false;
+    });
+      
    
-
-
-
     //end zooming code
 
 
@@ -706,12 +847,17 @@ $(function() {
     $('#btnAnalyse').click(function() {
        isDrawing=false;
        canvas.isDrawingMode = isDrawing;
-       $('.btn-toggle').removeClass('active');
-       $(this).addClass('active'); 
+       
+        $('.btn-toggle').removeClass('active');
+       
+        $(this).addClass('active'); 
+     
+       
+      
        $('.toolbar').hide();
        $('.toolbar.analyse').toggle();
        if(!heightBarsPresent){makePatientHeightBars();};
-       if ($(this).hasClass('active')){bottomBar.visible=true;;topBar.visible=true;topBarC.visible=true;bottomBarC.visible=true;}
+       if ($(this).hasClass('active')){bottomBar.visible=true;topBar.visible=true;topBarC.visible=true;bottomBarC.visible=true;}
        else{bottomBar.visible=false;topBar.visible=false;topBarC.visible=false;bottomBarC.visible=false}
 
        
@@ -928,7 +1074,10 @@ $(function() {
         
         }).show();	;  				
       try {
-        bottomBar.setVisible(false);topBar.setVisible(false);
+        bottomBar.visible=false;topBar.visible=false;topBarC.visible=false;bottomBarC.visible=false;
+        canvas.renderAll();
+
+        //bottomBar.setVisible(false);topBar.setVisible(false);
       } catch (error) {
         //console.error(error);
         // expected output: ReferenceError: nonExistentFunction is not defined
@@ -965,6 +1114,8 @@ $(function() {
                   //add timestamp next to save button to feedback when it was saved
                   $('.save-timestamp').html(' saved @ ' + timestamp);
 			});
+      bottomBar.visible=true;topBar.visible=true;topBarC.visible=true;bottomBarC.visible=true;
+      canvas.renderAll();
     });
     
     $('#btnPrint').click(function() {	
