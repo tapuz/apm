@@ -125,17 +125,39 @@ class Patient
 		error_log('THE TABLE DOES EXIST !!!');	
 		}
 		
-		//WHERE CONCAT( nameFirst,  ' ', nameLast ) LIKE  '%Joe%'  
-		//patient_surname LIKE '%s'
-		$query=sprintf("SELECT *, concat(patient_surname, ' ', patient_firstname) as fullname FROM temp_table_patients
-															WHERE (
-																concat(patient_surname, ' ', patient_firstname) LIKE '%s'
-																   
-																  ) ORDER by patient_id DESC"
-																  ,'%'.$q.'%'
-																  );
-		$patients=$wpdb->get_results($query);
+		
+		$q = trim($q); // Trim spaces from input
+		$normalized_q = str_replace(["'", " "], "", $q); // Normalize input by removing spaces and apostrophes
+
+		// First Query: Exact and Normalized Search
+		$query = $wpdb->prepare("
+			SELECT *, 
+				concat(patient_surname, ' ', patient_firstname) as fullname 
+			FROM temp_table_patients
+			WHERE 
+				concat(patient_surname, ' ', patient_firstname) LIKE CONCAT('%', %s, '%')
+				OR REPLACE(REPLACE(concat(patient_surname, ' ', patient_firstname), '''', ''), ' ', '') 
+					LIKE CONCAT('%', %s, '%')
+			ORDER BY patient_id DESC", 
+			$q, $normalized_q);
+
+		$patients = $wpdb->get_results($query);
+
+		// If No Results, Try Phonetic Matching
+		if (empty($patients)) {
+			$query = $wpdb->prepare("
+				SELECT *, 
+					concat(patient_surname, ' ', patient_firstname) as fullname 
+				FROM temp_table_patients
+				WHERE SOUNDEX(concat(patient_surname, ' ', patient_firstname)) = SOUNDEX(%s)
+				ORDER BY patient_id DESC", 
+				$q);
+			
+			$patients = $wpdb->get_results($query);
+		}
+
 		return $patients;
+
 		
 	}
 	
