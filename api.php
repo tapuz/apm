@@ -160,7 +160,7 @@ switch (getVar('task')){
 
 		$mail = new Email();
 		$mail->getServerSettings(2);
-		$mail->to = 'thierry.duhameeuw@gmail.com';
+		$mail->to = 'info@rugcentrumgent.be';
 		$mail->subject='New urgent request';
 		$mail->message = json_encode($demand);
 		$mail->send();
@@ -175,6 +175,12 @@ switch (getVar('task')){
 		
 		
 
+	break;
+
+	case 'deleteAppointment':
+		loadLib('calendar');
+		$appointmentID =  getVar('appointmentID');
+		Calendar::deleteAppointment($appointmentID);
 	break;
 
 	case 'addAppointment':

@@ -328,11 +328,11 @@ $('.urgent-footer').hide();
       rules: {
       firstName: {
         required: true,
-        minlength: 3
+        minlength: 2
       },
       surName: {
         required: true,
-        minlength: 3
+        minlength: 2
       },
       DOB: {
         beDate: true,
