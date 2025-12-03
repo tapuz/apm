@@ -47,10 +47,12 @@ var wizard;
 var appointment;
 
 
+$(window).on('load', function () {
+  // mark app as ready: show wizard, keep loader on top for the fade
+  $('body').removeClass('loading').addClass('ready');
 
-$(window).on('load',function() {
-  // Animate loader off screen
-  $(".se-pre-con").fadeOut("slow");;
+  // now fade loader away
+  $(".se-pre-con").fadeOut("slow");
 });
 
 $(document).ready(function() {
@@ -576,7 +578,7 @@ $(document).ready(function() {
                
             
             //if recurrent patient-> propose the practitioner
-            if (mode == 'recurrentPatient'){
+            if (mode == 'recurrentPatient' && objPatient.last_encounter){
               $('#practitioner #message').html('Selectie gemaakt op basis van je laatste bezoek.');
               $('#' + practitioner_to_propose).click();
             } 
@@ -791,6 +793,7 @@ $(document).ready(function() {
       $width = 100 / $total;
 
       navigation.find('li').css('width', $width + '%');
+      
 
     },
 
@@ -924,7 +927,7 @@ $(document).ready(function() {
         var newAppointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0,group:group.ID};
         newAppointment = JSON.stringify(newAppointment);
         addAppointment(newAppointment);
-        console.log(newAppointment);
+        
        
 
 
@@ -1386,6 +1389,14 @@ $(document).ready(function() {
     //get the appt details that need to be moved
     toMoveAppointmentId = $("input:radio[name ='appointment']:checked").val();
     appointment = objPatient.appointments.find(appointment => appointment.id === toMoveAppointmentId);
+
+     // 🔹 PRESELECT CLINIC based on appointment.clinic
+    if (appointment && appointment.clinic) {
+    $('#location .clinics input[name="clinic"][value="' + appointment.clinic + '"]')
+      .closest('[data-toggle="wizard-radio"]')
+      .trigger('click');  // this also calls getPractitionersFromClinic(...)
+    }
+
     //move to the select clinic and start making a new appointment
     $('.wizard-title').html('Afspraak verplaatsen');
     $('.wizard-card').bootstrapWizard('show',1);
@@ -1491,6 +1502,7 @@ $(document).ready(function() {
   }
 
   function checkMatch() {
+
     // Create and return a Promise
     return new Promise((resolve, reject) => {
       if (patientLoggedIn){
@@ -1611,6 +1623,19 @@ $(document).ready(function() {
                          
                           
         $('#practitioner .practitioners').append(newhtml);
+
+         // 🔹 PRESELECT PRACTITIONER when moving an appointment
+        if (action === 'manage' && appointment && appointment.resourceId) {
+          $('#practitioner .practitioners input[name="practitioner"][value="' + appointment.resourceId + '"]')
+          .closest('[data-toggle="wizard-radio"]')
+          .trigger('click');
+        }
+
+        if (action === 'create' && objPatient && objPatient.last_encounter) {
+          $('#practitioner .practitioners input[name="practitioner"][value="' + objPatient.last_encounter + '"]')
+          .closest('[data-toggle="wizard-radio"]')
+          .trigger('click');
+        }
                         
                          
       });

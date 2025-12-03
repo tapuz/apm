@@ -7,6 +7,23 @@
 </script>
 <html lang="nl">
 <head>
+	<style>
+			/* Hide everything except the preloader while body has class "loading" */
+		body.loading .wizard-container {
+		visibility: hidden; /* or display:none; if you prefer */
+		}
+
+		/* Make sure the loader itself is always visible while loading */
+		body.loading .se-pre-con {
+		display: block;
+		}
+
+		/* When we're ready, show wizard and let JS fade out the loader */
+		body.ready .wizard-container {
+		visibility: visible;
+		}
+	</style>
+
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png" />
@@ -48,7 +65,7 @@
 	
 </head>
 
-<body>
+<body class="loading">
 	<div class="se-pre-con"></div>
 	<div class="image-container set-full-height" style="background-color: rgb(36, 36, 36)">
 	    
