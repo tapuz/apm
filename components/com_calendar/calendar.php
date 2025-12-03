@@ -164,7 +164,6 @@ switch (getVar('task')){
 	break;
 
 	case 'getFutureAppointments':
-	    error_log('getting da shit!!');
 		echo json_encode(Calendar::getFutureAppointments(getVar('patientID')));
 	break;
 

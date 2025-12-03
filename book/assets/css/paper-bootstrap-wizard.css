@@ -1385,6 +1385,14 @@ input[type="button"]:focus {
   margin-bottom: 0px;
   text-align: center;
 }
+
+.wizard-card .wizard-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #9A9A9A;
+  margin-bottom: 0px;
+  text-align: center;
+}
 .wizard-card .wizard-navigation {
   position: relative;
   padding-bottom: 100px;

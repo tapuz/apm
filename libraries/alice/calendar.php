@@ -2,7 +2,7 @@
 
 class Calendar {
     
-	public function getAppointments($userID,$start,$end){
+	public static function getAppointments($userID,$start,$end){
 		//get the reg appts
 		global $wpdb;
 		$query = $wpdb->prepare("SELECT * from view_appointments WHERE (resourceId = '%d' AND start > DATE_ADD('%s', INTERVAL -3 DAY) AND end < DATE_ADD('%s', INTERVAL +3 DAY))",$userID,$start,$end);
@@ -69,7 +69,16 @@ class Calendar {
 	
 	public static function getFutureAppointments($patientID){
 		global $wpdb;
-		$query = $wpdb->prepare("SELECT *,DATE_FORMAT(start, '%%a, %%e %%M %%Y - %%H:%%i') as strStart FROM view_appointments WHERE (patientID = %d AND start > CURRENT_DATE)",$patientID);
+		$query = $wpdb->prepare(
+    "SELECT *,
+            DATE_FORMAT(start, '%%a, %%e %%M %%Y - %%H:%%i') AS strStart
+     FROM view_appointments
+     WHERE patientID = %d
+       AND start >= NOW()
+	   AND status <> 7 AND status <> 6
+     ORDER BY start ASC",
+    $patientID
+);
 		$appointments = $wpdb->get_results($query);
 		return  $appointments;
 	}
@@ -354,7 +363,7 @@ class Calendar {
 	}
 	
 	
-	public function getAppointmentRequests($group){ //not used
+	public static function getAppointmentRequests($group){ //not used
 		global $wpdb;
 		$query = $wpdb->prepare("
 			SELECT
@@ -396,7 +405,7 @@ class Calendar {
 				array( 'appointment_id' => $appointment->id)
 	 			);
 		
-				 error_log(print_r( self::getAppointment($appointment->id)),1);		
+				 //error_log(print_r( self::getAppointment($appointment->id)),1);		
 	}
 
 
@@ -434,7 +443,7 @@ class Calendar {
 		$wpdb->query($query);
 	}
 	
-	public function addAppointmentLog($appointment_id,$datetime,$tag,$log,$labelclass) {
+	public static function addAppointmentLog($appointment_id,$datetime,$tag,$log,$labelclass) {
 		//get current user ID
 		
 		
@@ -457,25 +466,27 @@ class Calendar {
 	
 	
 	
-	public function getLog($appointment_id,$tag){
+	public static function getLog($appointment_id,$tag){
 		global $wpdb;
 
 		if ($tag=='all'){
 
 			$query = sprintf(
-							"SELECT table_appointments_log.appointment_id,
-									table_appointments_log.datetime,
-									table_appointments_log.labelclass,
-									table_appointments_log.log,
-									table_appointments_log.tag,
-							
-									wp_users.display_name as username
-							
-							FROM table_appointments_log
-							INNER JOIN wp_users
-							ON table_appointments_log.user = wp_users.ID
-							
-							WHERE table_appointments_log.appointment_id = '%s' ORDER BY table_appointments_log.id DESC",$appointment_id);
+							  "SELECT 
+								table_appointments_log.appointment_id,
+								table_appointments_log.datetime,
+								table_appointments_log.labelclass,
+								table_appointments_log.log,
+								table_appointments_log.tag,
+								COALESCE(wp_users.display_name, 'Patient') AS username
+
+								FROM table_appointments_log
+								LEFT JOIN wp_users
+									ON table_appointments_log.user = wp_users.ID
+
+								WHERE table_appointments_log.appointment_id = %s
+								ORDER BY table_appointments_log.id DESC
+							", $appointment_id);
 		} else {
 			$query = sprintf(
 				"SELECT table_appointments_log.appointment_id,
@@ -622,8 +633,8 @@ class Calendar {
 
 					
 				
-					error_log("AVAILABLE PERIODS WITHOUT APPOINTMENTS----->");
-					error_log(print_r($available_periods_with_breaks,1));
+					//error_log("AVAILABLE PERIODS WITHOUT APPOINTMENTS----->");
+					//error_log(print_r($available_periods_with_breaks,1));
 				}	
 		
 		//combine appointments and breaks

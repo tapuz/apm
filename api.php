@@ -140,6 +140,14 @@ switch (getVar('task')){
 	case 'findPatientMatch':
 		echo(Patient::findPatientMatch(getVar('patient')));
 	break;
+
+
+	case 'getFutureAppointments':
+		loadLib('calendar');
+		echo json_encode(Calendar::getFutureAppointments(getVar('patientID')));
+	break;
+
+
     case 'message':
         $message = getVar('message');
         error_log($message);
@@ -182,6 +190,18 @@ switch (getVar('task')){
 		$appointmentID =  getVar('appointmentID');
 		Calendar::deleteAppointment($appointmentID);
 	break;
+
+	case 'cancelAppointment':
+		loadLib('calendar');
+		$appointmentID =  getVar('appointmentID');
+		$reason = getVar('reason');
+		$datetime = getvar('datetime');
+		Calendar::setstatus($appointmentID,6);
+		error_log("this is the reason " . $reason);
+		Calendar::addAppointmentLog($appointmentID,$datetime,'cancelled',$reason,"label-danger");
+	break;
+
+	
 
 	case 'addAppointment':
 		loadLib('calendar');

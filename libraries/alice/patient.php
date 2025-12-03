@@ -43,7 +43,7 @@ class Patient
 		$wpdb->delete( 'table_appointments', array( 'patient_id' => $patientID ));		
 	}
 	
-	public function searchPatients__($q,$user){
+	public static function searchPatients__($q,$user){
 		
 		//create a temp table containing only patients belonging to a group
 		global $wpdb;
@@ -161,21 +161,54 @@ class Patient
 		
 	}
 	
-	public function findPatientMatch($patient){ // used by the book online page
+	public static function findPatientMatch($patient){ // used by the book online page
 		global $wpdb;
 		$patient = json_decode(stripslashes($patient));
-		$query = $wpdb->prepare('
-			SELECT * from table_patients 
-			WHERE table_patients.patient_surname = %s AND table_patients.patient_firstname = %s AND table_patients.dob = %s AND table_patients.group = %s',
-			$patient->surname,$patient->firstname,$patient->dob,$patient->group);
-		$result=$wpdb->get_row($query);
+
+		// Normalize name input (remove apostrophes & spaces)
+		$normalized_surname = str_replace(["'", " "], "", $patient->surname);
+		$normalized_firstname = str_replace(["'", " "], "", $patient->firstname);
+
+		$query = $wpdb->prepare("
+			SELECT * FROM table_patients 
+			WHERE (
+					table_patients.patient_surname = %s 
+					OR REPLACE(REPLACE(table_patients.patient_surname, '''', ''), ' ', '') = %s
+				)
+			AND (
+					table_patients.patient_firstname = %s 
+					OR REPLACE(REPLACE(table_patients.patient_firstname, '''', ''), ' ', '') = %s
+				)
+			AND table_patients.dob = %s
+			AND table_patients.group = %s",
+			$patient->surname, $normalized_surname,  
+			$patient->firstname, $normalized_firstname, 
+			$patient->dob, $patient->group);
+
+		$result = $wpdb->get_row($query);
+
+		// If no results, try phonetic matching
+		if (!$result) {
+			$query = $wpdb->prepare("
+				SELECT * FROM table_patients 
+				WHERE SOUNDEX(table_patients.patient_surname) = SOUNDEX(%s)
+				AND SOUNDEX(table_patients.patient_firstname) = SOUNDEX(%s)
+				AND table_patients.dob = %s
+				AND table_patients.group = %s",
+				$patient->surname, $patient->firstname, 
+				$patient->dob, $patient->group);
+
+			$result = $wpdb->get_row($query);
+		}
+
+		
 		
 		if ($result === NULL) {//no match was found
 			error_log('no match found');
 			$result = new StdClass;
 			$result->match = false;
 		}else{
-			//we have a match.. include practitioner ID that the patient last had an encoubter with
+			//we have a match.. include practitioner ID that the patient last had an encounter with
 			$query = $wpdb->prepare('
 				SELECT user from table_encounters
 				WHERE table_encounters.patient_id = %s ORDER BY id DESC LIMIT 1' ,
@@ -185,6 +218,11 @@ class Patient
 				$practitioner = 0;
 			}
 			$result->{"last_encounter"} = $practitioner;
+			//get the appointments the patient might have in the future
+			$query=sprintf('SELECT * from view_appointments WHERE patientID = %s AND status <> 7 AND status <> 6 AND start >= NOW() ORDER BY start DESC',$result->patient_id);
+			error_log($query);
+			$result->{"appointments"} =$wpdb->get_results($query);			
+
 			//check if we have an email in DB and if the one we have is valid email in DB - if not update
 
 			if (filter_var($result->email, FILTER_VALIDATE_EMAIL)) {
@@ -215,6 +253,7 @@ class Patient
 		
 	}
 	
+
 	public static function getPatient($patient_id)	{
 	global $wpdb;
 	// get patient object 
@@ -258,7 +297,7 @@ class Patient
 		
 	}
 	
-	public function addEncounter($encounter){
+	public static function addEncounter($encounter){
 		global $wpdb;
 		$wpdb->insert( 
 				'table_encounters', 
@@ -279,7 +318,7 @@ class Patient
 		$wpdb->delete( 'table_encounters', array( 'id' => $encounter_id ));	
 	}
 	
-	public function getEncounter($id){
+	public static function getEncounter($id){
 		global $wpdb;
 		$query = sprintf("SELECT * from table_encounters WHERE id = '%s'",$id);
 		$encounter = $wpdb->get_row($query);
@@ -287,7 +326,7 @@ class Patient
 	}
 	
 
-	public function getEncounters($patient_id){
+	public static function getEncounters($patient_id){
 		global $wpdb;
 		$query = sprintf("SELECT
 						 table_encounters.*,
@@ -345,7 +384,7 @@ class Patient
 	}
 
 	
-	public function getDiagnoses($patient_id){
+	public static function getDiagnoses($patient_id){
 		global $wpdb;
 		$query = sprintf("
 						 SELECT
@@ -386,7 +425,7 @@ class Patient
 	
 	//insert new diagnosis into table
 	
-	public function addNewDiagnosis($diagnosis){
+	public static function addNewDiagnosis($diagnosis){
 		global $wpdb;
 		$wpdb->insert( 
 				'table_diagnoses', 
@@ -401,7 +440,7 @@ class Patient
 	
 	
 	//add diagnosis to a complaint
-	public function addDiagnosis($data){
+	public static function addDiagnosis($data){
 		global $wpdb;
 		parse_str($data);
 		error_log('COMMENT IS ' . $comment);
@@ -418,7 +457,7 @@ class Patient
 		$id = $wpdb->insert_id;
 	}
 	
-	public function searchDiagnoses($q){
+	public static function searchDiagnoses($q){
 		global $wpdb;
 		$query=sprintf("SELECT * from table_diagnoses WHERE ( diagnosis LIKE '%s') ORDER BY diagnosis ASC ",'%'.$q.'%');
 		$diagnoses=$wpdb->get_results($query);
@@ -426,7 +465,7 @@ class Patient
 	}
 	
 	
-	public function updateDiagnosis($data){
+	public static function updateDiagnosis($data){
 		global $wpdb;
 		parse_str($data);
 		$wpdb->update( 
@@ -439,7 +478,7 @@ class Patient
 	 			);
 	}
 	
-	public function addSOAP($SOAP){
+	public static function addSOAP($SOAP){
 		global $wpdb;
 		$wpdb->insert( 
 				'table_soap', 
@@ -455,14 +494,14 @@ class Patient
 		
 	}
 	
-	public function getSOAP($id){
+	public static function getSOAP($id){
 		global $wpdb;
 		$query = sprintf("SELECT * from table_soap WHERE id = '%s'",$id);
 		$SOAP = $wpdb->get_row($query);
         return  $SOAP;
 	}
 	
-	public function updateSOAP($SOAP){
+	public static function updateSOAP($SOAP){
 		global $wpdb;
 		//get the first element as it contains the id
 		$id = array_shift($SOAP);
@@ -480,7 +519,7 @@ class Patient
 		
 	}
 
-	public function saveSOAP($soap_id,$field,$value){
+	public static function saveSOAP($soap_id,$field,$value){
 		error_log($soap_id . ' ' . $field . ' '.$value);
 		global $wpdb;
 		$wpdb->update( 
@@ -496,7 +535,7 @@ class Patient
 		
 	}
 	
-	public function addComplaint($complaint){
+	public static function addComplaint($complaint){
 		global $wpdb;
 		$wpdb->insert( 
 				'table_complaints', 
@@ -513,7 +552,7 @@ class Patient
 		
 	}
 	
-	public function getComplaint($id){
+	public static function getComplaint($id){
 		global $wpdb;
 		$query = sprintf("SELECT * from table_complaints WHERE id = '%s'",$id);
 		$complaint = $wpdb->get_row($query);
@@ -527,7 +566,7 @@ class Patient
 	
 	
 	
-	public function updateComplaint($complaint){
+	public static function updateComplaint($complaint){
 		global $wpdb;
 		//get the first element as it contains the id
 		$id = array_shift($complaint);
@@ -545,7 +584,7 @@ class Patient
 		
 	}
 	
-	public function saveComplaint($complaint_id,$field,$value){
+	public static function saveComplaint($complaint_id,$field,$value){
 		error_log($complaint_id . ' ' . $field . ' '.$value);
 		global $wpdb;
 		$wpdb->update( 
@@ -561,7 +600,7 @@ class Patient
 		
 	}
 	
-	public function saveHistory($patient_id,$field,$value){
+	public static function saveHistory($patient_id,$field,$value){
 		global $wpdb;
 		$sql = "INSERT INTO table_history (patient_id,".$field.") VALUES (%d,%s) ON DUPLICATE KEY UPDATE ".$field." = %s";
 		var_dump($sql); // debug
@@ -572,7 +611,7 @@ class Patient
 		
 	}
 	
-	public function getHistory($patient_id){
+	public static function getHistory($patient_id){
 		global $wpdb;
 		$sql="SELECT * FROM table_history WHERE patient_id=%d";
 		$sql = $wpdb->prepare($sql,$patient_id);
@@ -600,7 +639,7 @@ class Patient
 		
 	}
 	
-	public function getAppointments($patient_id){
+	public static function getAppointments($patient_id){
 	global $wpdb;
 	$query=sprintf('SELECT * from view_treatment_details WHERE patient_id = "%s" AND status <> 7 ORDER BY scheduled_date DESC',$patient_id);
 	$appointments=$wpdb->get_results($query);
@@ -609,7 +648,7 @@ class Patient
 
 	
 	
-	public function getPatientsForToday(){
+	public static function getPatientsForToday(){
 	global $wpdb;
 	$query=sprintf('select * from view_treatment_details WHERE scheduled_date="%s" and scheduled_practitioner_id=%s ORDER BY scheduled_time ASC',
 		                                      date("Y-m-d", time()),

@@ -21,8 +21,10 @@ var transparent = true;
 
 
 var objPatient={};
+var patientLoggedIn = false;
 
 var mode; //newPatient or recurrentPatient
+var action; //create or manage
 var match = false;
 var clinic; 
 var clinics;
@@ -42,6 +44,7 @@ var practitionerNotAvailable;
 var urlService;
 var loadingImg = '<img class="loading" src="assets/img/rolling.svg">';
 var wizard;
+var appointment;
 
 
 
@@ -74,154 +77,171 @@ $(document).ready(function() {
     months -= d1.getMonth();
     months += d2.getMonth();
     return months <= 0 ? 0 : months;
-}
+  }
 
-var today = new Date(); 
+  var today = new Date(); 
   
-$("#loading").hide();
-$("#timing").hide();
-$('.urgent-footer').hide();
+  tabsInit();
+
+  function tabsInit(){
+    $("#loading").hide();
+    $("#timing").hide();
+    $('.urgent-footer').hide();
+    $('.manager-footer').hide();
+    $(".manager-footer .btn").prop("disabled", true);
+    $("#confirmed").hide();
+    $("#resume_details appointmentToMove").hide();
+    $("#resume_details appointment").show();
+    $("#resume_details").show();
+    $('#newPatient').hide();
+    $('.standard-footer').show();
+    //$('.wizard-title').html('');
+    //$('.service-title').html('');
+    
+  }
 
 
 
   //init cal
-    calendar = new Calendar({
-      id: "#calendar",
-      calendarSize: "small",
-      startWeekday:1,
-      weekdayDisplayType: 'short',
-      customWeekdayValues:[
-        "Zo",
-        "Ma",
-        "Di",
-        "Woe",
-        "Dond",
-        "Vrij",
-        "Zat"
-      ] ,
-      customMonthValues:[
-        "Januari",
-        "Februari",
-        "Maart",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Augustus",
-        "September",
-        "Oktober",
-        "November",
-        "December"
-      ] ,
+  calendar = new Calendar({
+    id: "#calendar",
+    calendarSize: "small",
+    startWeekday:1,
+    weekdayDisplayType: 'short',
+    customWeekdayValues:[
+      "Zo",
+      "Ma",
+      "Di",
+      "Woe",
+      "Dond",
+      "Vrij",
+      "Zat"
+    ] ,
+    customMonthValues:[
+      "Januari",
+      "Februari",
+      "Maart",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Augustus",
+      "September",
+      "Oktober",
+      "November",
+      "December"
+    ] ,
       
       
       
-      headerBackgroundColor: '#7a9e9f',
-      headerColor: '#7a9e9f',
-      calendarSize: "large",
-      theme: 'basic',
-      //primaryColor:'#7a9e9f',
-       monthChanged: (selectedDate, events) => {
-              if(monthDiff(today, selectedDate) == 0){
-                leftArrow = document.getElementsByClassName('calendar__arrow-prev')[0];        
-                leftArrow.style.display = "none";
-              } else {
-                leftArrow = document.getElementsByClassName('calendar__arrow-prev')[0];        
-                leftArrow.style.display = "block";                
-              }
-              if(monthDiff(today, selectedDate) == monthsInAdvance){
-                rightArrow = document.getElementsByClassName('calendar__arrow-next')[0];        
-                rightArrow.style.display = "none";
-              } else {
-                rightArrow = document.getElementsByClassName('calendar__arrow-next')[0];        
-                rightArrow.style.display = "block";                
-              }
-          }, 
+    headerBackgroundColor: '#7a9e9f',
+    headerColor: '#7a9e9f',
+    calendarSize: "large",
+    theme: 'basic',
+    //primaryColor:'#7a9e9f',
+    monthChanged: (selectedDate, events) => {
+      if(monthDiff(today, selectedDate) == 0){
+        leftArrow = document.getElementsByClassName('calendar__arrow-prev')[0];        
+        leftArrow.style.display = "none";
+      } else {
+        leftArrow = document.getElementsByClassName('calendar__arrow-prev')[0];        
+        leftArrow.style.display = "block";                
+      }
+      if(monthDiff(today, selectedDate) == monthsInAdvance){
+        rightArrow = document.getElementsByClassName('calendar__arrow-next')[0];        
+        rightArrow.style.display = "none";
+      } else {
+        rightArrow = document.getElementsByClassName('calendar__arrow-next')[0];        
+        rightArrow.style.display = "block";                
+      }
+    }, 
       
-      dateChanged: (currentDate, propositions) => {
-        let doWeHavePropositions = false;
-        $('#timeslot_select .propositions').html('');
-        //const events_display = document.querySelector('.events-display');
-        let events_html = '';
+    dateChanged: (currentDate, propositions) => {
+      let doWeHavePropositions = false;
+      $('#timeslot_select .propositions').html('');
+      //const events_display = document.querySelector('.events-display');
+      let events_html = '';
+      console.log(propositions);
        
-        propositions.forEach(proposition => {
-          doWeHavePropositions = true;
-          value = {user:proposition.user,clinic:proposition.clinic,start:proposition.start,end:proposition.end};
-          value = JSON.stringify(value);
-          newhtml = html_proposition.replace('%timeslot%',value);
-          newhtml = newhtml.replace('%timeslot_text%', moment(proposition.start).locale('nl-be').format('LT'));
-          $('#timeslot_select .propositions').append(newhtml);
+      propositions.forEach(proposition => {
+        doWeHavePropositions = true;
+        value = {user:proposition.user,clinic:proposition.clinic,start:proposition.start,end:proposition.end};
+        value = JSON.stringify(value);
+        newhtml = html_proposition.replace('%timeslot%',value);
+        newhtml = newhtml.replace('%timeslot_text%', moment(proposition.start).locale('nl-be').format('LT'));
+        $('#timeslot_select .propositions').append(newhtml);
         
-        });
-        if(doWeHavePropositions) {
-          $('#message_propositions').html('');
+      });
+      if(doWeHavePropositions) {
+        $('#message_propositions').html('');
          
-        } else {
-          newhtml =  html_no_proposition.replace('%text%','Geen mogelijkheden voor deze dag');
-          $('#timeslot_select .propositions').append(newhtml);
+      } else {
+        newhtml =  html_no_proposition.replace('%text%','Geen mogelijkheden voor deze dag');
+        $('#timeslot_select .propositions').append(newhtml);
 
         
-        }
-        
-      },
-      selectedDateClicked:(currentDate) =>{
-        
       }
+        
+    },
+    selectedDateClicked:(currentDate) =>{
+        
+    }
 
     
 
                       
       
       
-    });
+  });
 
-    $('#calendar').click(function(){
+  $('#calendar').click(function(){
 
-     let theDate = calendar.getSelectedDate();
-     calendar.setDate(theDate);
+    let theDate = calendar.getSelectedDate();
+    calendar.setDate(theDate);
      
-    });
+  });
  
- 
+ //
   
-   // get the clinics from group
-   $.ajax({
-  		dataType: "json",
-		url: apiURL,
-  		data: { 
-  			task: 'getClinicsFromGroup', 
-  			group : getGroup}
-		}).done(function( data ) {
-      clinics = data;
-      $.each(clinics, function() {
-        newhtml = html.replace('%clinicID%',this.clinic_id);
-        newhtml = newhtml.replace('%clinicName%',this.clinic_name);
-        newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
-        $('#location .clinics').append(newhtml);
+  // get the clinics from group
+  $.ajax({
+    dataType: "json",
+    url: apiURL,
+    data: { 
+      task: 'getClinicsFromGroup', 
+      group : getGroup()}
+  }).done(function( data ) {
+    clinics = data;
+    $.each(clinics, function() {
+      newhtml = html.replace('%clinicID%',this.clinic_id);
+      newhtml = newhtml.replace('%clinicName%',this.clinic_name);
+      newhtml = newhtml.replace('%clinicName2%',this.clinic_name);
+      $('#location .clinics').append(newhtml);
         
-        //set the group /
-        group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description,allow_np_online_booking:parseInt(this.allow_np_online_booking), allow_urgent_request:parseInt(this.allow_urgent_request),practitioner_title:this.practitioner_title};
-      });
-      group.logo = '<img src = '+group.logo+'>';
-      //console.log('read this.. ' + group.description);
-      $('.group-description').html(group.logo + group.description);
+      //set the group /
+      group = {ID:this.group_id,email:this.admin_email,name:this.groupname, logo:this.logo, description:this.description,allow_np_online_booking:parseInt(this.allow_np_online_booking), allow_urgent_request:parseInt(this.allow_urgent_request),practitioner_title:this.practitioner_title};
+    });
+    group.logo = '<img src = '+group.logo+'>';
+    //console.log('read this.. ' + group.description);
+    $('.group-description').html(group.logo + group.description);
       
-      if(urlService == 'rugscreening_30'){
-      	$('.service-title').html("Rugscreening");
-      }
+    if(urlService == 'rugscreening_30'){
+      $('.service-title').html("Rugscreening");
+    }
       
 
-      
-      //if allow_np_online_booking = false skip the first wizard slide, patient can only book if they are already in the system
-      if(!group.allow_np_online_booking){
-        mode = 'recurrentPatient';
-        $('#selectRecurrentNewPatient').hide();
-        $('#recurrentPatient').show();
-        $('.btn-next').show();
-      }
-      $('.practitioner_title').html(group.practitioner_title);
+  
+
+    //if allow_np_online_booking = false skip the first wizard slide, patient can only book if they are already in the system
+    if(!group.allow_np_online_booking){
+      mode = 'recurrentPatient';
+      $('#selectRecurrentNewPatient').hide();
+      $('#recurrentPatient').show();
+      $('.btn-next').show();
+    }
+    $('.practitioner_title').html(group.practitioner_title);
   	
-    });  
+  });  
   
    
   
@@ -234,13 +254,13 @@ $('.urgent-footer').hide();
   var $validatorUrgent = $('#urgent form').validate({
     rules:{
       urgent_practitioner:{
-                required:true
-          },
+        required:true
+      },
       severity:{
-          required:true
+        required:true
       },
       note:{
-          required:true
+        required:true
       }
     },
     messages:{
@@ -250,82 +270,82 @@ $('.urgent-footer').hide();
 
     },
     errorPlacement: function(error, element) {
-          $('#urgent #message').html(error);
+      $('#urgent #message').html(error);
           
     }
     
     
-    }); 
+  }); 
 
-   var $validatorTimeslot = $('#timeslot_select form').validate({
-      rules:{
-            proposition:{
-                  required:true
-            }
-      },
-      messages:{
-            proposition:'Selecteer een tijdstip'
-      },
-      errorPlacement: function(error, element) {
-            $('#timeslot_select #message').html(error);
-            
-      }
-      
-      
-      });
-  var $validatorConditions = $('#conditions form').validate({
+  var $validatorTimeslot = $('#timeslot_select form').validate({
     rules:{
-          condition:{
-                required:true
-          }
+      proposition:{
+        required:true
+      }
     },
     messages:{
-          condition:'U moet akkoord gaan met deze voorwaarde om uw afspraak te maken.'
+      proposition:'Selecteer een tijdstip'
     },
     errorPlacement: function(error, element) {
-          $('#conditions #message').html(error);
+      $('#timeslot_select #message').html(error);
+            
+    }
+      
+      
+  });
+  var $validatorConditions = $('#conditions form').validate({
+    rules:{
+      condition:{
+        required:true
+      }
+    },
+    messages:{
+      condition:'U moet akkoord gaan met deze voorwaarde om uw afspraak te maken.'
+    },
+    errorPlacement: function(error, element) {
+      $('#conditions #message').html(error);
           
     }
     
     
-    });
+  });
   
   var $validatorPractitioner = $('#practitioner form').validate({
-      rules:{
-            practitioner:{
-                  required:true
-            }
-      },
-      messages:{
-            practitioner:'Selecteer een chiropractor'
-      },
-      errorPlacement: function(error, element) {
-            $('#practitioner #message').html(error);
-            
+    rules:{
+      practitioner:{
+        required:true
       }
+    },
+    messages:{
+      practitioner:'Selecteer een chiropractor'
+    },
+    errorPlacement: function(error, element) {
+      $('#practitioner #message').html(error);
+            
+    }
       
       
-      });
+  });
   
   var $validatorClinic = $('#location form').validate({
-      rules:{
-            clinic:{
-                  required:true
-            }
-      },
-      messages:{
-            clinic:'Selecteer een locatie'
-      },
-      errorPlacement: function(error, element) {
-            $('#location #message').html(error);
-            
+    rules:{
+      clinic:{
+        required:true
       }
+    },
+    messages:{
+      clinic:'Selecteer een locatie'
+    },
+    errorPlacement: function(error, element) {
+      $('#location #message').html(error);
+            
+    }
       
       
-      });
+  });
   
   var $validatorNewPatient = $('#newPatient form').validate({
-      rules: {
+    rules: {
       firstName: {
         required: true,
         minlength: 2
@@ -343,7 +363,7 @@ $('.urgent-footer').hide();
         email: true
       },
       phone:{
-         required:true,
+        required:true,
       }
     },
     messages: {
@@ -356,7 +376,7 @@ $('.urgent-footer').hide();
     }
       
       
-      });
+  });
   
   
   var $validator = $('#recurrentPatient form').validate({
@@ -400,30 +420,10 @@ $('.urgent-footer').hide();
     },
     "Please enter a date in the format!"
   );
-
-
-  // Wizard Initialization
-    wizard = $('.wizard-card').bootstrapWizard({
-    'tabClass': 'nav nav-pills',
-    'nextSelector': '.btn-next',
-    'previousSelector': '.btn-previous',
-    onPrevious: function (tab, navigation,index){
-      
-      switch (index) {
-        case 2: // previous was clicked on select timeslot 
-          $('#' + practitioner.ID).click();
-          
-        break;
-      }
-    },
-
-    onNext: function(tab, navigation, index) {
-      //var $current = index + 1;
-      
-
-      switch (index) {
+  // wizard helper function
+  function handleWizardNext(index) {
+    switch (index) {
         case 1: //next was clicked on first slide of wizard
-          
           switch (mode) {
             case 'recurrentPatient':
               var $valid = $('#recurrentPatient form').valid();
@@ -431,18 +431,102 @@ $('.urgent-footer').hide();
                 $validator.focusInvalid();
                 return false; //do not navigate to next slide
               } else { //form is valid, check with DB for patient match
-                  if(match === false){
-                        checkMatch();
-                        return false;
-                  } else {
-                    //suggest clinic
-                    
-                    //$('.clinics :input[value='+ objPatient.clinic +']').click();
+                //check patient match
+                if (match){
+                  if(action=='create'){
+                    return true;
+                  } else if (action == 'manage'){
+                    return false;
                   }
+                  
+                } else {
+                  checkMatch().then(function(result) {
+                    if (result === true) {
+                      console.log('Match found, proceed with further logic.');
+                      match=true;
+                      if(objPatient.hasOwnProperty('new_email')== true){
+                        //show confirm email modal
+                        $('#confirmEmail .keep_old_email').html(objPatient.email);
+                        $('#confirmEmail .update_email').html(objPatient.new_email);
+                        showEmailModalAndWait().then(response => {
+                          if (response === 'keep_old_email') {
+                            console.log('keep old email');
+                            // Proceed with the confirmed action
+                          } else if (response === 'update_email') {
+                            console.log('update email');
+                            $.ajax({
+                              url: apiURL,
+                              data: {
+                                task: 'update_patient_field',
+                                patient_id: objPatient.patient_id,
+                                field: 'email',
+                                value: objPatient.new_email
+                              }
+                            }).done(function() {
+                              $('#email').val(objPatient.new_email);
+                  
+                            }).fail(function( jqXHR, textStatus ) {
+                              alert( "Request failed: " + textStatus );
+                            });
+                              
+                          }
+                        });
+                      }
+                      if(action=='create'){
+                        wizard.bootstrapWizard('next');
+                      } else if (action == 'manage'){
+                        $('.manager-footer').show();
+                        $('.standard-footer').hide();
+                        $('#recurrentPatient').hide();
+                        $('#manageAppointments').show();
+                        $('.btn-next').hide();
+                        $('.firstTabTitle').html('Afspraken beheren');
+                        //render the appointments
+                        var html='<div class="col-md-6 col-sm-12 col-xs-12 appointment" data-appointment-id="%appointmentID%"> \
+														        <div class="choice" data-toggle="wizard-radio">\
+															        <input type="radio" name="appointment" value="%appointmentID%" clinicname="RUGCENTRUM GENT">\
+															        <div class="card card-checkboxes card-hover-effect appointment"><i class="ti-calendar"></i>\
+															          <p>%service% - %appointment%</p>\
+                                        <p>bij %practitioner% @ %clinicName%</p>\
+															        </div>\
+														        </div>\
+													        </div> \
+                                  ';
+                        
+                        $('.appointments').html('');                        
+                        if (objPatient.appointments.length == 0) {
+                          $('.appointments').html(
+                            '<div class="no-appointments text-center text-muted" style="padding:20px;">' +
+                            'Er zijn momenteel geen afspraken gepland.' +
+                            '</div>'
+                          );
+                          $('.manager-footer').hide();
+          
+                        } else {
+                          $.each(objPatient.appointments.reverse(), function() {
+                            newhtml = html.replaceAll('%appointmentID%',this.id);
+                            newhtml = newhtml.replace('%appointment%',moment(this.start).locale('nl-be').format('LLLL'));
+                            newhtml = newhtml.replace('%practitioner%',this.resourceName);
+                            newhtml = newhtml.replace('%clinicName%',this.clinicName);
+                            newhtml = newhtml.replace('%service%',this.service);
 
+                            $('.appointments').append(newhtml);
+                          });
+                        }
 
-            
-
+                    }    
+                    // Continue with your logic here
+                    } else if (result === false) {
+                      match=false;
+                      console.log('No match found, handle this case.');
+                     
+                    }
+                  }).catch(function(error) {
+                    console.log('Error during AJAX request or matching process.');
+                 
+                  });
+                }
+                return false;
               }
               break;
 
@@ -452,154 +536,252 @@ $('.urgent-footer').hide();
                 $validatorNewPatient.focusInvalid();
                 return false; //do not navigate to next slide
               } else { //form is valid,  will only save to DB if app is confirmed
-                  form = $('#newPatient form').serializeArray();
+                form = $('#newPatient form').serializeArray();
                   
-                  objPatient.firstname = form[0].value;
-                  objPatient.surname = form[1].value;
-                  // the following 2 lines are needed because table_patients has patient_firstname and patients_surname as fields... 
-                  objPatient.patient_firstname = form[0].value;
-                  objPatient.patient_surname = form[1].value;
+                objPatient.firstname = form[0].value;
+                objPatient.surname = form[1].value;
+                // the following 2 lines are needed because table_patients has patient_firstname and patients_surname as fields... 
+                objPatient.patient_firstname = form[0].value;
+                objPatient.patient_surname = form[1].value;
                   
-                  objPatient.dob = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
-                  objPatient.email = form[3].value;
-                  objPatient.phone = form[4].value;
-                  objPatient.id=
+                objPatient.dob = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
+                objPatient.email = form[3].value;
+                objPatient.phone = form[4].value;
+                objPatient.id=
                   
-                  //send NP details by mail... 
-                  $.get(apiURL,{task:'emailTempNP',patient:JSON.stringify(objPatient)});
+                //send NP details by mail... 
+                $.get(apiURL,{task:'emailTempNP',patient:JSON.stringify(objPatient)});
 
               }
-            break;
+              break;
           }
 
           break;
           
-          case 2: //next was clicked on the select location wizard
-            var $valid = $('#location form').valid();
-              if (!$valid) {
-                //$validator.focusInvalid();
-                return false; //do not navigate to next slide
-              } else {
-               var clinic_id = $("input:radio[name ='clinic']:checked").val();
-               var clinic_name = $("input:radio[name ='clinic']:checked").attr('clinicName');
-               //set clinic name on the wizard
+        case 2: //next was clicked on the select location wizard
+          var $valid = $('#location form').valid();
+          if (!$valid) {
+            //$validator.focusInvalid();
+            return false; //do not navigate to next slide
+          } else {
+            var clinic_id = $("input:radio[name ='clinic']:checked").val();
+            var clinic_name = $("input:radio[name ='clinic']:checked").attr('clinicName');
+            //set clinic name on the wizard
 
-               clinic = {ID:clinic_id,name:clinic_name};
+            clinic = {ID:clinic_id,name:clinic_name};
                
                
-               $('.group-description').html(group.logo + clinic.name);
-               //set the service title
+            $('.group-description').html(group.logo + clinic.name);
+            //set the service title
                
-               
-               //if recurrent patient-> propose the practitioner
-               if (mode == 'recurrentPatient'){
-                $('#practitioner #message').html('Selectie gemaakt op basis van je laatste bezoek.');
-                $('#' + practitioner_to_propose).click();
-               } 
+            
+            //if recurrent patient-> propose the practitioner
+            if (mode == 'recurrentPatient'){
+              $('#practitioner #message').html('Selectie gemaakt op basis van je laatste bezoek.');
+              $('#' + practitioner_to_propose).click();
+            } 
                
               
-              }
+          }
               
           break;
       
-          case 3://next was clicked on the select practitioner wizard
+        case 3://next was clicked on the select practitioner wizard
           
           
-            var $valid = $('#practitioner form').valid();
-              if (!$valid) {
-                //$validator.focusInvalid();
-                return false; //do not navigate to next slide
-              }else{
+          var $valid = $('#practitioner form').valid();
+          if (!$valid) {
+            //$validator.focusInvalid();
+            return false; //do not navigate to next slide
+          }else{
 
-               practitioner = new Object();
-               practitioner.ID =  $("input:radio[name ='practitioner']:checked").val();
-               practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
+            practitioner = new Object();
+            practitioner.ID =  $("input:radio[name ='practitioner']:checked").val();
+            practitioner.name = $("input:radio[name ='practitioner']:checked").attr('practitionerName');
                
-              if (group.ID == '1'){
-               //$.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'finding timeslot with: ' + practitioner.name } );
-              }
-               $.each(practitioners, function() {
-                if (this.ID == practitioner.ID){
+            if (group.ID == '1'){
+              //$.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'finding timeslot with: ' + practitioner.name } );
+            }
+            $.each(practitioners, function() {
+              if (this.ID == practitioner.ID){
                 practitioner=this;
                 
-                }
-              
-                
-
-              });
-               
-               //$(".group-description").html(clinic.name + " / " + practitioner.name);
-               $('.wizard-title').html('Afspraak maken bij ' + practitioner.display_name);
-               //check the service we need 
-               
-
-               if (urlParams.has('service')==true){
-                  if (mode == 'recurrentPatient'){
-                    if(urlService == 'rugscreening_30'){
-                      urlService = 'rugscreening_15'
-                    }
-                  }
-                  service = practitioner.services.find(x => x.name === urlService);
-                  console.log(service.id + ' : Service_id');
-			            $('.service-title').html(service.description);
-               } else {
-                 switch (mode)
-                  {              
-                    case 'recurrentPatient':
-                      service.id = practitioner.default_service.service;
-                      service.duration = practitioner.default_service.duration;
-                      service.description = practitioner.default_service.description
-
-                    break;
-                    case 'newPatient':
-                      service.id = practitioner.default_service_np.service;
-                      service.duration = practitioner.default_service_np.duration;
-                      service.description = practitioner.default_service_np.description
-                    break;
-                  }
-				        $('.service-title').html(service.description);
-               }    
-               getAvailableTimes(service.id,service.duration,timing);
               }
+              
+                 
+
+            });
+               
+            //$(".group-description").html(clinic.name + " / " + practitioner.name);
+            $('.wizard-title').html('Afspraak maken bij ' + practitioner.display_name);
+            //check the service we need 
+               
+
+            if (urlParams.has('service')==true){
+              if (mode == 'recurrentPatient'){
+                if(urlService == 'rugscreening_30'){
+                  urlService = 'rugscreening_15'
+                }
+              }
+              service = practitioner.services.find(x => x.name === urlService);
+              console.log(service.id + ' : Service_id');
+              $('.service-title').html(service.description);
+            } else {
+              switch (mode)
+              {              
+                case 'recurrentPatient':
+                  service.id = practitioner.default_service.service;
+                  service.duration = practitioner.default_service.duration;
+                  service.description = practitioner.default_service.description
+
+                  break;
+                case 'newPatient':
+                  service.id = practitioner.default_service_np.service;
+                  service.duration = practitioner.default_service_np.duration;
+                  service.description = practitioner.default_service_np.description
+                  break;
+              }
+                
+              if (action == 'manage'){
+                service.id = appointment.serviceId;
+                const startTime = moment(appointment.start, 'YYYY-MM-DD HH:mm:ss');
+                const endTime = moment(appointment.end, 'YYYY-MM-DD HH:mm:ss');
+
+                // Calculate the difference in minutes
+                const diffInMinutes = endTime.diff(startTime, 'minutes');
+                service.duration = diffInMinutes;
+                service.description=appointment.service;
+              }
+              $('.service-title').html(service.description);
+            }    
+            getAvailableTimes(service.id,service.duration,timing);
+          }
           break;
          
-          case 4: // next was clicked on the select timeslot tab
-               $('.error').html('');
-               if (group.ID == '1'){
-                //$.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'waiting to confirm appt..' } );
-               }
-               var $valid = $('#timeslot_select form').valid();
-                  if (!$valid) {
-                     return false; //do not navigate to next slide
-                  }else{
-                     selected_timeslot = $("input:radio[name ='proposition']:checked").val();
-                     selected_timeslot = JSON.parse (selected_timeslot);
-                     //alert(selected_timeslot);
+        case 4: // next was clicked on the select timeslot tab
+          $('.error').html('');
+          if (group.ID == '1'){
+            //$.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'waiting to confirm appt..' } );
+          }
+          var $valid = $('#timeslot_select form').valid();
+          if (!$valid) {
+            return false; //do not navigate to next slide
+          }else{
+            selected_timeslot = $("input:radio[name ='proposition']:checked").val();
+            selected_timeslot = JSON.parse (selected_timeslot);
+            //alert(selected_timeslot);
+            $('#resume_details .info-text').html(objPatient.patient_firstname + ', controleer je afspraak nog even en bevestig onderaan... ');
                      
-                     $('#resume .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
-                     $('#resume .practitioner').html(practitioner.display_name);
-                     $('#resume .service').html(service.description);
-                     $('#resume .location').html(clinic.name);
-                     $('#resume .timeslot').html(moment(selected_timeslot.start).locale('nl-be').format('LLLL'));
+            $('#resume_details .appointment .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
+            $('#resume_details .appointment .practitioner').html(practitioner.display_name);
+            $('#resume_details .appointment .service').html(service.description);
+            $('#resume_details .appointment .location').html(clinic.name);
+            $('#resume_details .appointment .timeslot').html(moment(selected_timeslot.start).locale('nl-be').format('LLLL'));
+
                      
-                  }
+            $('#confirmed .practitioner').html(practitioner.display_name);
+            $('#confirmed .service').html(service.description);
+            $('#confirmed .location').html(clinic.name);
+            $('#confirmed .timeslot').html(moment(selected_timeslot.start).locale('nl-be').format('LLLL'));
+
+
+                  
+            if (action == 'manage' ) {
+              //populate with data
+              $('#resume_details .info-text').html(objPatient.patient_firstname + ', controleer de verplaatsing en bevestig onderaan...')
+              $('#resume_details .appointmentToMove .practitioner').html(appointment.resourceName);
+              $('#resume_details .appointmentToMove .service').html(appointment.service);
+              $('#resume_details .appointmentToMove .location').html(appointment.clinicName);
+              $('#resume_details .appointmentToMove .timeslot').html(moment(appointment.start).locale('nl-be').format('LLLL'));
+              $("#resume_details .appointmentToMove").show();
+
+
+            } else {
+              $('#resume_details .appointmentToMove').hide();
+            }
+          }
                
           break;
 
-          case 5: //next was clicked on conditions tab
-            /* $('.error').html('');
-            var $valid = $('#conditions form').valid();
-            if (!$valid) {
-              return false; //do not navigate to next slide
-            }else{
-              //navigate to nxt slide
-            }
-                 */
+        case 5: //next was clicked on conditions tab
+          /* $('.error').html('');
+          var $valid = $('#conditions form').valid();
+          if (!$valid) {
+            return false; //do not navigate to next slide
+          }else{
+            //navigate to nxt slide
+          }
+               */
           break;
       }
 
+  }
+
+  function handleTabShow(index, navigation) {
+     if (index == 1){match = false;}
+      var $total = navigation.find('li').length;
+      var $current = index + 1;
+
+      var $wizard = navigation.closest('.wizard-card');
+
+      // If it's the last tab then hide the last button and show the finish instead
+      if ($current >= $total) {
+        $($wizard).find('.btn-next').hide();
+        $($wizard).find('.btn-previous').show();
+        $($wizard).find('.btn-finish').show();
+      } else {
+        $($wizard).find('.btn-previous').show();
+        $($wizard).find('.btn-next').show();
+        $($wizard).find('.btn-finish').hide();
+      }
+
+      if ($current == 1) {
+        $($wizard).find('.btn-previous').hide();
+      }
+
+      //update progress
+      var move_distance = 100 / $total;
+      move_distance = move_distance * (index) + move_distance / 2;
+
+      $wizard.find($('.progress-bar')).css({
+        width: move_distance + '%'
+      });
+      //e.relatedTarget // previous tab
+
+      $wizard.find($('.wizard-card .nav-pills li.active a .icon-circle')).addClass('checked');
+
+    
+  } 
 
 
+  // Wizard Initialization
+  wizard = $('.wizard-card').bootstrapWizard({
+    'tabClass': 'nav nav-pills',
+    'nextSelector': '.btn-next',
+    'previousSelector': '.btn-previous',
+    onPrevious: function (tab, navigation,index){
+      //console.log('index: ' + index);
+      switch (index) {
+        case 0: // previous was clicked on select clinic 
+          if(action == "manage"){ //then whe now end up in the appointment list... show manage toobar 
+            $('.manager-footer').show();
+            $('.standard-footer').hide();
+          }
+          match=false;
+          $('#message').html('');
+          no_match_counter=0;
+
+          break;
+        case 2: // previous was clicked on select timeslot 
+          $('#' + practitioner.ID).click();
+          
+          break;
+      }
+    },
+
+    onNext: function(tab, navigation, index) {
+      // if your handler returns false, stop the wizard
+      return handleWizardNext(index);
     },
 
     onInit: function(tab, navigation, index) {
@@ -626,37 +808,12 @@ $('.urgent-footer').hide();
     },
 
     onTabShow: function(tab, navigation, index) {
-      if (index == 1){match = false;}
-      var $total = navigation.find('li').length;
-      var $current = index + 1;
-
-      
-
-      var $wizard = navigation.closest('.wizard-card');
-
-      // If it's the last tab then hide the last button and show the finish instead
-      if ($current >= $total) {
-        $($wizard).find('.btn-next').hide();
-        $($wizard).find('.btn-finish').show();
-      } else {
-        $($wizard).find('.btn-next').show();
-        $($wizard).find('.btn-finish').hide();
-      }
-
-      //update progress
-      var move_distance = 100 / $total;
-      move_distance = move_distance * (index) + move_distance / 2;
-
-      $wizard.find($('.progress-bar')).css({
-        width: move_distance + '%'
-      });
-      //e.relatedTarget // previous tab
-
-      $wizard.find($('.wizard-card .nav-pills li.active a .icon-circle')).addClass('checked');
-
+     handleTabShow(index, navigation); 
     }
-  });
+  })
   
+
+
   
   $('.btn-urgent-finish').click(function(){
 
@@ -681,12 +838,12 @@ $('.urgent-footer').hide();
           service.duration = practitioner.default_service_urgent.duration;
           service.description = practitioner.default_service_urgent.description
 
-        break;
+          break;
         case 'newPatient':
           service.id = practitioner.default_service_np_urgent.service;
           service.duration = practitioner.default_service_np_urgent.duration;
           service.description = practitioner.default_service_np_urgent.description
-        break;
+          break;
       }
 
       //construct the demand for urgent appointment
@@ -713,102 +870,147 @@ $('.urgent-footer').hide();
           
         },
         
-        }).done(function(data) {
+      }).done(function(data) {
           
-          $('#urgent_confirmation .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
-          if (userID=='0'){
-            $('#urgent_confirmation .practitioner').html('geen voorkeur');
-          }else{
-            $('#urgent_confirmation .practitioner').html(practitioner.display_name);
-          }
-          $('#urgent_confirmation .service').html(service.description);
-          $('#urgent_confirmation .location').html(clinic.name);
-          $('#urgent_confirmation .note').html($('.urgent_note').val());
+        $('#urgent_confirmation .patient').html(objPatient.patient_surname + ' ' +objPatient.patient_firstname);
+        if (userID=='0'){
+          $('#urgent_confirmation .practitioner').html('geen voorkeur');
+        }else{
+          $('#urgent_confirmation .practitioner').html(practitioner.display_name);
+        }
+        $('#urgent_confirmation .service').html(service.description);
+        $('#urgent_confirmation .location').html(clinic.name);
+        $('#urgent_confirmation .note').html($('.urgent_note').val());
           
-          //$('.wizard-card').bootstrapWizard('show',4);
+        //$('.wizard-card').bootstrapWizard('show',4);
          
-          $('#resume .loading').hide();
-          $('#urgent_confirmation').show();
-          $('#urgent').hide();
-          //$('.btn-urgent-finish-saving').hide();
-          $('.urgent-footer').hide();
+        $('#resume .loading').hide();
+        $('#urgent_confirmation').show();
+        $('#urgent').hide();
+        //$('.btn-urgent-finish-saving').hide();
+        $('.urgent-footer').hide();
           
           
-        }).fail(function(){
-          $('.wizard-card').bootstrapWizard('show',3);
-          $('#urgent #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
-          $('.btn-urgent-finish-saving').hide();
-          $('.btn-urgent-finish').show();
-          $('#resume .loading').hide();
-          $('#urgent').show();
+      }).fail(function(){
+        $('.wizard-card').bootstrapWizard('show',3);
+        $('#urgent #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
+        $('.btn-urgent-finish-saving').hide();
+        $('.btn-urgent-finish').show();
+        $('#resume .loading').hide();
+        $('#urgent').show();
 
-        });
+      });
     }
 
   });
   
   $('.btn-finish').click(function(){
-   $('.btn-finish-saving').show();
-   $('.btn-finish').hide();
+    $('.btn-finish-saving').show();
+    $('.btn-finish').hide();
    
-   //construct the appointment
+    //construct the appointment
+    //if in managing mode the appointment needs to be moved
 
-   switch (mode)
-   {
-     case 'recurrentPatient':
 
-       var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0,group:group.ID};
-       appointment = JSON.stringify(appointment);
-       addAppointment(appointment);
-       console.log(appointment);
+    switch (mode)
+    {
+      case 'recurrentPatient':
+        
+        if (action=='manage'){ //if manage the appointment is beeing rescheduled
+          deleteAppointment(appointment.id)
+
+        }
+
+        var newAppointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0,group:group.ID};
+        newAppointment = JSON.stringify(newAppointment);
+        addAppointment(newAppointment);
+        console.log(newAppointment);
        
 
 
-     break;
-     case 'newPatient':
+        break;
+      case 'newPatient':
      
+        //create the new patient in DB
+        objPatient.group = group.ID;
+        objPatient.clinic = clinic.ID;
+        objPatient.practitioner = practitioner.ID;
 
-      //create the new patient in DB
-      objPatient.group = group.ID;
-      objPatient.clinic = clinic.ID;
-      objPatient.practitioner = practitioner.ID;
-
-      $.ajax({
+        $.ajax({
          
-        url: apiURL,
-        dataType: "json",
-        data: {
-           task: 'addNewPatient',
-           patient:JSON.stringify(objPatient)
+          url: apiURL,
+          dataType: "json",
+          data: {
+            task: 'addNewPatient',
+            patient:JSON.stringify(objPatient)
            
-        },
+          },
         
         }).done(function(data) {
           objPatient.patient_id = data;
 
-          var appointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0,group:group.ID}
-          appointment = JSON.stringify(appointment);
+          var newAppointment  = {userID:practitioner.ID,clinic:clinic.ID,patientID:objPatient.patient_id,madeOnline:1,start:selected_timeslot.start,end:selected_timeslot.end,service:service.id,status:0,group:group.ID}
+          newAppointment = JSON.stringify(newAppointment);
 
 
          
-          addAppointment(appointment);
-           
+          addAppointment(newAppointment);
+
+          //hide the manage appointments.. not working when the appointment has just been made - see the case 1 in handlewizard... the recurrentpatient form is not valid when new patient
+          $('.btn-manageAppointments').hide(); 
         }).fail(function(){
-           $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
-           $('.btn-finish-saving').hide();
-           $('.btn-finish').show();
+          $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
+          $('.btn-finish-saving').hide();
+          $('.btn-finish').show();
         });
-     break;
-   }
-   
-   
-   
-   
+        break;
+    }
    
   
   });
 
-  
+  function deleteAppointment(id){
+    $.ajax({
+         
+      url: apiURL,
+      dataType: "auto",
+      data: {
+        task: 'deleteAppointment',
+        appointmentID:id
+      },
+      
+    }).done(function() {
+      socket.emit('calendar_changed');
+         
+    }).fail(function(data){
+         
+    });
+
+  }
+
+   function cancelAppointment(id,reason,callback){
+    $.ajax({
+         
+      url: apiURL,
+      dataType: "text",
+      data: {
+        task: 'cancelAppointment',
+        appointmentID:id,
+        reason:reason,
+        datetime:moment().format()
+
+      },
+      
+    }).done(function(data) {
+       if(callback){callback(data);}
+       socket.emit('calendar_changed');
+         
+    }).fail(function(data){
+        alert('Annuleren is mislukt. Probeer later opnieuw of neem contact op met het secretariaat.');  
+    });
+
+  }
+
   function addAppointment(appointment){
     $('#resume .loading').html(loadingImg).show();
     $('#resume .loading').prop('disabled', true);
@@ -819,35 +1021,36 @@ $('.urgent-footer').hide();
       url: apiURL,
       dataType: "json",
       data: {
-         task: 'addAppointment',
-         appointment:appointment,
-         email:group.email
+        task: 'addAppointment',
+        appointment:appointment,
+        email:group.email
          
-         //comment:$('#timing #comment').val()
+        //comment:$('#timing #comment').val()
       },
       
-      }).done(function() {
-         $('.btn-next').prop('disabled', false);
-         $('#resume .loading').hide();
-         $('.btn-finish-saving').hide();
-         $('.btn-previous').hide();
-         $('#resume_details').hide();
-         $('#resume .loading').prop('disabled', false);
-         $('#confirmed').show();
-         $('.btn-restart').show();
-         //$('.btn-finish').show();
-         //show the confirmation page
-         socket.emit('calendar_changed');
+    }).done(function() {
+      $('.btn-next').prop('disabled', false);
+      $('#resume .loading').hide();
+      $('.btn-finish-saving').hide();
+      $('.btn-previous').hide();
+      $('#resume_details').hide();
+      $('#resume .loading').prop('disabled', false);
+      $('#confirmed').show();
+      $('.btn-restart').show();
+      //$('.btn-finish').show();
+      //show the confirmation page
+      socket.emit('calendar_changed');
+      getFutureAppointments();//refetch the appointments
          
-      }).fail(function(data){
-         $('#resume .loading').hide();
-         $('.btn-next').prop('disabled', false);
-         $('#resume .loading').prop('disabled', false);
-         $('#resume_details').show();
-         $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
-         $('.btn-finish-saving').hide();
-         $('.btn-finish').show();
-      });
+    }).fail(function(data){
+      $('#resume .loading').hide();
+      $('.btn-next').prop('disabled', false);
+      $('#resume .loading').prop('disabled', false);
+      $('#resume_details').show();
+      $('#resume #message').html('Oops!!! Bevestigen mislukt!! Probeer opnieuw aub.');
+      $('.btn-finish-saving').hide();
+      $('.btn-finish').show();
+    });
 
   }
  
@@ -869,6 +1072,17 @@ $('.urgent-footer').hide();
     //as soon as a clinic is selected.. get the practitioners and pre-load them into next slide
     $('#practitioner .practitioners').html('');
     getPractitionersFromClinic($("input:radio[name ='clinic']:checked").val());
+    
+  });
+
+  $('.appointments').on('click','[data-toggle="wizard-radio"]',function() {
+      
+    wizard = $(this).closest('.toggle');
+    wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
+    $(this).addClass('active');
+    $(wizard).find('[type="radio"]').removeAttr('checked');
+    $(this).find('[type="radio"]').attr('checked', 'true');
+    
     
   });
   
@@ -905,8 +1119,8 @@ $('.urgent-footer').hide();
     $.each(clinics, function() {
       if (this.clinic_id == clinic.ID){
         location.href = this.clinic_url;
-       }
-     });
+      }
+    });
   });
   
   
@@ -941,6 +1155,153 @@ $('.urgent-footer').hide();
   $('.btn-urgent-finish-saving').hide();
   $('.btn-restart').hide();
 
+  $('.createAppointment').click(function(){
+    action = 'create';
+    $('.firstTabTitle').html('Wie bent u?')
+    $('#selectCreateOrManageAppointments').hide();
+    $('#selectRecurrentNewPatient').show();
+  })
+
+  $('.btn-createAppointment').click(function(){
+    action = 'create';
+    mode = 'recurrentPatient'; 
+    tabsInit(); 
+    var targetIndex = 1;
+    handleWizardNext(targetIndex);
+    handleTabShow(targetIndex, $('.wizard-card .nav'));
+    $('.wizard-card').bootstrapWizard('show', targetIndex);
+    
+  });
+
+  $('.manageAppointments').click(function(){
+    action = 'manage';
+    mode = 'recurrentPatient'; 
+    $('.firstTabTitle').html('Wie bent u?')
+    $('#selectCreateOrManageAppointments').hide();
+    $('#selectRecurrentNewPatient').hide();
+    $('#recurrentPatient').show();
+    $('.btn-next').show();
+    
+  
+  });
+
+  $('.btn-open-cancel-appointment-modal').click(function(){
+      // appointment = het object zoals je hierboven gaf
+    toCancelAppointmentId = $("input:radio[name ='appointment']:checked").val();
+    appointment = objPatient.appointments.find(appointment => appointment.id === toCancelAppointmentId);
+
+    // starttijd van de afspraak
+    var start = moment(appointment.start, 'YYYY-MM-DD HH:mm:ss');
+    var now   = moment();
+
+    var diffHours = start.diff(now, 'hours', true); // float, bv. 23.5
+
+    // Tekst met info over de afspraak
+    var infoText = 'Je staat op het punt je afspraak op '
+                + start.locale('nl-be').format('dddd D MMMM YYYY [om] HH:mm')
+                + ' bij ' + appointment.resourceName
+                + ' in ' + appointment.clinicName
+                + ' te annuleren.';
+
+    $('#cancelAppointmentModal .appointment-info').text(infoText);
+
+    // Reset velden
+    $('#cancel_reason').val('');
+    $('.cancel-reason-error').hide();
+    $('#cancel_accept_charge').prop('checked', false);
+
+    // Minder dan 24u?
+    if (diffHours <= 24) {
+      $('.cancel-message-standard').hide();
+      $('.charge-warning').show();
+      $('.charge-consent').show();
+    } else {
+      $('.cancel-message-standard').show();
+      $('.charge-warning').hide();
+      $('.charge-consent').hide();
+    }
+
+    // Bewaar eventueel de appointment in een globale variabele
+    objPatient.appointmentToCancel = appointment;
+
+    $('#cancelAppointmentModal').modal('show');
+  
+
+  
+  });
+  
+  $('.btnConfirmCancel').on('click', function () {
+  var reason = $.trim($('#cancel_reason').val());
+  var within24h = $('.charge-warning').is(':visible');
+
+  var valid = true;
+
+  // Reden verplicht
+  if (!reason) {
+    $('.cancel-reason-error').show();
+    valid = false;
+  } else {
+    $('.cancel-reason-error').hide();
+  }
+
+  // Als binnen 24u: akkoord verplicht
+  if (within24h && !$('#cancel_accept_charge').is(':checked')) {
+    alert('Gelieve te bevestigen dat je akkoord gaat met de annuleringsvoorwaarden.');
+    valid = false;
+  }
+
+  if (!valid) {
+    return;
+  }
+
+  // Hier doe je de echte annulatie (AJAX / API)
+  
+
+  // Voorbeeld: AJAX call naar je backend
+  cancelAppointment(objPatient.appointmentToCancel.id, reason,function(){
+    
+      $('[data-appointment-id="' + objPatient.appointmentToCancel.id + '"]').remove();
+      if ($('.appointments').children().length === 0) {
+        $('.appointments').html(
+            '<div class="no-appointments text-center text-muted" style="padding:20px;">' +
+                'Er zijn momenteel geen afspraken gepland.' +
+            '</div>'
+        );
+        $('.manager-footer').hide();
+    }
+
+      $('#appointmentCancelled').modal('show');
+
+  });
+  
+  $('#cancelAppointmentModal').modal('hide');
+});
+
+
+
+
+
+  $('.btn-manageAppointments').click(function(){
+    action = 'manage';
+    mode = 'recurrentPatient';
+    tabsInit(); 
+    var targetIndex = 1;
+    handleWizardNext(targetIndex);
+    $('.wizard-card').bootstrapWizard('show', targetIndex-1);
+    
+  });
+
+    $('.btn-makeAppointment').click(function(){
+    action = 'create';
+    //mode = 'recurrentPatient';
+    tabsInit(); 
+    var targetIndex = 1;
+    handleWizardNext(targetIndex);
+    $('.wizard-card').bootstrapWizard('show', targetIndex);
+    
+  });
+
+
   $('.recurrent').click(function() {
     mode = 'recurrentPatient';
     $('#selectRecurrentNewPatient').hide();
@@ -971,53 +1332,76 @@ $('.urgent-footer').hide();
       
 
    
-   }).fail(function( jqXHR, textStatus ) {
+    }).fail(function( jqXHR, textStatus ) {
       alert( "Request failed: " + textStatus );
-   });
+    });
   });
   
-$(document).on("click", ".keep_old_email" , function() {
-  //ok nothing needs to be updated and move to next slide
-  console.log('no_updating');
-  $('#confirmEmail').modal('hide');
-  wizard.bootstrapWizard('next');
-
-});
-
-$(document).on("click", ".update_email" , function() {
-  //update 
-  
-  $.ajax({
-    url: apiURL,
-    data: {
-      task: 'update_patient_field',
-      patient_id: objPatient.patient_id,
-      field: 'email',
-      value: objPatient.new_email
-    }
-  }).done(function() {
-    
-    $('#email').val(objPatient.new_email);
+  $(document).on("click", ".keep_old_email__" , function() {
+    //ok nothing needs to be updated and move to next slide
+    console.log('no_updating');
     $('#confirmEmail').modal('hide');
-    wizard.bootstrapWizard('next');
-   
- }).fail(function( jqXHR, textStatus ) {
-    alert( "Request failed: " + textStatus );
- });
+    if (action=='create'){
+      wizard.bootstrapWizard('next');
+    }
   
-});
+
+  });
+
+  $(document).on("click", ".update_email__" , function() {
+    //update 
+      
+    $.ajax({
+      url: apiURL,
+      data: {
+        task: 'update_patient_field',
+        patient_id: objPatient.patient_id,
+        field: 'email',
+        value: objPatient.new_email
+      }
+    }).done(function() {
+    
+      $('#email').val(objPatient.new_email);
+      $('#confirmEmail').modal('hide');
+      if (action=='create'){
+        wizard.bootstrapWizard('next');
+      }
+   
+    }).fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
+    });
+  
+  });
 
 
-$(document).on("click",".btn_OpenUrgentApptWarningModal",function(){
-  $('#urgentApptWarning').modal('show');
-});
+  $(document).on("click",".btn_OpenUrgentApptWarningModal",function(){
+    $('#urgentApptWarning').modal('show');
+  });
+
+  $(document).on("click",".appointments .appointment",function(){
+    $(".manager-footer .btn").prop("disabled", false);
+  });
+
+  $(document).on("click",".btn-move-appointment",function(){
+    //get the appt details that need to be moved
+    toMoveAppointmentId = $("input:radio[name ='appointment']:checked").val();
+    appointment = objPatient.appointments.find(appointment => appointment.id === toMoveAppointmentId);
+    //move to the select clinic and start making a new appointment
+    $('.wizard-title').html('Afspraak verplaatsen');
+    $('.wizard-card').bootstrapWizard('show',1);
+    $('.manager-footer').hide();
+    $('.standard-footer').show();
+  });
 
 
-$(document).on("click", ".btn_urgent" , function() {
-  if (group.ID == '1'){
-    $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'Started the urgent appointment request ' + practitioner.name } );
-  }
-  $('#urgentApptWarning').modal('hide');
+
+
+
+  $(document).on("click", ".btn_urgent" , function() {
+    if (group.ID == '1'){
+      $.get( apiURL, { task: "push", title: objPatient.patient_surname + ' ' + objPatient.patient_firstname + '(' + objPatient.patient_id + ')' , body: 'Started the urgent appointment request ' + practitioner.name } );
+    }
+    $('#urgentApptWarning').modal('hide');
     $('#timeslot_propositions').hide();
     $('#urgent').show();
     $('.standard-footer').hide();
@@ -1034,210 +1418,215 @@ $(document).on("click", ".btn_urgent" , function() {
 
 
 
-});
+  });
 
-$(document).on("click", ".btn-urgent-previous" , function() {
-  $('#timeslot_propositions').show();
-  $('#urgent').hide();
-  $('.standard-footer').show();
-  $('.urgent-footer').hide();
-   //swap the icon and text of the tab
-   $('#tab4 i').toggleClass('ti-bolt');
-   $('#tab4 i').toggleClass('ti-calendar');
-   $('#tab4 .tabTitle').html('Tijdstip');
-   $('.service-title').html(service.description).toggleClass('urgent');
-});
+  $(document).on("click", ".btn-urgent-previous" , function() {
+    $('#timeslot_propositions').show();
+    $('#urgent').hide();
+    $('.standard-footer').show();
+    $('.urgent-footer').hide();
+    //swap the icon and text of the tab
+    $('#tab4 i').toggleClass('ti-bolt');
+    $('#tab4 i').toggleClass('ti-calendar');
+    $('#tab4 .tabTitle').html('Tijdstip');
+    $('.service-title').html(service.description).toggleClass('urgent');
+  });
+  
 
 
 
+  function getAvailableTimes(service,duration,timing){
+    //clear the propositions if there would be any...
+    $('#loading').html(loadingImg).show();
+    $('.btn-next').prop('disabled', true);
+    $('#calendar').hide();
+    $('.btn_OpenUrgentApptWarningModal').hide();
+    $('#message_propositions').hide();
+    $('#timeslot_select .propositions').html('');
+    console.log('SERVICE !!! ' + service);
 
-function getAvailableTimes(service,duration,timing){
-   //clear the propositions if there would be any...
-   $('#loading').html(loadingImg).show();
-   $('.btn-next').prop('disabled', true);
-   $('#calendar').hide();
-   $('.btn_OpenUrgentApptWarningModal').hide();
-   $('#message_propositions').hide();
-   $('#timeslot_select .propositions').html('');
-   console.log('SERVICE !!! ' + service);
-
-   //practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
+    //practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
    
   
-   $.ajax({
-                  dataType: "json",
-                  url: apiURL,
-                  data: {
-                    task: 'getAvailableTimes',
-                    clinic: clinic.ID,
-                    user : practitioner.ID,
-                    duration:duration,
-                    service: service,
-                    timing : JSON.stringify(timing)
-                  }
-                }).done(function(propositions) {
-                $('.btn-next').prop('disabled', false);  
-                $('#timeslot_select .propositions').html('');
-                $('#loading').hide();
-                $('.btn_OpenUrgentApptWarningModal').show();
-                $('#calendar').show();
-                calendar.setEventsData(propositions);   
-                if(!group.allow_urgent_request){
-                  $('.btn_OpenUrgentApptWarningModal').hide();
-                }
-               }).fail(function( jqXHR, textStatus ) {
-                  alert( "Request failed: " + textStatus );
-               });
-}
+    $.ajax({
+      dataType: "json",
+      url: apiURL,
+      data: {
+        task: 'getAvailableTimes',
+        clinic: clinic.ID,
+        user : practitioner.ID,
+        duration:duration,
+        service: service,
+        timing : JSON.stringify(timing)
+      }
+    }).done(function(propositions) {
+      //console.log(propositions)
+      $('.btn-next').prop('disabled', false);  
+      $('#timeslot_select .propositions').html('');
+      $('#loading').hide();
+      $('.btn_OpenUrgentApptWarningModal').show();
+      $('#calendar').show();
+      calendar.setEventsData(propositions);   
+      if(!group.allow_urgent_request){
+        $('.btn_OpenUrgentApptWarningModal').hide();
+      }
+    }).fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
+    });
+  }
 
+  function getFutureAppointments() {
+    $.ajax({
+      dataType: "json",
+      url: apiURL,
+      data: {
+        task: 'getFutureAppointments',
+        patientID : objPatient.patient_id
+      }
+    }).done(function(appointments) {
+      objPatient.appointments = appointments;
+    }).fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
+    });
+  }
 
-function checkMatch() {
-  
-                form = $('#recurrentPatient form').serializeArray();
-                //save the data to the server
-                var firstname = form[0].value;
-                var surname = form[1].value;
-                var dob = form[2].value = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
-                var email = form[3].value;
-                patient = {
-                  surname: surname,
-                  firstname: firstname,
-                  dob: dob,
-                  email: email,
-                  group:group.ID
-                };
-                $.ajax({
-                  dataType: "json",
-                  url: apiURL,
-                  data: {
-                    task: 'findPatientMatch',
-                    patient: JSON.stringify(patient)
-                  }
-                }).done(function(patient) {
-                  if (patient.match === true) {
-                    objPatient = patient;
-                    //move to select location
-                    match = true;
-                    //suggest practitioner to patient 
-                    if(patient.last_encounter == 0){
-                      //propose patient.practitioner
-                      practitioner_to_propose = patient.practitioner;
-                    } else{
-                      if (patient.last_encounter != patient.practitioner) {
-                        //propose patient.last_encounter
-                        practitioner_to_propose = patient.last_encounter;
-                      } else {
-                        //propose patient.practitioner
-                        practitioner_to_propose= patient.practitioner;
-                      }
-                    }
-                    $('#location .info-text').html('Waar wens je een afspraak ' + patient.patient_firstname + '?');
-                    //email given in form might be different than the one we have in DB .. so ask which one is the correct one...
-                    if(objPatient.hasOwnProperty('new_email')== true){
-                      //show confirm email modal
-                      $('#confirmEmail .keep_old_email').html(objPatient.email);
-                      $('#confirmEmail .update_email').html(objPatient.new_email);
-                      $('#confirmEmail').modal('show');
-                    } else {
-                    wizard.bootstrapWizard('next');
-                    }
-                  } else {
-					
-					if (++no_match_counter<2){                  	
-                    	$('#message').html('We vinden geen gegevens van u...probeer gerust opnieuw.');
-                    } else {
-                    	$('#message').html('We vinden geen gegevens. Misschien is er een fout in de gegevens die we van jou hebben. Klik op de knop hieronder zodat we de fout kunnen bekijken. Je hoort dan snel van ons.<p><button class="btn_error_match">Verstuur</button></p>');
-                    }
-                    
-                    
-                  }
-                });
+  function checkMatch() {
+    // Create and return a Promise
+    return new Promise((resolve, reject) => {
+      if (patientLoggedIn){
+        return resolve(true);
       }
 
-      function createNewPatient(){
-            form = $('#newPatient form').serializeArray();
-                //save the data to the server
+      form = $('#recurrentPatient form').serializeArray();
+      //save the data to the server
+      var firstname = form[0].value;
+      var surname = form[1].value;
+      var dob = form[2].value = moment(form[2].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
+      var email = form[3].value;
+      patient = {
+        surname: surname,
+        firstname: firstname,
+        dob: dob,
+        email: email,
+        group:group.ID
+      };
+      $.ajax({
+        dataType: "json",
+        url: apiURL,
+        data: {
+          task: 'findPatientMatch',
+          patient: JSON.stringify(patient)
+        }
+      }).done(function(patient) {
+        if (patient.match === true) {
+          objPatient = patient;
+          patientLoggedIn = true;
+
+          console.log(objPatient);
+          resolve(true);
+          $('#location .info-text').html('Waar wens je een afspraak ' + patient.patient_firstname + '?');
+        } else {
+					
+          if (++no_match_counter<2){                  	
+            $('#message').html('We vinden geen gegevens van u...probeer gerust opnieuw.');
+          } else {
+            $('#message').html('We vinden geen gegevens. Misschien is er een fout in de gegevens die we van jou hebben. Klik op de knop hieronder zodat we de fout kunnen bekijken. Je hoort dan snel van ons.<p><button class="btn_error_match">Verstuur</button></p>');
+          }
+          resolve(false);            
+                            
+        }
+      });
+    });
+  }
+
+  function createNewPatient(){
+    form = $('#newPatient form').serializeArray();
+    //save the data to the server
         
                 
-                var surname = form[3].value;
-                var firstname = form[0].value;
-                var dob = form[1].value = moment(form[1].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
-                var email = form[4].value;
-                var phone = form[2].value;
-                var patient = {
-                  surname: surname,
-                  firstname: firstname,
-                  group:group.ID,
-                  dob: dob,
-                  email: email,
-                  phone:phone,
-                  practitioner:1,
-                  clinic:1
-                };
+    var surname = form[3].value;
+    var firstname = form[0].value;
+    var dob = form[1].value = moment(form[1].value, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    var email = form[4].value;
+    var phone = form[2].value;
+    var patient = {
+      surname: surname,
+      firstname: firstname,
+      group:group.ID,
+      dob: dob,
+      email: email,
+      phone:phone,
+      practitioner:1,
+      clinic:1
+    };
                 
-                objPatient = patient;
-               //make the patient id DB
+    objPatient = patient;
+    //make the patient id DB
               
-               $.ajax({
-                url: apiURL,
-                //dataType: "json",
+    $.ajax({
+      url: apiURL,
+      //dataType: "json",
                
-                data: {
-                  task: 'addNewPatient',
-                  patient:JSON.stringify(patient)
+      data: {
+        task: 'addNewPatient',
+        patient:JSON.stringify(patient)
           
-                },
-                success: function(data) {
+      },
+      success: function(data) {
                   
-                      //callback(patientID);
+        //callback(patientID);
               
-                }
-              });
+      }
+    });
 
             
+  }
+      
+
+      
+  function getPractitionersFromClinic(clinic){
+    $('#practitioner .practitioners').html(loadingImg);
+    var html='<div class="col-sm-12 col-xs-12 col-md-4"><div id="%practitionerID%" class="choice" data-toggle="wizard-radio"><input type="radio" name="practitioner" value="%practitionerID%" practitionerName="%practitionerName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-user"></i><p>%practitionerName%</p></div></div></div>';
+    $.ajax({
+      dataType: "json",
+      url: apiURL,
+      data: {
+        task: 'getPractitionersFromClinic',
+        clinic: clinic
       }
-      
-      
-      
-      function getPractitionersFromClinic(clinic){
-            $('#practitioner .practitioners').html(loadingImg);
-            var html='<div class="col-sm-12 col-xs-12 col-md-4"><div id="%practitionerID%" class="choice" data-toggle="wizard-radio"><input type="radio" name="practitioner" value="%practitionerID%" practitionerName="%practitionerName2%"><div class="card card-checkboxes card-hover-effect"><i class="ti-user"></i><p>%practitionerName%</p></div></div></div>';
-            $.ajax({
-                  dataType: "json",
-                  url: apiURL,
-                  data: {
-                    task: 'getPractitionersFromClinic',
-                    clinic: clinic
-                  }
-                }).done(function(data) {
+    }).done(function(data) {
         
-                  practitioners = data;
+      practitioners = data;
                   
                   
-                  $('#practitioner .practitioners').html('');
-                   $.each(practitioners, function() {
+      $('#practitioner .practitioners').html('');
+      $.each(practitioners, function() {
                         
-                          if (this.ID == practitionerNotAvailable && mode != 'recurrentPatient'){
-                            return true;
-                          }
-                          newhtml = html.replaceAll('%practitionerID%',this.ID);
-                          newhtml = newhtml.replace('%practitionerName%',this.display_name);
-                          newhtml = newhtml.replace('%practitionerName2%',this.display_name);
+        if (this.ID == practitionerNotAvailable && mode != 'recurrentPatient'){
+          return true;
+        }
+        newhtml = html.replaceAll('%practitionerID%',this.ID);
+        newhtml = newhtml.replace('%practitionerName%',this.display_name);
+        newhtml = newhtml.replace('%practitionerName2%',this.display_name);
                          
                           
-                        $('#practitioner .practitioners').append(newhtml);
+        $('#practitioner .practitioners').append(newhtml);
                         
                          
-                   });
+      });
                   
                   
                   
                   
                   
-            });
-      }
+    });
+  }
       
-function getGroup() {
+  
+    
+    
+  
+  function getGroup() {
     var params = {};
 
     if (location.search) {
@@ -1273,6 +1662,25 @@ function getGroup() {
 });
 
 
+
+function showEmailModalAndWait() {
+  return new Promise((resolve, reject) => {
+    // Show the modal
+    $('#confirmEmail').modal('show');
+      
+    // Handle the modal's confirmation button
+    $(document).on("click", ".keep_old_email" , function() {
+      $('#confirmEmail').modal('hide');
+      resolve('keep_old_email');
+    });
+
+    $(document).on("click", ".update_email" , function() {
+      $('#confirmEmail').modal('hide');
+      resolve('update_email');
+    });
+
+  });
+}
 
 
 //Function to show image before upload
