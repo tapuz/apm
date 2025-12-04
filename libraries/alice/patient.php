@@ -161,7 +161,61 @@ class Patient
 		
 	}
 	
-	public static function findPatientMatch($patient){ // used by the book online page
+	public function findPatientMatch($patient){ // used by the book online page
+		global $wpdb;
+		$patient = json_decode(stripslashes($patient));
+		$query = $wpdb->prepare('
+			SELECT * from table_patients 
+			WHERE table_patients.patient_surname = %s AND table_patients.patient_firstname = %s AND table_patients.dob = %s AND table_patients.group = %s',
+			$patient->surname,$patient->firstname,$patient->dob,$patient->group);
+		$result=$wpdb->get_row($query);
+		
+		if ($result === NULL) {//no match was found
+			error_log('no match found');
+			$result = new StdClass;
+			$result->match = false;
+		}else{
+			//we have a match.. include practitioner ID that the patient last had an encoubter with
+			$query = $wpdb->prepare('
+				SELECT user from table_encounters
+				WHERE table_encounters.patient_id = %s ORDER BY id DESC LIMIT 1' ,
+				$result->patient_id);
+			$practitioner = $wpdb->get_var($query);
+			if ($practitioner === NULL){ //there is no encounter, set val to 0 so 
+				$practitioner = 0;
+			}
+			$result->{"last_encounter"} = $practitioner;
+			//check if we have an email in DB and if the one we have is valid email in DB - if not update
+
+			if (filter_var($result->email, FILTER_VALIDATE_EMAIL)) {
+				//email in DB is a valid email address"
+				//Now what to do if email in DB is different than the one patient entered in booking form
+				if($result->email != $patient->email) { 
+					$result->{"new_email"} = $patient->email;
+				}
+				
+			  } else {
+				//email in DB is not a valid email address .. update 
+				$wpdb->update( 
+					'table_patients',
+						array( 'email' => $patient->email), 
+						array( 'patient_id' => $result->patient_id)
+					); 
+					$result->email = $patient->email;
+
+			  }
+			
+			$result->{"match"} = true;
+			error_log('match found');
+		}
+		
+		error_log(json_encode($result));
+		//error_log($result->match);
+		return json_encode($result);
+		
+	}
+
+	public static function findPatientMatch__SLOW($patient){ // used by the book online page
 		global $wpdb;
 		$patient = json_decode(stripslashes($patient));
 
