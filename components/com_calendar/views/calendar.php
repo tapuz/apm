@@ -705,8 +705,8 @@
 
 <!--load the Templates-->
 
-<?include(TEMPLATES . 'right_panel.html'); ?>
-<?include(TEMPLATES . 'main.html'); ?>
+<?php include(TEMPLATES . 'right_panel.html'); ?>
+<?php include(TEMPLATES . 'main.html'); ?>
 
 
 

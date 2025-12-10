@@ -40,12 +40,13 @@ $(document).ready(function() {
   tmpl_patient_demographics = $('#tmpl_patient_demographics').html();
   tmpl_patient_appointments = $('#tmpl_patient_appointments').html();
   tmpl_rooms_status = $('#tmpl_rooms_status').html();
-
+ 
   Mustache.parse(tmpl_patient_search_results);
   Mustache.parse(tmpl_patient_demographics);
   Mustache.parse(tmpl_patient_appointments);
   Mustache.parse(tmpl_rooms_status);
 
+ 
   // get the room statuses
   getRoomStatuses = function(){
     Clinic.getRoomsStatusClinic(clinicPresent,function(data){

@@ -51,7 +51,7 @@ switch (getTask())
 
 	case 'update_clinic':
 		loadLib('clinic');
-		error_log('CLINIC update --> ' . print_r(json_decode(stripslashes(getVar('clinic')),true),1));
+		//error_log('CLINIC update --> ' . print_r(json_decode(stripslashes(getVar('clinic')),true),1));
 		$clinic = json_decode(stripslashes(getVar('clinic')),true);
 		Clinic::updateClinic($clinic);
 		
@@ -106,6 +106,16 @@ switch (getView()) {
 		include('views/online_booking.php');
 		
 	
+	break;
+	
+	case 'payments':
+		loadJS('mustache.min.js');
+		loadJS('payments.js','settings');
+		$settings =  new stdClass();
+		$user = get_current_user_id();
+		$settings->payconiqAPI= get_user_meta( $user, 'payconiqAPI');
+		
+		
 	break;
 
 	case 'clinics':

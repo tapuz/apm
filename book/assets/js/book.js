@@ -55,6 +55,7 @@ $(window).on('load', function () {
   $(".se-pre-con").fadeOut("slow");
 });
 
+
 $(document).ready(function() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -1454,7 +1455,7 @@ $(document).ready(function() {
     $('.btn_OpenUrgentApptWarningModal').hide();
     $('#message_propositions').hide();
     $('#timeslot_select .propositions').html('');
-    console.log('SERVICE !!! ' + service);
+  
 
     //practitioner = practitioners.find(x => x.ID === parseInt(practitioner.ID));
    

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Select the payments you want to view
  * 
@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label for="sel1">Select doctor:</label>
                 <select class="form-control" id="practitioner">
-                    <?foreach ($practitioners as $practitioner) {
+                    <?php foreach ($practitioners as $practitioner) {
                         echo '<option value='.$practitioner->ID.'>' . $practitioner->display_name . '</option>'; 
                     } 
                     ?>
@@ -35,7 +35,7 @@
 			<div class="form-group">
                 <label for="sel1">Select clinic:</label>
                 <select class="form-control" id="clinic">
-                    <?foreach ($clinics as $clinic) {
+                    <?php foreach ($clinics as $clinic) {
                         echo '<option value='.$clinic->clinic_id.'>' . $clinic->clinic_name . '</option>'; 
                     } 
                     ?>

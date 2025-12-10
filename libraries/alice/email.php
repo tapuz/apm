@@ -119,6 +119,7 @@ class Email {
                         $message = str_replace('%title%', $clinic->email_appointment_confirmation_subject, $message);
                         $message = str_replace('%text1%', $clinic->email_appointment_confirmation_text1, $message);
                         $message = str_replace('%text2%', $clinic->email_appointment_confirmation_text2, $message);
+                        $message = str_replace('%url_booking%', $clinic->clinic_url_booking, $message);
                     break;
                     case "amended":
                         $message = file_get_contents('assets/email_templates/appointmentConfirmation.html');
@@ -131,6 +132,7 @@ class Email {
                         $message = str_replace('%title%', $clinic->email_appointment_amended_subject, $message);
                         $message = str_replace('%text1%', $clinic->email_appointment_amended_text, $message);
                         $message = str_replace('%text2%', '', $message);
+                        $message = str_replace('%url_booking%', $clinic->clinic_url_booking, $message);
                    
 
                     break;

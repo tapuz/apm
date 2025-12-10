@@ -5,7 +5,7 @@
 
 </script>
 
-<?$view_title='Settings - Clinics'?>
+<?php $view_title='Settings - Clinics'?>
 	<!-- start: Breadcrumb -->
 	
 	<!-- /breadcrumb-->
@@ -19,7 +19,7 @@
 	
 </div>
 <div class="col-md-3 visible-md visible-lg" id="feed"><!-- Start Right content -->
-	<?loadModule('settings_menu');?>
+	<?php loadModule('settings_menu');?>
 	
 
 </div><!--/col /Right Content-->
@@ -27,4 +27,4 @@
 
 <!--load the Templates-->
 
-<?include(TEMPLATES . 'clinics.html'); ?>
+<?php include(TEMPLATES . 'clinics.html'); ?>

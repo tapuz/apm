@@ -1,9 +1,9 @@
 <script>
 
-	var userID = <?=$userID?>;
-	var patientID = <?=$patient_id?>;
-	var patientName = '<?=$patient->patient_surname.' '.$patient->patient_firstname?>';
-	var appointment_id  = <?=$appointment_id?>;
+	var userID = <?= $userID?>;
+	var patientID = <?= $patient_id?>;
+	var patientName = '<?= $patient->patient_surname.' '.$patient->patient_firstname?>';
+	var appointment_id  = <?= $appointment_id?>;
 	
 </script>
 
@@ -16,7 +16,7 @@
 <div class="col-sm-10 col-md-10 left-content" style="display:none;"><!-- Start Left content -->
 	
 	<!-- start: Breadcrumb -->
-	<!-- <?loadModule('breadcrumbs');?> -->
+	<!-- <?php loadModule('breadcrumbs');?> -->
 	<!-- /breadcrumb-->
 	<div class="row">
 	
@@ -121,7 +121,7 @@
 												
 								  					
 														<div contenteditable="true" id="thierry" rows="6">
-														<?echo $patient->notes?>
+														<?= $patient->notes?>
 														</div>
 											</div>
 											<button onclick="saveNotes();" type="button" class="btn btn-primary">Save</button>
@@ -158,7 +158,7 @@
 
 <div class="col-md-2 hidden-xs hidden-sm" id="feed"><!-- Start Right content -->
 	<!--start right menu -->
-		<?loadModule('patient_menu');?>
+		<?php loadModule('patient_menu');?>
 				
 					
 	<!--/right menu -->
@@ -242,7 +242,7 @@
 						</div>
 						<div class="col-md-5 selectFrom">
 						<select class="form-control from" id="clinic" name="clinic">
-							<?
+							<?php
 							foreach($clinics as $clinic) {
 								if ($clinic->clinic_id == $patient->clinic) {
 									echo sprintf('<option clinic_id ="%s" value="%s" selected>%s</option>',$clinic->clinic_id,$clinic->clinic_id,$clinic->clinic_name);
@@ -311,16 +311,16 @@
 
 
 
-<?include(TEMPLATES . 'demographics_panel.html'); ?>
-<?include(TEMPLATES . 'vitals_panel.html'); ?>
-<?include(TEMPLATES . 'encounter_flow.html'); ?>
-<?include(TEMPLATES . 'complaint.html'); ?>
-<?include(TEMPLATES . 'general_history.html'); ?>
-<?include(TEMPLATES . 'paediatric_history.html'); ?>
-<?include(TEMPLATES . 'social_history.html'); ?>
-<?include(TEMPLATES . 'encounter_print.html'); ?>
-<?include(TEMPLATES . 'patient_appointments.html'); ?>
-<?include(TEMPLATES . 'summary.html'); ?>
+<?php include(TEMPLATES . 'demographics_panel.html'); ?>
+<?php include(TEMPLATES . 'vitals_panel.html'); ?>
+<?php include(TEMPLATES . 'encounter_flow.html'); ?>
+<?php include(TEMPLATES . 'complaint.html'); ?>
+<?php include(TEMPLATES . 'general_history.html'); ?>
+<?php include(TEMPLATES . 'paediatric_history.html'); ?>
+<?php include(TEMPLATES . 'social_history.html'); ?>
+<?php include(TEMPLATES . 'encounter_print.html'); ?>
+<?php include(TEMPLATES . 'patient_appointments.html'); ?>
+<?php include(TEMPLATES . 'summary.html'); ?>
 
 
 

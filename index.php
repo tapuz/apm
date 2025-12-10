@@ -19,6 +19,10 @@ if ($config['debug_mode'] === true)
         ini_set('error_log', 'error.log');
 	}
 
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+
 //include the main lib
 include('libraries/alice/alice.php');
 
@@ -48,7 +52,7 @@ if ( !is_user_logged_in() )
 			<div class="row">
 				
 				<!-- start: Main Menu -->
-				<?if (!componentOnly()){loadModule('main_menu');}?>
+				<?php if (!componentOnly()){loadModule('main_menu');}?>
 				<!-- end: Main Menu -->
 						
 			<!-- start: Content -->

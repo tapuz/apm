@@ -1,4 +1,4 @@
-<?
+<?php
 class Service {
 
     public static function customTimeslotOnly($service){
