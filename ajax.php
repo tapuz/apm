@@ -1,18 +1,43 @@
 <?php
-header('Access-Control-Allow-Origin: *');  
-include('configuration.php');
-require_once ($config['path_wp-config']);
-error_log('STARTING');
-define('ROOT',						dirname(__FILE__));
+// ---------- CORS ----------
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowed_origins = [
+    'https://tapuz.be',
+    'https://timegenics.com'
+    // add more if needed
+];
 
-//check if we are in post or get mode
+if (in_array($origin, $allowed_origins, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header('Vary: Origin');
+}
+
+// If you do NOT use cookies/sessions, you could allow all:
+// header('Access-Control-Allow-Origin: *');
+
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Max-Age: 86400');
+
+// Uncomment ONLY if you rely on cookies / logged-in WordPress
+// header('Access-Control-Allow-Credentials: true');
+
+// Handle preflight
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+// ---------- Bootstrap ----------
+require __DIR__ . '/configuration.php';
+require_once $config['path_wp-config'];
+
+// ---------- Request mode ----------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    define('AJAXmode','POST');
+    define('AJAXmode', 'POST');
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    define('AJAXmode', 'GET');
 }
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    define('AJAXmode','GET');
-}
-
 //check debug mode
 
 

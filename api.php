@@ -1,10 +1,20 @@
 <?php
+// ---------------- CORS ----------------
+// Public API: allow all origins
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Max-Age: 86400');
 
-include('configuration.php');
-require_once ($config['path_wp-config']);
+// Handle preflight requests
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
 
-define('ROOT',						dirname(__FILE__));
+// --------------- Bootstrap --------------
+require __DIR__ . '/configuration.php';
+require_once $config['path_wp-config'];
 
 $APIKey = 'USxgbPOrHHI$bZ1Mos7Bp*q4Q3av8CaUZfaga7*kBp90DEB4s';
 

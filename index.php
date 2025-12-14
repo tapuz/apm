@@ -1,13 +1,21 @@
 <?php
-$v='2.5.2';
-define('VERSION','v.' . $v);
-define('ROOT', dirname(__FILE__));
+$v = '2.5.3';
+define('VERSION', 'v.' . $v);
+define('ROOT', __DIR__);
 
-include('configuration.php');
-require_once ($config['path_wp-config']);
+$configFile = __DIR__ . '/configuration.php';
+if (!is_file($configFile)) {
+    http_response_code(500);
+    exit('Missing configuration.php');
+}
+require $configFile;
 
+if (empty($config['path_wp-config']) || !is_file($config['path_wp-config'])) {
+    http_response_code(500);
+    exit('Invalid $config["path_wp-config"]');
+}
 
-
+require_once $config['path_wp-config'];
 
 //check debug mode
 
