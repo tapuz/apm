@@ -1,7 +1,7 @@
 <?php
 class Payment {
 
-public function getAllPayments() {
+public static function getAllPayments() {
     global $wpdb;
 	$query='
 	SELECT * FROM table_payments where payment_date = 
@@ -38,14 +38,14 @@ public static function getMethods() {
 	return  $methods;
 }
 
-public function getPayments($patient_id,$status) {
+public static function getPayments($patient_id,$status) {
     global $wpdb;
     $query= sprintf('SELECT * from table_payments WHERE patient_id = "%s" AND invoiced=%s',$patient_id,$status);
     $payments = $wpdb->get_results($query);
     return $payments;
 }
 
-public function setPaymentInvoicedStatus($payment_id,$status) {
+public static function setPaymentInvoicedStatus($payment_id,$status) {
     global $wpdb;
     $wpdb->update( 
 				'table_payments', 
@@ -57,7 +57,7 @@ public function setPaymentInvoicedStatus($payment_id,$status) {
 	 			);
 }
 
-public function addPayment($payment){
+public static function addPayment($payment){
 	
 	
 	
@@ -80,7 +80,7 @@ public function addPayment($payment){
 	}	 
 }
 
-public function getFees() {
+public static function getFees() {
     global $wpdb;
 	$query='SELECT * from table_fees';
 	$fees=$wpdb->get_results($query);
