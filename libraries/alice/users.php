@@ -56,6 +56,8 @@ class Users
 			//error_log($user->working_plan_2);
 		 	//error_log(print_r(get_user_meta ($user->ID, 'working_plan_2'),1));;
         }
+		//error_log('fjdsfkdjsfkdjsfkdsjfkds');
+		//error_log(print_r($users));
         return $users;
     }
     

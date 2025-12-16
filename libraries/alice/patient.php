@@ -666,14 +666,20 @@ class Patient
 	}
 	
 	public static function getHistory($patient_id){
-		global $wpdb;
-		$sql="SELECT * FROM table_history WHERE patient_id=%d";
-		$sql = $wpdb->prepare($sql,$patient_id);
-		$history = $wpdb->get_row($sql);
-		//ensure the retired value is send as boolean
-		$retiredValue = $history->retired;
-		//Convert the value to a boolean data type
-		$history->retired = ($retiredValue == 1) ? true : false;
+	global $wpdb;
+
+	$sql = $wpdb->prepare(
+		"SELECT * FROM table_history WHERE patient_id = %d",
+		(int) $patient_id
+	);
+
+	$history = $wpdb->get_row($sql);
+
+	// If no record found, $history will be null
+	if ($history !== null) {
+		// Ensure retired is a boolean
+		$history->retired = ((int) $history->retired === 1);
+	}
 		
 		if ($wpdb->num_rows === 0){ //there is no history for this patient .. insert one in DB
 			$insert_sql = "INSERT INTO table_history (patient_id) VALUES (%d)";

@@ -153,8 +153,8 @@ class Email {
                 }
                 
                 $this->message = $message;
-                $this->attachment['file'] = ICS::render($appointment,$clinic);
-                $this->attachment['filename']='mijnafspraak.ics';
+                //$this->attachment['file'] = ICS::render($appointment,$clinic);
+                //$this->attachment['filename']='mijnafspraak.ics';
                 
                 $this->send();
     }
