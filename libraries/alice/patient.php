@@ -466,7 +466,7 @@ class Patient
 	}
 	
 	
-	function doesComplaintHaveDiagnosisForThisEncounter($complaint,$encounter){
+	public static function doesComplaintHaveDiagnosisForThisEncounter($complaint,$encounter){
 		global $wpdb;
 		$query = sprintf("SELECT * from table_patient_encounter_complaint_diagnosis WHERE (complaint = '%d' AND encounter = '%d')",$complaint,$encounter);
 		$result = $wpdb->get_results($query);
@@ -723,7 +723,7 @@ class Patient
 
 
 
-function getClinic($clinic_id) {
+public static function getClinic($clinic_id) {
 	global $wpdb;
 	//get clinic object
 	$query= sprintf('SELECT * from table_clinics WHERE clinic_id = %s',$clinic_id); 
