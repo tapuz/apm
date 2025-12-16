@@ -161,7 +161,7 @@ class Patient
 		
 	}
 	
-	public function findPatientMatch($patient){ // used by the book online page
+	public static function findPatientMatch($patient){ // used by the book online page
 		global $wpdb;
 		$patient = json_decode(stripslashes($patient));
 		$query = $wpdb->prepare('
