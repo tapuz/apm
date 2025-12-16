@@ -723,7 +723,7 @@ class Patient
 
 
 
-public static function getClinic($clinic_id) {
+function getClinic($clinic_id) {
 	global $wpdb;
 	//get clinic object
 	$query= sprintf('SELECT * from table_clinics WHERE clinic_id = %s',$clinic_id); 
