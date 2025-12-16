@@ -190,27 +190,29 @@ switch(getTask()){
 		error_log($id);
 	break;
 	
-	case 'addDiagnosis': //adding a diagnosis to a complaint..
-		
-		$data = stripslashes(getVar('diagnosis'));
-		parse_str($data);
-		//first check if the actual complaint already has a diagnosis... if not add one..
-		if (Patient::doesComplaintHaveDiagnosisForThisEncounter($complaint,$encounter)){ // a diagnosis already exist
-			//check if this is the first encounter for this complaint..
-				error_log('YES...update');
-				Patient::updateDiagnosis($data);
-						
-		} else { //there is no diagnosis yet for this complaint.. add one
-			//add diagnosis
-			$result = Patient::addDiagnosis($data);
-		}
-		
-		
-			echo '{"success" : 1}';
-		
-		
-		
-	break;
+	case 'addDiagnosis': // adding a diagnosis to a complaint..
+
+    $data = stripslashes(getVar('diagnosis'));
+
+    $params = [];
+    parse_str($data, $params);
+
+    // extract needed vars explicitly (recommended)
+    $complaint = $params['complaint'] ?? null;
+    $encounter = $params['encounter'] ?? null;
+
+    // first check if the actual complaint already has a diagnosis
+    if (Patient::doesComplaintHaveDiagnosisForThisEncounter($complaint, $encounter)) {
+        // diagnosis already exists → update
+        error_log('YES...update');
+        Patient::updateDiagnosis($params);
+    } else {
+        // no diagnosis yet → add
+        $result = Patient::addDiagnosis($params);
+    }
+
+    echo json_encode(['success' => 1]);
+    break;
 
 	case 'getHistory':
 		$history = Patient::getHistory(getVar('patient_id'));
