@@ -36,42 +36,74 @@ class Email {
    }
     
     public function send(){
-        
-        $mail = new PHPMailer;
-        $mail->isSMTP();                                      // Set mailer to use SMTP
-        $mail->Host = $this->smtp_server;  // Specify main and backup SMTP servers
-        $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = $this->smtp_username;           // SMTP username
-        $mail->Password = $this->smtp_password;               // SMTP password
-        $mail->SMTPSecure = $this->smtp_encryption;    // Enable TLS encryption, `ssl` also accepted
-        $mail->Port = $this->smtp_port;
-        $mail->isHTML(true);    //
+
+        $mail = new PHPMailer(true);
+
+        $mail->isSMTP();
+        $mail->Host       = $this->smtp_server;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $this->smtp_username;
+        $mail->Password   = $this->smtp_password;
+        $mail->SMTPSecure = $this->smtp_encryption;
+        $mail->Port       = $this->smtp_port;
+
+        $mail->CharSet = 'UTF-8';
+        $mail->isHTML(true);
+
         $mail->addReplyTo($this->from_email, $this->from_name);
         $mail->setFrom(NOREPLY_EMAIL, $this->from_name);
         $mail->addAddress($this->to);
-        $mail->Subject = $this->subject;
-        $mail->Body = $this->message;
 
-        //get domain to set message ID
-        $parts = explode("@",$this->from_email); 
-        $domain = $parts[1]; 
-        
-        $mail->MessageID = "<" . md5('HELLO'.(idate("U")-1000000000).uniqid()).'@'.$domain.'>';
-        //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename']);
-        
-        $mail->AddAttachment($this->attachment['file'],$this->attachment['filename']);
-        
-        //$mail->addStringAttachment($this->attachment['file'], $this->attachment['filename'],'base64','application/pdf');
-        if(!$mail->send()) {
-            error_log($mail->ErrorInfo);
-            return $mail->ErrorInfo;
-		} else {
+        $mail->Subject = $this->subject;
+        $mail->Body    = $this->message;
+
+        // Message-ID
+        $parts  = explode("@", $this->from_email);
+        $domain = $parts[1] ?? 'timegenics.com';
+        $mail->MessageID = "<" . md5('HELLO'.(idate("U")-1000000000).uniqid()) . '@' . $domain . '>';
+
+        // Attachment handling
+        if (!empty($this->attachment['file']) && !empty($this->attachment['filename'])) {
+
+            $filename = $this->attachment['filename'];
+            $content  = $this->attachment['file'];
+            $ext      = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+            if ($ext === 'ics') {
+                // Critical for iPhone/Apple Mail: add a calendar MIME part
+                $mail->Ical = $content;
+
+                // Also attach as file (optional, but nice)
+                $mail->addStringAttachment(
+                    $content,
+                    $filename,
+                    'base64',
+                    'text/calendar; method=REQUEST; charset=UTF-8'
+                );
+
+                // Helps Outlook/Apple sometimes
+                $mail->addCustomHeader('Content-class: urn:content-classes:calendarmessage');
+
+            } elseif ($ext === 'pdf') {
+                $mail->addStringAttachment($content, $filename, 'base64', 'application/pdf');
+            } else {
+                // fallback
+                $mail->addStringAttachment($content, $filename);
+            }
+        }
+
+        try {
+            if (!$mail->send()) {
+                error_log($mail->ErrorInfo);
+                return $mail->ErrorInfo;
+            }
             return 200;
-		}
-        
-        
-        
+        } catch (\Exception $e) {
+            error_log($mail->ErrorInfo);
+            return $mail->ErrorInfo ?: $e->getMessage();
+        }
     }
+
 
     public function getServerSettings($clinic){
         loadLib('clinic'); 
@@ -153,8 +185,8 @@ class Email {
                 }
                 
                 $this->message = $message;
-                //$this->attachment['file'] = ICS::render($appointment,$clinic);
-                //$this->attachment['filename']='mijnafspraak.ics';
+                $this->attachment['file'] = ICS::render($appointment,$clinic);
+                $this->attachment['filename']='mijnafspraak.ics';
                 
                 $this->send();
     }

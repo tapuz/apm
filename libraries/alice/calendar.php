@@ -113,6 +113,7 @@ class Calendar {
 			table_appointments.customAppointment,
             table_appointments.madeOnline,
 			table_appointments.payed,
+			table_appointments.ics_sequence,
             
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as title,
             CONCAT(table_patients.patient_surname, ' ', table_patients.patient_firstname) as patientName,
@@ -413,20 +414,24 @@ class Calendar {
 		$appointment = json_decode($appointment);
 		//error_log($appointment->service . ' :service');
 		global $wpdb;
-		$wpdb->update( 
-				'table_appointments', 
-				array( 
-					'start' => $appointment->start, 
-					'end' => $appointment->end, 
-					'user' => $appointment->user,
-					'patient_id' => $appointment->patientID,
-					'status' => $appointment->status,
-					'service' => $appointment->service,
-					'clinic' => $appointment->clinic,
-					'note' => $appointment->note
-					),
-				array( 'appointment_id' => $appointment->id)
-	 			);
+		
+		$wpdb->update(
+			'table_appointments',
+			array(
+				'start'        => $appointment->start,
+				'end'          => $appointment->end,
+				'user'         => $appointment->user,
+				'patient_id'   => $appointment->patientID,
+				'status'       => $appointment->status,
+				'service'      => $appointment->service,
+				'clinic'       => $appointment->clinic,
+				'note'         => $appointment->note
+			),
+			array( 'appointment_id' => $appointment->id )
+		);
+		//++ the ics_sequence
+		$wpdb->query($wpdb->prepare("UPDATE table_appointments SET ics_sequence = ics_sequence + 1 WHERE appointment_id = %d",$appointment->id));
+
 		return self::getAppointment($appointment->id);
 	}
 	
