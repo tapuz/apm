@@ -496,20 +496,22 @@ class Patient
 	//add diagnosis to a complaint
 	public static function addDiagnosis($data){
 		global $wpdb;
-		parse_str($data);
-		error_log('COMMENT IS ' . $comment);
-		$wpdb->insert( 
-				'table_patient_encounter_complaint_diagnosis', 
-				array( 
-					'encounter' => $encounter,
-					'patient' => $patient,
-					'complaint' => $complaint, 
-					'diagnosis' => $diagnosis_id,
-					'comment' => $comment
-					) 
-	 			);
-		$id = $wpdb->insert_id;
+		parse_str($data, $parsed);
+
+		$wpdb->insert(
+			'table_patient_encounter_complaint_diagnosis',
+			array(
+				'encounter' => $parsed['encounter'] ?? null,
+				'patient'   => $parsed['patient'] ?? null,
+				'complaint' => $parsed['complaint'] ?? null,
+				'diagnosis' => $parsed['diagnosis_id'] ?? null,
+				'comment'   => $parsed['comment'] ?? null
+			)
+		);
+
+		return $wpdb->insert_id;
 	}
+
 	
 	public static function searchDiagnoses($q){
 		global $wpdb;
@@ -520,17 +522,23 @@ class Patient
 	
 	
 	public static function updateDiagnosis($data){
-		global $wpdb;
-		parse_str($data);
-		$wpdb->update( 
-				'table_patient_encounter_complaint_diagnosis', 
-				array( 
-					'diagnosis' => $diagnosis_id,
-					'comment' => $comment
-					),
-				array( 'encounter' => $encounter, 'complaint' => $complaint)
-	 			);
-	}
+    global $wpdb;
+
+    parse_str($data, $parsed);
+
+    $wpdb->update(
+        'table_patient_encounter_complaint_diagnosis',
+        array(
+            'diagnosis' => $parsed['diagnosis_id'] ?? null,
+            'comment'   => $parsed['comment'] ?? null
+        ),
+        array(
+            'encounter' => $parsed['encounter'] ?? null,
+            'complaint' => $parsed['complaint'] ?? null
+        )
+    );
+}
+
 	
 	public static function addSOAP($SOAP){
 		global $wpdb;

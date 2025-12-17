@@ -21,12 +21,12 @@
 					
 				
 					<input id="patient_name" type="hidden" value="<?= $patient->patient_surname.' '.$patient->patient_firstname?>">
-					<input id="patient_email" type="hidden" value="<?echo $patient->email;?>">
-					<input id="patient_address" type="hidden" value="<?echo $patient->address;?>">
-					<input id="patient_postcode" type="hidden" value="<?echo $patient->postcode;?>">
-					<input id="patient_city" type="hidden" value="<?echo $patient->city;?>">
-					<input id="patient_country" type="hidden" value="<?echo $patient->country;?>">
-					<input id="patient_phone" type="hidden" value="<?echo $patient->phone;?>">
+					<input id="patient_email" type="hidden" value="<?= $patient->email;?>">
+					<input id="patient_address" type="hidden" value="<?= $patient->address;?>">
+					<input id="patient_postcode" type="hidden" value="<?= $patient->postcode;?>">
+					<input id="patient_city" type="hidden" value="<?= $patient->city;?>">
+					<input id="patient_country" type="hidden" value="<?= $patient->country;?>">
+					<input id="patient_phone" type="hidden" value="<?= $patient->phone;?>">
 					
 				
 					

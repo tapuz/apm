@@ -76,7 +76,7 @@
  		
 <!--load the Templates-->
 
-<?include(TEMPLATES . 'payment_summary.html'); ?>
+<?php include(TEMPLATES . 'payment_summary.html'); ?>
 			
 
 				

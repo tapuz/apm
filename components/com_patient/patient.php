@@ -192,26 +192,25 @@ switch(getTask()){
 	
 	case 'addDiagnosis': // adding a diagnosis to a complaint..
 
-    $data = stripslashes(getVar('diagnosis'));
+		$data = stripslashes(getVar('diagnosis'));
 
-    $params = [];
-    parse_str($data, $params);
+		$params = [];
+		parse_str($data, $params);
 
-    // extract needed vars explicitly (recommended)
-    $complaint = $params['complaint'] ?? null;
-    $encounter = $params['encounter'] ?? null;
+		// extract needed vars explicitly (recommended)
+		$complaint = $params['complaint'] ?? null;
+		$encounter = $params['encounter'] ?? null;
 
-    // first check if the actual complaint already has a diagnosis
-    if (Patient::doesComplaintHaveDiagnosisForThisEncounter($complaint, $encounter)) {
-        // diagnosis already exists → update
-        error_log('YES...update');
-        Patient::updateDiagnosis($params);
-    } else {
-        // no diagnosis yet → add
-        $result = Patient::addDiagnosis($params);
-    }
+		// first check if the actual complaint already has a diagnosis
+		if (Patient::doesComplaintHaveDiagnosisForThisEncounter($complaint, $encounter)) {
+			// diagnosis already exists → update
+			Patient::updateDiagnosis($data);
+		} else {
+			// no diagnosis yet → add
+			$result = Patient::addDiagnosis($data);
+		}
 
-    echo json_encode(['success' => 1]);
+		echo json_encode(['success' => 1]);
     break;
 
 	case 'getHistory':

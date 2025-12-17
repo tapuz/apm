@@ -29,6 +29,8 @@ $(document).ready(function(){
         //date:
         },
         success: function(data) {
+
+            
         	if (Object.keys(data).length==0){ 
         		var summary='<div class="alert alert-danger" role="alert">No payments for this date...</div>';
         		
