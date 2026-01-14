@@ -35,74 +35,93 @@ class Email {
          
    }
     
-    public function send(){
+    public function send()
+{
+    $mail = new PHPMailer(true);
 
-        $mail = new PHPMailer(true);
-
+    try {
+        // SMTP
         $mail->isSMTP();
-        $mail->Host       = $this->smtp_server;
+        $mail->Host       = (string)$this->smtp_server;
         $mail->SMTPAuth   = true;
-        $mail->Username   = $this->smtp_username;
-        $mail->Password   = $this->smtp_password;
-        $mail->SMTPSecure = $this->smtp_encryption;
-        $mail->Port       = $this->smtp_port;
+        $mail->Username   = (string)$this->smtp_username;
+        $mail->Password   = (string)$this->smtp_password;
+        $mail->SMTPSecure = (string)$this->smtp_encryption; // e.g. PHPMailer::ENCRYPTION_SMTPS / 'tls'
+        $mail->Port       = (int)$this->smtp_port;
 
+        // Content
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
 
-        $mail->addReplyTo($this->from_email, $this->from_name);
-        $mail->setFrom(NOREPLY_EMAIL, $this->from_name);
-        $mail->addAddress($this->to);
+        // From / To
+        $fromEmail = (string)$this->from_email;
+        $fromName  = (string)$this->from_name;
 
-        $mail->Subject = $this->subject;
-        $mail->Body    = $this->message;
+        $mail->addReplyTo($fromEmail, $fromName);
+        $mail->setFrom(NOREPLY_EMAIL, $fromName);
+        $mail->addAddress((string)$this->to);
+
+        $mail->Subject = (string)$this->subject;
+        $mail->Body    = (string)$this->message;
 
         // Message-ID
-        $parts  = explode("@", $this->from_email);
+        $parts  = explode('@', $fromEmail);
         $domain = $parts[1] ?? 'timegenics.com';
-        $mail->MessageID = "<" . md5('HELLO'.(idate("U")-1000000000).uniqid()) . '@' . $domain . '>';
+        $mail->MessageID = '<' . md5('HELLO' . (idate('U') - 1000000000) . uniqid('', true)) . '@' . $domain . '>';
 
-        // Attachment handling
+        // Attachment (supports either file path or raw content)
         if (!empty($this->attachment['file']) && !empty($this->attachment['filename'])) {
+            $filename = (string)$this->attachment['filename'];
+            $fileOrContent = $this->attachment['file']; // can be path OR raw string
+            $ext = strtolower((string)pathinfo($filename, PATHINFO_EXTENSION));
 
-            $filename = $this->attachment['filename'];
-            $content  = $this->attachment['file'];
-            $ext      = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $looksLikePath =
+                is_string($fileOrContent) &&
+                (str_starts_with($fileOrContent, '/') || preg_match('~^[A-Za-z]:\\\\~', $fileOrContent)) &&
+                is_file($fileOrContent);
 
             if ($ext === 'ics') {
-                // Critical for iPhone/Apple Mail: add a calendar MIME part
-                $mail->Ical = $content;
+                // Expect ICS CONTENT (string). If a path was passed, load it.
+                $ics = $looksLikePath ? file_get_contents($fileOrContent) : (string)$fileOrContent;
 
-                // Also attach as file (optional, but nice)
+                $mail->Ical = $ics;
                 $mail->addStringAttachment(
-                    $content,
+                    $ics,
                     $filename,
                     'base64',
                     'text/calendar; method=REQUEST; charset=UTF-8'
                 );
-
-                // Helps Outlook/Apple sometimes
                 $mail->addCustomHeader('Content-class: urn:content-classes:calendarmessage');
 
             } elseif ($ext === 'pdf') {
-                $mail->addStringAttachment($content, $filename, 'base64', 'application/pdf');
+                if ($looksLikePath) {
+                    // Correct for your case: you pass a FILE PATH
+                    $mail->addAttachment($fileOrContent, $filename, 'base64', 'application/pdf');
+                } else {
+                    // Raw bytes string
+                    $mail->addStringAttachment((string)$fileOrContent, $filename, 'base64', 'application/pdf');
+                }
+
             } else {
-                // fallback
-                $mail->addStringAttachment($content, $filename);
+                // Generic: attach file if it's a path; otherwise attach as string
+                if ($looksLikePath) {
+                    $mail->addAttachment($fileOrContent, $filename);
+                } else {
+                    $mail->addStringAttachment((string)$fileOrContent, $filename);
+                }
             }
         }
 
-        try {
-            if (!$mail->send()) {
-                error_log($mail->ErrorInfo);
-                return $mail->ErrorInfo;
-            }
-            return 200;
-        } catch (\Exception $e) {
-            error_log($mail->ErrorInfo);
-            return $mail->ErrorInfo ?: $e->getMessage();
-        }
+        $mail->send();
+        return 200;
+
+    } catch (\Throwable $e) {
+        // PHPMailer populates ErrorInfo for many failures
+        $err = $mail->ErrorInfo ?: $e->getMessage();
+        error_log($err);
+        return $err;
     }
+}
 
 
     public function getServerSettings($clinic){

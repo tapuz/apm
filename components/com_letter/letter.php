@@ -134,41 +134,45 @@ switch (getVar('task')){
 	break;
 	
 	case 'emailLetter':
-		loadLib('email');
-		$clinic = Clinic::getClinic(getVar('clinic'));
-		$email = getVar('patientEmail');
-		$patientName = getVar('patientName');
-		$pdfdoc			= base64_decode(getVar('pdf'));
-        $subject = getVar('subject');
-		$message = getVar('message');
+    loadLib('email');
 
-		if ($message == ''){$message = $clinic->email_name;}
+    $clinic      = Clinic::getClinic(getVar('clinic'));
+    $email       = getVar('patientEmail');
+    $patientName = getVar('patientName');
+    $subject     = getVar('subject');
+    $message     = getVar('message');
 
-		//$b64file = $pdfdoc;
-		//$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
-		//$b64file		= str_replace( ' ', '+', $b64file );
-		//$decoded_pdf	= base64_decode( $b64file );
+    if ($message === '' || $message === null) {
+        $message = $clinic->email_name ?? '';
+    }
 
-		//error_log($decoded_pdf);
-		$filename = $subject. '_' . $patientName.'.pdf';
-		$filepath = '/var/www/timegenics_dev/temp/$filename';
-		file_put_contents($filepath,$pdfdoc);
+    // MUST come from $_FILES
+    if (empty($_FILES['pdf']) || !is_uploaded_file($_FILES['pdf']['tmp_name'])) {
+        http_response_code(400);
+        echo 'No PDF uploaded. Debug: ' . print_r($_FILES, true);
+        break;
+    }
 
-		$mail = new Email;
-		$mail->getServerSettings($clinic->clinic_id);
-		$mail->to=$email;
-		$mail->subject=$subject;
-		$mail->message=$message;
+    $pdfdoc = file_get_contents($_FILES['pdf']['tmp_name']);
 
+    $filename     = ($subject ?: 'letter') . '_' . ($patientName ?: 'patient') . '.pdf';
+    $safeFilename = basename(preg_replace('/[^A-Za-z0-9._-]/', '_', $filename));
+    $filepath     = '/var/www/timegenics_dev/temp/' . $safeFilename;
 
-		$mail->attachment['file']= $filepath;
-		$mail->attachment['filename']=$filename;
-		$mail->clinic = $clinic->clinic_id;
-		
-		echo $result = $mail->send();	
+    file_put_contents($filepath, $pdfdoc);
 
-		
-	break;
+    $mail = new Email();
+    $mail->getServerSettings($clinic->clinic_id);
+    $mail->to      = $email;
+    $mail->subject = $subject;
+    $mail->message = $message;
+
+    $mail->attachment['file'] = $filepath;
+    $mail->attachment['filename'] = $filename;
+    $mail->clinic = $clinic->clinic_id;
+
+    echo $mail->send();
+    break;
 
 	
 }
@@ -182,6 +186,7 @@ switch (getVar('view')) {
 		$user = get_userdata($patient->practitioner);
 		
 		$backLink = "index.php?com=patient&view=patient&patient_id=" . $patient_id;
+		
 		include('views/list.php');
 		
 	break;
@@ -233,6 +238,8 @@ switch (getVar('view')) {
 		
 		
 		$backLink = "index.php?com=letter&view=list&patient_id=" . $patient_id; 
+		
+		
 		include('views/edit_letter.php');
 		
 	break;

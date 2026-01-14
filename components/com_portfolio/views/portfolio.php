@@ -15,7 +15,16 @@
 <?loadModule('patient_name');?>
 	
 <!-- /patient_name-->
-
+<div class="row">
+		<div class="col-sm-12">
+			<a href="<?= htmlspecialchars($backLink ?? '#', ENT_QUOTES, 'UTF-8') ?>"
+			class="btn btn-default pull-right">
+				← Back
+			</a>
+			<div style="clear: both;"></div>
+		</div>
+</div>
+<div class="row">&nbsp;</div>
 <div id="portfolio" class="row">
     <div class="col-lg-12">
     <button class="btn btn-primary btnSelectImages">Select</button>

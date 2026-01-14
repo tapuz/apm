@@ -100,8 +100,8 @@ global $v;
 	<!--<script src="assets/js/jquery-migrate-1.2.1.min.js"></script>-->
 	<!-- page scripts -->
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js' async></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-
+	
+	<script src="https://unpkg.com/jspdf@4.0.0/dist/jspdf.umd.min.js"></script>
 	<script src="assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 	<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script src="assets/js/jquery.sparkline.min.js"></script>

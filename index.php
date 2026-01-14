@@ -1,5 +1,5 @@
 <?php
-$v = '2.6';
+$v = '2.7';
 define('VERSION', 'v.' . $v);
 define('ROOT', __DIR__);
 

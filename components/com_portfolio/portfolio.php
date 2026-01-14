@@ -23,36 +23,58 @@ switch (getVar('task')){
 	break;
 
 	case 'emailPortfolio':
-		loadLib('email');
-		$clinic = Clinic::getClinic(getVar('clinic'));
-		$email = getVar('patientEmail');
-		$patientName = getVar('patientName');
-		$pdfdoc			= base64_decode(getVar('pdf'));
+    loadLib('email');
 
+    $clinic      = Clinic::getClinic(getVar('clinic'));
+    $email       = getVar('patientEmail');
+    $patientName = getVar('patientName');
 
+    // Option A: PDF is uploaded as multipart/form-data (Blob -> FormData -> $_FILES)
+    if (empty($_FILES['pdf']) || !is_uploaded_file($_FILES['pdf']['tmp_name'])) {
+        http_response_code(400);
+        echo 'No PDF uploaded';
+        break;
+    }
 
-		//$b64file = $pdfdoc;
-		//$b64file 		= trim( str_replace( 'data:application/pdf;base64,', '', $pdfdoc ) );
-		//$b64file		= str_replace( ' ', '+', $b64file );
-		//$decoded_pdf	= base64_decode( $b64file );
+    if (!empty($_FILES['pdf']['error']) && $_FILES['pdf']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo 'Upload error: ' . (int)$_FILES['pdf']['error'];
+        break;
+    }
 
-		//error_log($decoded_pdf);
+    $pdfdoc = file_get_contents($_FILES['pdf']['tmp_name']);
+    if ($pdfdoc === false || $pdfdoc === '') {
+        http_response_code(400);
+        echo 'Empty PDF upload';
+        break;
+    }
 
-		$filepath = '/var/www/timegenics_dev/temp/portfolio.pdf';
-		file_put_contents($filepath,$pdfdoc);
+    // Optional sanity check
+    if (strncmp($pdfdoc, '%PDF', 4) !== 0) {
+        http_response_code(400);
+        echo 'Uploaded file is not a valid PDF';
+        break;
+    }
 
-		$mail = new Email;
-		$mail->getServerSettings($clinic->clinic_id);
-		$mail->to=$email;
-		$mail->subject=$clinic->email_portfolio_subject;
-		$mail->message=$clinic->email_portfolio_message;
+    $filename     = 'Portfolio_' . ($patientName ?? 'patient') . '.pdf';
+    $safeFilename = basename(preg_replace('/[^A-Za-z0-9._-]/', '_', $filename));
+    $filepath     = '/var/www/timegenics_dev/temp/' . $safeFilename;
 
+    file_put_contents($filepath, $pdfdoc);
 
-		$mail->attachment['file']= $filepath;
-		$mail->attachment['filename']='Portfolio_'.$patientName.'.pdf';
-		$mail->clinic = $clinic->clinic_id;
-		$mail->send();
-	break;
+    $mail = new Email();
+    $mail->getServerSettings($clinic->clinic_id);
+    $mail->to      = $email;
+    $mail->subject = (string)($clinic->email_portfolio_subject ?? 'Portfolio');
+    $mail->message = (string)($clinic->email_portfolio_message ?? '');
+
+    // IMPORTANT: this is a PATH; your send() now handles pdf paths via addAttachment()
+    $mail->attachment['file']     = $filepath;
+    $mail->attachment['filename'] = $filename;
+    $mail->clinic = $clinic->clinic_id;
+
+    echo $mail->send();
+    break;
 
 	
 }

@@ -11,6 +11,7 @@ $(function() {
     if (maxWidth > 1300){maxWidth=1300;};
     var canvasWidth = 0;
 	  var canvasHeight = 0;
+    let contentScale = 1; // cumulative content scale relative to the very first size
     var bgImage;
     var bgImageCurAngle = 0;
 	
@@ -79,9 +80,77 @@ $(function() {
     getCameraPictures(); 
     // get the portfolio pictures
     getPortfolioPictures();
+
+
+
+    function resizeCanvasToViewport() {
+  // 1) target width based on current viewport
+  const targetW = Math.min(window.innerWidth - 60, 1300);
+
+  // if you have a background image, use its aspect ratio; otherwise keep current ratio
+  const img = canvas.backgroundImage;
+  const prevW = canvas.getWidth();
+  const prevH = canvas.getHeight();
+
+  // scale factor we need to apply to all existing objects
+  const k = targetW / prevW;
+
+  // 2) compute target height
+  let targetH;
+  if (img) {
+    // fit bg to width
+    const scale = targetW / img.width;
+    targetH = img.height * scale;
+    // set bg scale to exact fit (not multiplied by k)
+    img.set({
+      scaleX: scale,
+      scaleY: scale,
+      left: 0,
+      top: 0,
+      originX: 'left',
+      originY: 'top'
+    });
+  } else {
+    targetH = prevH * k;
+  }
+
+  // 3) set canvas dimensions first
+  canvas.setDimensions({ width: targetW, height: targetH });
+
+  // 4) scale and reposition every non-background object
+  canvas.getObjects().forEach(o => {
+    if (o === img) return;
+    o.scaleX *= k;
+    o.scaleY *= k;
+    o.left   *= k;
+    o.top    *= k;
+    o.setCoords();
+  });
+
+  // 5) clear any panning/zoom that might push content off-screen
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  canvas.requestRenderAll();
+  contentScale *= k; // (optional) keep track if you need it elsewhere
+}
+
+// Debounce helper so Safari/iPad doesn’t spam resizes
+let __rzTimer;
+function scheduleResize() {
+  clearTimeout(__rzTimer);
+  __rzTimer = setTimeout(resizeCanvasToViewport, 120);
+}
+
+// Listen to both — iPad fires both in various cases
+window.addEventListener('orientationchange', scheduleResize);
+window.addEventListener('resize', scheduleResize);
+
+// also call once after you load/set a background image
+// (at the end of renderBackgroundImage's fromURL callback)
     
     var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false, allowTouchScrolling: true});
     canvas.setDimensions({width:canvasWidth, height:canvasHeight});
+    canvas.skipOffscreen = false; // <-- don’t cull anything while zooming
     
     groupPaths = new fabric.Group();
     
@@ -95,11 +164,13 @@ $(function() {
 
     });
     
-    canvas.on({
-        'object:selected': onObjectSelected,
-        'object:moving': onObjectMoving,
-        'before:selection:cleared': onBeforeSelectionCleared
-      });
+   canvas.on({
+      'selection:created': onSelectionChange,
+      'selection:updated': onSelectionChange,
+      'selection:cleared': onSelectionCleared,
+      'object:moving': onObjectMoving
+    });
+
 
 
 	//do not delete the line below
@@ -379,9 +450,9 @@ $(function() {
 
 
     function makeSpineQuadratic(left,top){
-        var line = new fabric.Path('M 0 0 Q 0, 1, 0, 0', { fill: '', stroke: analyseToolColor, objectCaching: false });
-        log("left: " + left);
-        log("top: " + top);
+        var line = new fabric.Path('M 0 0 Q 0, 1, 0, 0', { fill: '', stroke: analyseToolColor, objectCaching: false,strokeUniform: true  });
+        //log("left: " + left);
+        //log("top: " + top);
         line.path[0][1] = left;
         line.path[0][2] = top;
 
@@ -405,7 +476,9 @@ $(function() {
         var p2 = makeCurveCircle(left, top+200, null, p1, line);
         p2.name = "p2";
         //canvas.add(p2);
+        
 
+        refreshPath(line); // <-- make the path’s aCoords accurate immediately
         const analyseGroup = [line,p1, p0, p2];
         analyseGroups.push(analyseGroup);
         analyseGroup.forEach(function(obj) {
@@ -521,6 +594,48 @@ $(function() {
 	}
 
 
+  function refreshPath(p) {
+  if (!p) return;
+  // Recompute dimensions so isOnScreen() won’t cull it on zoom
+  p.set({ path: p.path });   // triggers _setPositionDimensions
+  p.setCoords();
+  p.dirty = true;            // extra nudge across Fabric versions
+}
+
+
+
+        // helper: show control when p0/p2 is selected
+function onSelectionChange(e) {
+  const obj = e.selected && e.selected[0];
+  if (!obj) return;
+
+  if (obj.name === 'p0' || obj.name === 'p2') {
+    const ctrl = obj.line2; // this is your p1
+    if (ctrl) {
+      ctrl.set({ opacity: 1, visible: true, selectable: true, evented: true });
+      canvas.bringToFront(ctrl);
+      canvas.requestRenderAll();
+    }
+  }
+}
+
+// helper: hide control when selection clears or when p1 itself was selected and gets cleared
+function onSelectionCleared(e) {
+  const prev = (e.deselected && e.deselected[0]) || null;
+  if (!prev) return;
+
+  if (prev.name === 'p0' || prev.name === 'p2') {
+    const ctrl = prev.line2;
+    if (ctrl) {
+      ctrl.set({ opacity: 0, visible: false, selectable: false });
+      canvas.requestRenderAll();
+    }
+  } else if (prev.name === 'p1') {
+    prev.set({ opacity: 0, visible: false, selectable: false });
+    canvas.requestRenderAll();
+  }
+}
+
     function onObjectSelected(e) {
         var activeObject = e.target;
     
@@ -576,10 +691,12 @@ $(function() {
             p.line1.path[0][1] = p.left;
             p.line1.path[0][2] = p.top;
             p.line1.path
+            refreshPath(p.line1);
           }
           else if (p.line3) {
             p.line3.path[1][3] = p.left;
             p.line3.path[1][4] = p.top;
+            refreshPath(p.line3);
           }
         }
         else if (e.target.name == "p1") {
@@ -588,6 +705,7 @@ $(function() {
           if (p.line2) {
             p.line2.path[1][1] = p.left;
             p.line2.path[1][2] = p.top;
+            refreshPath(p.line2);
           }
         }
         else if (e.target.name == "p0" || e.target.name == "p2") {
@@ -629,6 +747,7 @@ $(function() {
       // Prevent scrolling the page
       options.e.preventDefault();
       options.e.stopPropagation();
+      canvas.requestRenderAll();
     });
 
     //let touchStartDistance = 0;
@@ -1240,6 +1359,7 @@ $(function() {
                     canvas.setHeight(canvasHeight);
                     canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
                     bgImage = img;
+                    resizeCanvasToViewport();
                 });
 }
 
