@@ -47,6 +47,7 @@ $(document).ready(function(){
 
 	//append the modals to the body to avoid Z index probs
 	$('#emailModal').appendTo("body");
+	$('#recordEncounterModal').appendTo("body");
 	
 	//set the Active patient
 	window.addEventListener('focus', setActivePatient);

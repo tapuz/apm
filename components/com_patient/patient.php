@@ -2,6 +2,7 @@
 //patient component
 loadLib('patient');
 loadLib('image');
+loadLib('ai');
 loadCSS('search.css','patient');
 loadCSS('patient.css','patient');
 
@@ -32,6 +33,7 @@ switch(getView()){
 		loadJS('diagnosis.js','patient');
 		loadJS('complaint.js','patient');
 		loadJS('soap.js','patient');
+		loadJS('record.js','patient');
 		loadJS('mustache.min.js');
 		loadJS('patient.js','patient');
 		loadJS('com_patient.js','patient');
@@ -269,6 +271,22 @@ switch(getTask()){
 			$docs = Image::getImages(getVar('patientID'),'doc');
 			echo json_encode($docs);
 		
+	break;
+
+	case 'processEncounterRecording':
+		if (!isset($_FILES['audio']) || $_FILES['audio']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(["error"=>"No audio uploaded"]);
+        exit;
+        }
+
+		$tmpPath = $_FILES['audio']['tmp_name'];
+        $origName = $_FILES['audio']['name'] ?? 'encounter.webm';
+
+		$resp = Ai::processEncounterRecording($tmpPath,$origName);
+		
+
+
 	break;
 
 		

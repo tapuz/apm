@@ -203,6 +203,56 @@
 </div>
 <!--stop: diagnoses-modal -->
 
+<div class="modal fade" id="recordEncounterModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Record encounter</h3>
+      </div>
+
+      <div class="modal-body">
+        <p id="recStatus" class="muted">Ready.</p>
+
+        <div class="btn-toolbar" style="margin-bottom:10px;">
+          <button id="btnRecStart" class="btn btn-danger">Record</button>
+          <button id="btnRecPause" class="btn" disabled>Pause</button>
+          <button id="btnRecResume" class="btn" disabled>Continue</button>
+          <button id="btnRecDone" class="btn btn-success" disabled>Done</button>
+        </div>
+
+        <!-- Retry button (hidden by default) -->
+        <div style="margin-top:10px;">
+          <button
+            id="btnRetryUpload"
+            class="btn btn-warning"
+            style="display:none;"
+            disabled>
+            Retry upload
+          </button>
+          <span class="help-block muted" style="margin-top:5px;">
+            If the connection drops, the recording is saved locally and can be retried.
+          </span>
+        </div>
+
+        <hr>
+
+        <audio
+          id="recPlayback"
+          controls
+          style="width:100%; display:none;">
+        </audio>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!--start:email-modal -->
 <div class="modal fade modal-wide" id="emailModal">
   <div class="modal-dialog" role="document">
