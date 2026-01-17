@@ -4,13 +4,19 @@ class Ai {
 
     public static function processEncounterRecording($tmpPath, $origName) {
 
-         $apiKey = get_option('openai_api_key');
+        // ✅ NEVER hardcode API keys
+        
+         $apiKey = get_option('openai_api_key');   // whatever option name you use
+            $apiKey = trim((string)$apiKey);
+            $apiKey = preg_replace('/\s+/', '', $apiKey); // remove hidden spaces/newlines
 
-        if (!$apiKey) {
+        
+         if (!$apiKey || strpos($apiKey, 'sk-') !== 0) {
             http_response_code(500);
-            echo json_encode(["error" => "Missing OPENAI_API_KEY"]);
+            echo json_encode(["error" => "OPENAI_API_KEY missing/invalid"]);
             exit;
-        }
+         }
+       
 
         /* =====================================================
            1) TRANSCRIBE AUDIO
