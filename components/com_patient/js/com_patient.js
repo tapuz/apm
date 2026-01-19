@@ -53,6 +53,14 @@ $(document).ready(function(){
 	window.addEventListener('focus', setActivePatient);
 	setActivePatient();
 
+	// Normalize appointment_id once (safe against PHP "null", empty, undefined)
+	//if file was opened from calendar when linked to appointment
+	const hasAppointment =
+	appointment_id !== null &&
+	appointment_id !== undefined &&
+	appointment_id !== 'null' &&
+	appointment_id !== '';
+
     function setActivePatient(){
         $.ajax({
             url: "ajax.php",
@@ -255,8 +263,9 @@ $(document).ready(function(){
 						
 					});
 				//set the appointment status to 4 if there is an appointment linked to this encounter
-				if (appointment_id != 'null'){
+				if (hasAppointment){
 					//change status to in consultation -> status 4
+					log('ID ' + appointment_id);
 					Appointment.setStatus(appointment_id, 4);
 				}
 			
@@ -316,43 +325,85 @@ $(document).ready(function(){
 
 	
 	
-	 $(document).on('click','.btn_close_encounter', function(){
-		setSaveStatus('saving');
-		SOAPform = $('#editSOAP').serializeArray();
-		disableform('editSOAP',true);
-		
-		log(SOAPform);
-		    SOAP.update(SOAPform,async function(data){
-				fSaveSuccess = data.success;
-				fSOAPSaved = data.success;
-				encounters = await Encounter.getAll(patientID);
-				diagnoses = await Diagnosis.getDiagnosesPatient(patientID);
-				vitals = await Patient.getVitals(patientID),
-				renderEncounters();
-				renderVitalsPanel(true);
-				renderInitComplaintTabs(false);
-				renderComplaints();
-				renderVitalsPanel(true);
-				setSaveStatus('saved');
+// Close encounter = save SOAP, refresh UI, never get stuck in "saving"
+$(document).on('click', '.btn_close_encounter', async function () {
+  setSaveStatus('saving');
 
-				
-				$('#btn_new_encounter').show();
-				editingSOAP = false;
-				//disable the add vitals button
+  const $form = $('#editSOAP');
+  const soapForm = $form.serializeArray();
 
-				//set the appointment status to 5 if there is an appointment linked to this encounter
-				log('enc ' + fNewEncounter);
+  disableform('editSOAP', true);
 
-				if (appointment_id != 'null' && fNewEncounter === true){
-					//change status to in consultation -> status 4
-					Appointment.setStatus(appointment_id, 5);
-					fNewEncounter = false;
-				}
+  try {
+    const data = await SOAP.updateAsync(soapForm);
 
+    // Accept {success:true}, {success:1}, {success:"1"}
+    const ok = !!(data && (data.success === true || data.success == 1));
 
-			}); 
-				
-	});
+    if (!ok) {
+      const msg =
+        (data && (data.message || data.error))
+          ? (data.message || data.error)
+          : 'SOAP opslaan is mislukt. Probeer opnieuw.';
+
+      setSaveStatus('error');
+      console.error('SOAP save failed:', data);
+
+      // optional toast/noty
+      // new Noty({ type: 'error', text: msg }).show();
+      return;
+    }
+
+    // Mark saved flags
+    fSaveSuccess = true;
+    fSOAPSaved = true;
+
+    // Refresh data in parallel (faster)
+    const [enc, diag, vit] = await Promise.all([
+      Encounter.getAll(patientID),
+      Diagnosis.getDiagnosesPatient(patientID),
+      Patient.getVitals(patientID),
+    ]);
+
+    encounters = enc;
+    diagnoses = diag;
+    vitals = vit;
+
+    // Re-render UI
+    renderEncounters();
+    renderVitalsPanel(true);
+    renderInitComplaintTabs(false);
+    renderComplaints();
+    renderVitalsPanel(true);
+
+    setSaveStatus('saved');
+
+    $('#btn_new_encounter').show();
+    editingSOAP = false;
+
+    // If appointment linked to this encounter: set status to 5 on first save
+    if (hasAppointment && fNewEncounter === true) {
+		try {
+			await Appointment.setStatus(appointment_id, 5);
+		} catch (e) {
+			console.warn('Appointment.setStatus failed:', e);
+			// do not block SOAP success UI
+		}
+		fNewEncounter = false;
+		}
+
+  } catch (err) {
+    setSaveStatus('error');
+    console.error('SOAP save error:', err);
+
+    // optional toast/noty
+    // new Noty({ type:'error', text:'Netwerkfout: SOAP niet opgeslagen. Probeer opnieuw.' }).show();
+
+  } finally {
+    // ALWAYS re-enable (success or fail)
+    disableform('editSOAP', false);
+  }
+});
 	 
 	
 	 

@@ -74,7 +74,7 @@ function checkLoginStatus() {
 
 
 
-checkLoginStatus();
+//checkLoginStatus();
 
 	 
 	 
@@ -127,6 +127,18 @@ function setSaveStatus(status) {
             saveNoty.close();
             savedNoty = new Noty({
                 text: '<span class="text-center">Saved!</span>',
+                layout:'bottomRight',
+                theme:'sunset',
+                type:'success',
+                speed: 0,
+                timeout: 1000,
+                callbacks: {afterClose: function() {}}
+                }).show();
+        break;
+        case 'error':
+            saveNoty.close();
+            errordNoty = new Noty({
+                text: '<span class="text-center">Could not save... </span>',
                 layout:'bottomRight',
                 theme:'sunset',
                 type:'success',

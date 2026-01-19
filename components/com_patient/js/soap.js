@@ -18,6 +18,48 @@ class SOAP
     }
  
   
+  static updateAsync(oSOAP) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: 'ajax.php',
+      dataType: 'json',
+      type: 'post',
+      timeout: 20000,
+      data: {
+        com: 'patient',
+        task: 'updateSOAP',
+        SOAP: JSON.stringify(oSOAP)
+      }
+    })
+    .done(function (data) {
+      // Normalize backend response
+      if (data && (data.success === true || data.success == 1)) {
+        data.success = true;
+      } else {
+        data = data || {};
+        data.success = false;
+      }
+
+      resolve(data);
+    })
+    .fail(function (xhr, textStatus, errorThrown) {
+      console.error('SOAP.updateAsync AJAX failed', {
+        textStatus,
+        errorThrown,
+        status: xhr.status,
+        response: xhr.responseText
+      });
+
+      reject({
+        success: false,
+        error: textStatus || 'ajax_failed',
+        status: xhr.status,
+        response: xhr.responseText
+      });
+    });
+  });
+}
+
   static update(oSOAP,callback){
         
     $.ajax({
