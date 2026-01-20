@@ -6,8 +6,6 @@ loadLib('ai');
 loadCSS('search.css','patient');
 loadCSS('patient.css','patient');
 
-
-
 define('COMPONENT','patient');
 define('TEMPLATES', ROOT . '/components/com_' . COMPONENT . '/templates/');
 $patient_id = getVar('patient_id');
