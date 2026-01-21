@@ -50,6 +50,7 @@
               				<ul class="nav nav-tabs" id="history_tabs">
 								<li class="active"><a href="#general_history" data-toggle="tab">General</a></li>
 								<li><a href="#social_history" data-toggle="tab">Social</a></li>
+								<li><a href="#orthotics_history" data-toggle="tab">Orthotics</a></li>
                 				<li><a href="#paediatric_history" data-toggle="tab">Peadiatric</a></li>
               				</ul>
 
@@ -59,6 +60,9 @@
 					</div>
 					<div class='tab-pane' id='social_history'>
                   		social
+					</div>
+					<div class='tab-pane' id='orthotics_history'>
+                  		orthotics
 					</div>
                 	<div class='tab-pane' id='paediatric_history'>
                   		child
@@ -222,22 +226,37 @@
           <button id="btnRecDone" class="btn btn-success" disabled>Done</button>
         </div>
 
-        <!-- Retry button (hidden by default) -->
-        <div style="margin-top:10px;">
-          <button
-            id="btnRetryUpload"
-            class="btn btn-warning"
-            style="display:none;"
-            disabled>
-            Retry upload
-          </button>
-          <span class="help-block muted" style="margin-top:5px;">
-            If the connection drops, the recording is saved locally and can be retried.
-          </span>
-        </div>
+		<div class="btn-toolbar" style="margin-bottom:10px;">
+			<label class="checkbox"><input type="checkbox" id="recSoapOnly" value="1">
+ 			 SOAP only (follow-up)
+			</label>
+			
+		</div>
+		
+
+		<div id="recRecoverActions" style="margin-top:10px; display:none;">
+			<button
+				id="btnRetryUpload"
+				class="btn btn-warning"
+				style="display:none;"
+				disabled>
+				Retry upload
+			</button>
+
+			<a
+				id="btnDownloadRecording"
+				class="btn btn-info"
+				href="#"
+				download="encounter.webm"
+				style="display:none;">
+				Download recording
+			</a>
+		</div>
 
         <hr>
-
+		<span class="help-block muted" style="margin-top:5px;">
+            If the connection drops, the recording is saved locally and can be retried.
+          </span>
         <audio
           id="recPlayback"
           controls
@@ -246,6 +265,10 @@
       </div>
 
       <div class="modal-footer">
+		<input type="file" id="recUploadFile" accept="audio/*" style="display:none" />
+			<label for="recUploadFile" class="btn btn-info">
+  				Upload audio file from disk
+			</label>
         <button class="btn" data-dismiss="modal">Close</button>
       </div>
 
@@ -368,6 +391,7 @@
 <?php include(TEMPLATES . 'general_history.html'); ?>
 <?php include(TEMPLATES . 'paediatric_history.html'); ?>
 <?php include(TEMPLATES . 'social_history.html'); ?>
+<?php include(TEMPLATES . 'orthotics_history.html'); ?>
 <?php include(TEMPLATES . 'encounter_print.html'); ?>
 <?php include(TEMPLATES . 'patient_appointments.html'); ?>
 <?php include(TEMPLATES . 'summary.html'); ?>

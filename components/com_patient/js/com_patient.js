@@ -1,11 +1,13 @@
 var oPatient;
+var oEncounter;
 var cast;
+
 $(document).ready(function(){
 	var fSOAPSaved = 1;
 	var fSaveSuccess = 1;
 	var fNewEncounter = false;
 	var fAllSaved = 1;
-	var oEncounter;
+	var oHistory = null;
 	var encounters;
 	var oPrevEncounter;	
 	var diagnoses;
@@ -32,7 +34,11 @@ $(document).ready(function(){
 
 	cast = new Cast('https://desk.timegenics.com');
 
-	
+	//setup the namespace//
+	 window.Patient = window.Patient || {};
+	 Patient.Templates = Patient.Templates || {};
+	 Patient.Helpers = Patient.Helpers || {};
+	 Patient.State = Patient.State || {};
 	
 	showLoadingScreen();
 	//set the page title = patientName
@@ -112,6 +118,7 @@ $(document).ready(function(){
 			renderDemographicsPanel();
 			renderVitalsPanel(true);
 			renderHistoryPanel();
+			renderOrthoticsPanel();
 			renderEncounters();
 			renderSummary();
 			renderInitComplaintTabs(false);
@@ -140,8 +147,10 @@ $(document).ready(function(){
 	var template_complaint = $('#tmpl_complaint').html();
 	var template_complaint_init = $('#tmpl_complaint_init').html();
 	var tmpl_patient_appointments = $('#tmpl_patient_appointments').html();
-		
-	
+
+	Patient.Templates.complaint = template_complaint;
+  	Patient.Templates.complaint_tab = template_complaint_tab;
+
 	
 	//Parse it 
 	
@@ -166,11 +175,9 @@ $(document).ready(function(){
 		});
 		$(".list-diagnosis").on("click", function () {
 						//e.preventDefault();
-						log($(this).attr('diagnosis'));
-						log(formDiagnosis);
-						formDiagnosis.find('.diagnosis').val($(this).attr('diagnosis'));
-						formDiagnosis.find('.diagnosis_id').val($(this).attr('diagnosis_id'));
-						saveDiagnosis(formDiagnosis);
+						Patient.State.formDiagnosis.find('.diagnosis').val($(this).attr('diagnosis'));
+						Patient.State.formDiagnosis.find('.diagnosis_id').val($(this).attr('diagnosis_id'));
+						Patient.Helpers.saveDiagnosis(Patient.State.formDiagnosis);
 						$("#diagnosesModal").modal("hide");
 						
 		});	
@@ -299,9 +306,8 @@ $(document).ready(function(){
 		$('#editSOAP').trigger("reset");
 	}
 	
-
-	function saveDiagnosis(form){
-			$('#label_encounter_saving_error').hide();
+	Patient.Helpers.saveDiagnosis = function (form) {
+		$('#label_encounter_saving_error').hide();
 			$('#label_encounter_saved').hide();
 			$('#label_encounter_saving').show();
             
@@ -319,8 +325,9 @@ $(document).ready(function(){
 				$('#tab_complaint_' + form.find('.complaint').val()).html(form.find('.diagnosis').val());
 				
 			});
-		
-	}
+  	};
+
+	
 	
 
 	
@@ -427,9 +434,9 @@ $(document).on('click', '.btn_close_encounter', async function () {
 	$(document).on('click','.unknown-diagnosis',function(){ 
 	 
 		 Diagnosis.addNew($(this).attr('diagnosis'),function(data){
-					formDiagnosis.find('.diagnosis').val(data.diagnosis);
-					formDiagnosis.find('.diagnosis_id').val(data.id);
-					saveDiagnosis(formDiagnosis);
+					Patient.State.formDiagnosis.find('.diagnosis').val(data.diagnosis);
+					Patient.State.formDiagnosis.find('.diagnosis_id').val(data.id);
+					Patient.Helpers.saveDiagnosis(Patient.State.formDiagnosis);
 					$("#diagnosesModal").modal("hide");
 					var html = '<a class="list-group-item list-diagnosis" diagnosis="'+ data.diagnosis +'" diagnosis_id="'+ data.id +'"><span>'+ data.diagnosis +'</span></a>';
 					$("#searchlistDiagnoses").prepend(html);
@@ -614,13 +621,13 @@ $(document).on('click', '.btn_close_encounter', async function () {
 						
 							
 							$('.btn-open-diagnoses-modal').click(function(){
-								formDiagnosis = $(this.form);
+								Patient.State.formDiagnosis = $(this.form);
 								$("#diagnosesModal").modal("show");
 								});
 							
 							$('.form_diagnosis .form-control').on('change',function() {
 								log('changed!! diagnosis');
-								saveDiagnosis($(this.form));
+								Patient.Helpers.saveDiagnosis($(this.form));
 								log('FORM');
 								log($(this.form));
 								fAllSaved = 0;
@@ -685,20 +692,21 @@ $(document).on('click', '.btn_close_encounter', async function () {
 							
 							//
 							form = $('#' + pane_id + ' .form_diagnosis');
-							saveDiagnosis(form);
+							Patient.Helpers.saveDiagnosis(form);
+							
 							//select new complaint tab & focus on first element of form
 							$('#tab_' + pane_id ).tab('show');
 							$('#' + pane_id + ' .cc').focus();
 						
 							
 							$('.btn-open-diagnoses-modal').click(function(){
-								formDiagnosis = $(this.form);
+								Patient.State.formDiagnosis = $(this.form);
 								$("#diagnosesModal").modal("show");
 								});
 							
 							$('.form_diagnosis .form-control').on('change',function() {
 								log('changed!! diagnosis');
-								saveDiagnosis($(this.form));
+								Patient.Helpers.saveDiagnosis($(this.form));
 								log('FORM');
 								log($(this.form));
 								fAllSaved = 0;
@@ -1159,6 +1167,54 @@ $(document).on('click', '.btn_close_encounter', async function () {
 			});
 	//DOCS
 	
+	function renderOrthoticsPanel() {
+	// template
+	var template_orthotics = $('#tmpl_orthotics').html();
+	Mustache.parse(template_orthotics);
+
+	// oHistory.orthotics can be JSON or empty string/null
+	var orth = {};
+	try {
+		if (oHistory.orthotics && typeof oHistory.orthotics === 'string') {
+		orth = JSON.parse(oHistory.orthotics);
+		} else if (typeof oHistory.orthotics === 'object' && oHistory.orthotics !== null) {
+		orth = oHistory.orthotics;
+		}
+	} catch (e) {
+		orth = {};
+	}
+
+	// heel lift can be in orthotics json OR stored separately in history
+	var heelLift = '';
+	try {
+		if (orth && typeof orth === 'object' && orth.heel_lift != null) {
+		heelLift = orth.heel_lift;
+		} else if (oHistory.heel_lift != null) {
+		heelLift = oHistory.heel_lift;
+		}
+	} catch (e) {}
+
+	var view = {
+		type: orth.type || '',
+		origin: orth.origin || '',
+		since: orth.since || '',
+		effect: orth.effect || '',
+		notes: orth.notes || '',
+		heel_lift: heelLift || ''
+	};
+
+	var html = Mustache.render(template_orthotics, view);
+
+	
+
+	// render target: create/use #orthotics_history container in your layout
+	// e.g. <div id="orthotics_history"></div>
+	$('#orthotics_history').html(html);
+
+	// init tagsinput in this panel only
+	$('#orthotics_history .tagsinput').tagsinput();
+	}
+
 	function renderHistoryPanel(){
 		var data,render;
 		//get the templates
@@ -1346,7 +1402,39 @@ $(document).on('click', '.btn_close_encounter', async function () {
 
 		History.save(patientID,field,value,function(){oHistory[field] = value;renderSummary();});
 		});
-	
+	//save orthotics on change
+	$(document).on('change', '#orthotics_history input, #orthotics_history textarea, #orthotics_history select', function () {
+		var $panel = $('#orthotics_history');
+		var orthotics = {};
+
+		// build JSON from all inputs in panel
+		$panel.find('input, textarea, select').each(function () {
+			var $el = $(this);
+			var name = $el.attr('name');
+			if (!name) return;
+
+			var type = $el.attr('type');
+			var value;
+
+			if (type === 'checkbox') {
+			value = $el.is(':checked') ? 1 : 0;
+			} else {
+			value = $el.val();
+			}
+
+			// normalize empty strings → null (optional but clean)
+			if (value === '') value = null;
+
+			orthotics[name] = value;
+		});
+
+		var json = JSON.stringify(orthotics);
+
+		History.save(patientID, 'orthotics', json, function () {
+			oHistory.orthotics = json;
+			renderSummary();   // keep your existing flow
+		});
+		});
 	
 	//save the PMH data on change
 	$(document).on('change','.pmh input',function(){
@@ -1380,6 +1468,8 @@ $(document).on('click', '.btn_close_encounter', async function () {
 
 		
 	});
+
+	
 
 	
 	//inputs clone when full 

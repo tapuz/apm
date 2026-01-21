@@ -8,23 +8,23 @@
                                 <div class="col-sm-12">
                                     <div class="form-group ">
                                         <label class="cc" for="cc">Chief Complaint</label>
-                                        <input autocomplete="off" class="complaint_input first form-control" complaint_id="{{complaint_id}}" name="cc" type="text" value="{{cc}}">
+                                        <input autocomplete="off" class="complaint_input first form-control cc" complaint_id="{{complaint_id}}" name="cc" type="text" value="{{cc}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group ">
-                                        <label for="ac">Associated Complaint</label>
-                                        <input autocomplete="off" class="complaint_input first form-control" complaint_id="{{complaint_id}}" name="ac" type="text" value="{{ac}}">
+                                        <label for="ac">Associated Complaints</label>
+                                        <input autocomplete="off" class="complaint_input first form-control ac" complaint_id="{{complaint_id}}" name="ac" type="text" value="{{ac}}">
                                     </div>
                                 </div>
                             </div>
 	    <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group ">
-                                        <label for="onset">Location</label>
-                                        <input autocomplete="off" class="complaint_input first form-control" complaint_id="{{complaint_id}}" name="location" type="text" value="{{location}}">
+                                        <label for="location">Location</label>
+                                        <input autocomplete="off" class="complaint_input first form-control location" complaint_id="{{complaint_id}}" name="location" type="text" value="{{location}}">
                                     </div>
                                 </div>
                             </div>
@@ -32,7 +32,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group ">
                                         <label for="onset">Onset</label>
-                                        <input autocomplete="off" class="complaint_input first form-control" complaint_id="{{complaint_id}}" name="onset" type="text" value="{{onset}}" >
+                                        <input autocomplete="off" class="complaint_input first form-control onset" complaint_id="{{complaint_id}}" name="onset" type="text" value="{{onset}}" >
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group ">
                                         <label for="timing">Timing</label>
-                                        <input autocomplete="off" class="complaint_input first form-control" complaint_id="{{complaint_id}}" name="timing" type="text" value="{{timing}}" >
+                                        <input autocomplete="off" class="complaint_input first form-control timing" complaint_id="{{complaint_id}}" name="timing" type="text" value="{{timing}}" >
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                                 <div class="col-sm-12">
                                     <label>Character</label>
                                     <div class="form-group ">
-                                        <input autocomplete="off" class="complaint_input tagsinput form-control" complaint_id="{{complaint_id}}" name="character" type="text" value="{{character}}" >
+                                        <input autocomplete="off" class="complaint_input tagsinput form-control character" complaint_id="{{complaint_id}}" name="character" type="text" value="{{character}}" >
                                     </div>
                                 </div>
                             </div>
@@ -81,8 +81,7 @@
                                 <div class="col-sm-12">
                                     <label for="aggravating">Aggravating factors</label>
                                     <div class="form-group ">
-                                        
-                                        <input autocomplete="off" class="complaint_input tagsinput form-control" complaint_id="{{complaint_id}}" name="aggravating" type="text" value="{{aggravating}}">
+                                        <input autocomplete="off" class="complaint_input tagsinput form-control aggravating" complaint_id="{{complaint_id}}" name="aggravating" type="text" value="{{aggravating}}">
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +90,7 @@
                                     <label for="relieving">Relieving factors</label>
                                     <div class="form-group ">
                                         
-                                        <input autocomplete="off" class="complaint_input tagsinput form-control" complaint_id="{{complaint_id}}" name="relieving" type="text" value="{{relieving}}" >
+                                        <input autocomplete="off" class="complaint_input tagsinput form-control relieving" complaint_id="{{complaint_id}}" name="relieving" type="text" value="{{relieving}}" >
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +141,7 @@
                                     <label for="aggravating">Previous Treatments</label>
                                     <div class="form-group ">
                                         
-                                        <input autocomplete="off" class="complaint_input tagsinput form-control" complaint_id="{{complaint_id}}" name="previous_treatments" type="text" value="{{previous_treatments}}" >
+                                        <input autocomplete="off" class="complaint_input tagsinput form-control previous_treatments" complaint_id="{{complaint_id}}" name="previous_treatments" type="text" value="{{previous_treatments}}" >
                                     </div>
 	</div>
       </div>
@@ -151,7 +150,7 @@
 	<div class="col-sm-12">
        <div class="form-group">
 	<label>Note</label>
-	<textarea class="complaint_input form-control" rows="5" complaint_id="{{complaint_id}}" name="note">{{note}}</textarea>
+	<textarea class="complaint_input form-control note" rows="5" complaint_id="{{complaint_id}}" name="note">{{note}}</textarea>
        </div>
        </div>
       </div>

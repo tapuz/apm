@@ -27,6 +27,7 @@ switch(getView()){
 		}
 		loadCSS('encounters.css','patient');
 		loadJS('encounter.js','patient');
+		loadJS('com_patient.js','patient');
 		loadJS('appointment.js','calendar');
 		loadJS('diagnosis.js','patient');
 		loadJS('complaint.js','patient');
@@ -34,7 +35,6 @@ switch(getView()){
 		loadJS('record.js','patient');
 		loadJS('mustache.min.js');
 		loadJS('patient.js','patient');
-		loadJS('com_patient.js','patient');
 		loadJS('rightPanel.js','patient');
 		loadJS('history.js','patient');
 		loadExtJS('https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js');
@@ -272,18 +272,44 @@ switch(getTask()){
 	break;
 
 	case 'processEncounterRecording':
-		if (!isset($_FILES['audio']) || $_FILES['audio']['error'] !== UPLOAD_ERR_OK) {
-        http_response_code(400);
-        echo json_encode(["error"=>"No audio uploaded"]);
-        exit;
-        }
 
-		$tmpPath = $_FILES['audio']['tmp_name'];
-        $origName = $_FILES['audio']['name'] ?? 'encounter.webm';
+		header('Content-Type: application/json; charset=utf-8');
 
-		$resp = Ai::processEncounterRecording($tmpPath,$origName);
-		
+		// DEV: return mock JSON without calling OpenAI
+		if (!empty($_POST['mock'])) {
+			$mockPath = '/var/www/tapuz.be/shared/mock.json'; // adjust path
+			if (!file_exists($mockPath)) {
+				http_response_code(500);
+				echo json_encode(["error" => "Mock file not found", "path" => $mockPath]);
+				exit;
+			}
+			echo file_get_contents($mockPath);
+			exit;
+		}
 
+		// Validate upload
+		if (!isset($_FILES['audio'])) {
+			http_response_code(400);
+			echo json_encode(["error" => "No audio uploaded"]);
+			exit;
+		}
+
+		if (!empty($_FILES['audio']['error']) && $_FILES['audio']['error'] !== UPLOAD_ERR_OK) {
+			http_response_code(400);
+			echo json_encode([
+				"error" => "Audio upload error",
+				"code"  => $_FILES['audio']['error']
+			]);
+			exit;
+		}
+
+		$tmpPath  = $_FILES['audio']['tmp_name'];
+		$origName = $_FILES['audio']['name'] ?? 'encounter.webm';
+		$soapOnly = !empty($_POST['soap_only']);
+
+		// This function echoes JSON and exits internally
+		Ai::processEncounterRecording($tmpPath, $origName, $soapOnly);
+		exit;
 
 	break;
 
