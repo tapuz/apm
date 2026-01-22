@@ -65,18 +65,30 @@ class Ai {
             exit;
         }
 
-        /* =====================================================
-           2) BUILD JSON SCHEMA (SOAP-only vs Full)
-           ===================================================== */
+       /* =====================================================
+        2) BUILD JSON SCHEMA (SOAP-only vs Full)
+        ===================================================== */
 
         $soapSchema = [
             "type" => "object",
             "additionalProperties" => false,
             "properties" => [
-                "subjective" => ["type" => "string"],
-                "objective"  => ["type" => "string"],
-                "assessment" => ["type" => "string"],
-                "plan"       => ["type" => "string"]
+                "subjective" => [
+                    "type" => "string",
+                    "description" => "Subjectieve klachten en beleving van de patiënt (Nederlands, bij voorkeur Belgisch Nederlands)."
+                ],
+                "objective"  => [
+                    "type" => "string",
+                    "description" => "Objectieve bevindingen/observaties/metingen (Nederlands)."
+                ],
+                "assessment" => [
+                    "type" => "string",
+                    "description" => "Beoordeling/diagnostische inschatting (Nederlands)."
+                ],
+                "plan"       => [
+                    "type" => "string",
+                    "description" => "Behandelplan/advies/beleid (Nederlands)."
+                ]
             ],
             "required" => ["subjective","objective","assessment","plan"]
         ];
@@ -92,9 +104,13 @@ class Ai {
             ];
 
             $userPrompt =
-                "Extract ONLY a Dutch SOAP note from this transcript (follow-up visit). " .
-                "Do NOT extract complaint/PMH/family/social/orthotics. " .
-                "Only use information explicitly present.\n\n" . $transcript;
+                "FOLLOW-UP (SOAP ONLY).\n" .
+                "Geef ALLE output uitsluitend in het Nederlands (bij voorkeur Belgisch Nederlands). Gebruik nooit Engels.\n" .
+                "Als het transcript Engelse woorden/termen bevat, vertaal die naar correct Nederlands.\n" .
+                "Extraheer UITSLUITEND een SOAP-notitie uit dit transcript.\n" .
+                "Extraheer GEEN complaint/PMH/family/social/orthotics.\n" .
+                "Gebruik alleen informatie die expliciet in het transcript staat. Niet gokken.\n\n" .
+                $transcript;
 
         } else {
             $schema = [
@@ -107,18 +123,57 @@ class Ai {
                         "type" => ["object","null"],
                         "additionalProperties" => false,
                         "properties" => [
-                            "chief_complaint"       => ["type" => ["string","null"]],
-                            "associated_complaints" => ["type" => "array", "items" => ["type" => "string"]],
-                            "location"              => ["type" => ["string","null"]],
-                            "onset"                 => ["type" => ["string","null"]],
-                            "duration"              => ["type" => ["string","null"]],
-                            "timing"                => ["type" => ["string","null"]],
-                            "intensity"             => ["type" => ["string","null"]],
-                            "character"             => ["type" => ["string","null"]],
-                            "aggravating_factors"   => ["type" => "array", "items" => ["type" => "string"]],
-                            "relieving_factors"     => ["type" => "array", "items" => ["type" => "string"]],
-                            "previous_treatments"   => ["type" => ["string","null"]],
-                            "note"                  => ["type" => ["string","null"]]
+                            "chief_complaint" => [
+                                "type" => ["string","null"],
+                                "description" => "Hoofdklacht in het Nederlands."
+                            ],
+                            "associated_complaints" => [
+                                "type" => "array",
+                                "items" => ["type" => "string"],
+                                "description" => "Bijkomende klachten (Nederlands)."
+                            ],
+                            "location" => [
+                                "type" => ["string","null"],
+                                "description" => "Lokalisatie van de klacht (Nederlands)."
+                            ],
+                            "onset" => [
+                                "type" => ["string","null"],
+                                "description" => "Ontstaan/begin (Nederlands)."
+                            ],
+                            "duration" => [
+                                "type" => ["string","null"],
+                                "description" => "Duur (Nederlands)."
+                            ],
+                            "timing" => [
+                                "type" => ["string","null"],
+                                "description" => "Tijdsverloop/variatie (Nederlands)."
+                            ],
+                            "intensity" => [
+                                "type" => ["string","null"],
+                                "description" => "Intensiteit, bv. '7/10' (Nederlands notatie ok)."
+                            ],
+                            "character" => [
+                                "type" => ["string","null"],
+                                "description" => "Karakter van de pijn/klacht (Nederlands)."
+                            ],
+                            "aggravating_factors" => [
+                                "type" => "array",
+                                "items" => ["type" => "string"],
+                                "description" => "Uitlokkende/verergerende factoren (Nederlands)."
+                            ],
+                            "relieving_factors" => [
+                                "type" => "array",
+                                "items" => ["type" => "string"],
+                                "description" => "Verlichtende factoren (Nederlands)."
+                            ],
+                            "previous_treatments" => [
+                                "type" => ["string","null"],
+                                "description" => "Eerdere behandelingen/medicatie/maatregelen (Nederlands)."
+                            ],
+                            "note" => [
+                                "type" => ["string","null"],
+                                "description" => "Extra notities (Nederlands)."
+                            ]
                         ],
                         "required" => [
                             "chief_complaint","associated_complaints","location","onset","duration","timing",
@@ -128,12 +183,19 @@ class Ai {
 
                     "pmh" => [
                         "type" => "array",
+                        "description" => "Persoonlijke medische voorgeschiedenis (Nederlands).",
                         "items" => [
                             "type" => "object",
                             "additionalProperties" => false,
                             "properties" => [
-                                "year" => ["type" => ["integer","null"]],
-                                "condition" => ["type" => "string"]
+                                "year" => [
+                                    "type" => ["integer","null"],
+                                    "description" => "Jaar (indien genoemd)."
+                                ],
+                                "condition" => [
+                                    "type" => "string",
+                                    "description" => "Aandoening/ingreep (Nederlands)."
+                                ]
                             ],
                             "required" => ["year","condition"]
                         ]
@@ -141,12 +203,19 @@ class Ai {
 
                     "family_history" => [
                         "type" => "array",
+                        "description" => "Familiale voorgeschiedenis (Nederlands).",
                         "items" => [
                             "type" => "object",
                             "additionalProperties" => false,
                             "properties" => [
-                                "condition" => ["type" => "string"],
-                                "relationship" => ["type" => "string"]
+                                "condition" => [
+                                    "type" => "string",
+                                    "description" => "Aandoening (Nederlands)."
+                                ],
+                                "relationship" => [
+                                    "type" => "string",
+                                    "description" => "Familierelatie (bv. vader, moeder) in het Nederlands."
+                                ]
                             ],
                             "required" => ["condition","relationship"]
                         ]
@@ -156,12 +225,30 @@ class Ai {
                         "type" => "object",
                         "additionalProperties" => false,
                         "properties" => [
-                            "profession" => ["type" => ["string","null"]],
-                            "retired"    => ["type" => ["string","null"]],
-                            "smoking"    => ["type" => ["string","null"]],
-                            "drinking"   => ["type" => ["string","null"]],
-                            "sport"      => ["type" => ["string","null"]],
-                            "sleeping"   => ["type" => ["string","null"]]
+                            "profession" => [
+                                "type" => ["string","null"],
+                                "description" => "Beroep (Nederlands)."
+                            ],
+                            "retired" => [
+                                "type" => ["boolean","null"],
+                                "description" => "Gepensioneerd (true/false) enkel indien expliciet genoemd."
+                            ],
+                            "smoking" => [
+                                "type" => ["string","null"],
+                                "description" => "Roken (Nederlands, bv. 'niet-roker', '10 sigaretten/dag')."
+                            ],
+                            "drinking" => [
+                                "type" => ["string","null"],
+                                "description" => "Alcohol (Nederlands)."
+                            ],
+                            "sport" => [
+                                "type" => ["string","null"],
+                                "description" => "Sport/activiteit (Nederlands)."
+                            ],
+                            "sleeping" => [
+                                "type" => ["string","null"],
+                                "description" => "Slaap (Nederlands)."
+                            ]
                         ],
                         "required" => ["profession","retired","smoking","drinking","sport","sleeping"]
                     ],
@@ -170,13 +257,34 @@ class Ai {
                         "type" => ["object","null"],
                         "additionalProperties" => false,
                         "properties" => [
-                            "uses_orthotics" => ["type" => ["boolean","null"]],
-                            "type"           => ["type" => ["string","null"]],
-                            "origin"         => ["type" => ["string","null"]],
-                            "since"          => ["type" => ["string","null"]],
-                            "effect"         => ["type" => ["string","null"]],
-                            "notes"          => ["type" => ["string","null"]],
-                            "heel_lift"      => ["type" => ["string","null"]]
+                            "uses_orthotics" => [
+                                "type" => ["boolean","null"],
+                                "description" => "Gebruikt steunzolen/orthesen: true/false enkel indien expliciet vermeld."
+                            ],
+                            "type" => [
+                                "type" => ["string","null"],
+                                "description" => "Type steunzolen/orthesen (Nederlands)."
+                            ],
+                            "origin" => [
+                                "type" => ["string","null"],
+                                "description" => "Herkomst/oorsprong (bv. podoloog, orthopedist, winkel) in het Nederlands."
+                            ],
+                            "since" => [
+                                "type" => ["string","null"],
+                                "description" => "Sinds wanneer (Nederlands)."
+                            ],
+                            "effect" => [
+                                "type" => ["string","null"],
+                                "description" => "Effect/ervaring (Nederlands)."
+                            ],
+                            "notes" => [
+                                "type" => ["string","null"],
+                                "description" => "Extra notities (Nederlands)."
+                            ],
+                            "heel_lift" => [
+                                "type" => ["string","null"],
+                                "description" => "Hakverhoging (Nederlands), indien vermeld."
+                            ]
                         ],
                         "required" => ["uses_orthotics","type","origin","since","effect","notes","heel_lift"]
                     ],
@@ -185,23 +293,30 @@ class Ai {
             ];
 
             $userPrompt =
-                "Extract a Dutch SOAP note AND structured intake fields from this transcript. " .
-                "Also extract orthotics/insole (steunzolen) and heel lift (hakverhoging) if explicitly mentioned. " .
-                "Only use information explicitly present. If not mentioned, return null/empty.\n\n" . $transcript;
+                "VOLLEDIGE INTAKE.\n" .
+                "Geef ALLE output uitsluitend in het Nederlands (bij voorkeur Belgisch Nederlands). Gebruik nooit Engels.\n" .
+                "Als het transcript Engelse woorden/termen bevat, vertaal die naar correct Nederlands.\n" .
+                "Extraheer een SOAP-notitie én gestructureerde intakevelden uit dit transcript.\n" .
+                "Extraheer ook steunzolen/orthesen (orthotics/insoles) en hakverhoging (heel lift/hakverhoging) indien expliciet vermeld.\n" .
+                "Gebruik alleen informatie die expliciet in het transcript staat. Niet gokken. Indien niet vermeld: null/lege array/string.\n\n" .
+                $transcript;
         }
 
         /* =====================================================
-           3) GENERATE STRUCTURED OUTPUT (RESPONSES API)
-           ===================================================== */
+        3) GENERATE STRUCTURED OUTPUT (RESPONSES API)
+        ===================================================== */
+
         $payload = [
             "model" => "gpt-4o",
             "input" => [
                 [
                     "role" => "system",
                     "content" =>
-                        "You are a clinical scribe. Return ONLY information explicitly present in the transcript. " .
-                        "If a field is not mentioned, return null or an empty array/string as appropriate. " .
-                        "Do not guess. Do not invent."
+                        "Je bent een klinisch verslaggever voor een Nederlandstalige praktijk. " .
+                        "ALLE output MOET in het Nederlands zijn (bij voorkeur Belgisch Nederlands). Gebruik nooit Engels. " .
+                        "Als het transcript Engelse termen bevat, vertaal ze naar correct Nederlands. " .
+                        "Gebruik alleen informatie die expliciet in het transcript staat. Niet gokken. Niet verzinnen. " .
+                        "Als een veld niet genoemd wordt: geef null of een lege array/string, passend bij het schema."
                 ],
                 [
                     "role" => "user",
