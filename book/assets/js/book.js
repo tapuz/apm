@@ -526,6 +526,7 @@ $(document).ready(function() {
                     }
                   }).catch(function(error) {
                     console.log('Error during AJAX request or matching process.');
+                    console.log(error);
                  
                   });
                 }
@@ -1534,7 +1535,6 @@ $(document).ready(function() {
         if (patient.match === true) {
           objPatient = patient;
           patientLoggedIn = true;
-
           console.log(objPatient);
           resolve(true);
           $('#location .info-text').html('Waar wens je een afspraak ' + patient.patient_firstname + '?');

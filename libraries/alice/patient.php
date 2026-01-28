@@ -175,6 +175,11 @@ class Patient
 			$result = new StdClass;
 			$result->match = false;
 		}else{
+			//get the appointments the patient might have in the future
+			$query=sprintf('SELECT * from view_appointments WHERE patientID = %s AND status <> 7 AND status <> 6 AND start >= NOW() ORDER BY start DESC',$result->patient_id);
+			error_log($query);
+			$result->{"appointments"} =$wpdb->get_results($query);		
+
 			//we have a match.. include practitioner ID that the patient last had an encoubter with
 			$query = $wpdb->prepare('
 				SELECT user from table_encounters
