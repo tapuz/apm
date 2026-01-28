@@ -63,7 +63,14 @@ $(document).ready(function() {
   var html_proposition="<div class='col-md-4 col-sm-12 col-xs-12'><div class='choice' data-toggle='wizard-radio'><input type='radio' name='proposition' value='%timeslot%'><div class='card card-checkboxes card-hover-effect'><i class='ti-calendar'></i><p>%timeslot_text%</p></div></div></div>";
   var html_no_proposition="<div class='col-md-4 col-sm-12 col-xs-12'><div class='choice'><input type='radio' name='proposition'><div class='card card-checkboxes'><i class='ti-calendar'></i><p>%text%</p></div></div></div>";
  
-  
+  // some form field configs
+  $('.dob').inputmask('datetime', {
+    inputFormat: 'mm/dd/yyyy',
+    placeholder: 'MM/DD/YYYY',
+    clearIncomplete: true
+  });
+
+ 
 
   if (urlParams.has('service')){ // patient is requesting a screening..limit months to book to 2
     monthsInAdvance = 2;
