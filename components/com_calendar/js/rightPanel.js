@@ -11,10 +11,6 @@ var rightPanelPB = new NProgress({
 
 var getRoomInfo;
 
-
-
-
-
 $(document).ready(function() {
   //hide the patient_details div
   $('#rightPanel .patient_details').toggle();
@@ -280,6 +276,24 @@ $(document).ready(function() {
        
       
      });
+     $("#toggleDatePicker").on("click", function (e) {
+      e.preventDefault();
+
+      const $datePicker = $("#datePicker");
+      const $icon = $(this).find("i");
+
+      const isVisible = $datePicker.is(":visible"); // check BEFORE toggle
+
+      $datePicker.slideToggle(200);
+
+      if (isVisible) {
+          // was visible → now hiding → show open eye
+          $icon.removeClass("fa-eye-slash").addClass("fa-eye");
+      } else {
+          // was hidden → now showing → show crossed eye
+          $icon.removeClass("fa-eye").addClass("fa-eye-slash");
+      }
+    });
 
      
 

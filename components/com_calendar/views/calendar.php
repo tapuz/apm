@@ -43,7 +43,10 @@
 				<div class="content">
 				
 					<div class="default">
-						<div class="row">
+						<div class="row" id="datePickerRow">
+								<a href="#" id="toggleDatePicker" class="btn btn-sm btn-secondary mb-2">
+									<i class="fa fa-fw fa-eye-slash"></i>
+								</a>
 							<div id="datePicker"></div>
 						</div>
 					</div>
