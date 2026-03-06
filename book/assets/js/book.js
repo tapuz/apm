@@ -65,8 +65,8 @@ $(document).ready(function() {
  
   // some form field configs
   $('.dob').inputmask('datetime', {
-    inputFormat: 'mm/dd/yyyy',
-    placeholder: 'MM/DD/YYYY',
+    inputFormat: 'dd/mm/yyyy',
+    placeholder: 'DD/MM/YYYY',
     clearIncomplete: true
   });
 
