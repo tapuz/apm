@@ -7,6 +7,104 @@ $(document).ready(function() {
 var patientLinkedClinic = null;
 var eventStatus = 0;
 
+  function setEditAppointmentSaveButton(enabled, label) {
+    $('.editAppSubmit').prop('disabled', !enabled);
+    $('.editAppSubmit').text(label || (enabled ? 'Save' : 'Saving...'));
+  }
+
+  function toggleCustomTimeslotSaveButton() {
+    var clinicSelected = $('#addWorkingSlot .clinicSelectEditApp').val();
+    $('#addWorkingSlot .addWorkingSlotSubmit').prop('disabled', !clinicSelected);
+  }
+
+  function syncCustomWorkingSlotInputsFromSelection() {
+    if (!eventStart || !eventEnd) {
+      return;
+    }
+
+    $('#addWorkingSlot .customWorkingSlotStart').val(moment(eventStart).format('HH:mm'));
+    $('#addWorkingSlot .customWorkingSlotEnd').val(moment(eventEnd).format('HH:mm'));
+    $('#addWorkingSlot .datetime').html(moment(eventStart).locale(locale).format('LL'));
+  }
+
+  function syncSelectionFromCustomWorkingSlotInputs() {
+    if (!eventStart) {
+      return;
+    }
+
+    var startTime = $('#addWorkingSlot .customWorkingSlotStart').val();
+    var endTime = $('#addWorkingSlot .customWorkingSlotEnd').val();
+
+    if (!startTime || !endTime) {
+      return;
+    }
+
+    var selectedDate = moment(eventStart).format('YYYY-MM-DD');
+    var newStart = moment(selectedDate + ' ' + startTime, 'YYYY-MM-DD HH:mm');
+    var newEnd = moment(selectedDate + ' ' + endTime, 'YYYY-MM-DD HH:mm');
+
+    if (!newStart.isValid() || !newEnd.isValid() || !newEnd.isAfter(newStart)) {
+      return;
+    }
+
+    eventStart = newStart;
+    eventEnd = newEnd;
+    $('#addWorkingSlot .datetime').html(moment(eventStart).locale(locale).format('LL'));
+  }
+
+  function syncAppointmentStartTimeInput() {
+    if (!eventStart) {
+      return;
+    }
+
+    var startTime = $('#editEvent .appointmentStartTime').val();
+    if (!startTime) {
+      return;
+    }
+
+    var selectedDate = moment(eventStart).format('YYYY-MM-DD');
+    var newStart = moment(selectedDate + ' ' + startTime, 'YYYY-MM-DD HH:mm');
+    if (!newStart.isValid()) {
+      return;
+    }
+
+    eventStart = newStart;
+  }
+
+  function syncBusyTimeInputsFromSelection() {
+    if (!eventStart || !eventEnd) {
+      return;
+    }
+
+    $('#editBusyTime .busyTimeStart').val(moment(eventStart).format('HH:mm'));
+    $('#editBusyTime .busyTimeEnd').val(moment(eventEnd).format('HH:mm'));
+    $('#editBusyTime .datetime').html(moment(eventStart).locale(locale).format('LL'));
+  }
+
+  function syncBusyTimeSelectionFromInputs() {
+    if (!eventStart) {
+      return;
+    }
+
+    var startTime = $('#editBusyTime .busyTimeStart').val();
+    var endTime = $('#editBusyTime .busyTimeEnd').val();
+
+    if (!startTime || !endTime) {
+      return;
+    }
+
+    var selectedDate = moment(eventStart).format('YYYY-MM-DD');
+    var newStart = moment(selectedDate + ' ' + startTime, 'YYYY-MM-DD HH:mm');
+    var newEnd = moment(selectedDate + ' ' + endTime, 'YYYY-MM-DD HH:mm');
+
+    if (!newStart.isValid() || !newEnd.isValid() || !newEnd.isAfter(newStart)) {
+      return;
+    }
+
+    eventStart = newStart;
+    eventEnd = newEnd;
+    $('#editBusyTime .datetime').html(moment(eventStart).locale(locale).format('LL'));
+  }
 
   $('.selected').hide();
 
@@ -18,9 +116,10 @@ var eventStatus = 0;
 
   $('#addWorkingSlot').on('submit', function(e){
     e.preventDefault();
+    syncSelectionFromCustomWorkingSlotInputs();
     var start = moment(eventStart).format();
     var end = moment(eventEnd).format();
-    var service = $('#addWorkingSlot .serviceSelector').val();
+    //var service = $('#addWorkingSlot .serviceSelector').val();
     var clinic = $('#addWorkingSlot .clinicSelectEditApp').val();
     note = "Extra";
    
@@ -59,10 +158,10 @@ var eventStatus = 0;
     } */
   
     
-      Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note,service:service},function (timeslot){
+      Appointment.addCustomTimeslot({start:start,end:end,userID:userID,clinic:clinic,note:note},function (timeslot){
               eventIDtoHighlight = timeslot.id;
               highlightEvent = true;
-              calendar.fullCalendar('renderEvent', timeslot);
+              loadWorkingPlanBackgrounds();
               calendar.fullCalendar('unselect');
               closeEditAppModal();        
         });
@@ -71,9 +170,9 @@ var eventStatus = 0;
 
   $('#editBusyTime').on('submit', function(e){
     e.preventDefault();
-    var duration = $('#editBusyTime .duration option:selected').val();
+    syncBusyTimeSelectionFromInputs();
     var start = moment(eventStart).format();
-    var end = eventStart.clone().add(duration, 'minutes').format();
+    var end = moment(eventEnd).format();
     var note= $('#busyTimeDesc').val();
     if (note==''){note='Busy'};
    
@@ -106,8 +205,7 @@ var eventStatus = 0;
       }).show();
       return;
     }
-    $('.editAppSubmit').prop('disabled',true);
-    $('.editAppSubmit').text("Saving...");
+    setEditAppointmentSaveButton(false, 'Saving...');
     switch (appModalMode) {
     case 'newAppointment':
        
@@ -131,8 +229,7 @@ var eventStatus = 0;
                         clinic: clinic
                       },function(newPatientID){
                           Appointment.add({start:start,end:end,patientID:newPatientID,userID:userID,service:service,status:eventStatus,clinic:clinic,note:note},function (appointment){ 
-                            $('.editAppSubmit').prop('disabled',false);
-                            $('.editAppSubmit').text("Save");
+                            setEditAppointmentSaveButton(true);
                             calendar.fullCalendar('renderEvent', appointment);
                             calendar.fullCalendar('unselect');
                             closeEditAppModal();
@@ -146,8 +243,7 @@ var eventStatus = 0;
         } else {
           
           Appointment.add({start:start,end:end,patientID:patientID,userID:userID,service:service,status:eventStatus,clinic:clinic,note:note},function (appointment){
-            $('.editAppSubmit').prop('disabled',false);
-            $('.editAppSubmit').text("Save");
+            setEditAppointmentSaveButton(true);
             renderRightPanelPatientAppointments();
             eventIDtoHighlight = appointment.id;
             highlightEvent = true;
@@ -190,8 +286,7 @@ var eventStatus = 0;
                         clinic: $('#clinicSelectEditApp').val()
                         
                       },function(newPatientID){
-                        $('.editAppSubmit').prop('disabled',false);
-                        $('.editAppSubmit').text("Save");
+                        setEditAppointmentSaveButton(true);
                         Appointment.update({id : objEvent.id,
                            start: objEvent.start.format(),
                            end : objEvent.end.format(),
@@ -223,8 +318,7 @@ var eventStatus = 0;
                            clinic: $('#clinicSelectEditApp').val()
                            },
                            function(appointment){
-                            $('.editAppSubmit').prop('disabled',false);
-                            $('.editAppSubmit').text("Save");
+                            setEditAppointmentSaveButton(true);
                             renderRightPanelPatientAppointments();
                             calendar.fullCalendar('removeEvents' , objEvent.id );
                             calendar.fullCalendar('renderEvent', appointment);
@@ -336,7 +430,10 @@ var eventStatus = 0;
   
   $('#editEvent').on('shown.bs.modal', function() {
     $('#patient-search').focus();
-    
+    toggleCustomTimeslotSaveButton();
+    syncCustomWorkingSlotInputsFromSelection();
+    syncBusyTimeInputsFromSelection();
+    setEditAppointmentSaveButton(true);
   });
 
   $(document).on('change','#clinicSelectEditApp',function(){
@@ -352,15 +449,40 @@ var eventStatus = 0;
         $('.warningSelectClinic').show();
       }
     }
+    setEditAppointmentSaveButton(true);
   });
 
   $(document).on('change','#addWorkingSlot .clinicSelectEditApp',function(){
     renderServicesLookup($('#addWorkingSlot .clinicSelectEditApp').val());
     //reset the clinic on add appointment... to prevent service select that does not exist in clinic
     $('#clinicSelectEditApp').val(0);
+    toggleCustomTimeslotSaveButton();
+    setEditAppointmentSaveButton(true);
 
   });
-  
+
+  $('#editEvent').on('shown.bs.modal', function() {
+    toggleCustomTimeslotSaveButton();
+    syncCustomWorkingSlotInputsFromSelection();
+  });
+
+  $(document).on('change', '#addWorkingSlot .customWorkingSlotStart, #addWorkingSlot .customWorkingSlotEnd', function() {
+    syncSelectionFromCustomWorkingSlotInputs();
+  });
+
+  $(document).on('change', '#editEvent .appointmentStartTime', function() {
+    syncAppointmentStartTimeInput();
+  });
+
+  $(document).on('change', '#editBusyTime .busyTimeStart, #editBusyTime .busyTimeEnd', function() {
+    syncBusyTimeSelectionFromInputs();
+    setEditAppointmentSaveButton(true);
+  });
+
+  $(document).on('input change', '#editAppointment input, #editAppointment select, #editAppointment textarea', function() {
+    setEditAppointmentSaveButton(true);
+  });
+
   $('.clear-selected-patient').click(function() { //clear the selected patient and set fNewPatient to true
     fNewPatient = true;
     //mode = 'newPatient';
@@ -432,4 +554,3 @@ var eventStatus = 0;
 
 
 });
-

@@ -12,6 +12,308 @@ var selectedUser = "";
 var calSwipeDisabled = false;
 
 var cast;
+var customWorkingSlotsRequestToken = 0;
+
+function getClinicColorFromWorkingPlan(userId, clinicId) {
+  var workingPlanUserId = userId || selectedUser;
+
+  if (!workingPlanUserId || !users || !users[workingPlanUserId] || !users[workingPlanUserId].data || !users[workingPlanUserId].data.workingPlan) {
+    return null;
+  }
+
+  var workingPlan;
+  try {
+    workingPlan = JSON.parse(users[workingPlanUserId].data.workingPlan);
+  } catch (error) {
+    return null;
+  }
+
+  var clinicKey = clinicId != null ? clinicId.toString() : '';
+
+  for (var index = 0; index < workingPlan.length; index++) {
+    if (workingPlan[index].clinic != null && workingPlan[index].clinic.toString() === clinicKey) {
+      return workingPlan[index].color || null;
+    }
+  }
+
+  return null;
+}
+
+function buildDateTime(referenceDate, timeValue) {
+  if (!referenceDate || !timeValue) {
+    return null;
+  }
+
+  var normalizedTime = timeValue.toString().length === 5 ? timeValue + ':00' : timeValue;
+  var dateTime = moment(referenceDate.format('YYYY-MM-DD') + ' ' + normalizedTime, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm']);
+
+  return dateTime.isValid() ? dateTime : null;
+}
+
+function subtractIntervals(baseInterval, blockedIntervals) {
+  var openIntervals = [{
+    start: baseInterval.start.clone(),
+    end: baseInterval.end.clone()
+  }];
+
+  $.each(blockedIntervals, function() {
+    var blocker = this;
+    var nextOpenIntervals = [];
+
+    $.each(openIntervals, function() {
+      var segment = this;
+
+      if (blocker.end.isSameOrBefore(segment.start) || blocker.start.isSameOrAfter(segment.end)) {
+        nextOpenIntervals.push(segment);
+        return true;
+      }
+
+      if (blocker.start.isAfter(segment.start)) {
+        nextOpenIntervals.push({
+          start: segment.start.clone(),
+          end: blocker.start.clone().isBefore(segment.end) ? blocker.start.clone() : segment.end.clone()
+        });
+      }
+
+      if (blocker.end.isBefore(segment.end)) {
+        nextOpenIntervals.push({
+          start: blocker.end.clone().isAfter(segment.start) ? blocker.end.clone() : segment.start.clone(),
+          end: segment.end.clone()
+        });
+      }
+    });
+
+    openIntervals = nextOpenIntervals;
+  });
+
+  return openIntervals;
+}
+
+function mergeIntervalsByClinic(intervals) {
+  intervals.sort(function(first, second) {
+    if (first.clinic !== second.clinic) {
+      return first.clinic < second.clinic ? -1 : 1;
+    }
+
+    if (first.start.isBefore(second.start)) {
+      return -1;
+    }
+
+    if (first.start.isAfter(second.start)) {
+      return 1;
+    }
+
+    if (first.end.isBefore(second.end)) {
+      return -1;
+    }
+
+    if (first.end.isAfter(second.end)) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+  var mergedIntervals = [];
+
+  $.each(intervals, function() {
+    var currentInterval = this;
+    var previousInterval = mergedIntervals[mergedIntervals.length - 1];
+
+    if (previousInterval && previousInterval.clinic == currentInterval.clinic && currentInterval.start.isSameOrBefore(previousInterval.end)) {
+      if (currentInterval.end.isAfter(previousInterval.end)) {
+        previousInterval.end = currentInterval.end.clone();
+      }
+
+      if (!previousInterval.color && currentInterval.color) {
+        previousInterval.color = currentInterval.color;
+      }
+
+      return true;
+    }
+
+    mergedIntervals.push({
+      start: currentInterval.start.clone(),
+      end: currentInterval.end.clone(),
+      clinic: currentInterval.clinic,
+      resourceId: currentInterval.resourceId,
+      color: currentInterval.color
+    });
+  });
+
+  return mergedIntervals;
+}
+
+function setCustomWorkingPlanButtonVisibility(visible) {
+  var button = $('.fc-showCustomTimeslots-button');
+  if (!button.length) {
+    return;
+  }
+
+  if (visible) {
+    button.show();
+  } else {
+    button.hide();
+  }
+}
+
+function loadWorkingPlanBackgrounds(viewDate) {
+  if (!calendar) {
+    return;
+  }
+
+  var requestToken = ++customWorkingSlotsRequestToken;
+  var currentDate = moment(viewDate || calendar.fullCalendar('getDate')).format('YYYY-MM-DD');
+
+  calendar.fullCalendar('removeEvents', function(event) {
+    return event.customWorkingSlot == 1;
+  });
+
+  if (!selectedUser || selectedUser === 'all_practitioners') {
+    setCustomWorkingPlanButtonVisibility(false);
+    return;
+  }
+
+  Appointment.getCustomTimeslots(selectedUser, currentDate, function(data) {
+    if (requestToken !== customWorkingSlotsRequestToken) {
+      return;
+    }
+
+    setCustomWorkingPlanButtonVisibility(data && data.length > 0);
+    renderWorkingPlan(users[selectedUser].data.workingPlan, data);
+  });
+}
+
+function renderWorkingPlan(workingPlan, customWorkingSlots) {
+  var currentView = calendar.fullCalendar('getView');
+  var viewName = currentView.name;
+  var viewStart = moment(currentView.start).clone().startOf('day');
+  var viewEnd = moment(currentView.end).clone().startOf('day');
+  var workingIntervals = [];
+
+  workingPlan = JSON.parse(workingPlan);
+  customWorkingSlots = customWorkingSlots || [];
+
+  calendar.fullCalendar('removeEvents', function(event) {
+    return event.type == 'bgEvent' || event.customWorkingSlot == 1;
+  });
+
+  $.each(workingPlan, function() {
+    var clinic = this.clinic;
+    var color = this.color;
+
+    if (selectedClinic != 'all' && clinic != selectedClinic) {
+      return true;
+    }
+
+    $.each(this.workingPlan, function() {
+      $.each(this, function(day, dayplan) {
+        var dayOffset = dayplan.dow - viewStart.day();
+        if (dayOffset < 0) {
+          dayOffset += 7;
+        }
+
+        var dayDate = moment(viewStart).clone().add(dayOffset, 'days').startOf('day');
+
+        if (viewName === 'agendaDay' && !dayDate.isSame(viewStart, 'day')) {
+          return true;
+        }
+
+        if (dayDate.isBefore(viewStart, 'day') || dayDate.isSameOrAfter(viewEnd, 'day')) {
+          return true;
+        }
+
+        var workingStart = buildDateTime(dayDate, dayplan.start);
+        var workingEnd = buildDateTime(dayDate, dayplan.end);
+
+        if (!workingStart || !workingEnd || !workingEnd.isAfter(workingStart)) {
+          return true;
+        }
+
+        var blockedIntervals = [];
+        $.each(dayplan.breaks || [], function() {
+          var breakStart = buildDateTime(dayDate, this.start);
+          var breakEnd = buildDateTime(dayDate, this.end);
+
+          if (breakStart && breakEnd && breakEnd.isAfter(breakStart)) {
+            blockedIntervals.push({
+              start: breakStart,
+              end: breakEnd
+            });
+          }
+        });
+
+        $.each(subtractIntervals({
+          start: workingStart,
+          end: workingEnd
+        }, blockedIntervals), function() {
+          workingIntervals.push({
+            start: this.start,
+            end: this.end,
+            clinic: clinic,
+            resourceId: clinic,
+            color: color
+          });
+        });
+      });
+    });
+  });
+
+  $.each(customWorkingSlots, function() {
+    if (selectedClinic != 'all' && this.clinic != selectedClinic) {
+      return true;
+    }
+
+    var customStart = moment(this.start);
+    var customEnd = moment(this.end);
+
+    if (!customStart.isValid() || !customEnd.isValid() || !customEnd.isAfter(customStart)) {
+      return true;
+    }
+
+    if (customEnd.isSameOrBefore(viewStart, 'day') || customStart.isSameOrAfter(viewEnd, 'day')) {
+      return true;
+    }
+
+    workingIntervals.push({
+      start: customStart,
+      end: customEnd,
+      clinic: this.clinic,
+      resourceId: this.resourceId,
+      color: getClinicColorFromWorkingPlan(this.resourceId, this.clinic)
+    });
+  });
+
+  var mergedIntervals = mergeIntervalsByClinic(workingIntervals);
+  var backgroundEvents = [];
+
+  $.each(mergedIntervals, function(index) {
+    backgroundEvents.push({
+      id: 'not_working',
+      className: 'fc-nonbusiness',
+      start: this.start.clone(),
+      end: this.end.clone(),
+      rendering: 'inverse-background',
+      type: 'bgEvent',
+      clinic: this.clinic
+    });
+
+    backgroundEvents.push({
+      id: 'working_' + index,
+      start: this.start.clone(),
+      end: this.end.clone(),
+      rendering: 'background',
+      type: 'bgEvent',
+      color: this.color,
+      clinic: this.clinic
+    });
+  });
+
+  $.each(backgroundEvents, function() {
+    calendar.fullCalendar('renderEvent', this, true);
+  });
+  
+}
 
 
 showLoadingScreen();
@@ -179,7 +481,7 @@ $(document).ready(function() {
     //log (users[selectedUser].data.workingPlan);
 
     
-    renderWorkingPlan(users[selectedUser].data.workingPlan);
+    loadWorkingPlanBackgrounds();
 
     $('#userSelect').on('change', function() {
       
@@ -212,7 +514,7 @@ $(document).ready(function() {
         
 
 
-        renderWorkingPlan(users[selectedUser].data.workingPlan);
+        loadWorkingPlanBackgrounds();
         //log(users[selectedUser].data.workingPlan);
        
         
@@ -229,6 +531,7 @@ $(document).ready(function() {
   .fail(function( jqxhr, textStatus, error ) {
     var err = textStatus + ", " + error;
     console.log( "Request Failed: " + err );
+     console.error('Error:', jqxhr.responseText);
   });
 	
 	function addSelectClinic() {
@@ -257,6 +560,8 @@ $(document).ready(function() {
 			selectClinic += "</select>";
 			$('#editAppointment .selectClinic').html(selectClinic);
       $('#addWorkingSlot .selectClinic').html(selectClinic);
+      $('#addWorkingSlot .clinicSelectEditApp').prepend('<option value="" selected>Select clinic</option>');
+      $('#addWorkingSlot .addWorkingSlotSubmit').prop('disabled', true);
       
 			
 			//render clinic select for the editPatient modal
@@ -279,12 +584,12 @@ $(document).ready(function() {
 			
 			//set the onchange for the calendar clinic selector
 			$('#clinicSelect').on('change', function() {
-				selectedClinic = $(this).val();
-				//log (selectedClinic + ' is the clinic');
+        selectedClinic = $(this).val();
+        //log (selectedClinic + ' is the clinic');
         calendar.fullCalendar('removeEvents','not_working');
         calendar.fullCalendar('removeEvents','working');
         calendar.fullCalendar('removeEvents','break');
-        renderWorkingPlan(users[selectedUser].data.workingPlan);	
+        loadWorkingPlanBackgrounds();	
       
 			switch(selectedClinic) {
 				case 'all':
@@ -376,121 +681,6 @@ $(document).ready(function() {
     if (callback){callback();}
 
   }
-
-
-  function renderWorkingPlan(workingPlan) {
-    //log('the user is = ' + selectedUser);
-    //var ev = $('#calendar').fullCalendar('clientEvents', function(evt) {
-    //          return evt.thierry == 'yes';
-    //        });
-    //calendar.fullCalendar('removeEvents', ev);
-         
-    workingPlan = JSON.parse(workingPlan);
-    
-
-    //calendar.fullCalendar('removeEvents');
- 
-    
-       $.each(workingPlan,function(){
-        if(selectedClinic == 'all'){
-          var color = this.color;
-          var clinic = this.clinic;
-          $.each(this.workingPlan,function(){
-            
-            $.each(this,function( day, dayplan ) {
-                calendar.fullCalendar('renderEvent', {
-                  id:'not_working', //all need the same ID, else you would get cumulative layer coloring
-                  className: 'fc-nonbusiness',
-                  start: dayplan.start,
-                  end: dayplan.end,
-                  dow: [dayplan.dow], 
-                  rendering: 'inverse-background',
-                  type:'bgEvent',
-                  clinic:clinic
-                },true);
-                calendar.fullCalendar('renderEvent', {
-                  id:'working', //all need the same ID, else you would get cumulative layer coloring
-                  //id: clinic,
-                  //className: className,
-                  start: dayplan.start,
-                  end: dayplan.end,
-                  dow: [dayplan.dow], 
-                  rendering: 'background',
-                  type:'bgEvent',
-                  color:color,
-                  clinic:clinic
-                },true);
-              //render the breaks
-              $.each(dayplan.breaks,function(){
-                //log('break start:' + this.start + 'dow: ' + dayplan.dow);
-                  calendar.fullCalendar('renderEvent', {
-                  id:'break', //all need the same ID, else you would get cumulative layer coloring
-                  className: 'fc-nonbusiness',
-                  start: this.start,
-                  end: this.end,
-                  dow: [dayplan.dow], 
-                  rendering: 'background',
-                  type:'bgEvent',
-                  clinc:clinic
-                },true); 
-              });   
-            });
-          });
-
-
-        }else{ 
-          
-          if(this.clinic == selectedClinic){
-            //log('WE HAVE A MATCH :' + this.clinic ); // only render this working plan
-            var color = this.color
-            $.each(this.workingPlan,function(){
-              
-              $.each(this,function( day, dayplan ) {
-                  calendar.fullCalendar('renderEvent', {
-                    id:'not_working', //all need the same ID, else you would get cumulative layer coloring
-                    className: 'fc-nonbusiness',
-                    start: dayplan.start,
-                    end: dayplan.end,
-                    dow: [dayplan.dow], 
-                    rendering: 'inverse-background',
-                    type:'bgEvent',
-                    clinic:selectedClinic
-                  },true); 
-
-                  calendar.fullCalendar('renderEvent', {
-                  id:'working', //all need the same ID, else you would get cumulative layer coloring
-                  //id: clinic,
-                  //className: className,
-                  start: dayplan.start,
-                  end: dayplan.end,
-                  dow: [dayplan.dow], 
-                  rendering: 'background',
-                  type:'bgEvent',
-                  color:color,
-                  clinic:selectedClinic
-                 
-                },true);
-                //render the breaks
-              $.each(dayplan.breaks,function(){
-                //log('break start:' + this.start + 'dow: ' + dayplan.dow);
-                calendar.fullCalendar('renderEvent', {
-                  id:'break', //all need the same ID, else you would get cumulative layer coloring
-                  className: 'fc-nonbusiness',
-                  start: this.start,
-                  end: this.end,
-                  dow: [dayplan.dow], 
-                  rendering: 'background',
-                  type:'bgEvent'
-                },true);
-              });   
-              });
-            });   
-          } 
-        } 
-      }); 
-    
-  }
-
 	
 
 
@@ -508,7 +698,7 @@ $(document).ready(function() {
       hiddenDays: [0],
       slotDuration: '00:15:00',
       snapDuration: '00:05:00',
-      slotLabelInterval: '00:30:00',
+      slotLabelInterval: '00:15:00',
       slotEventOverlap: 'false',
       weekNumbers: true,
       minTime: '07:30:00',
@@ -600,12 +790,13 @@ $(document).ready(function() {
           
           click: function() {
             calendar.fullCalendar( 'refetchEvents' );
+            loadWorkingPlanBackgrounds();
           
           }
       },
         
       showCustomTimeslots: {
-        text: 'Custom Timeslots',
+        text: 'Custom Workingplan',
         click: function() {
           $('#customTimeslotsModal').modal('show');
           renderCustomTimeslotsList();
@@ -670,8 +861,9 @@ $(document).ready(function() {
 
 
           $('#editEvent .modal-title').html('Book next appointment');
-					$('#editEvent .datetime').html(moment(start).locale(locale).format('LLL'));
+					$('#editEvent .datetime').html(moment(start).locale(locale).format('LL'));
           $('#editEvent').appendTo("body").modal('show');
+          $('#editEvent .appointmentStartTime').val(moment(start).format('HH:mm'));
           $('.patient-select #patient-search').val(objNewAppointment.patientName); //if patient-search field is empty the save button will stay disabled.
 					$('.patient-select #phone').val(objNewAppointment.phone); //if patient-search field is empty the save button will stay disabled.
 					
@@ -745,13 +937,17 @@ $(document).ready(function() {
         
            
 
-         if (selectedClinic != 'all'){
+          if (selectedClinic != 'all'){
             clinic = selectedClinic;
             
             if(objEvent.clinic != selectedClinic ){ 
               // user needs to confirm that appoinment is to be moved to different clinic
-              showConfirm('Reschedule to different clinic?').then(function(result){
-                if(result){objEvent.clinic = selectedClinic;updateAppointment();}
+              showRescheduleClinicServiceConfirm(selectedClinic, objEvent.serviceId).then(function(result){
+                if(result.confirmed){
+                  objEvent.clinic = selectedClinic;
+                  objEvent.serviceId = result.serviceId;
+                  updateAppointment();
+                }
                 
               });
             }else{updateAppointment();}
@@ -763,8 +959,12 @@ $(document).ready(function() {
             
             //clinicID = '';
             if(objEvent.clinic != clinicID ){
-              showConfirm('Reschedule to different clinic?').then(function(result){
-                if(result){objEvent.clinic = clinicID;updateAppointment();}
+              showRescheduleClinicServiceConfirm(clinicID, objEvent.serviceId).then(function(result){
+                if(result.confirmed){
+                  objEvent.clinic = clinicID;
+                  objEvent.serviceId = result.serviceId;
+                  updateAppointment();
+                }
                 
               });
             }else{objEvent.clinic = clinicID;updateAppointment()};
@@ -821,11 +1021,12 @@ $(document).ready(function() {
         $('#editEvent .modal-title').html('Book Appointment');
 				$('.clear-selected-patient').click();
         //$("#editAppointment")[0].reset();
-        $('#editEvent .datetime').html(moment(start).locale(locale).format('LLL'));
+        $('#editEvent .datetime').html(moment(start).locale(locale).format('LL'));
         $('#editEvent #addWorkingSlot .datetime').html(moment(start).locale(locale).format('LLL') + ' - ' +  moment(end).locale(locale).format('LT'));
         appModalMode = 'newAppointment';
         $('#editEvent').modal('show');
         $('#editEvent :input').val('');
+        $('#editEvent .appointmentStartTime').val(moment(start).format('HH:mm'));
 				$('#editEvent .confirmed').button("toggle");
 				log('selected clinic is : ' + selectedClinic);
         //select the 30mins as defailt in busy time duration
@@ -917,13 +1118,17 @@ $(document).ready(function() {
         } else {
 
         
-       if (selectedClinic != 'all'){
+        if (selectedClinic != 'all'){
             clinic = selectedClinic;
             
             if(objEvent.clinic != selectedClinic ){ 
               // user needs to confirm that appoinment is to be moved to different clinic
-              showConfirm('Reschedule to different clinic?').then(function(result){
-                if(result){objEvent.clinic = selectedClinic;updateAppointment();}else{revertFunc();}
+              showRescheduleClinicServiceConfirm(selectedClinic, objEvent.serviceId).then(function(result){
+                if(result.confirmed){
+                  objEvent.clinic = selectedClinic;
+                  objEvent.serviceId = result.serviceId;
+                  updateAppointment();
+                }else{revertFunc();}
                 
               });
             }else{updateAppointment();}
@@ -934,8 +1139,12 @@ $(document).ready(function() {
             clinic = clinicID;
         
             if(objEvent.clinic != clinicID ){
-              showConfirm('Reschedule to different clinic?').then(function(result){
-                if(result){objEvent.clinic = clinicID;updateAppointment();}else{revertFunc();}
+              showRescheduleClinicServiceConfirm(clinicID, objEvent.serviceId).then(function(result){
+                if(result.confirmed){
+                  objEvent.clinic = clinicID;
+                  objEvent.serviceId = result.serviceId;
+                  updateAppointment();
+                }else{revertFunc();}
                 
               });
             }else{objEvent.clinic = clinicID;updateAppointment()};
@@ -1146,15 +1355,6 @@ $(document).ready(function() {
 
             };
 
-            if (event.customTimeslot == 1){
-              element.addClass('clinic' + event.clinic);
-              element.addClass('appointment');
-              element.addClass('customTimeslot');
-              //element.append("Custom");
-
-            };
-
-
             if (event.payed == 1) {
               $(element).find('.icon-payed').show();
             } else {
@@ -1215,6 +1415,7 @@ $(document).ready(function() {
           $('.container').css('width','100%');
           removeCalendarTimes();
         }
+        loadWorkingPlanBackgrounds(view.start);
        
 
       },
@@ -1328,6 +1529,129 @@ function renderServicesLookup(clinic_id){
     $('.selectService').html(selectService);
   }catch(error){}
 	}	
+
+function getClinicServicesOptions(clinicId, selectedServiceId) {
+  if (!clinics || !clinicId) {
+    return { html: '', defaultServiceId: '' };
+  }
+
+  var clinic = clinics.find(function(item) {
+    return item.clinic_id === clinicId.toString();
+  });
+
+  if (!clinic || !clinic.services) {
+    return { html: '', defaultServiceId: '' };
+  }
+
+  var options = '';
+  var defaultServiceId = '';
+  $.each(clinic.services, function() {
+    var isDefault = this.default == 1;
+    if (isDefault && !defaultServiceId) {
+      defaultServiceId = this.id;
+    }
+    var selected = selectedServiceId != null && this.id.toString() === selectedServiceId.toString() ? ' selected' : '';
+    options += '<option value="' + this.id + '"' + selected + '>' + this.name + '</option>';
+  });
+
+  return {
+    html: options,
+    defaultServiceId: defaultServiceId || (clinic.services.length ? clinic.services[0].id : '')
+  };
+}
+
+function getClinicServiceName(clinicId, serviceId) {
+  if (!clinics || !clinicId || !serviceId) {
+    return '';
+  }
+
+  var clinic = clinics.find(function(item) {
+    return item.clinic_id === clinicId.toString();
+  });
+
+  if (!clinic || !clinic.services) {
+    return '';
+  }
+
+  var service = clinic.services.find(function(item) {
+    return item.id.toString() === serviceId.toString();
+  });
+
+  return service ? service.name : '';
+}
+
+function showRescheduleClinicServiceConfirm(clinicId, currentServiceId) {
+  var deferred = $.Deferred();
+  var services = getClinicServicesOptions(clinicId, currentServiceId);
+  var clinicName = '';
+  var currentClinicName = '';
+  var currentServiceName = '';
+
+  try {
+    clinicName = getClinicName(clinicId);
+  } catch (error) {
+    clinicName = '';
+  }
+
+  try {
+    currentClinicName = objEvent && objEvent.clinic ? getClinicName(objEvent.clinic) : '';
+  } catch (error) {
+    currentClinicName = '';
+  }
+
+  try {
+    currentServiceName = objEvent && objEvent.clinic && objEvent.serviceId ? getClinicServiceName(objEvent.clinic, objEvent.serviceId) : '';
+  } catch (error) {
+    currentServiceName = '';
+  }
+
+  if (!services.html) {
+    deferred.resolve({ confirmed: true, serviceId: currentServiceId });
+    return deferred.promise();
+  }
+
+  var message = '' +
+    '<div style="margin-bottom:10px;">Moving to different clinic - ' + (clinicName ? '<strong>' + clinicName + '</strong>' : 'the selected clinic') + '</div>' +
+    '<div style="margin-bottom:10px;"><strong>Current:</strong> <strong>' + (currentClinicName || 'current clinic') + (currentServiceName ? ' / ' + currentServiceName : '') + '</strong></div>' +
+    '<div class="form-group" style="margin-top:10px; text-align:left;">' +
+      '<label class="control-label">select Clinic Service</label>' +
+      '<select id="rescheduleClinicServiceSelect" class="form-control">' +
+        services.html +
+      '</select>' +
+    '</div>';
+
+  bootbox.dialog({
+    title: 'Move appointment',
+    message: message,
+    className: 'moveAppointmentModal',
+    onEscape: function() {
+      deferred.resolve({ confirmed: false });
+      return true;
+    },
+    buttons: {
+      cancel: {
+        label: 'No',
+        className: 'btn-primary',
+        callback: function() {
+          deferred.resolve({ confirmed: false });
+        }
+      },
+      confirm: {
+        label: 'Yes',
+        className: 'btn-primary',
+        callback: function() {
+          var selectedServiceId = $('#rescheduleClinicServiceSelect').val() || services.defaultServiceId;
+          deferred.resolve({
+            confirmed: true,
+            serviceId: selectedServiceId
+          });
+        }
+      }
+    }
+  });
+
+  return deferred.promise();
+}
 
 
   

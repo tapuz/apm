@@ -98,7 +98,7 @@
     	<ul class="nav nav-pills">
 			<li class="active"><a  href="#patientAppointment" data-toggle="tab"><i class="fa fa-user"></i>&nbsp;&nbsp;Patient Appointment</a></li>
 			<li id='tab_busyTime'><a  href="#busyTime" data-toggle="tab"><i class="fas fa-ban"></i>&nbsp;&nbsp;Busy Time</a></li>
-			<li id='tab_addWorkingSlot'><a  href="#addWorkingSlot" data-toggle="tab"><i class="fas fa-poll-h"></i>&nbsp;&nbsp;Add custom timeslot</a></li>
+			<li id='tab_addWorkingSlot'><a  href="#addWorkingSlot" data-toggle="tab"><i class="fas fa-poll-h"></i>&nbsp;&nbsp;Add custom workingslot</a></li>
 			
 		</ul> 
 	
@@ -120,7 +120,17 @@
 							</div>
 						</div>	
 					</div>
-					<div class="row">
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="col-sm-2">
+							<label class="patient-name">Start time</label>
+						</div>
+						<div class="col-sm-5">
+							<div class="row">
+								<input type="time" class="form-control appointmentStartTime" style="width:50%;">
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 10px;">
 						<div class="col-sm-2">
 							<label class="patient-name">Clinic</label>
 						</div>
@@ -205,7 +215,7 @@
 					</div>
 
 					<div class="row">&nbsp</div>
-					<div class="row">
+					<div class="row" style="margin-bottom: 10px;">
 						<div class="col-sm-2">
 							<label class="patient-name">Note</label>
 						</div>
@@ -217,7 +227,7 @@
 							</div>
 						</div>	
 					</div>
-					<div class="row">
+					<div class="row" style="margin-bottom: 10px;">
 					<div class="col-md-6" data-toggle="buttons">
 						<label class="status confirmed btn btn-sm" status="0"><input type="radio" value="0"> Confirmed</label>
 						<label class="status pencilled btn btn-sm" status="2"><input type="radio" value="2"> Pencilled</label>
@@ -243,41 +253,33 @@
 				<form id="editBusyTime" role="form" data-toggle="validator">
 					
 				<div class="row">
-						<div class="col-sm-3">
-							<label>Time</label>
+						<div class="col-sm-2">
+							<label>Date</label>
 						</div>
-						<div class="col-sm-5">
+						<div class="col-sm-5" style="padding-left:0;">
 							<span class="datetime"></span>
 						</div>	
 				</div>
 
-				<div class="row">
-
-					<div class="col-sm-3">
-						<label for="duration">Duration</label>
-
+				<div class="row" style="margin-bottom: 10px;">
+					<div class="col-sm-2">
+						<label>Start time</label>
 					</div>
-					<div class="col-sm-5">
-					
-  						<select class="form-control duration">
-    						<option value="10">10min</option>
-    						<option value="15">15min</option>
-    						<option value="30">30min</option>
-    						<option value="45">45min</option>
-							<option value="60">1h</option>
-							<option value="90">1h30min</option>
-							<option value="120">2h</option>
- 					 	 </select>
-
+					<div class="col-sm-5" style="padding-left:0;">
+						<div style="display:flex; gap:10px;">
+							<input type="time" class="form-control busyTimeStart" style="flex:1;">
+							<input type="time" class="form-control busyTimeEnd" style="flex:1;">
+						</div>
 					</div>
 				</div>
+
 				<div class="row">
 
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<label>Description</label>
 
 					</div>
-					<div class="col-sm-5">
+					<div class="col-sm-5" style="padding-left:0;">
 						<textarea class="form-control" cols="15" id="busyTimeDesc" rows="2"></textarea>
 
 					</div>
@@ -311,6 +313,20 @@
 							</div>
 						</div>	
 					</div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="col-sm-2">
+							<label class="patient-name">Start time</label>
+						</div>
+						<div class="col-sm-3" style="padding-left:0;">
+							<input type="time" class="form-control customWorkingSlotStart">
+						</div>
+						<div class="col-sm-2">
+							<label class="patient-name">End time</label>
+						</div>
+						<div class="col-sm-3" style="padding-left:0;">
+							<input type="time" class="form-control customWorkingSlotEnd">
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-sm-2">
 							<label class="patient-name">Clinic</label>
@@ -322,17 +338,7 @@
 							</div>
 						</div>	
 					</div>
-					<div class="row">
-						<div class="col-sm-2">
-							<label class="patient-name">Service</label>
-						</div>
-						<div class="col-sm-5">
-							<div class="row">
-								<span class="selectService"></span>
-								
-							</div>
-						</div>	
-					</div>
+					
 
 					<div class="row">&nbsp</div>
 					
@@ -686,7 +692,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h3 class="modal-title">Custom Timeslots</h3>      
+		<h3 class="modal-title">Custom Workingplan</h3>      
       </div>
       <div class="modal-body">
 		No custom timeslots for this week...
@@ -710,10 +716,3 @@
 
 <?php include(TEMPLATES . 'right_panel.html'); ?>
 <?php include(TEMPLATES . 'main.html'); ?>
-
-
-
-
-
-
-

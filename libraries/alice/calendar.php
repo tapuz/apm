@@ -13,26 +13,7 @@ class Calendar {
 		$custom_appointments = $wpdb->get_results($query);
 		//error_log(print_r(array_merge($appointments,$custom_appointments),1));
 
-		//get the extra working timeslots
-		$query = $wpdb->prepare("
-			SELECT table_custom_timeslots.id, 
-			table_custom_timeslots.start,table_custom_timeslots.end, 
-			table_custom_timeslots.user as resourceId,
-			table_custom_timeslots.clinic,
-			'1' as 'customTimeslot',
-			table_services.color,
-			table_clinics.clinic_name as title,
-			'background' as 'rendering'
-			FROM table_custom_timeslots 
-			INNER JOIN table_services
-			ON table_services.id = table_custom_timeslots.service
-			INNER JOIN table_clinics
-			ON table_custom_timeslots.clinic = table_clinics.clinic_id
-			WHERE (user = '%d' AND start > DATE_ADD('%s', INTERVAL -3 DAY) AND end < DATE_ADD('%s', INTERVAL +3 DAY))",$userID,$start,$end);
-		$customTimeslots = $wpdb->get_results($query);
-
-
-		return array_merge($appointments,$custom_appointments,$customTimeslots);
+		return array_merge($appointments,$custom_appointments);
 
 	}
 	
@@ -160,18 +141,14 @@ class Calendar {
             table_custom_timeslots.start,
             table_custom_timeslots.end,
 			table_custom_timeslots.clinic,
-			table_custom_timeslots.service as serviceId,
+
 			'1' as 'customTimeslot',
+			'bgEvent' as 'type',
             
 			table_clinics.clinic_name as title,
-
-			table_services.color as backgroundColor,
-			table_services.color as borderColor,
 			'background' as 'rendering'
 			
             FROM table_custom_timeslots            
-			INNER JOIN table_services
-			ON table_custom_timeslots.service = table_services.id
 
 			INNER JOIN table_clinics
 			ON table_custom_timeslots.clinic = table_clinics.clinic_id
@@ -191,13 +168,10 @@ class Calendar {
 			table_custom_timeslots.user as resourceId,
 			table_custom_timeslots.clinic,
 			'1' as 'customTimeslot',
-			table_services.color,
-			table_services.name,
+			'bgEvent' as 'type',
 			table_clinics.clinic_name as title,
 			'background' as 'rendering'
 			FROM table_custom_timeslots 
-			INNER JOIN table_services
-			ON table_services.id = table_custom_timeslots.service
 			INNER JOIN table_clinics
 			ON table_custom_timeslots.clinic = table_clinics.clinic_id
 			WHERE (user = '%s' AND WEEKOFYEAR(start) = WEEKOFYEAR('%s') AND YEARWEEK(start, 1) = YEARWEEK('%s', 1))",$user,$currentDate,$currentDate);
@@ -247,8 +221,7 @@ class Calendar {
 					'user' => $slot->userID, 
 					'clinic' => $slot->clinic,
 					'start' => $slot->start,
-					'end' => $slot->end,
-					'service'=> $slot->service
+					'end' => $slot->end
 					) 
 	 			);
 	 			
@@ -516,7 +489,7 @@ class Calendar {
 		$extra_booking = [
 			    //['start' => '18:00', 'end' => '19:00'],
 			];				
-		error_log('THE date == ' . $selected_date);
+		//error_log('THE date == ' . $selected_date);
 		
 		$day = strtolower(date('l', strtotime($selected_date))); //ex 'monday'
 		//clinic_id is not needed in the query.. if included, custom appts are excluded.. they do not have a clinic_id
@@ -524,10 +497,10 @@ class Calendar {
 		global $wpdb;
 		$appointments=$wpdb->get_results($q);
 		
-		$q =$wpdb->prepare("select TIME(start) as start ,TIME(end) as end from table_custom_timeslots where user = %d AND DATE(start) = '%s' AND clinic='%s' AND service='%s' ORDER BY start ASC",$user,$selected_date,$clinic,$service);
+		$q =$wpdb->prepare("select TIME(start) as start ,TIME(end) as end from table_custom_timeslots where user = %d AND DATE(start) = '%s' AND clinic='%s' ORDER BY start ASC",$user,$selected_date,$clinic);
 		$customWorkingPlan = $wpdb->get_results($q, ARRAY_A);
 		
-		
+		error_log('THE CUSTOM WORKING PLAN FOR THE DAY ' . $selected_date);
 		error_log(print_r($customWorkingPlan,1));
 		//add periods not possible for patient for this day as appointments so that these periods are not included possible timeslots
 		
@@ -551,7 +524,6 @@ class Calendar {
 	
 		if (Service::customTimeslotOnly($service)) {
 			$available_periods_with_breaks = $customWorkingPlan;
-			//error_log(print_r($available_periods_with_breaks,1));
 		} else {
 					$working_plan_all = json_decode(get_user_meta( $user, 'working_plan',1),TRUE);
 					//error_log('working plan for user-->' . print_r($working_plan_all,1));
@@ -572,67 +544,69 @@ class Calendar {
 				//error_log('working plan temp for the selected clinic-->' . print_r($working_plan,1));
 
 					$working_plan = $working_plan[0];
-					if (!array_key_exists($day, $working_plan)) {
-						// there is no working plan for this day, return FALSE
-						return FALSE;
-					}
-					//error_log($day . 'does exits');
-					$selected_date_working_plan = $working_plan[$day];
-				
 					$available_periods_with_breaks = array();
 					
-					if (isset($selected_date_working_plan['breaks'])) {
-						$start = new DateTime($selected_date_working_plan['start']);
-						$end = new DateTime($selected_date_working_plan['end']);
-						$available_periods_with_breaks[] = array(
-							'start' => $selected_date_working_plan['start'],
-							'end' => $selected_date_working_plan['end']
-						);
-						//error_log('DAY ' . $selected_date);
-						
-						// Split the working plan to available time periods that do not contain the breaks in them.
-						foreach ($selected_date_working_plan['breaks'] as $index => $break) {
-							$break_start = new DateTime($break['start']);
-							$break_end = new DateTime($break['end']);
-							if ($break_start < $start) {
-								$break_start = $start;
-							}
-							if ($break_end > $end) {
-								$break_end = $end;
-							}
-							if ($break_start >= $break_end) {
-								continue;
-							}
-							foreach ($available_periods_with_breaks as $key => $open_period) {
-								$s = new DateTime($open_period['start']);
-								$e = new DateTime($open_period['end']);
-								if ($s < $break_end && $break_start < $e) { // check for overlap
-									$changed = FALSE;
-									if ($s < $break_start) {
-										$open_start = $s;
-										$open_end = $break_start;
-										$available_periods_with_breaks[] = array(
-											'start' => $open_start->format("H:i"),
-											'end' => $open_end->format("H:i")
-										);
-										$changed = TRUE;
-									}
-									if ($break_end < $e) {
-										$open_start = $break_end;
-										$open_end = $e;
-										$available_periods_with_breaks[] = array(
-											'start' => $open_start->format("H:i"),
-											'end' => $open_end->format("H:i")
-										);
-										$changed = TRUE;
-									}
-									if ($changed) {
-										unset($available_periods_with_breaks[$key]);
+					if (array_key_exists($day, $working_plan)) {
+						//error_log($day . 'does exits');
+						$selected_date_working_plan = $working_plan[$day];
+					
+						if (isset($selected_date_working_plan['breaks'])) {
+							$start = new DateTime($selected_date_working_plan['start']);
+							$end = new DateTime($selected_date_working_plan['end']);
+							$available_periods_with_breaks[] = array(
+								'start' => $selected_date_working_plan['start'],
+								'end' => $selected_date_working_plan['end']
+							);
+							//error_log('DAY ' . $selected_date);
+							
+							// Split the working plan to available time periods that do not contain the breaks in them.
+							foreach ($selected_date_working_plan['breaks'] as $index => $break) {
+								$break_start = new DateTime($break['start']);
+								$break_end = new DateTime($break['end']);
+								if ($break_start < $start) {
+									$break_start = $start;
+								}
+								if ($break_end > $end) {
+									$break_end = $end;
+								}
+								if ($break_start >= $break_end) {
+									continue;
+								}
+								foreach ($available_periods_with_breaks as $key => $open_period) {
+									$s = new DateTime($open_period['start']);
+									$e = new DateTime($open_period['end']);
+									if ($s < $break_end && $break_start < $e) { // check for overlap
+										$changed = FALSE;
+										if ($s < $break_start) {
+											$open_start = $s;
+											$open_end = $break_start;
+											$available_periods_with_breaks[] = array(
+												'start' => $open_start->format("H:i"),
+												'end' => $open_end->format("H:i")
+											);
+											$changed = TRUE;
+										}
+										if ($break_end < $e) {
+											$open_start = $break_end;
+											$open_end = $e;
+											$available_periods_with_breaks[] = array(
+												'start' => $open_start->format("H:i"),
+												'end' => $open_end->format("H:i")
+											);
+											$changed = TRUE;
+										}
+										if ($changed) {
+											unset($available_periods_with_breaks[$key]);
+										}
 									}
 								}
 							}
+						} else {
+							$available_periods_with_breaks[] = array(
+								'start' => $selected_date_working_plan['start'],
+								'end' => $selected_date_working_plan['end']
+							);
 						}
-						
 					}
 					
 
@@ -642,11 +616,24 @@ class Calendar {
 					//error_log(print_r($available_periods_with_breaks,1));
 				}	
 		
-		//combine appointments and breaks
-		
-		 $available_periods_with_appointments = $available_periods_with_breaks;
-	    //error_log("AVAILABLE PERIODS WITHOUT APPOINTMENTS----->");
-		//error_log(print_r($available_periods_with_breaks,1));			
+		$normalize_periods = function ($periods) {
+			$normalized = array();
+			foreach ($periods as $period) {
+				if (!isset($period['start'], $period['end'])) {
+					continue;
+				}
+				$normalized[] = array(
+					'start' => date('H:i', strtotime($period['start'])),
+					'end' => date('H:i', strtotime($period['end']))
+				);
+			}
+			return $normalized;
+		};
+
+		$available_periods_with_appointments = array_merge(
+			$normalize_periods($available_periods_with_breaks),
+			$normalize_periods($customWorkingPlan)
+		);
 
 	    foreach($appointments as $appointment) {
 	        foreach($available_periods_with_appointments as $index => &$period) {
@@ -693,42 +680,16 @@ class Calendar {
 	    }
 	    //error_log('VOILA');
 	    //error_log(print_r($available_periods_with_appointments,1));
-	    
-	    //$periods = array_merge($available_periods_with_appointments, $extra_booking);
-		//$periods = array_merge($available_periods_with_appointments, $customWorkingPlan);
-		$periods = $available_periods_with_appointments;
-		//error_log('VOILA the merged');
-	    //error_log(print_r($periods,1));
 		
+		error_log('avail count=' . count($available_periods_with_appointments));
+		error_log('custom count=' . count($customWorkingPlan));
 
+		error_log('merged count=' . count($available_periods_with_appointments));
+		error_log(print_r($available_periods_with_appointments, true));
 
-	    $merged = [];
-		
-		    // Sort the periods by their start times
-		    usort($periods, function ($a, $b) {
-		        return strtotime($a['start']) - strtotime($b['start']);
-		    });
-			
-		
-		    $currentPeriod = null;
-		     //took this part out because it deletes certain periods....not sure why but seems to work ok without
-		     /* foreach ($periods as $period) {
-		        if ($currentPeriod === null || strtotime($period['start']) > strtotime($currentPeriod['end'])) {
-		            // If there's no overlap, add the current period to the merged array
-		            $merged[] = $period;
-		            $currentPeriod = $period;
-		        } else {
-		            // If there's an overlap, merge the current period with the new period
-		            $currentPeriod['end'] = max($currentPeriod['end'], $period['end']);
-		        }
-		    }  */
-	    
-	    	
-			//print_r($available_periods_with_extra_booking);	
-			
-	    $available_periods_with_appointments = $periods;
-	    
-	    asort($available_periods_with_appointments);
+	    usort($available_periods_with_appointments, function ($left, $right) {
+	        return strtotime($left['start']) - strtotime($right['start']);
+	    });
 		//error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
 		//error_log('AVAL SLOTS ' .  print_r(array_values($available_periods_with_appointments),1));
 		// unset all timeslots that do not fit the required time

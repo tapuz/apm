@@ -240,6 +240,19 @@
   color:black;
 }
 
+#patientAppointment .status.active{
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  color: #fff;
+}
+
+#patientAppointment .status.active:hover,
+#patientAppointment .status.active:focus{
+  background-color: #286090;
+  border-color: #204d74;
+  color: #fff;
+}
+
 .appointmentCancelled{
   text-decoration: line-through;
   text-decoration-color: rgb(255, 0, 0);
@@ -254,6 +267,15 @@
 
 #editEvent .modal-header {
   background-color: #303b42;
+  color: #fff;
+}
+
+.moveAppointmentModal .modal-header {
+  background-color: #303b42;
+  color: #fff;
+}
+
+.moveAppointmentModal .modal-header .modal-title {
   color: #fff;
 }
 
@@ -282,12 +304,6 @@ p.selected-patient-details{
 }
 
 
-
-/*BG event Style*/
-
-.customTimeslot{
-  opacity: 0.5 !important;
-}
 
 /*Event styles*/
 .fc-content {
