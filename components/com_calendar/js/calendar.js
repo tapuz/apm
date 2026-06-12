@@ -163,7 +163,7 @@ function loadWorkingPlanBackgrounds(viewDate) {
   }
 
   var requestToken = ++customWorkingSlotsRequestToken;
-  var currentDate = moment(viewDate || calendar.fullCalendar('getDate')).format('YYYY-MM-DD');
+  var currentDate = moment(calendar.fullCalendar('getDate')).format('YYYY-MM-DD');
 
   calendar.fullCalendar('removeEvents', function(event) {
     return event.customWorkingSlot == 1;
@@ -271,7 +271,7 @@ function renderWorkingPlan(workingPlan, customWorkingSlots) {
       return true;
     }
 
-    if (customEnd.isSameOrBefore(viewStart, 'day') || customStart.isSameOrAfter(viewEnd, 'day')) {
+    if (customEnd.isSameOrBefore(viewStart) || customStart.isSameOrAfter(viewEnd)) {
       return true;
     }
 
@@ -1261,8 +1261,6 @@ $(document).ready(function() {
               insurance = '<span class="event_insurance">[' + event.insurance + ']<span>';
             }
             
-            log(event.note);
-
             if (event.note === null || event.note === undefined || event.customAppointment == 1 || event.note ==''){
               $(element).find('.icon-note').hide();
             

@@ -162,6 +162,12 @@ class Calendar {
 
 	public static function getCustomTimeslots($user, $currentDate){
 		global $wpdb;
+		$weekStart = new DateTime($currentDate);
+		$weekStart->setTime(0, 0, 0);
+		$weekStart->modify('monday this week');
+		$weekEnd = clone $weekStart;
+		$weekEnd->modify('+7 days');
+
 		$query = $wpdb->prepare("
 			SELECT table_custom_timeslots.id, 
 			table_custom_timeslots.start,table_custom_timeslots.end, 
@@ -174,7 +180,13 @@ class Calendar {
 			FROM table_custom_timeslots 
 			INNER JOIN table_clinics
 			ON table_custom_timeslots.clinic = table_clinics.clinic_id
-			WHERE (user = '%s' AND WEEKOFYEAR(start) = WEEKOFYEAR('%s') AND YEARWEEK(start, 1) = YEARWEEK('%s', 1))",$user,$currentDate,$currentDate);
+			WHERE table_custom_timeslots.user = %d
+			AND table_custom_timeslots.start >= %s
+			AND table_custom_timeslots.start < %s",
+			$user,
+			$weekStart->format('Y-m-d H:i:s'),
+			$weekEnd->format('Y-m-d H:i:s')
+		);
 			
 		$customTimeslots = $wpdb->get_results($query);
 		return $customTimeslots;
