@@ -235,18 +235,24 @@ switch(getTask()){
 	break;
 
 	case 'save_notes':
-		//$notes = $_POST["notes"];
-		$notes = getVar('notes');
-		
-		$wpdb->update( 
-		'table_patients', 
-		array( 
-			'notes' => getVar('notes'),
-			), 
-		array( 'patient_id' => getVar('patient_id')) 
-		 
+		$patient_id = (int) getVar('patient_id');
+		$notes = wp_unslash(getVar('notes'));
+
+		$result = $wpdb->update(
+			'table_patients',
+			array(
+				'notes' => $notes,
+			),
+			array(
+				'patient_id' => $patient_id,
+			),
+			array('%s'),
+			array('%d')
 		);
-		
+
+		echo json_encode(array(
+			'success' => $result !== false
+		));
 	break;
 
 	case 'get_patient':
