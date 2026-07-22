@@ -72,11 +72,53 @@
         </div>
       </div>
     </div>
-      
-    
-     
+</script>
 
-  
+<script id='tmpl_context_history' type="x-tmpl-mustache">
+  <div class='row'>&nbsp;</div>
+  <div class='row'>
+    <div class="col-sm-12">
+      <div class="form-group ">
+          <label class="" for="">Context</label>
+          <div class="row">
+            <div class="col-sm-10">
+              <div class="input-group">
+                <input id="context_input" class="form-control" type="text" placeholder="Add relevant patient context">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" id="btnAddContext" type="button">Add</button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px;">
+            <div class="col-sm-10">
+              <ul class="list-group context-list">
+              </ul>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script id="tmpl_social_history_context" type="x-tmpl-mustache" >
+  {{#context_items}}
+  <li class="list-group-item">
+    <div class="row">
+      <div class="col-sm-3 col-md-2">
+        <strong>{{date}}</strong>
+      </div>
+      <div class="col-sm-8 col-md-9">
+        <span>{{text}}</span>
+      </div>
+      <div class="col-sm-1 text-right">
+        <button class="btn btn-link btn-xs btn-delete-context" type="button" data-index="{{index}}" title="Delete">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </li>
+  {{/context_items}}
 </script>
 
 

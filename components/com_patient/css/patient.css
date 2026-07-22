@@ -1,3 +1,77 @@
+.left-content,
+#feed,
+#recordEncounterModal {
+  --patient-green-border: #d7e1dd;
+  --patient-green-header-start: #f4fbf7;
+  --patient-green-header-end: #e5f2eb;
+  --patient-green-surface: #fcfefd;
+  --patient-green-text: #244236;
+  --patient-green-chip: #e9f5ee;
+  --patient-green-chip-border: #cfe3d7;
+  --patient-green-button: #8ab79c;
+  --patient-green-button-hover: #6f9f83;
+}
+
+.left-content .panel.panel-success,
+#feed .panel.panel-success,
+#recordEncounterModal .panel.panel-success {
+  border-color: var(--patient-green-border);
+  box-shadow: 0 4px 14px rgba(41, 60, 52, 0.08);
+}
+
+.left-content .panel.panel-success > .panel-heading,
+#feed .panel.panel-success > .panel-heading,
+#recordEncounterModal .panel.panel-success > .panel-heading {
+  background: linear-gradient(135deg, var(--patient-green-header-start) 0%, var(--patient-green-header-end) 100%);
+  border-color: var(--patient-green-border);
+  color: var(--patient-green-text);
+}
+
+.left-content .panel.panel-success > .panel-heading a,
+#feed .panel.panel-success > .panel-heading a,
+#recordEncounterModal .panel.panel-success > .panel-heading a {
+  color: var(--patient-green-text);
+}
+
+.left-content .panel.panel-success > .panel-body,
+#feed .panel.panel-success > .panel-body,
+#recordEncounterModal .panel.panel-success > .panel-body {
+  background: var(--patient-green-surface);
+}
+
+.left-content .btn.btn-success,
+#feed .btn.btn-success,
+#recordEncounterModal .btn.btn-success {
+  background-color: var(--patient-green-button);
+  border-color: var(--patient-green-button);
+  color: #fff;
+}
+
+.left-content .btn.btn-success:hover,
+.left-content .btn.btn-success:focus,
+#feed .btn.btn-success:hover,
+#feed .btn.btn-success:focus,
+#recordEncounterModal .btn.btn-success:hover,
+#recordEncounterModal .btn.btn-success:focus {
+  background-color: var(--patient-green-button-hover);
+  border-color: var(--patient-green-button-hover);
+  color: #fff;
+}
+
+.left-content .label.label-success,
+#feed .label.label-success,
+#recordEncounterModal .label.label-success {
+  background-color: var(--patient-green-chip);
+  border: 1px solid var(--patient-green-chip-border);
+  color: var(--patient-green-text);
+}
+
+#editSOAP textarea.form-control.soap_input,
+#editSOAP input.form-control.soap_input,
+#editSOAP .form-group .form-control {
+  border-radius: 10px !important;
+}
+
 .imageSelected{
     opacity: 0.5;
   }
@@ -40,6 +114,3 @@ height:auto;
 .modal.modal-medium .modal-dialog {
   width: 40%;
 }
-
-
-

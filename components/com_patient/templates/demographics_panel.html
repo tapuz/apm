@@ -1,37 +1,137 @@
 <script id='tpml_demographics_panel' type="x-tmpl-mustache">
-   <div class="row">
-          <div class="col-xs-2"><img width="50%" src="assets/img/face-placeholder.jpg"></div>
-          <div class="col-xs-4">
-            <div><strong>Patient : {{patient_name}}</strong></div>
-            <div><strong>DOB :</strong> {{dob}}</div>
-            <div><strong>Age :</strong> {{age}}</div>
-            <div><strong>Sex :</strong> {{sex}}</div>
-            <div><strong>Profession :</strong> {{profession}}</div>
-            <div><strong>Insurance :</strong> {{insurance}}</div>
-            <div>&nbsp;</div>
-            <div><strong>Practitioner :</strong>{{practitioner}}</div>
+  {{#is_edit_mode}}
+    <form id="form-demographics">
+      <div class="row">
+        <div class="col-xs-2"><img width="50%" src="assets/img/face-placeholder.jpg"></div>
+        <div class="col-xs-4">
+          <div class="form-group">
+            <label>First name</label>
+            <input class="form-control" name="patient_firstname" type="text" value="{{patient_firstname}}">
           </div>
-          <div class="col-xs-3">
-            <div><i class="icon-phone"></i><a href="tel:{{phone}}" rel="external"> {{phone}}</a></div>
-            <div><i class="icon-envelope-alt"></i><a href="mailto:{{email}}" rel="external"> {{email}}</a></div>
-            <div>&nbsp;</div>
-            <address>
-            <a href="http://maps.google.com/?q={{address}}">{{address}}</a><br>
-            </address>
+          <div class="form-group">
+            <label>Surname</label>
+            <input class="form-control" name="patient_surname" type="text" value="{{patient_surname}}">
           </div>
-          <div class="col-xs-3">
-            <div class="text-danger"><strong>RED FLAGS</strong></div>
-            <ul class="list-unstyled text-danger">
-            {{#redflags}}
-							{{#redflag}}<li> {{condition}} </li>{{/redflag}}
-            {{/redflags}}
-            </ul>
-            <div class="text-warning"><strong>YELLOW FLAGS</strong></div>
-						<ul class="list-unstyled text-warning">
-            {{#yellowflags}}
-							{{#yellowflag}}<li> {{condition}} </li>{{/yellowflag}}
-            {{/yellowflags}}
-						</ul>
+          <div class="form-group">
+            <label>DOB</label>
+            <input class="form-control" name="dob" type="date" value="{{dob_raw}}">
+          </div>
+          <div class="form-group">
+            <label>Age</label>
+            <input class="form-control demographics-age" type="text" value="{{age}}" disabled>
+          </div>
+          <div class="form-group">
+            <label>Sex</label>
+            <select class="form-control" name="sex">
+              <option value="male" {{#sex_is_male}}selected{{/sex_is_male}}>Male</option>
+              <option value="female" {{#sex_is_female}}selected{{/sex_is_female}}>Female</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Profession</label>
+            <input class="form-control" name="profession" type="text" value="{{profession}}">
+          </div>
+          <div class="form-group">
+            <label>Insurance</label>
+            <input class="form-control" name="insurance" type="text" value="{{insurance}}">
+          </div>
+          <div class="form-group">
+            <label>Practitioner</label>
+            <input class="form-control" type="text" value="{{practitioner}}" disabled>
           </div>
         </div>
+        <div class="col-xs-3">
+          <div class="form-group">
+            <label>Phone</label>
+            <input class="form-control" name="phone" type="text" value="{{phone}}">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input class="form-control" name="email" type="email" value="{{email}}">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input class="form-control" name="address" type="text" value="{{address_line}}">
+          </div>
+          <div class="form-group">
+            <label>Postcode</label>
+            <input class="form-control" name="postcode" type="text" value="{{postcode}}">
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            <input class="form-control" name="city" type="text" value="{{city}}">
+          </div>
+          <div class="form-group">
+            <label>Country</label>
+            <input class="form-control" name="country" type="text" value="{{country}}">
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="text-danger"><strong>RED FLAGS</strong></div>
+          <ul class="list-unstyled text-danger">
+          {{#redflags}}
+            {{#redflag}}<li>{{condition}}</li>{{/redflag}}
+          {{/redflags}}
+          </ul>
+          <div class="text-warning"><strong>YELLOW FLAGS</strong></div>
+          <ul class="list-unstyled text-warning">
+          {{#yellowflags}}
+            {{#yellowflag}}<li>{{condition}}</li>{{/yellowflag}}
+          {{/yellowflags}}
+          </ul>
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <div class="col-xs-12 text-right">
+          <button type="button" class="btn btn-default btn-cancel-demographics">Cancel</button>
+          <button type="button" class="btn btn-primary btn-save-demographics">Save</button>
+        </div>
+      </div>
+    </form>
+  {{/is_edit_mode}}
+
+  {{^is_edit_mode}}
+    <div class="row">
+      <div class="col-xs-2"><img width="50%" src="assets/img/face-placeholder.jpg"></div>
+      <div class="col-xs-4">
+        <div><strong>Patient :</strong> {{patient_name}}</div>
+        <div><strong>DOB :</strong> {{dob}}</div>
+        <div><strong>Age :</strong> {{age}}</div>
+        <div><strong>Sex :</strong> {{sex}}</div>
+        <div><strong>Profession :</strong> {{profession}}</div>
+        <div><strong>Insurance :</strong> {{insurance}}</div>
+        <div>&nbsp;</div>
+        <div><strong>Practitioner :</strong> {{practitioner}}</div>
+      </div>
+      <div class="col-xs-3">
+        <div><i class="icon-phone"></i><a href="tel:{{phone}}" rel="external"> {{phone}}</a></div>
+        <div><i class="icon-envelope-alt"></i><a href="mailto:{{email}}" rel="external"> {{email}}</a></div>
+        <div>&nbsp;</div>
+        <address>
+          <a href="http://maps.google.com/?q={{address}}">{{address}}</a><br>
+        </address>
+      </div>
+      <div class="col-xs-3">
+        <div class="text-danger"><strong>RED FLAGS</strong></div>
+        <ul class="list-unstyled text-danger">
+        {{#redflags}}
+          {{#redflag}}<li>{{condition}}</li>{{/redflag}}
+        {{/redflags}}
+        </ul>
+        <div class="text-warning"><strong>YELLOW FLAGS</strong></div>
+        <ul class="list-unstyled text-warning">
+        {{#yellowflags}}
+          {{#yellowflag}}<li>{{condition}}</li>{{/yellowflag}}
+        {{/yellowflags}}
+        </ul>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="col-xs-12 text-right">
+        <button type="button" class="btn btn-default btn-edit-demographics">
+          <i class="fas fa-edit"></i> Edit
+        </button>
+      </div>
+    </div>
+  {{/is_edit_mode}}
 </script>

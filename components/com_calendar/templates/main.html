@@ -4,60 +4,126 @@
 {{#data}}
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times</span></button>
-        <h3 class="modal-title">
-			<a class="btn btn-sm loadPatientRightPanel" patient_id="{{patientID}}">{{patientName}}</a>
-			<div>
-				<a href="tel:{{phone}}"><i class="fa fa-phone">&nbsp</i>{{phone}}</a>
-				<a href="mailto:{{email}}"><i class="fa fa-envelope-o">&nbsp</i>{{email}}</a>
+        <div class="event-details-header">
+			<div class="event-details-header-main">
+				<h3 class="modal-title">
+					<a class="loadPatientRightPanel event-details-patient-link" patient_id="{{patientID}}">{{patientName}}</a>
+					<span class="event-details-patient-meta">{{dob_formatted}}{{#age}} | {{age}}y{{/age}}</span>
+				</h3>
+				<div class="event-details-contact">
+					<a href="tel:{{phone}}" class="event-details-contact-item">
+						<i class="fa fa-phone"></i>
+						<span>{{phone}}</span>
+					</a>
+					<a href="mailto:{{email}}" class="event-details-contact-item">
+						<i class="fa fa-envelope-o"></i>
+						<span>{{email}}</span>
+					</a>
+				</div>
 			</div>
-		</h3>
+			<div class="event-details-header-actions">
+				<button type="button" class="btn btn-sm editPatient btn-edit-patient-header">
+					<i class="fa fa-pencil-square-o"></i>&nbsp;Edit
+				</button>
+			</div>
+		</div>
     </div>
 	<div class="modal-body">
-		
-		<span class="pull-right"><a class="btn btn-info btn-sm history"><i class="fa fa-list-alt fa-fw"></i>&nbspHistory</a></span>
+		<div class="event-details-tabs">
+			<div class="event-details-tab-group">
+				<button type="button" class="btn btn-sm btn-default event-details-tab active" data-target="details">Details</button>
+				<button type="button" class="btn btn-sm btn-default event-details-tab history" data-target="history"><i class="fa fa-list-alt fa-fw"></i>&nbsp;History</button>
+			</div>
+			<div class="event-details-tab-actions">
+				<button type="button" class="btn btn-sm btn-default event-details-tab event-details-tab-appointments" data-target="appointments">All Appointments</button>
+				<a id="btn_goto_file" type="button" target="{{patientID}}" href="index.php?com=patient&view=patient&layout=component&patient_id={{patientID}}&appointment_id={{id}}" class="btn btn-sm btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Open File</a>
+			</div>
+		</div>
 
-		<div class="appBox">
-			<p><i class="fas fa-user-md summary"></i>&nbsp {{resourceName}}</p>
-			<p><i class="fa fa-clock-o summary"></i>&nbsp{{start_modified}} - {{end_modified}}</p>
-			<p><i class="fa fa-hospital-o summary"></i>&nbsp {{clinicName}} </p>
-			<p><i class="far fa-sticky-note"></i><strong>{{note}}</strong><a href="#" class="editapp">edit</a></p>
-		
-			<div class="btn-group appActions" role="group" aria-label="btnGrpEditEvents">
-				<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</button>
-				<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbsp;Reschedule</button>
-				<button type="button" class="btn btn-primary booknext"><i class="fa fa-refresh"></i>&nbsp;Book Next</button>
-				<button type="button" class="btn btn-danger toggleCancelBox"><i class="fas fa-slash"></i>&nbsp;Cancel</button>  
-				<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
+		<div class="appBox event-details-panel">
+			<div class="event-details-card">
+				<div class="event-details-grid">
+					<div class="event-details-field">
+						<div class="event-details-label">Practitioner</div>
+						<div class="event-details-value">{{resourceName}}</div>
+					</div>
+					<div class="event-details-field">
+						<div class="event-details-label">Date &amp; Time</div>
+						<div class="event-details-value">{{start_modified}} - {{end_modified}}</div>
+					</div>
+					<div class="event-details-field">
+						<div class="event-details-label">Clinic</div>
+						<div class="event-details-value">{{clinicName}}</div>
+					</div>
+					<div class="event-details-field event-details-field-note">
+						<div class="event-details-label">Note <a href="#" class="editapp event-details-inline-link">edit</a></div>
+						<div class="event-details-value">{{note}}</div>
+					</div>
+				</div>
 			</div>
-			<div class="row"></div> 
-			
 
-				
-			<div class="cancelBox input-group" style="display:none">
-				<input type="text" placeholder="Reason for cancellation" class="form-control reasonForCancel"><span class="input-group-btn"><button type="button" class="btn btn-danger cancelAppointment"><i class="fas fa-slash"></i>&nbspCancel</button></span>
+			<div class="event-details-card">
+				<div class="event-details-card-title">Appointment Status</div>
+				<div class="event-details-status-row">
+					<div class="event-details-status-group">
+						<div class="btn-group appStatusActions" data-toggle="buttons">
+							<label id="1" class="set_status arrived btn btn-sm" status="1"><input type="radio"> Arrived</label>
+							<label id="2" class="set_status dns btn btn-sm" status="8"><input type="radio"> Did not show</label>
+						</div>
+					</div>
+					<div class="event-details-status-group">
+						<div class="btn-group appPencilledIn" data-toggle="buttons">
+							<label id="1" class="set_status confirmed btn btn-sm" status="0"><input type="radio"> Confirmed</label>
+							<label id="2" class="set_status pencilled btn btn-sm" status="2"><input type="radio"> Pencilled</label>
+						</div>
+					</div>
+				</div>
+				<div class="appCancelledBox" style="display:none"></div>
 			</div>
-			<div class="appCancelledBox" style="display:none"></div>
-			
-			<div class="btn-group col-md-4 appStatusActions" data-toggle="buttons">
-				<label id="1" class="set_status arrived btn btn-sm" status="1"><input type="radio"> Arrived</label>
-				<label id="2" class="set_status dns btn btn-sm" status="8"><input type="radio"> Did not show</label>
+
+			<div class="event-details-card">
+				<div class="event-details-card-title">Actions</div>
+				<div class="event-details-actions-columns">
+					<div class="event-details-actions-column">
+						<div class="event-details-actions-primary appActions" role="group" aria-label="btnGrpEditEvents">
+							<button type="button" class="btn btn-primary editapp"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</button>
+							<button type="button" class="btn btn-primary reschedule"><i class="fa fa-calendar"></i>&nbsp;Reschedule</button>
+							<button type="button" class="btn btn-primary booknext"><i class="fa fa-refresh"></i>&nbsp;Book next</button>
+						</div>
+					</div>
+					<div class="event-details-actions-column">
+						<div class="event-details-actions-secondary">
+							<button type="button" class="btn btn-success addPayment"><i class="fa fa-eur" aria-hidden="true"></i>&nbspAdd Payment</button>
+							<button type="button" class="btn btn-success btn_viewInvoices"><i class="fa fa-eur" aria-hidden="true"></i>&nbspView Invoices</button>
+						</div>
+					</div>
+					<div class="event-details-actions-column">
+						<div class="event-details-actions-danger">
+							<button type="button" class="btn btn-danger toggleCancelBox"><i class="fas fa-slash"></i>&nbsp;Cancel</button>
+							<button type="button" class="btn btn-danger delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
+						</div>
+					</div>
+				</div>
+				<div class="cancelBox" style="display:none">
+					<div class="input-group">
+						<input type="text" placeholder="Reason for cancellation" class="form-control reasonForCancel">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-danger cancelAppointment"><i class="fas fa-slash"></i>&nbsp;Cancel appointment</button>
+						</span>
+					</div>
+					<div class="cancelBoxActions">
+						<button type="button" class="btn btn-default btnCloseCancelBox">Close</button>
+					</div>
+				</div>
 			</div>
-			
-			<div class="btn-group col-md-4 appPencilledIn" data-toggle="buttons">
-				<label id="1" class="set_status confirmed btn btn-sm" status="0"><input type="radio"> Confirmed</label>
-				<label id="2" class="set_status pencilled btn btn-sm" status="2"><input type="radio"> Pencilled</label>
+
+			<div class="event-details-card appAllocateRoomCard">
+				<div class="event-details-card-title">Allocate To Room</div>
+				<div class="appAllocateRoom"></div>
 			</div>
-			
-			<div class="row"></div>
-			
-			<div class="btn-group">
-				<a id="btn_goto_file" type="button" target="{{patientID}}"  href = "index.php?com=patient&view=patient&layout=component&patient_id={{patientID}}&appointment_id={{id}}" class="btn btn-primary gotoFile"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbspOpen File</a>
-				<button type="button" class="btn btn-success addPayment"><i class="fa fa-eur" aria-hidden="true"></i>&nbspAdd Payment</button>
-				<button type="button" class="btn btn-success btn_viewInvoices"><i class="fa fa-eur" aria-hidden="true"></i>&nbspView Invoices</button>
-			</div>
-		</div> 
-		<div class="appAllocateRoom"></div>
+		</div>
 		<div class="appHistoryBox" style="display:none">Loading...</div>
+		<div class="appAppointmentsBox" style="display:none">Loading...</div>
 		
 	
 	</div>
@@ -67,9 +133,45 @@
 {{/data}}
 </script>
 
+<script id='tmpl_event_details_appointments' type="x-tmpl-mustache">
+	<div class="event-details-card">
+		<div class="event-details-card-title">{{title_future_appointments}}</div>
+		<ul class="event-details-appointments-list">
+			{{#future_appointments}}
+				<li start="{{start}}" appointmentID="{{id}}" resourceId="{{resourceId}}" class="event-details-appointment-item {{#is_cancelled}}appointmentCancelledHistory{{/is_cancelled}}" style="border-left-color:{{itemBorderColor}}">
+					<div class="event-details-appointment-date">{{strStart}}</div>
+					<div class="event-details-appointment-service">{{service}}{{#is_cancelled}} <span class="event-details-appointment-status">(Cancelled)</span>{{/is_cancelled}}</div>
+					<div class="event-details-appointment-meta">with {{resourceName}} @ {{clinicName}}</div>
+					{{#cancel_reason}}<div class="event-details-appointment-reason">Reason: {{cancel_reason}}</div>{{/cancel_reason}}
+				</li>
+			{{/future_appointments}}
+			{{^future_appointments}}
+				<li class="event-details-appointment-empty">No future appointments</li>
+			{{/future_appointments}}
+		</ul>
+	</div>
+
+	<div class="event-details-card">
+		<div class="event-details-card-title">{{title_past_appointments}}</div>
+		<ul class="event-details-appointments-list">
+			{{#past_appointments}}
+				<li start="{{start}}" appointmentID="{{id}}" resourceId="{{resourceId}}" class="event-details-appointment-item {{#is_cancelled}}appointmentCancelledHistory{{/is_cancelled}}" style="border-left-color:{{itemBorderColor}}">
+					<div class="event-details-appointment-date">{{strStart}}</div>
+					<div class="event-details-appointment-service">{{service}}{{#is_cancelled}} <span class="event-details-appointment-status">(Cancelled)</span>{{/is_cancelled}}</div>
+					<div class="event-details-appointment-meta">with {{resourceName}} @ {{clinicName}}</div>
+					{{#cancel_reason}}<div class="event-details-appointment-reason">Reason: {{cancel_reason}}</div>{{/cancel_reason}}
+				</li>
+			{{/past_appointments}}
+			{{^past_appointments}}
+				<li class="event-details-appointment-empty">No past appointments</li>
+			{{/past_appointments}}
+		</ul>
+	</div>
+</script>
+
 
 <script id="tmpl_allocate_room" type="x-tmpl-mustache">
-   <div><label>Allocate to room:</label> 
+   <div>
         <ul>
             {{#data}}
                 	<li data-room_name = "{{room_name}}"" data-room_id="{{room_id}}" data-practitioner_id={{practitioner_id}} class="btnAllocateRoom" style="border-color:green">
@@ -83,4 +185,3 @@
     </div>
 
 </script>
-

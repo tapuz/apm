@@ -39,6 +39,7 @@ $(document).ready(function(){
 	 Patient.Templates = Patient.Templates || {};
 	 Patient.Helpers = Patient.Helpers || {};
 	 Patient.State = Patient.State || {};
+	 Patient.State.demographicsEditMode = false;
 	
 	showLoadingScreen();
 	//set the page title = patientName
@@ -735,15 +736,25 @@ $(document).on('click', '.btn_close_encounter', async function () {
 		var address = oPatient.address + ' - ' + oPatient.postcode + ' ' + oPatient.city + ' - ' + oPatient.country ;
 		
 		var data = {patient_name : oPatient.patient_surname + ' ' + oPatient.patient_firstname ,
+					patient_firstname : oPatient.patient_firstname,
+					patient_surname : oPatient.patient_surname,
 					dob: dob,
+					dob_raw : oPatient.dob,
 					age : age,
 					sex : oPatient.sex,
+					sex_is_male : String(oPatient.sex).toLowerCase() === 'male',
+					sex_is_female : String(oPatient.sex).toLowerCase() === 'female',
 					profession : oPatient.profession,
 					insurance : oPatient.insurance,
 					practitioner : oPatient.practitioner_name,
 					phone : oPatient.phone,
 					email : oPatient.email,
 					address : address,
+					address_line : oPatient.address,
+					postcode : oPatient.postcode,
+					city : oPatient.city,
+					country : oPatient.country,
+					is_edit_mode : Patient.State.demographicsEditMode,
 					redflags : JSON.parse(oHistory.pmh),
 					yellowflags: JSON.parse(oHistory.pmh)
 					};
@@ -751,6 +762,44 @@ $(document).on('click', '.btn_close_encounter', async function () {
 		$('#demographics').html(demographics_panel);
 
 	}
+
+	$(document).on('click','.btn-edit-demographics',function(){
+		Patient.State.demographicsEditMode = true;
+		renderDemographicsPanel();
+	});
+
+	$(document).on('click','.btn-cancel-demographics',function(){
+		Patient.State.demographicsEditMode = false;
+		renderDemographicsPanel();
+	});
+
+	$(document).on('click','.btn-save-demographics',function(){
+		var $button = $(this);
+		var form = $('#form-demographics').serializeArray();
+
+		$button.prop('disabled', true).text('Saving...');
+
+		Patient.update(patientID, form, function(updatedPatient){
+			oPatient = updatedPatient;
+			Patient.State.demographicsEditMode = false;
+			renderDemographicsPanel();
+			renderSummary();
+		});
+	});
+
+	$(document).on('change input', '#form-demographics input[name="dob"]', function(){
+		var dobValue = $(this).val();
+		var age = '';
+
+		if (dobValue) {
+			var dobMoment = moment(dobValue, 'YYYY-MM-DD', true);
+			if (dobMoment.isValid()) {
+				age = moment().diff(dobMoment, 'years', false);
+			}
+		}
+
+		$('#form-demographics .demographics-age').val(age);
+	});
 	//VITALS//
 	function renderVitalsPanel(disabled){
 		var template_vitals_panel = $('#tpml_vitals_panel').html();
@@ -828,6 +877,44 @@ $(document).on('click', '.btn_close_encounter', async function () {
 	function renderSummary(){
 		bogus = oHistory;
 		filterComplaints();
+		var orthoticsSummary = '';
+		var heelLiftSummary = oHistory.heel_lift;
+		if (oHistory.orthotics) {
+			try {
+				var orthoticsData = typeof oHistory.orthotics === 'string' ? JSON.parse(oHistory.orthotics) : oHistory.orthotics;
+				var orthoticsParts = [];
+				if (orthoticsData.type) orthoticsParts.push(orthoticsData.type);
+				if (orthoticsData.origin) orthoticsParts.push('Origin: ' + orthoticsData.origin);
+				if (orthoticsData.since) orthoticsParts.push('Since: ' + orthoticsData.since);
+				if (orthoticsData.effect) orthoticsParts.push('Effect: ' + orthoticsData.effect);
+				if (orthoticsData.notes) orthoticsParts.push('Notes: ' + orthoticsData.notes);
+				orthoticsSummary = orthoticsParts.join(' | ');
+				if (orthoticsData.heel_lift) {
+					heelLiftSummary = orthoticsData.heel_lift;
+				}
+			} catch (error) {
+				orthoticsSummary = oHistory.orthotics;
+			}
+		}
+
+		var summaryContext = normalizeContextItems(oHistory.context).slice(0, 5).map(function(item){
+			return {
+				date: formatContextDate(item.date),
+				text: item.text
+			};
+		});
+		var summaryPmh = [];
+		try {
+			summaryPmh = JSON.parse(oHistory.pmh || '[]').slice(0, 5);
+		} catch (error) {
+			summaryPmh = [];
+		}
+		var summaryComplaints = [];
+		$.each(filteredDiagnoses, function(){
+			this.open = moment(this.open).format('L');
+			summaryComplaints.push(this);
+		});
+		summaryComplaints = summaryComplaints.slice(0, 5);
 		var template_summary = $('#tmpl_summary').html();
 		Mustache.parse(template_summary);
 		var rendered = Mustache.render(template_summary,
@@ -838,17 +925,13 @@ $(document).on('click', '.btn_close_encounter', async function () {
 				drinking : oHistory.drinking,
 				smoking : oHistory.smoking,
 				sleeping : oHistory.sleeping,
-				orthotics : oHistory.orthotics,
-				heel_lift : oHistory.heel_lift,
-				pmh : JSON.parse(oHistory.pmh),
+				orthotics_summary : orthoticsSummary,
+				heel_lift : heelLiftSummary,
+				pmh : summaryPmh,
 				allergies : oHistory.allergies,
-				complaints : function(){
-					$.each(filteredDiagnoses,function(){
-						this.open = moment(this.open).format('L')
-
-					})
-					return filteredDiagnoses;},
-				bmi : ''
+				complaints : summaryComplaints,
+				bmi : '',
+				context_entries : summaryContext
 				
 					
 			
@@ -1215,17 +1298,90 @@ $(document).on('click', '.btn_close_encounter', async function () {
 	$('#orthotics_history .tagsinput').tagsinput();
 	}
 
+	function getTodayContextDate(){
+		return new Date().toISOString().slice(0, 10);
+	}
+
+	function formatContextDate(dateString){
+		if (!dateString) {
+			return '-';
+		}
+
+		var m = moment(dateString, ['YYYY-MM-DD', moment.ISO_8601], true);
+		if (!m.isValid()) {
+			return dateString;
+		}
+
+		return m.format('L');
+	}
+
+	function normalizeContextItems(rawContext){
+		var contextItems = [];
+
+		if (!rawContext) {
+			return contextItems;
+		}
+
+		try {
+			var parsedContext = JSON.parse(rawContext);
+			if (Array.isArray(parsedContext)) {
+				contextItems = parsedContext.map(function(item) {
+					if (typeof item === 'string') {
+						return {
+							date: '',
+							text: item
+						};
+					}
+
+					return {
+						date: item.date || '',
+						text: item.text || item.value || ''
+					};
+				}).filter(function(item) {
+					return item.text !== '';
+				});
+			} else if (typeof parsedContext === 'string' && parsedContext !== '') {
+				contextItems = [{
+					date: '',
+					text: parsedContext
+				}];
+			}
+		} catch (error) {
+			contextItems = [{
+				date: '',
+				text: rawContext
+			}];
+		}
+
+		return contextItems;
+	}
+
+	function saveContextItems(contextItems, callback){
+		var jsonString = JSON.stringify(contextItems);
+		oHistory.context = jsonString;
+		History.save(patientID,'context',jsonString,function(){
+			renderSummary();
+			if (callback) {
+				callback();
+			}
+		});
+	}
+	
 	function renderHistoryPanel(){
 		var data,render;
 		//get the templates
 		var template_general_history = $('#tmpl_general_history').html();
 		var template_general_history_pmh = $('#tmpl_general_history_pmh').html();
 		var template_general_history_family_history = $('#tmpl_general_history_familyhistory').html();
+		var template_context_history = $('#tmpl_context_history').html();
+		var template_social_history_context = $('#tmpl_social_history_context').html();
 		
 		
 		Mustache.parse(template_general_history);
 		Mustache.parse(template_general_history_pmh);
 		Mustache.parse(template_general_history_family_history);
+		Mustache.parse(template_context_history);
+		Mustache.parse(template_social_history_context);
 	
 		
 		
@@ -1277,6 +1433,20 @@ $(document).on('click', '.btn_close_encounter', async function () {
 			sleeping : oHistory.sleeping
 			});
 		$('#social_history').html(social_history);
+
+		var context_history = Mustache.render(template_context_history, {});
+		$('#context_history').html(context_history);
+
+		var contextItems = normalizeContextItems(oHistory.context).map(function(item, index) {
+			return {
+				index: index,
+				date: formatContextDate(item.date),
+				text: item.text
+			};
+		});
+
+		render = Mustache.render(template_social_history_context, { context_items: contextItems });
+		$('#context_history .context-list').html(render);
 		
 		//paed history
 		var template_paediatric_history = $('#tmpl_paediatric_history').html();
@@ -1383,11 +1553,51 @@ $(document).on('click', '.btn_close_encounter', async function () {
 		History.save(patientID,'family_history',jsonString);
 		
 	});
+
+	$(document).on('click','#btnAddContext',function(){
+		var $input = $('#context_input');
+		var value = $.trim($input.val());
+		if (value === '') {
+			return;
+		}
+
+		var contextItems = normalizeContextItems(oHistory.context);
+		contextItems.unshift({
+			date: getTodayContextDate(),
+			text: value
+		});
+
+		saveContextItems(contextItems, function(){
+			renderHistoryPanel();
+			$input.val('').focus();
+		});
+	});
+
+	$(document).on('keypress','#context_input',function(e){
+		if (e.which === 13) {
+			e.preventDefault();
+			$('#btnAddContext').trigger('click');
+		}
+	});
+
+	$(document).on('click','.btn-delete-context',function(){
+		var index = parseInt($(this).data('index'), 10);
+		var contextItems = normalizeContextItems(oHistory.context);
+
+		if (isNaN(index) || !contextItems[index]) {
+			return;
+		}
+
+		contextItems.splice(index, 1);
+		saveContextItems(contextItems, function(){
+			renderHistoryPanel();
+		});
+	});
 	
 	
 	
 	//save the history input on change
-	$(document).on('change','.history input',function(){
+	$(document).on('change','.history input, .history textarea, .history select',function(){
 		var value = $(this).val();
 		var field = $(this).attr("name");
 		var type = $(this).attr("type");
@@ -1624,7 +1834,3 @@ function saveNotes()
 					});
 	
 }
-
-
-
-

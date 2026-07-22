@@ -669,13 +669,50 @@ class Patient
 	
 	public static function saveHistory($patient_id,$field,$value){
 		global $wpdb;
+		$allowed_fields = array(
+			'allergies',
+			'context',
+			'drinking',
+			'family_history',
+			'heel_lift',
+			'orthotics',
+			'paed_analgesia',
+			'paed_birth_height',
+			'paed_birth_weight',
+			'paed_bottle_feeding',
+			'paed_breast_feeding',
+			'paed_crying_duration',
+			'paed_crying_type',
+			'paed_crying_when',
+			'paed_delivery_type',
+			'paed_duration_of_labour_stage1',
+			'paed_duration_of_labour_stage2',
+			'paed_ease_of_birth',
+			'paed_feeding_behaviour',
+			'paed_head_circumference',
+			'paed_immunisations',
+			'paed_interventions',
+			'paed_place_of_birth',
+			'paed_pregnancy_duration',
+			'paed_sleeping_pattern',
+			'paed_tummy_time',
+			'pmh',
+			'profession',
+			'retired',
+			'sleeping',
+			'smoking',
+			'sport'
+		);
+
+		if (!in_array($field, $allowed_fields, true)) {
+			return false;
+		}
+
 		$sql = "INSERT INTO table_history (patient_id,".$field.") VALUES (%d,%s) ON DUPLICATE KEY UPDATE ".$field." = %s";
-		var_dump($sql); // debug
 		$sql = $wpdb->prepare($sql,$patient_id,$value,$value);
-		// var_dump($sql); // debug
 		$wpdb->query($sql);
-		
-		
+
+		return true;
 	}
 	
 	public static function getHistory($patient_id){

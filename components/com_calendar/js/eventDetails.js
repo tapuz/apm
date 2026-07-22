@@ -5,8 +5,10 @@ var getFreeRoomsForAppointment;
 
 $(document).ready(function() {
   var tmpl_allocate_room = $('#tmpl_allocate_room').html();
+  var tmpl_event_details_appointments = $('#tmpl_event_details_appointments').html();
  
 	Mustache.parse(tmpl_allocate_room);
+  Mustache.parse(tmpl_event_details_appointments);
   
 
 
@@ -17,6 +19,34 @@ $(document).ready(function() {
       var rendered = Mustache.render(tmpl_allocate_room, { data: data });
       $('.appAllocateRoom').html(rendered);
       log(data);
+    });
+  }
+
+  function renderEventDetailsAppointments() {
+    var futureAppointments, pastAppointments;
+
+    function preprocessAppointments(appointments) {
+      return (appointments || []).map(function(appointment) {
+        appointment.is_cancelled = String(appointment.status) === '6';
+        appointment.itemBorderColor = appointment.is_cancelled ? '#d9534f' : (appointment.borderColor || '#d9e0e6');
+        return appointment;
+      });
+    }
+
+    $.when(
+      Appointment.getFutureAppointments(objEvent.patientID, function(appointments){ futureAppointments = appointments; }),
+      Appointment.getPastAppointments(objEvent.patientID, function(appointments){ pastAppointments = appointments; })
+    ).then(function() {
+      futureAppointments = preprocessAppointments(futureAppointments);
+      pastAppointments = preprocessAppointments(pastAppointments);
+      var rendered = Mustache.render(tmpl_event_details_appointments, {
+        title_future_appointments: futureAppointments.length ? 'Future Appointments' : 'No Future Appointments',
+        title_past_appointments: pastAppointments.length ? 'Past Appointments' : 'No Past Appointments',
+        future_appointments: futureAppointments,
+        past_appointments: pastAppointments
+      });
+
+      $('.appAppointmentsBox').html(rendered);
     });
   }
 
@@ -155,11 +185,15 @@ $(document).ready(function() {
     });
 
   $(document).on('click','.toggleCancelBox',function(){  
-  
+    $('.event-details-actions-columns').hide();
     $('.cancelBox').show();
-    $('.appActions').hide();
-    $('.appStatusActions').hide();
     $('.reasonForCancel').focus();
+  });
+
+  $(document).on('click','.btnCloseCancelBox',function(){
+    $('.cancelBox').hide();
+    $('.reasonForCancel').val('');
+    $('.event-details-actions-columns').show();
   });
 
   $(document).on('click','.cancelAppointment',function(){
@@ -167,10 +201,10 @@ $(document).ready(function() {
     Appointment.addLog(objEvent.id, 'Cancelled', $('.reasonForCancel').val(),'label-danger');
     Appointment.setStatus(objEvent.id, 6, function() {
       log('setting the status !!');
-      $('#eventDetails').modal('hide');
 			objEvent.status = 6;
+      objEvent.cancel_reason = $('.reasonForCancel').val();
 			calendar.fullCalendar('updateEvent',objEvent);
-      //calendar.fullCalendar('removeEvents', objEvent.id);
+      loadEventDetails();
 
     });
 
@@ -184,26 +218,42 @@ $(document).ready(function() {
 
   });
   $(document).on('click','.history',function(){
+    Appointment.getLog(eventID,'all',function(log){
+        console.log(log);
+        theLogs = log;
+        var logs = '<br>';
+        
+        $.each(log, function(){
+          logs += '<div class="log"><span class="label ' + this.labelclass + ' ">' + this.tag + ' &nbsp;</span><span class="logDateTime">'+ moment(this.datetime).format('LLLL') +'</span><span style="color:gray;"> - by ' + this.username + '</span>';
+          logs += '<div>'+ this.log +'</div></div>';
 
-		
-		Appointment.getLog(eventID,'all',function(log){
-				console.log(log);
-				theLogs = log;
-				var logs = '<br>';
-				
-				$.each(log, function(){
-					logs += '<div class="log"><span class="label ' + this.labelclass + ' ">' + this.tag + ' &nbsp;</span><span class="logDateTime">'+ moment(this.datetime).format('LLLL') +'</span><span style="color:gray;"> - by ' + this.username + '</span>';
-					logs += '<div>'+ this.log +'</div></div>';
-	
-				});
-				
-				$('.appHistoryBox').html(logs);
-		});
-		
-		
-    $('.history').toggleClass('active');
-    $('.appHistoryBox').toggle();
-    $('.appBox').toggle();
+        });
+        
+        $('.appHistoryBox').html(logs);
+    });
+
+    $('.event-details-tab').removeClass('active');
+    $(this).addClass('active');
+    $('.appHistoryBox').show();
+    $('.appAppointmentsBox').hide();
+    $('.appBox').hide();
+  });
+
+  $(document).on('click','.event-details-tab[data-target="details"]',function(){
+    $('.event-details-tab').removeClass('active');
+    $(this).addClass('active');
+    $('.appHistoryBox').hide();
+    $('.appAppointmentsBox').hide();
+    $('.appBox').show();
+  });
+
+  $(document).on('click','.event-details-tab[data-target="appointments"]',function(){
+    $('.event-details-tab').removeClass('active');
+    $(this).addClass('active');
+    $('.appHistoryBox').hide();
+    $('.appBox').hide();
+    $('.appAppointmentsBox').show();
+    renderEventDetailsAppointments();
   });
 
 
@@ -303,6 +353,8 @@ function loadEventDetails() {
   //prepare the data
   objEvent.start_modified = moment(objEvent.start).locale(locale).format('LLLL');
   objEvent.end_modified = moment(objEvent.end).locale(locale).format('HH:mm');
+  objEvent.dob_formatted = objEvent.dob ? moment(objEvent.dob, 'YYYY-MM-DD').format('L') : '';
+  objEvent.age = objEvent.dob ? moment().diff(objEvent.dob, 'years', false) : '';
   var tmpl_event_details = $('#tmpl_event_details').html();
   var rendered = Mustache.render(tmpl_event_details, { data: objEvent });
   $('#eventDetails .modal-content').html(rendered);
@@ -318,13 +370,17 @@ function loadEventDetails() {
     $(".editapp").hide();
     $(".appPencilledIn").hide();
     $(".toggleCancelBox").hide();
-    $(".appAllocateRoom").hide();
+    $(".appAllocateRoomCard").hide();
     
     
   }
   if (objEvent.status == 8) {$(".set_status.dns").button("toggle");}
   if (objEvent.status == 6) {
       //get the cancelled log
+      $(".appAllocateRoomCard").hide();
+      $(".toggleCancelBox").hide();
+      $(".cancelBox").hide();
+      $(".event-details-actions-columns").show();
       Appointment.getLog(eventID,'Cancelled',function(log){
         theLogs = log;
         var logs = '<br>';
@@ -340,7 +396,6 @@ function loadEventDetails() {
       $(".appCancelledBox").show();
       $(".appActions .editapp").hide();
       $(".appActions .reschedule").hide();
-      $(".appActions .toggleCancelBox").hide();
       $(".addPayment").hide();
       $(".appPencilledIn").hide();
   //$(".appActions").hide();
@@ -352,5 +407,7 @@ function loadEventDetails() {
     $(".appPencilledIn").hide();
     $(".toggleCancelBox").hide();
   }
-  getFreeRoomsForAppointment();
+  if (objEvent.status != 6) {
+    getFreeRoomsForAppointment();
+  }
 }

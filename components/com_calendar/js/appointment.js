@@ -50,6 +50,23 @@ class Appointment {
      }
     });
   }
+
+  static getPastAppointments(patientID,callback){
+    
+    return $.ajax({
+     url: "ajax.php",
+     dataType: "json",
+     type: 'get',
+     data: {
+       com: 'calendar',
+       task: 'getPastAppointments',
+       patientID: patientID
+     },
+     success: function(data) {
+       if(callback){callback(data);}
+     }
+    });
+  }
   
   static getRequests(group,callback){
     $.ajax({

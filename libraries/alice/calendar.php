@@ -52,11 +52,19 @@ class Calendar {
 		global $wpdb;
 		$query = $wpdb->prepare(
     "SELECT *,
+            (
+                SELECT table_appointments_log.log
+                FROM table_appointments_log
+                WHERE table_appointments_log.appointment_id = view_appointments.id
+                  AND table_appointments_log.tag = 'Cancelled'
+                ORDER BY table_appointments_log.id DESC
+                LIMIT 1
+            ) AS cancel_reason,
             DATE_FORMAT(start, '%%a, %%e %%M %%Y - %%H:%%i') AS strStart
      FROM view_appointments
      WHERE patientID = %d
        AND start >= NOW()
-	   AND status <> 7 AND status <> 6
+	   AND status <> 7
      ORDER BY start ASC",
     $patientID
 );
@@ -69,6 +77,30 @@ class Calendar {
 		$query = $wpdb->prepare("SELECT *,DATE_FORMAT(start, '%%a, %%e %%M %%Y - %%H:%%i') as strStart FROM view_appointments WHERE (patientID = %d AND start < CURRENT_DATE) ORDER BY start DESC LIMIT 1",$patientID);
 		$appointments = $wpdb->get_results($query);
 		return  $appointments;
+	}
+
+	public static function getPastAppointments($patientID){
+		global $wpdb;
+		$query = $wpdb->prepare(
+			"SELECT *,
+					(
+						SELECT table_appointments_log.log
+						FROM table_appointments_log
+						WHERE table_appointments_log.appointment_id = view_appointments.id
+						  AND table_appointments_log.tag = 'Cancelled'
+						ORDER BY table_appointments_log.id DESC
+						LIMIT 1
+					) AS cancel_reason,
+					DATE_FORMAT(start, '%%a, %%e %%M %%Y - %%H:%%i') AS strStart
+			 FROM view_appointments
+			 WHERE patientID = %d
+			   AND start < NOW()
+			   AND status <> 7
+			 ORDER BY start DESC",
+			$patientID
+		);
+		$appointments = $wpdb->get_results($query);
+		return $appointments;
 	}
     
 

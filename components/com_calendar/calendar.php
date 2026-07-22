@@ -171,6 +171,10 @@ switch (getVar('task')){
 		echo json_encode(Calendar::getLastAppointment(getVar('patientID')));
 	break;
 
+	case 'getPastAppointments':
+		echo json_encode(Calendar::getPastAppointments(getVar('patientID')));
+	break;
+
 	case 'setStatus':
 		loadLib('email');
 		Calendar::setStatus(getVar('appointmentID'),getVar('status'));

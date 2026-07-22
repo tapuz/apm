@@ -1,72 +1,159 @@
 <script id='tmpl_summary' type="x-tmpl-mustache">   
+  <style>
+    #summary-panel .summary-card {
+      border: 1px solid #d7e1dd;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(41, 60, 52, 0.08);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+    #summary-panel .summary-card .panel-heading {
+      background: linear-gradient(135deg, #f4fbf7 0%, #e5f2eb 100%);
+      border-bottom: 1px solid #d7e1dd;
+      color: #244236;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    #summary-panel .summary-card .panel-body {
+      background: #fcfefd;
+      padding: 14px 16px;
+    }
+    #summary-panel .summary-line {
+      border-bottom: 1px solid #edf3ef;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+    }
+    #summary-panel .summary-line:last-child {
+      border-bottom: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    #summary-panel .summary-label {
+      color: #5f756a;
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+    }
+    #summary-panel .summary-value {
+      color: #20362c;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    #summary-panel .summary-chip {
+      background: #e9f5ee;
+      border: 1px solid #cfe3d7;
+      border-radius: 999px;
+      color: #2c5644;
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      margin: 0 6px 6px 0;
+      padding: 4px 9px;
+    }
+    #summary-panel .summary-note {
+      background: #f7fbf8;
+      border-left: 3px solid #8ab79c;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      padding: 8px 10px;
+    }
+  </style>
+
   <div class='row'>
-    <div class="col-md-3">
-      {{#profession}}<label>Profession:</label> {{profession}}{{/profession}}
-      {{#retired}}(Retired){{/retired}}
-      {{^retired}}{{/retired}}
-
-      
-    </div>
-    <div class="col-md-3">
-      {{#bmi}}<label>BMI:</label> {{bmi}}{{/bmi}}
-    </div>
-    <div class="col-md-3">
-      {{#sport}}<label>Sport:</label> {{sport}}{{/sport}}
-    </div>
-  </div>
-
-  <div class='row'>
-    {{#drinking}}
-      <div class='col-md-3'><label>Drinking:</label> {{drinking}}</div>
-    {{/drinking}}
-    {{#smoking}}
-      <div class="col-md-3"> <label>Smoker:</label> {{smoking}}</div>
-    {{/smoking}}
-    {{#sleeping}}
-      <div class="col-md-3"> <label>Sleeping:</label> {{sleeping}}</div>
-    {{/sleeping}}
-    {{#allergies}}
-      <div class="col-md-3"><label>Allergies:</label> {{allergies}}</div>
-    {{/allergies}}
-  </div>
-
-  <div class='row'>
-    {{#orthotics}}
-      <div class='col-md-3'><label>Orthotics:</label> {{orthotics}}</div>
-    {{/orthotics}}
-    {{#heel_lift}}
-      <div class="col-md-3"><label>Heel lift:</label> {{heel_lift}}</div>
-    {{/heel_lift}}  
-  </div>
-
-  <div class='row'>
-    <div class='col-md-3'>
-      <label>PMH:</label>
-    </div>
-    <div class='col-md-3'>
-      {{#pmh}}  
-       <div class='row'>
-        <div class="col-md-12">{{year}} - {{condition}} - {{#redflag}} <i style="color:red" class="fas fa-flag"></i> {{/redflag}} {{#yellowflag}} <i style="color:yellow" class="fas fa-flag"></i> {{/yellowflag}}</div> 
-       </div>
-      {{/pmh}}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class='col-md-3'>
-      
-        <label>Complaints:</label>
-      
-    </div>
-    <div class='col-md-3'>
-      {{#complaints}}
-        <div class='row'>
-          <div class="col-md-12">{{open}} - {{diagnosis}} - <strong>{{cc}}</strong> - {{ac}}</div>
+    <div class="col-md-4">
+      <div class="panel panel-default summary-card">
+        <div class="panel-heading"><strong>Medical Summary</strong></div>
+        <div class="panel-body">
+          {{#orthotics_summary}}
+            <div class="summary-line">
+              <span class="summary-label">Orthotics</span>
+              <div class="summary-value">
+                {{orthotics_summary}}
+                {{#heel_lift}}<br><strong>Heel lift:</strong> {{heel_lift}}{{/heel_lift}}
+              </div>
+            </div>
+          {{/orthotics_summary}}
+          {{^orthotics_summary}}
+            {{#heel_lift}}
+              <div class="summary-line">
+                <span class="summary-label">Orthotics</span>
+                <div class="summary-value"><strong>Heel lift:</strong> {{heel_lift}}</div>
+              </div>
+            {{/heel_lift}}
+          {{/orthotics_summary}}
+          <div class="summary-line">
+            <span class="summary-label">PMH</span>
+            {{#pmh}}
+              <div class="summary-value">{{year}} {{#year}}-{{/year}} {{condition}} {{#redflag}}<i style="color:red" class="fas fa-flag"></i>{{/redflag}} {{#yellowflag}}<i style="color:goldenrod" class="fas fa-flag"></i>{{/yellowflag}}</div>
+            {{/pmh}}
+            {{^pmh}}<div class="summary-value">No PMH recorded</div>{{/pmh}}
+          </div>
         </div>
-      {{/complaints}}
+      </div>
+
+      <div class="panel panel-default summary-card">
+        <div class="panel-heading"><strong>Recent Complaints</strong></div>
+        <div class="panel-body">
+          {{#complaints}}
+            <div class="summary-note"><strong>{{open}}</strong> - {{diagnosis}} {{#cc}}- <strong>{{cc}}</strong>{{/cc}}</div>
+          {{/complaints}}
+          {{^complaints}}<div class="summary-value">No recent complaints</div>{{/complaints}}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default summary-card">
+        <div class="panel-heading"><strong>Patient Snapshot</strong></div>
+        <div class="panel-body">
+          {{#profession}}
+            <div class="summary-line">
+              <span class="summary-label">Profession</span>
+              <div class="summary-value">{{profession}} {{#retired}}(Retired){{/retired}}</div>
+            </div>
+          {{/profession}}
+          <div class="summary-line">
+            <span class="summary-label">Lifestyle</span>
+            {{#sport}}<span class="summary-chip">Sport: {{sport}}</span>{{/sport}}
+            {{#smoking}}<span class="summary-chip">Smoking: {{smoking}}</span>{{/smoking}}
+            {{#drinking}}<span class="summary-chip">Drinking: {{drinking}}</span>{{/drinking}}
+            {{#sleeping}}<span class="summary-chip">Sleeping: {{sleeping}}</span>{{/sleeping}}
+          </div>
+          {{#allergies}}
+            <div class="summary-line">
+              <span class="summary-label">Allergies</span>
+              <div class="summary-value">{{allergies}}</div>
+            </div>
+          {{/allergies}}
+          {{#bmi}}
+            <div class="summary-line">
+              <span class="summary-label">BMI</span>
+              <div class="summary-value">{{bmi}}</div>
+            </div>
+          {{/bmi}}
+        </div>
+      </div>
+    </div>
+
+    <div class='col-md-4'>
+      <div class="panel panel-default summary-card">
+        <div class="panel-heading"><strong>Recent Context</strong></div>
+        <div class="panel-body">
+          {{#context_entries}}
+            <div class="summary-note"><strong>{{date}}</strong><br>{{text}}</div>
+          {{/context_entries}}
+          {{^context_entries}}
+            <div class="summary-value">No context entries</div>
+          {{/context_entries}}
+        </div>
+      </div>
     </div>
   </div>
-
 
 </script>
 
@@ -74,5 +161,3 @@
 
 
 </script>
-
-

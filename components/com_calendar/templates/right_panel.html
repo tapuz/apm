@@ -98,38 +98,44 @@
 </script>
 
 <script id='tmpl_patient_appointments' type="x-tmpl-mustache">
-    <div><label>{{title_future_appointments}}</label> 
-        <ul>
-            {{#future_appointments}}
-                <li start="{{start}}" appointmentID={{id}} resourceId = {{resourceId}} class="right_panel_appointment" style="border-color:{{borderColor}}">
-                    <div><label>{{strStart}}</label</div>
-                    <div><a href="#">{{service}}</a></div>
-                    <div><label>with {{resourceName}}</label></div>
-                    <div><label>@ {{clinicName}}</label></div>       
-                    
-                </li>
-            {{/future_appointments}}
-
-         </ul>
-    </div>
+    <div class="patient-appointments-history">
+        <div class="appointments-history-card">
+            <div class="appointments-history-title">{{title_future_appointments}}</div>
+            <ul class="appointments-history-list">
+                {{#future_appointments}}
+                    <li start="{{start}}" appointmentID="{{id}}" resourceId="{{resourceId}}" class="right_panel_appointment appointments-history-item {{#is_cancelled}}appointmentCancelledHistory{{/is_cancelled}}" style="border-left-color:{{itemBorderColor}}">
+                        <div class="appointments-history-date">{{strStart}}</div>
+                        <div class="appointments-history-service">{{service}}{{#is_cancelled}} <span class="appointments-history-status">(Cancelled)</span>{{/is_cancelled}}</div>
+                        <div class="appointments-history-meta">with {{resourceName}} @ {{clinicName}}</div>
+                        {{#cancel_reason}}<div class="appointments-history-reason">Reason: {{cancel_reason}}</div>{{/cancel_reason}}
+                    </li>
+                {{/future_appointments}}
+                {{^future_appointments}}
+                    <li class="appointments-history-empty">No future appointments</li>
+                {{/future_appointments}}
+            </ul>
+        </div>
        
-    <div class="btn-group btn-group-justified" role="group">
-        <a href="#" class="btn btn-success bookAppointment" role="button">Book appointment</a>
-    </div>
-    <br>
-    <div><label>{{title_last_appointment}}</label> 
-        <ul>
-            {{#last_appointment}}
-                <li start="{{start}}" appointmentID={{id}} resourceId = {{resourceId}} class="right_panel_appointment" style="border-color:{{borderColor}}">
-                    <div><label>{{strStart}}</label</div>
-                    <div><a href="#">{{service}}</a></div>
-                    <div><label>with {{resourceName}}</label></div>
-                    <div><label>@ {{clinicName}}</label></div>       
-                    
-                </li>
-            {{/last_appointment}}
+        <div class="btn-group btn-group-justified" role="group">
+            <a href="#" class="btn btn-success bookAppointment" role="button">Book appointment</a>
+        </div>
 
-         </ul>
+        <div class="appointments-history-card">
+            <div class="appointments-history-title">{{title_past_appointments}}</div>
+            <ul class="appointments-history-list">
+                {{#past_appointments}}
+                    <li start="{{start}}" appointmentID="{{id}}" resourceId="{{resourceId}}" class="right_panel_appointment appointments-history-item {{#is_cancelled}}appointmentCancelledHistory{{/is_cancelled}}" style="border-left-color:{{itemBorderColor}}">
+                        <div class="appointments-history-date">{{strStart}}</div>
+                        <div class="appointments-history-service">{{service}}{{#is_cancelled}} <span class="appointments-history-status">(Cancelled)</span>{{/is_cancelled}}</div>
+                        <div class="appointments-history-meta">with {{resourceName}} @ {{clinicName}}</div>
+                        {{#cancel_reason}}<div class="appointments-history-reason">Reason: {{cancel_reason}}</div>{{/cancel_reason}}
+                    </li>
+                {{/past_appointments}}
+                {{^past_appointments}}
+                    <li class="appointments-history-empty">No past appointments</li>
+                {{/past_appointments}}
+            </ul>
+        </div>
     </div>
    
   

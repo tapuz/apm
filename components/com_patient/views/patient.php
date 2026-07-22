@@ -50,6 +50,7 @@
               				<ul class="nav nav-tabs" id="history_tabs">
 								<li class="active"><a href="#general_history" data-toggle="tab">General</a></li>
 								<li><a href="#social_history" data-toggle="tab">Social</a></li>
+								<li><a href="#context_history" data-toggle="tab">Context</a></li>
 								<li><a href="#orthotics_history" data-toggle="tab">Orthotics</a></li>
                 				<li><a href="#paediatric_history" data-toggle="tab">Peadiatric</a></li>
               				</ul>
@@ -60,6 +61,9 @@
 					</div>
 					<div class='tab-pane' id='social_history'>
                   		social
+					</div>
+					<div class='tab-pane' id='context_history'>
+                  		context
 					</div>
 					<div class='tab-pane' id='orthotics_history'>
                   		orthotics
@@ -395,7 +399,6 @@
 <?php include(TEMPLATES . 'encounter_print.html'); ?>
 <?php include(TEMPLATES . 'patient_appointments.html'); ?>
 <?php include(TEMPLATES . 'summary.html'); ?>
-
 
 
 

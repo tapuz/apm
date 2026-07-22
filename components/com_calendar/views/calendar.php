@@ -470,7 +470,7 @@
 			<div class="col-sm-6">
 				<div class="form-group ">
 					<label>Date of birth</label>
-					<input autocomplete="off" class="last form-control" id="Patient_DOB" name="dob" type="text">
+					<input autocomplete="off" class="last form-control" id="Patient_DOB" name="dob" type="date">
 				</div>
 			</div>
 			<div class="col-sm-6">
@@ -487,7 +487,7 @@
 			<div class="col-sm-3">
 				<div class="form-group ">
 					<label class="" for="Patient_FirstName">Telephone</label>
-					<input autocomplete="off" class="first form-control" id="Patient_Phone" name="phone" type="text">
+					<input autocomplete="off" class="first form-control" id="Patient_Phone" name="phone" type="text" inputmode="numeric" pattern="[0-9]*">
 				</div>
 			</div>
 			<div class="col-sm-3">

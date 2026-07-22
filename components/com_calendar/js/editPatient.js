@@ -8,7 +8,7 @@ function editPatient(patientID){
             //moment("20111031", "YYYYMMDD")
             $('#Patient_FirstName').val(patient.patient_firstname);
             $('#Patient_LastName').val(patient.patient_surname);
-            $('#Patient_DOB').val(moment(patient.dob,'YYYY-MM-DD').format('L'));
+            $('#Patient_DOB').val(patient.dob);
             $('#Patient_Sex').val(patient.sex);
             $('#Patient_Phone').val(patient.phone);
             $('#Patient_Mobile').val(patient.gsm);
@@ -36,12 +36,15 @@ function editPatient(patientID){
 
 $(document).ready(function() {
 
+    $(document).on('input', '#Patient_Phone', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
     //validation
      // Code for the Validator
     var $validatorPatientDetails = $('#editPatientForm').validate({
         rules:{
             email:{
-                    required:true,
                     email: true
             }
         },
@@ -74,9 +77,9 @@ $(document).ready(function() {
         log(form[2].value);
         
         //format date for DB
-        var dob = form[2].value = moment(form[2].value, 'DD-MM-YYYY').format();
+        var dob = form[2].value ? moment(form[2].value, 'YYYY-MM-DD', true).format() : '';
         Patient.update(patientID,form,function(patient){
-            oPatient = JSON.parse(patient);
+            oPatient = (typeof patient === 'string') ? JSON.parse(patient) : patient;
             log('this is the udpated patient + ' + oPatient.patient_surname);
             var filter = patientID;
             var events = $('#calendar').fullCalendar('clientEvents', function(evt) {
@@ -119,4 +122,3 @@ $(document).ready(function() {
 
 
 });
-

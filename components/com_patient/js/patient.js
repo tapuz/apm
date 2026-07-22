@@ -102,7 +102,7 @@ class Patient {
     
     $.ajax({
       url: "ajax.php",
-      
+      dataType: "json",
       type: 'post',
     
       data: {
