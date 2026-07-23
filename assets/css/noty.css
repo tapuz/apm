@@ -309,25 +309,25 @@
     background-color: #fff; }
 
 .noty_theme__sunset.noty_type__warning {
-  background-color: #FFD166;
+  background-color: var(--alice-warning-button);
   color: #fff; }
 
 .noty_theme__sunset.noty_type__error {
-  background-color: #EF476F;
+  background-color: var(--alice-danger-button);
   color: #fff; }
   .noty_theme__sunset.noty_type__error .noty_progressbar {
     opacity: .4; }
 
 .noty_theme__sunset.noty_type__info,
 .noty_theme__sunset.noty_type__information {
-  background-color: #118AB2;
+  background-color: var(--alice-primary-button);
   color: #fff; }
   .noty_theme__sunset.noty_type__info .noty_progressbar,
   .noty_theme__sunset.noty_type__information .noty_progressbar {
     opacity: .6; }
 
 .noty_theme__sunset.noty_type__success {
-  background-color: #06D6A0;
+  background-color: var(--alice-success-button);
   color: #fff; }
 
 .noty_theme__bootstrap-v3.noty_bar {

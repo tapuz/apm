@@ -10,6 +10,15 @@ var rightPanelPB = new NProgress({
 
 
 var getRoomInfo;
+window.openPatientEmailModal = function(patient){
+  if (!patient) { return; }
+
+  $('#sendEmailForm')[0].reset();
+  $validatorSendEmail.resetForm();
+  $('#emailModal .to').val(patient.email || '');
+  $('#emailModal .modal-title').html('Send message to ' + (patient.patient_firstname || '') + ' ' + (patient.patient_surname || ''));
+  $('#emailModal').modal('show');
+}
 
 $(document).ready(function() {
   //hide the patient_details div
@@ -229,11 +238,7 @@ $(document).ready(function() {
     });
 
 	$(document).on('click','#rightPanel .sendEmail',function() {
-              $('#sendEmailForm')[0].reset();
-              $validatorSendEmail.resetForm();
-              $('#emailModal .to').val(oPatient.email);
-              $('#emailModal .modal-title').html('Send message to ' + oPatient.patient_firstname + ' ' + oPatient.patient_surname);
-              $('#emailModal').modal('show');
+              openPatientEmailModal(oPatient);
     });
 
 
@@ -396,7 +401,6 @@ function renderRightPanelPatientAppointments(){
   
 
 }
-
 
 
 

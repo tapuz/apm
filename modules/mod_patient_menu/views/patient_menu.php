@@ -1,4 +1,3 @@
-	<h2>Patient Menu</h2>
 						<ul class="nav main-menu">
 						<li><a href="index.php?com=patient&view=patient&patient_id=<?=$patient_id?>"><i class="icon-user"></i><span class="hidden-sm text"> Details</span></a></li>
 						<li><a href="index.php?com=educate&view=educate&layout=component&patient_id=<?=$patient_id?>"><i class="fa fa-graduation-cap"></i><span class="hidden-sm text"> Educate</span></a></li>
@@ -34,7 +33,6 @@
 					<p></p>
 					
 					
-	<h2>Upcoming Appointments</h2>
 	<ul>
 		
 		

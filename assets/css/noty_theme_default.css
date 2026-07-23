@@ -149,7 +149,7 @@
 		border-radius: 10px;
 	}
 	.noty_bar.noty_theme_default.noty_layout_topCenter.noty_success {
-		border: 1px solid #50C24E;
+		border: 1px solid var(--alice-success-button);
 	}
 	.noty_bar.noty_theme_default.noty_layout_topCenter .noty_message .noty_buttons {
 		margin-left: 15px;
@@ -173,15 +173,15 @@
   
 	/* noty_warning */
 	.noty_bar.noty_theme_default.noty_warning {
-		background-color: #FFEAA8;
-		border-color: #FFC237;
-    color: #826200;
+		background-color: #f6ebdc;
+		border-color: var(--alice-warning-button);
+    color: #7a5931;
 	}
 	.noty_bar.noty_theme_default.noty_warning.noty_layout_topLeft .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_warning.noty_layout_topRight .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_warning.noty_layout_bottomLeft .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_warning.noty_layout_bottomRight .noty_message .noty_buttons {
-    border-color: #FFC237;
+    border-color: var(--alice-warning-button);
   }
   
   /* noty_alert */
@@ -198,9 +198,10 @@
   
 	/* noty_error */
 	.noty_bar.noty_theme_default.noty_error {
-		background-color: red;
+		background-color: #ffe1e1;
 		color: #fff;
-		border-color: darkred;
+		color: #8c2f2f;
+		border-color: var(--alice-danger-button);
 	}
 	.noty_bar.noty_theme_default.noty_error .noty_message {
 		font-weight: bold;
@@ -209,32 +210,33 @@
 	.noty_bar.noty_theme_default.noty_error.noty_layout_topRight .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_error.noty_layout_bottomLeft .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_error.noty_layout_bottomRight .noty_message .noty_buttons {
-    border-color: darkred;
+    border-color: var(--alice-danger-button);
   }
   
 	/* noty_success */
 	.noty_bar.noty_theme_default.noty_success {
-		background-color: lightgreen;
-		color: darkgreen;
-		border-color: #50C24E;
+		background-color: var(--alice-success-chip);
+		color: var(--alice-success-text);
+		border-color: var(--alice-success-button);
 	}
 	.noty_bar.noty_theme_default.noty_success.noty_layout_topLeft .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_success.noty_layout_topRight .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_success.noty_layout_bottomLeft .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_success.noty_layout_bottomRight .noty_message .noty_buttons {
-    border-color: #50C24E;
+    border-color: var(--alice-success-button);
   }
   
 	/* noty_information */
 	.noty_bar.noty_theme_default.noty_information {
-		background-color: #57B7E2;
-		border-color: #0B90C4;
+		background-color: #e7eef2;
+		border-color: var(--alice-primary-button);
 		color: #fff;
+		color: #314b5b;
 	}
 	.noty_bar.noty_theme_default.noty_information.noty_layout_topLeft .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_information.noty_layout_topRight .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_information.noty_layout_bottomLeft .noty_message .noty_buttons,
 	.noty_bar.noty_theme_default.noty_information.noty_layout_bottomRight .noty_message .noty_buttons {
-    border-color: #0B90C4;
+    border-color: var(--alice-primary-button);
   }
   

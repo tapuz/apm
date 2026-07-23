@@ -8,12 +8,12 @@ $(document).ready(function(){
 	var fNewEncounter = false;
 	var fAllSaved = 1;
 	var oHistory = null;
-	var encounters;
+	var encounters = [];
 	var oPrevEncounter;	
-	var diagnoses;
+	var diagnoses = [];
 	var filteredDiagnoses;
 	var oHistory = null;
-	var vitals = null;
+	var vitals = [];
 	//var to store diagnosis form to input elements after diagnosis selection
 	var formDiagnosis;
 	
@@ -31,6 +31,8 @@ $(document).ready(function(){
 	var bgImage;
 	var bgImageCurAngle = 0;
 	var saveNoty;
+	var docsLoaded = false;
+	var pictureProofLoaded = false;
 
 	cast = new Cast('https://desk.timegenics.com');
 
@@ -97,45 +99,101 @@ $(document).ready(function(){
 	var canvas =  new fabric.Canvas('c', { isDrawingMode: false, backgroundColor :'white', selection: false,allowTouchScrolling: true,originX: 'center',
     originY: 'center'});
 	canvas.setDimensions({width:canvasWidth, height:canvasHeight});
+
+	function ajaxToPromise(jqXHR){
+		return new Promise(function(resolve, reject){
+			jqXHR.done(resolve).fail(reject);
+		});
+	}
+
+	function renderSectionLoader(target, message, modifierClass){
+		var extraClass = modifierClass ? ' ' + modifierClass : '';
+		$(target).html(
+			'<div class="patient-section-loader' + extraClass + '" aria-label="' + message + '">' +
+				'<div class="patient-section-loader-spinner" aria-hidden="true"></div>' +
+			'</div>'
+		);
+	}
 	
-	function renderMain(){
+	async function renderMain(){
 		//$('#patientPB').html("getting <strong>" + patientName + "'s </strong> file...");
 		patientPB.start();
 
-		$.when(Patient.get(patientID),
-			   History.get(patientID),
-			   Encounter.getAll(patientID),
-			   Diagnosis.getDiagnosesPatient(patientID),
-			   Patient.getVitals(patientID),
-			   ).then(function( data1,data2,data3,data4,data5 ) {
-			
-			oPatient = data1[0];
-			oHistory = data2[0];
-			encounters = data3[0];
-			diagnoses = data4[0];
-			vitals = data5[0];
+		try {
+			const [patient, history] = await Promise.all([
+				ajaxToPromise(Patient.get(patientID)),
+				ajaxToPromise(History.get(patientID))
+			]);
+
+			oPatient = patient;
+			oHistory = history;
 			$('.left-content').show();
-			
+
+			// Render the core patient view as soon as the essentials are ready.
 			renderDemographicsPanel();
-			renderVitalsPanel(true);
 			renderHistoryPanel();
 			renderOrthoticsPanel();
-			renderEncounters();
-			renderSummary();
+			renderVitalsPanel(true);
 			renderInitComplaintTabs(false);
 			renderComplaints(true);
+			renderSummary();
 			renderFlagnotifications();
-			renderDocsPanel();
-			renderPictureProofPanel();
+			$('#docsPanel').html('<div class="patient-section-loader" aria-label="Docs ready to load"><div class="patient-section-loader-spinner" aria-hidden="true"></div></div>');
+			$('#pictureproof-panel .panel-body').html('<div class="patient-section-loader" aria-label="PictureProof ready to load"><div class="patient-section-loader-spinner" aria-hidden="true"></div></div>');
+			renderSectionLoader('.list-encounters', 'Loading encounters...', 'patient-section-loader-large');
+			renderSectionLoader('#patient_appointments', 'Loading appointments...');
 			renderPatientAppointments();
-			
-			//assign previous encounter to var in order to use them in new encounter.. so user can copy this is new encounter
+
+			hideLoadingScreen();
+
+			const encountersPromise = ajaxToPromise(Encounter.getAll(patientID));
+			const diagnosesPromise = ajaxToPromise(Diagnosis.getDiagnosesPatient(patientID));
+			const vitalsPromise = ajaxToPromise(Patient.getVitals(patientID));
+
+			const encounterBundle = await Promise.allSettled([encountersPromise, diagnosesPromise]);
+			if (encounterBundle[0].status === 'fulfilled') {
+				encounters = encounterBundle[0].value || [];
+			} else {
+				console.warn('Failed to load encounters', encounterBundle[0].reason);
+				encounters = [];
+			}
+
+			if (encounterBundle[1].status === 'fulfilled') {
+				diagnoses = encounterBundle[1].value || [];
+			} else {
+				console.warn('Failed to load diagnoses', encounterBundle[1].reason);
+				diagnoses = [];
+			}
+
+			renderEncounters();
+			renderInitComplaintTabs(false);
+			renderComplaints(true);
+			renderSummary();
 			oPrevEncounter = encounters[1];
+
+			const vitalsResult = await Promise.allSettled([vitalsPromise]);
+			if (vitalsResult[0].status === 'fulfilled') {
+				vitals = vitalsResult[0].value || [];
+			} else {
+				console.warn('Failed to load vitals', vitalsResult[0].reason);
+				vitals = [];
+			}
+
+			renderVitalsPanel(true);
+		} catch (error) {
+			console.error('Failed to load patient page', error);
+			hideLoadingScreen();
+			new Noty({
+				text: '<span class="text-center">Could not load this patient file. Please try again.</span>',
+				layout:'topCenter',
+				theme:'sunset',
+				type:'error',
+				timeout: 4000
+			}).show();
+		} finally {
 			patientPB.done();
 			disableform('editSOAP',false);
-			hideLoadingScreen();
-			
-		});
+		}
 	}
 	
 	
@@ -986,44 +1044,50 @@ $(document).on('click', '.btn_close_encounter', async function () {
 		
 		var template = $('#tmpl_encounter').html();
 		Mustache.parse(template);
-		$('#timeline').html('');    
-		var encounterID;
-		var complaintID;
-		var Dx;
-		//var complaint = null;
-		$.each(encounters, function() {
-			Dx = '';
+		var encounterDiagnoses = {};
+		var rowsHtml = '';
 
-			encounterID = this.id;
-			encounterDate = this.start;
-		$.each(diagnoses,function(){
-			if (encounterID == this.encounter) { //we have a match...
+		$.each(diagnoses || [], function() {
+			var encounterKey = this.encounter;
+			if (!encounterDiagnoses[encounterKey]) {
+				encounterDiagnoses[encounterKey] = [];
+			}
+			encounterDiagnoses[encounterKey].push(this);
+		});
+
+		$.each(encounters || [], function() {
+			var encounterID = this.id;
+			var encounterDate = this.start;
+			var complaintID = null;
+			var Dx = '';
+			var relatedDiagnoses = encounterDiagnoses[encounterID] || [];
+
+			$.each(relatedDiagnoses, function() {
 				complaintID = this.complaint;
 				if(moment(encounterDate).isSame(this.open, 'day')){
-					
-					Dx = Dx +  '<span><span class="diagnosis" complaint="'+ this.complaint + '">CC: ' + this.cc + '<br>Dx: ' + this.diagnosis + '</span></span>';
+					Dx += '<span><span class="diagnosis" complaint="' + this.complaint + '">CC: ' + this.cc + '<br>Dx: ' + this.diagnosis + '</span></span>';
 				}else {
-					Dx = Dx +  '<span><span class="diagnosis">CC: ' + this.cc + '<br>Dx: ' + this.diagnosis + ' (' + moment(this.open).format('L') +')</span></span>';
+					Dx += '<span><span class="diagnosis">CC: ' + this.cc + '<br>Dx: ' + this.diagnosis + ' (' + moment(this.open).format('L') + ')</span></span>';
 				}
-			}
-			
 			});
-		var rendered = Mustache.render(template,
-			{
-			 encounterID:encounterID,
-			 username:this.username,
-			 subjective: this.subjective,
-			 objective: this.objective,
-			 assessment: this.assessment,
-			 plan: this.plan,
-			 date: moment(this.start).format('L'),
-			 note:this.note,
-			 interval:this.interval,
-			 diagnoses:Dx,
-			 complaintID:complaintID
-			 });
-		$('#encounters_table tbody').append(rendered);
+
+			rowsHtml += Mustache.render(template,
+				{
+				 encounterID: encounterID,
+				 username: this.username,
+				 subjective: this.subjective,
+				 objective: this.objective,
+				 assessment: this.assessment,
+				 plan: this.plan,
+				 date: moment(this.start).format('L'),
+				 note: this.note,
+				 interval: this.interval,
+				 diagnoses: Dx,
+				 complaintID: complaintID
+				});
 		});
+
+		$('#encounters_table tbody').html(rowsHtml);
 	
 		$('#label_encounter_saving').hide();
 		$('#label_encounter_saving_error').hide();
@@ -1033,8 +1097,24 @@ $(document).on('click', '.btn_close_encounter', async function () {
 	}
 	//DOCS
 	$('.btnRefreshDocs').click(function(){
+		docsLoaded = true;
 		renderDocsPanel();
 	});
+
+	$(document).on('shown.bs.tab', 'a[href="#docs_tab"]', function(){
+		if (!docsLoaded) {
+			docsLoaded = true;
+			renderDocsPanel();
+		}
+	});
+
+	$(document).on('shown.bs.tab', 'a[href="#pictureProof_tab"]', function(){
+		if (!pictureProofLoaded) {
+			pictureProofLoaded = true;
+			renderPictureProofPanel();
+		}
+	});
+
 	function renderDocsPanel(){
 		$('.btnDeleteDocs').hide();
 		$('#canvasPanel').hide();
@@ -1058,6 +1138,7 @@ $(document).on('click', '.btn_close_encounter', async function () {
 	}
 
 	function renderPictureProofPanel(){
+		pictureProofLoaded = true;
 		//$('.btnDeleteDocs').hide();
 		//$('#canvasPanel').hide();
 		//$('#docsPanel').html('Loading documents...');
@@ -1720,6 +1801,7 @@ $(document).on('click', '.btn_close_encounter', async function () {
 	function renderPatientAppointments(){
 		
 		var futureAppointments, pastAppointments
+		renderSectionLoader('#patient_appointments', 'Loading appointments...');
 
 		function preprocessAppointments(appointments) {
 			return (appointments || []).map(function(appointment) {
@@ -1745,6 +1827,8 @@ $(document).on('click', '.btn_close_encounter', async function () {
 				});
 			$('#patient_appointments').html(rendered);  
 		
+		}).fail(function() {
+			$('#patient_appointments').html('<div class="patient-section-loader"><div class="patient-section-loader-error">Could not load appointments.</div></div>');
 		});
 		
 	  

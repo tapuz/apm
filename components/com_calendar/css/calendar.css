@@ -78,19 +78,21 @@
 
 #rightPanel .content .patients_search_results li {
   align-items: center;
-  background: #fff;
-  border: 1px solid #e3eaef;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #e3eaef;
   border-radius: 6px;
   cursor: pointer;
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  margin-bottom: 10px;
-  padding: 12px 14px;
+  margin-bottom: 0;
+  padding: 10px 0;
 }
 
 #rightPanel .content .patients_search_results li:last-child {
   margin-bottom: 0;
+  border-bottom: 0;
 }
 
 #rightPanel .content .patients_search_results .patient-result-main {

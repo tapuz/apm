@@ -266,6 +266,16 @@ $(document).ready(function() {
     
     
   });
+
+  $(document).on('click','#eventDetails .openPatientEmailModal',function(e){
+    e.preventDefault();
+    $('#eventDetails').modal('hide');
+    openPatientEmailModal({
+      email: objEvent.email,
+      patient_firstname: objEvent.patient_firstname,
+      patient_surname: objEvent.patient_surname
+    });
+  });
   
   $(document).on('click','#btn_goto_file',function(){
     $('#eventDetails').modal('hide');    
