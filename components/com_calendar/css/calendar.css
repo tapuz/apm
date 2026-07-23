@@ -52,21 +52,72 @@
   list-style-type:none
 }
 
-#rightPanel .content .patients_search_results li:first-child {
-  border-top: none;
+#rightPanel .right-panel-card,
+#rightPanel .rooms-status-panel {
+  background: #fff;
+  border: 1px solid #d9e0e6;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  margin-bottom: 15px;
+  padding: 14px 16px;
 }
+
+#rightPanel .right-panel-card-title {
+  color: #303b42;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+#rightPanel .right-panel-card-list {
+  margin: 0;
+  padding: 0;
+}
+
 #rightPanel .content .patients_search_results li {
-  border-top: 1px solid #eee;
-  padding-top: 10px;
-  padding-bottom: 6px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e3eaef;
+  border-radius: 6px;
   cursor: pointer;
-
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 12px 14px;
 }
 
-#rightPanel .content .patients_search_results li a{
-  color: #0098cb;
-  text-decoration: none;
+#rightPanel .content .patients_search_results li:last-child {
+  margin-bottom: 0;
+}
 
+#rightPanel .content .patients_search_results .patient-result-main {
+  align-items: center;
+  color: #303b42;
+  display: inline-flex;
+  font-weight: 600;
+  gap: 10px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+#rightPanel .content .patients_search_results .patient-result-main i {
+  color: #7a9caf;
+}
+
+#rightPanel .content .patients_search_results .open_file {
+  color: #c99c67;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#rightPanel .content .patients_search_results .open_file i {
+  margin-right: 4px;
 }
 
 #rightPanel .content .patients_details h3 {
@@ -85,6 +136,42 @@
   min-width: 100px;
 }
 
+#rightPanel .content .patients_details h2 {
+  color: #303b42;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+#rightPanel .content .patient_demographics .btn-group {
+  margin-bottom: 10px;
+  margin-right: 6px;
+}
+
+#rightPanel .content .patient_demographics .well {
+  background: #fff;
+  border: 1px solid #d9e0e6;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  margin-bottom: 15px;
+}
+
+#rightPanel .content .patient_demographics .well .row {
+  margin-bottom: 8px;
+}
+
+#rightPanel .content .patient_demographics .well .row:last-child {
+  margin-bottom: 0;
+}
+
+#rightPanel .content .patient_demographics .well label {
+  color: #6d7a84;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+
 #rightPanel .content .right_panel_appointment {
   border-style: solid;
   border-width: 0 0 0 10px;
@@ -101,14 +188,75 @@
 }
 
 #rightPanel .content .right_panel_roomstatus {
+  background: #fff;
+  border: 1px solid #e3eaef;
   border-style: solid;
-  border-width: 0 0 0 10px;
-  padding-left: 10px;
+  border-width: 0 0 0 4px;
+  border-left-width: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  margin-bottom: 10px;
+  padding: 12px 14px;
 }
 
 #rightPanel .content .right_panel_roomstatus label {
   cursor: pointer;
+  margin-bottom: 0;
+}
+
+#rightPanel .content .right_panel_roomstatus:last-child {
+  margin-bottom: 0;
+}
+
+#rightPanel .content .rooms-status-practitioner {
+  color: #303b42;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin: 14px 0 8px;
+  text-transform: uppercase;
+}
+
+#rightPanel .content .rooms-status-practitioner:first-child {
+  margin-top: 0;
+}
+
+#rightPanel .content .room-status-head {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+#rightPanel .content .room-status-head > label:first-child {
+  color: #1f2a30;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#rightPanel .content .room-status-link,
+#rightPanel .content .right_panel_roomstatus a {
+  color: #303b42;
+  text-decoration: none;
+}
+
+#rightPanel .content .room-status-link label {
+  color: #303b42;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+#rightPanel .content .room-status-time label,
+#rightPanel .content .right_panel_roomstatus > div:not(.room-status-head):not(.room-status-time) label {
+  color: #6d7a84;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+#rightPanel .content .btnEmptyRoom {
+  min-width: 34px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 
@@ -581,6 +729,14 @@
 #rightPanel .appointments-history-meta {
   color: #6d7a84;
   margin-top: 4px;
+}
+
+#rightPanel .patient_demographics .well,
+#rightPanel .patients_search_results,
+#rightPanel .rooms_status_panel,
+#rightPanel .rooms_status_panel ul,
+#rightPanel #patient_rooms_status > div {
+  border-radius: 8px;
 }
 
 @media (max-width: 767px) {

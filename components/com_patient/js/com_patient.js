@@ -1719,24 +1719,29 @@ $(document).on('click', '.btn_close_encounter', async function () {
 	//show appointments
 	function renderPatientAppointments(){
 		
-		var futureAppointments, lastAppointment
+		var futureAppointments, pastAppointments
+
+		function preprocessAppointments(appointments) {
+			return (appointments || []).map(function(appointment) {
+				appointment.is_cancelled = String(appointment.status) === '6';
+				appointment.itemBorderColor = appointment.is_cancelled ? '#ff5454' : (appointment.borderColor || '#d9e0e6');
+				return appointment;
+			});
+		}
+
 		$.when(
 		  Appointment.getFutureAppointments(patientID,function(appointments){futureAppointments = appointments}),
-		  Appointment.getLastAppointment(patientID,function(appointment){lastAppointment = appointment})
+		  Appointment.getPastAppointments(patientID,function(appointments){pastAppointments = appointments})
 	  
 		
 		).then(function() {
-		  var title_future_appointments = 'Next Appointment';
-		  var title_last_appointment = 'Last Appointment';
-		  if (futureAppointments.length > 1){title_future_appointments = 'Next Appointments'};
-		  if (futureAppointments.length < 1){title_future_appointments = 'No future appointments'};
-		  if (lastAppointment.length <1 ){title_last_appointment = "No last appointment"}
+		  futureAppointments = preprocessAppointments(futureAppointments);
+		  pastAppointments = preprocessAppointments(pastAppointments).slice(0, 5);
 	  
 			var rendered = Mustache.render(tmpl_patient_appointments,
-				{ title_future_appointments:title_future_appointments,
-				  title_last_appointment: title_last_appointment,
+				{
 				  future_appointments : futureAppointments,
-				  last_appointment : lastAppointment
+				  past_appointments : pastAppointments
 				});
 			$('#patient_appointments').html(rendered);  
 		

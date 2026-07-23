@@ -1,8 +1,17 @@
 <script id='tmpl_patient_search_results' type="x-tmpl-mustache">
-   <div class="patients_search_results"> 
-    <ul>
+   <div class="patients_search_results right-panel-card"> 
+    <div class="right-panel-card-title">Patients</div>
+    <ul class="right-panel-card-list">
         {{#patients}}
-			<li class="patient" patient_id="{{patient_id}}"><a href="#"><i class="fa fa-user">&nbsp;&nbsp;</i><span> {{patient_surname}} {{patient_firstname}} ({{dob}})</span></i> <a target="{{patient_id}}" href="index.php?com=patient&view=patient&patient_id={{patient_id}}"><span class="open_file pull-right"><i class="fa fa-file-text-o" aria-hidden="true"></i> Open file</span></a></li>
+			<li class="patient" patient_id="{{patient_id}}">
+                <a href="#" class="patient-result-main">
+                    <i class="fa fa-user"></i>
+                    <span>{{patient_surname}} {{patient_firstname}} ({{dob}})</span>
+                </a>
+                <a target="{{patient_id}}" href="index.php?com=patient&view=patient&patient_id={{patient_id}}" class="open_file">
+                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Open file
+                </a>
+            </li>
         {{/patients}}
     <ul>
     </div>
@@ -146,34 +155,35 @@
 
 
 <script id='tmpl_rooms_status' type='x-tmpl-mustache'>
-    <div><label>Rooms</label> 
-        <ul>
+    <div class="rooms-status-panel">
+        <div class="right-panel-card-title">Rooms</div>
+        <ul class="right-panel-card-list">
             {{#data}}
                 {{#isNewPractitioner}}
-                    <div><label>{{practitioner}}</label></div>
+                    <li class="rooms-status-practitioner">{{practitioner}}</li>
                 {{/isNewPractitioner}}
                 {{#busy}}
                 	<li data-roomId="{{room_id}}" data-patientId={{patientID}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_roomstatus" style="border-color:{{borderColor}}">
-                	<div>
+                	<div class="room-status-head">
                         <label>{{room_name}}</label>
-                        <label class="btn btn-sm btnEmptyRoom" data-appointment_id={{appointment_id}} data-room_id = {{room_id}}><i class="fa fa-trash-o"></i>&nbsp</label>
+                        <label class="btn btn-sm btnEmptyRoom" data-appointment_id={{appointment_id}} data-room_id = {{room_id}}><i class="fa fa-trash-o"></i>&nbsp;</label>
                     </div>
                     {{#check}}
                     
-                        <a target="{{patientID}}" href="index.php?com=patient&amp;view=patient&amp;layout=component&amp;patient_id={{patientID}}&amp;appointment_id={{appointment_id}}"><div><label>Patient : {{patientName}}</label></div></a>
+                        <a target="{{patientID}}" href="index.php?com=patient&amp;view=patient&amp;layout=component&amp;patient_id={{patientID}}&amp;appointment_id={{appointment_id}}" class="room-status-link"><div><label>Patient: {{patientName}}</label></div></a>
                     {{/check}}    
                     {{^check}}
                     <div><label>In use by {{resourceName}}</label></div>
                     {{/check}}
                     
-                    <div>
+                    <div class="room-status-time">
                         <label>{{time}}</label>
                     </div>   
                        
                 {{/busy}}
                 {{^busy}}
                 	<li data-roomId="{{room_id}}" data-patientId={{patientID}} data-status={{status}} data-practitioner_id={{practitioner_id}} class="right_panel_roomstatus" style="border-color:rgb(120, 205, 81)">
-                	<div><label>{{room_name}}</label</div>
+                	<div class="room-status-head"><label>{{room_name}}</label></div>
 
                 {{/busy}}
                 

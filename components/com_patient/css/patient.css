@@ -1,49 +1,35 @@
-.left-content,
-#feed,
-#recordEncounterModal {
-  --patient-green-border: #d7e1dd;
-  --patient-green-header-start: #f4fbf7;
-  --patient-green-header-end: #e5f2eb;
-  --patient-green-surface: #fcfefd;
-  --patient-green-text: #244236;
-  --patient-green-chip: #e9f5ee;
-  --patient-green-chip-border: #cfe3d7;
-  --patient-green-button: #8ab79c;
-  --patient-green-button-hover: #6f9f83;
-}
-
 .left-content .panel.panel-success,
 #feed .panel.panel-success,
 #recordEncounterModal .panel.panel-success {
-  border-color: var(--patient-green-border);
+  border-color: var(--alice-success-border);
   box-shadow: 0 4px 14px rgba(41, 60, 52, 0.08);
 }
 
 .left-content .panel.panel-success > .panel-heading,
 #feed .panel.panel-success > .panel-heading,
 #recordEncounterModal .panel.panel-success > .panel-heading {
-  background: linear-gradient(135deg, var(--patient-green-header-start) 0%, var(--patient-green-header-end) 100%);
-  border-color: var(--patient-green-border);
-  color: var(--patient-green-text);
+  background: linear-gradient(135deg, var(--alice-success-header-start) 0%, var(--alice-success-header-end) 100%);
+  border-color: var(--alice-success-border);
+  color: var(--alice-success-text);
 }
 
 .left-content .panel.panel-success > .panel-heading a,
 #feed .panel.panel-success > .panel-heading a,
 #recordEncounterModal .panel.panel-success > .panel-heading a {
-  color: var(--patient-green-text);
+  color: var(--alice-success-text);
 }
 
 .left-content .panel.panel-success > .panel-body,
 #feed .panel.panel-success > .panel-body,
 #recordEncounterModal .panel.panel-success > .panel-body {
-  background: var(--patient-green-surface);
+  background: var(--alice-success-surface);
 }
 
 .left-content .btn.btn-success,
 #feed .btn.btn-success,
 #recordEncounterModal .btn.btn-success {
-  background-color: var(--patient-green-button);
-  border-color: var(--patient-green-button);
+  background-color: var(--alice-success-button);
+  border-color: var(--alice-success-button);
   color: #fff;
 }
 
@@ -53,17 +39,30 @@
 #feed .btn.btn-success:focus,
 #recordEncounterModal .btn.btn-success:hover,
 #recordEncounterModal .btn.btn-success:focus {
-  background-color: var(--patient-green-button-hover);
-  border-color: var(--patient-green-button-hover);
+  background-color: var(--alice-success-button-hover);
+  border-color: var(--alice-success-button-hover);
   color: #fff;
 }
 
 .left-content .label.label-success,
 #feed .label.label-success,
 #recordEncounterModal .label.label-success {
-  background-color: var(--patient-green-chip);
-  border: 1px solid var(--patient-green-chip-border);
-  color: var(--patient-green-text);
+  background-color: var(--alice-success-chip);
+  border: 1px solid var(--alice-success-chip-border);
+  color: var(--alice-success-text);
+}
+
+#feed {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#feed .btn-group.btn-group-justified {
+  margin-top: 10px;
+}
+
+#feed .btn-group.btn-group-justified .btn {
+  white-space: nowrap;
 }
 
 #editSOAP textarea.form-control.soap_input,
@@ -77,17 +76,90 @@
   }
   #patient_appointments ul {
     list-style-type: none;
+    margin: 0;
+    padding: 0;
   }
 
-  #patient_appointments .patient_appointment {
-    border-style: solid;
-    border-width: 0 0 0 10px;
-    padding-left: 10px;
+  #patient_appointments .patient-appointments-card {
+    background: #fff;
+    border: 1px solid #d9e0e6;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    padding: 12px;
+  }
+
+  #patient_appointments .patient-appointments-title {
+    color: #303b42;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  #patient_appointments .patient-appointments-section + .patient-appointments-section {
+    margin-top: 14px;
+  }
+
+  #patient_appointments .patient-appointments-section-title {
+    color: #6d7a84;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  #patient_appointments .patient-appointments-item,
+  #patient_appointments .patient-appointments-empty {
+    background: #fff;
+    border: 1px solid #e3eaef;
+    border-left: 4px solid #d9e0e6;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+  }
+
+  #patient_appointments .patient-appointments-item {
     cursor: pointer;
   }
-  
-  #patient_appointments .patient_appointment label {
-    cursor: pointer;
+
+  #patient_appointments .patient-appointments-item:last-child,
+  #patient_appointments .patient-appointments-empty:last-child {
+    margin-bottom: 0;
+  }
+
+  #patient_appointments .patient-appointments-date {
+    color: #303b42;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  #patient_appointments .patient-appointments-service {
+    color: #1f2a30;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  #patient_appointments .patient-appointments-meta {
+    color: #6d7a84;
+    margin-top: 4px;
+  }
+
+  #patient_appointments .patient-appointments-status {
+    color: #ff5454;
+    font-weight: 700;
+  }
+
+  #patient_appointments .patient-appointments-reason {
+    color: #6d7a84;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  #patient_appointments .patient-appointments-book {
+    margin-top: 14px;
+    margin-bottom: 14px;
   }
 
  /*Email modal*/
